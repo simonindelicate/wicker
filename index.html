@@ -461,20 +461,21 @@ const ICON={
 //  twin | islands | continent | highlands, enemies, diff, fog, centre = start surrounded),
 //  addB / addS = buildings and spells unlocked from this level on (all = everything),
 //  tomb = entombment allowed, news = what to mention as new, me / them = starting stock
-//  (mana, wood, huts, braves, warriors, archers), ai = rival tuning (first = first attack
+//  (mana, wood, huts, braves, warriors, archers, altar:false = no free altar, manaMult =
+//  offering yield), ai = rival tuning (first = first attack
 //  in seconds, war = eagerness, mana = offering yield, breed = breeding speed, cap = population
 //  ceiling, mil = share kept as fighters, gap = spellcasting slowness), wild = wildman numbers.
 //  Goals: conquer | survive (n seconds) | captives (hold n) | queen (offer a May Queen).
 // =====================================================================================
 const SCEN=[
  {title:'The Strait',seed:1101,style:'twin',enemies:1,diff:'easy',fog:false,goal:{type:'conquer'},
-  addB:['hut','camp'],addS:['blast','bridge'],news:['Warrior Camp','Blast','Land Bridge'],
-  me:{mana:700,wood:150,huts:2},ai:{first:1e9,breed:.5,cap:28,mil:.12,gap:3},
-  intro:'Across the water a people keeps its own fires and will not answer when we call. They have no quarrel with us yet, and no reason to fear us. Build a camp, raise warriors, and let the shaman lift the sea floor into a road.'},
+  addB:['hut','altar','camp'],addS:['blast','bridge'],news:['Forest Altar','Warrior Camp','Blast','Land Bridge'],
+  me:{mana:0,wood:150,huts:2,altar:false,manaMult:2.5},ai:{first:1e9,breed:.5,cap:28,mil:.12,gap:3},
+  intro:'Across the water a people keeps its own fires and will not answer when we call. Our shaman has no power of her own: everything she does must be paid for with a life. Build a forest altar among the trees and give it braves, one at a time. With what it gives back, raise warriors, lift the sea floor into a road, and cross.'},
  {title:'The Grove',seed:2207,style:'twin',enemies:1,diff:'easy',fog:false,goal:{type:'conquer'},
-  addB:['altar','wicker'],addS:['lightning'],news:['Forest Altar','Wicker Man','Lightning'],
-  me:{mana:250,wood:150,huts:2},ai:{first:720,breed:.6,cap:40,mil:.25,gap:2},
-  intro:'Mana is not given; it is paid for. The grove takes what we bring it, one at a time, and the wicker takes them five at once. Feed them, and the shaman will have what she needs.'},
+  addB:['wicker'],addS:['lightning'],news:['Wicker Man','Lightning'],
+  me:{mana:250,wood:150,huts:2,manaMult:1.5},ai:{first:720,breed:.6,cap:40,mil:.25,gap:2},
+  intro:'The grove gives a little for each life. The wicker man gives far more, but it takes five at once, and it must burn to give anything at all. Feed it, and the shaman will have what she needs.'},
  {title:'Hobby Horse',seed:3313,style:'continent',enemies:1,diff:'easy',fog:true,goal:{type:'captives',n:10},
   addB:['osshouse','fold'],addS:['swarm'],news:['Oss House','Thrall Fold','Plague of Flies'],wild:1.8,
   me:{mana:250,wood:180,huts:2},ai:{first:900,cap:50},
@@ -1785,13 +1786,13 @@ function buildWorld(){const SC=scen();const w=genWorld(settings.seed,settings.st
   recompute(0,0,N-1,N-1);
   trees=w.trees.map(t=>({x:t.x,z:t.z,wood:TUNE.woodPerTree,alive:true,sc:.8+R()*.45,tint:.85+R()*.25}));treeCap=Math.round(trees.length*1.1);tGridDirty=true;
   tribes=[];
-  for(let i=0;i<=settings.enemies;i++){const s=w.starts[i],D=DIFF[settings.diff];const ai=i||watching,ST=SC?(ai?SC.them||{}:SC.me||{}):{},SA=(SC&&SC.ai)||{};const T={dread:0,tomb:null,id:i,...TRIBES[i],c:new C.Color(TRIBES[i].col),mana:ST.mana??(ai?150:D.pMana0),wood:ST.wood??(ai?40:D.pWood),woodGoal:ai?120:160,alive:true,shaman:null,reincT:0,cd:{},manaMult:ai?D.mana*((TRIBES[i].pers||{}).mana||1)*(SA.mana||1):(SC?1:D.pMana),breedMult:(ai?D.breed:D.pBreed)*(ai&&SA.breed||1),capMax:ai?SA.cap:undefined,ai:ai?mkAI(i,s):null,stats:{pop:0,braves:0,outB:0,housed:0,others:0,mil:0,queued:0,huts:0,blds:0,sites:0,b:{},cap:25,cnt:{}}};
+  for(let i=0;i<=settings.enemies;i++){const s=w.starts[i],D=DIFF[settings.diff];const ai=i||watching,ST=SC?(ai?SC.them||{}:SC.me||{}):{},SA=(SC&&SC.ai)||{};const T={dread:0,tomb:null,id:i,...TRIBES[i],c:new C.Color(TRIBES[i].col),mana:ST.mana??(ai?150:D.pMana0),wood:ST.wood??(ai?40:D.pWood),woodGoal:ai?120:160,alive:true,shaman:null,reincT:0,cd:{},manaMult:ai?D.mana*((TRIBES[i].pers||{}).mana||1)*(SA.mana||1):(SC?(ST.manaMult||1):D.pMana),breedMult:(ai?D.breed:D.pBreed)*(ai&&SA.breed||1),capMax:ai?SA.cap:undefined,ai:ai?mkAI(i,s):null,stats:{pop:0,braves:0,outB:0,housed:0,others:0,mil:0,queued:0,huts:0,blds:0,sites:0,b:{},cap:25,cnt:{}}};
     T.roof=T.c.clone().lerp(new C.Color(0xc9a55a),.3);tribes.push(T);
     const rs=validSpot(i,'reinc',s.x,s.z);const sp=rs.err?{cx0:Math.floor(s.x-1),cz0:Math.floor(s.z-1)}:rs;const r=placeBuilding(i,'reinc',sp,true);
     if(T.ai){T.ai.base={x:r.x,z:r.z}}
     let huts=0;const want=ST.huts??(ai?1:D.pHuts);for(let a=0;a<24&&huts<want;a++){const ang=a/12*TAU+.4,rr=a<12?5:7.5,v=validSpot(i,'hut',r.x+Math.cos(ang)*rr,r.z+Math.sin(ang)*rr);if(!v.err){const h=placeBuilding(i,'hut',v,true);h.occ=2;huts++}}
     if(allowB('fold')){let done=false;for(let a=0;a<36&&!done;a++){const ang=a/12*TAU+3.6,rr=5.5+(a/12|0)*2.5,v=validSpot(i,'fold',r.x+Math.cos(ang)*rr,r.z+Math.sin(ang)*rr);if(!v.err){placeBuilding(i,'fold',v,true);done=true}}}
-    if(allowB('altar')){let done=false;for(let a=0;a<36&&!done;a++){const ang=a/12*TAU+1.7,rr=5+(a/12|0)*2.5,v=validSpot(i,'altar',r.x+Math.cos(ang)*rr,r.z+Math.sin(ang)*rr);if(!v.err){placeBuilding(i,'altar',v,true);done=true}}
+    if(allowB('altar')&&ST.altar!==false){let done=false;for(let a=0;a<36&&!done;a++){const ang=a/12*TAU+1.7,rr=5+(a/12|0)*2.5,v=validSpot(i,'altar',r.x+Math.cos(ang)*rr,r.z+Math.sin(ang)*rr);if(!v.err){placeBuilding(i,'altar',v,true);done=true}}
      if(!done){let bt=null,bd=1e9;for(const t of trees)if(t.alive){const d=d2(r.x,r.z,t.x,t.z);if(d<bd&&d>16){bd=d;bt=t}}if(bt){const v=validSpot(i,'altar',bt.x+1.5,bt.z+1.5);placeBuilding(i,'altar',v.err?{cx0:Math.floor(bt.x+.5),cz0:Math.floor(bt.z+.5)}:v,true)}}}
     T.shaman=spawnUnit('shaman',i,r.x,r.z+2.2);
     for(let k=0;k<(ST.braves??8);k++){const a=k/8*TAU;spawnUnit('brave',i,r.x+Math.cos(a)*2.6,r.z+Math.sin(a)*2.6)}
