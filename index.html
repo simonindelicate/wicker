@@ -138,6 +138,7 @@ details.help summary{cursor:pointer;color:var(--text);font:14px var(--f-display)
 .lvl.done{border-color:rgba(211,155,60,.5)}
 .lvl.next{border-color:var(--ochre);background:rgba(211,155,60,.12)}
 .lvl:disabled{opacity:.35}
+.devTog{display:flex;gap:8px;align-items:center;font-size:12px;color:var(--muted);margin:10px 0 4px;cursor:pointer}
 .eyebrow{font:12px var(--f-display);letter-spacing:.16em;color:var(--muted);margin:0 0 4px}
 .intro{font-style:italic;line-height:1.55;max-width:58ch;margin:0 0 14px}
 .goal{color:var(--ochre);margin:0 0 6px}
@@ -257,6 +258,7 @@ details.help summary{cursor:pointer;color:var(--text);font:14px var(--f-display)
       <h2>Campaign</h2>
       <p class="sub" id="campSub">Twenty years of the wheel, each harder than the last.</p>
       <div class="levels" id="levels"></div>
+      <label class="devTog"><input type="checkbox" id="devMode"> Test mode: open every level (wins in test mode are not recorded)</label>
       <button class="secondary" id="campBack">Back</button>
     </div>
   </div>
@@ -460,6 +462,9 @@ const ICON={
 //  Each level: title, intro (placeholder text, to be rewritten), goal, world (seed, style:
 //  twin | islands | continent | highlands, enemies, diff, fog, centre = start surrounded),
 //  addB / addS = buildings and spells unlocked from this level on (all = everything),
+//  lockB = buildings the player may not build on this level only (rivals still can),
+//  keep = player's village sits in a ring of crags with gates (hedge country),
+//  ai.only0 = rivals attack only the player; ai.first/int/need/needInc = first wave time, gap between waves, wave size,
 //  tomb = entombment allowed, news = what to mention as new, me / them = starting stock
 //  (mana, wood, huts, braves, warriors, archers, altar:false = no free altar, manaMult =
 //  offering yield), ai = rival tuning (first = first attack
@@ -484,10 +489,10 @@ const SCEN=[
   addB:['range'],addS:['shield'],news:['Archery Range','Shield'],
   me:{mana:250,wood:150,huts:2},
   intro:'This neighbour is not idle. Their warriors will come. Archers behind a line of spears will meet them, and the shaman can turn a blow aside.'},
- {title:'The Long Watch',seed:5531,style:'continent',enemies:2,diff:'normal',fog:true,goal:{type:'survive',n:600},
-  addB:['hedge','nest'],addS:['swamp'],news:['Blackthorn Hedge','Rook Tree','Swamp'],
-  me:{mana:400,wood:260,huts:2,warriors:4},ai:{first:130,war:1.3},
-  intro:'Two peoples have smelt our smoke and they are coming together. We cannot beat them yet. Plant the thorn, wake the bog, and hold the village for ten minutes until they tire of us.'},
+ {title:'The Long Watch',seed:5531,style:'continent',enemies:2,diff:'normal',fog:true,keep:true,goal:{type:'survive',n:600},
+  addB:['hedge','nest'],addS:['swamp','erode'],lockB:['camp'],news:['Blackthorn Hedge','Rook Tree','Swamp','Erode'],
+  me:{mana:400,wood:260,huts:2,warriors:4,manaMult:2},them:{mana:400,warriors:4},ai:{first:150,int:110,need:4,needInc:1,only0:true,mil:.36,cap:70},
+  intro:'Two peoples have smelt our smoke, and both are coming for us. We cannot beat them and we have no camp to raise more warriors. But our valley is ringed with crags, and there are only three ways in. Plant blackthorn across the gaps, wake the bog beyond them, sink the ground under anyone who forces a way through, and hold the village for ten minutes until they tire of us. The altar gives twice what it usually does here; feed it.'},
  {title:'Over the Water',seed:6607,style:'islands',enemies:2,diff:'normal',fog:true,goal:{type:'conquer'},
   addB:['boat'],addS:['ghost','flatten'],news:['Boathouse','Ghost Army','Flatten'],
   me:{mana:300,wood:180,huts:2},
@@ -501,7 +506,7 @@ const SCEN=[
   me:{mana:300,wood:220,huts:3},ai:{first:600},
   intro:'Raise the pole and let the people dance. When the merriment is high enough a Queen will be crowned. Keep her safe while she ripens, and then give her to the fire.'},
  {title:'The Wicker God',seed:9901,style:'islands',enemies:2,diff:'normal',fog:true,goal:{type:'conquer'},
-  addB:['god'],addS:['erode','quake'],news:['Wicker God','Erode','Earthquake'],
+  addB:['god'],addS:['quake'],news:['Wicker God','Earthquake'],
   me:{mana:300,wood:300,huts:3},
   intro:'Twelve go into the belly of the ram and the whole world sees it burn. Fill it with strangers and the shaman will shake the earth beneath our enemies.'},
  {title:'Hollow Hills',seed:10433,style:'continent',enemies:2,diff:'normal',fog:true,goal:{type:'conquer'},
@@ -547,7 +552,9 @@ function scen(){return settings.campaign!=null?SCEN[settings.campaign]:null}
 function scenSets(i){const b=new Set(['hut']),sp=new Set();let tomb=false;for(let k=0;k<=i;k++){const L=SCEN[k];(L.addB||[]).forEach(x=>b.add(x));(L.addS||[]).forEach(x=>sp.add(x));if(L.tomb)tomb=true;if(L.all){BUILDABLE.forEach(x=>b.add(x));SP.forEach(x=>sp.add(x.k));tomb=true}}return {b,s:sp,tomb}}
 const allowB=t=>!allowSets||(t==='tomb'?allowSets.tomb:allowSets.b.has(t));
 const allowS=k=>!allowSets||allowSets.s.has(k);
-const CAMP_KEY='wicker-campaign-v1';
+const allowPB=t=>allowB(t)&&!((scen()||{}).lockB||[]).includes(t);
+const CAMP_KEY='wicker-campaign-v1',DEV_KEY='wicker-dev';
+function devMode(){try{return localStorage.getItem(DEV_KEY)==='1'}catch(e){return false}}
 function campProg(){try{const d=JSON.parse(localStorage.getItem(CAMP_KEY));if(d&&typeof d.unlocked==='number')return d}catch(e){}return {unlocked:0,best:{}}}
 function campSave(p){try{localStorage.setItem(CAMP_KEY,JSON.stringify(p))}catch(e){}}
 const DIFF={
@@ -595,6 +602,14 @@ function genWorld(seed,style,nT,opts){opts=opts||{};
   const farPoint=(avoid,tries)=>{let best=null,bs=-1e9;for(let t=0;t<tries;t++){const x=rng()*N,z=rng()*N;let md=1e9;for(const s of avoid)md=Math.min(md,Math.sqrt(d2(x,z,s.x,s.z)));const hh=bil(h,x,z);const sc=md+(hh>.5?6:0);if(sc>bs){bs=sc;best={x,z}}}return best};
   if(opts.centre&&starts.length>2){let best=null,bs=-1e9;const en=starts.slice(1);for(let t=0;t<900;t++){const x=rng()*N,z=rng()*N;let mx=0,mn=1e9;for(const e of en){const d=Math.sqrt(d2(x,z,e.x,e.z));mx=Math.max(mx,d);mn=Math.min(mn,d)}if(mn<34)continue;const sc=-mx+(bil(h,x,z)>.6?6:0);if(sc>bs){bs=sc;best={x,z}}}if(best)starts[0]=best}
   for(const s of starts)plateau(s,9,17,clamp(bil(h,s.x,s.z),2,5));
+  const gateStones=[];if(opts.keep){const P0=starts[0],base=clamp(bil(h,P0.x,P0.z),2,5),R0=20.5,gates=[];for(let k=1;k<starts.length;k++)gates.push(Math.atan2(wd(starts[k].z-P0.z),wd(starts[k].x-P0.x)));
+    if(gates.length>=2){const mx=Math.cos(gates[0])+Math.cos(gates[1]),mz=Math.sin(gates[0])+Math.sin(gates[1]);gates.push(Math.atan2(-mz,-mx))}
+    const adiff=(a,b)=>Math.abs(Math.atan2(Math.sin(a-b),Math.cos(a-b)));
+    for(let dz=-30;dz<=30;dz++)for(let dx=-30;dx<=30;dx++){const d=Math.hypot(dx,dz);if(d>30)continue;const c=wi(Math.round(P0.z)+dz)*N+wi(Math.round(P0.x)+dx);const a=Math.atan2(dz,dx);let ga=1e9;for(const g of gates)ga=Math.min(ga,adiff(a,g)*d);
+      if(d<19)h[c]=Math.max(h[c],1.2);
+      if(ga<2.6&&d>=15){h[c]=lerp(base,Math.max(h[c],1.2),sstep(23,30,d))}
+      else if(d>=17&&d<=24){const bump=Math.max(0,1-Math.abs(d-R0)/3.2);h[c]=Math.max(h[c],base+7.5*bump)}}
+    for(const g of gates)for(const sd of[-1,1]){const a=g+sd*3.6/R0;gateStones.push({x:wrap(P0.x+Math.cos(a)*(R0+3.5)),z:wrap(P0.z+Math.sin(a)*(R0+3.5)),s:1.2,r:a})}}
   const centre=farPoint(starts,500);plateau(centre,6,12,clamp(bil(h,centre.x,centre.z),1.8,4));
   const barrows=[];for(let k=0;k<2;k++){const b=farPoint(starts.concat([centre],barrows),400);barrows.push(b);plateau(b,3.5,8,clamp(bil(h,b.x,b.z),1.5,6))}
   const spots=starts.concat([centre],barrows);
@@ -604,6 +619,7 @@ function genWorld(seed,style,nT,opts){opts=opts||{};
   for(let i=0;i<5200&&tr.length<1100;i++){const x=rng()*N,z=rng()*N;if(tn(x,z)<.52&&rng()>.06)continue;if(okTree(x,z))tr.push({x,z})}
   for(const s of starts){let n=0;for(let t=0;t<300&&n<26;t++){const a=rng()*TAU,r=7+rng()*10,x=wrap(s.x+Math.cos(a)*r),z=wrap(s.z+Math.sin(a)*r);if(okTree(x,z)){tr.push({x,z});n++}}}
   const st=[];for(let i=0;i<4000&&st.length<46;i++){const x=rng()*N,z=rng()*N;if(okTree(x,z)&&rng()<.5)st.push({x,z,s:.7+rng()*.7,r:rng()*TAU})}
+  st.push(...gateStones);
   return {h,starts,centre,barrows,stones:st,trees:tr,tn:Float32Array.from({length:N*N},()=>.92+rng()*.16)};
 }
 
@@ -1130,7 +1146,7 @@ function updProjs(dt){for(let i=projs.length-1;i>=0;i--){const p=projs[i];p.t+=d
   if(f>=1){projs.splice(i,1);if(p.kind==='arrow'){const t=p.tgt;if(t&&t.alive&&d2(x,z,t.x,t.z)<(t.bt?BT[t.bt].s*BT[t.bt].s*.3:1.1))hit(t,p.dmg*(0.85+R()*.3),p.src&&p.src.alive?p.src:null);for(let k=0;k<4;k++)PA.emit(x,y,z,(R()-.5)*2,R()*2,(R()-.5)*2,.25,1,.6,.2,1,.25,4)}else if(p.onHit)p.onHit(wrap(p.tx),wrap(p.tz))}}}
 
 // ---------------- AI ----------------
-function mkAI(i,s){const D=DIFF[settings.diff],P=TRIBES[i].pers||{},SA=(scen()&&scen().ai)||{},war=(P.war||1)*(SA.war||1);return {base:{x:s.x,z:s.z},nextBuild:4+i,nextAtk:SA.first!=null?SA.first+R()*40:(D.first+R()*60)/war,need:Math.max(3,Math.round(D.need/war)),D,int:D.int/war,res:D.res,gap:D.gap*(P.castGap||1)*(SA.gap||1),castT:0,milR:SA.mil??(D.milR+(P.mil||0)),bridge:null,calm:0,siege:0}}
+function mkAI(i,s){const D=DIFF[settings.diff],P=TRIBES[i].pers||{},SA=(scen()&&scen().ai)||{},war=(P.war||1)*(SA.war||1);return {base:{x:s.x,z:s.z},nextBuild:4+i,nextAtk:SA.first!=null?SA.first+(SA.only0?(i-1)*20:R()*40):(D.first+R()*60)/war,need:SA.need??Math.max(3,Math.round(D.need/war)),needInc:SA.needInc??D.needInc,only0:!!SA.only0,D,int:SA.int??D.int/war,res:D.res,gap:D.gap*(P.castGap||1)*(SA.gap||1),castT:0,milR:SA.mil??(D.milR+(P.mil||0)),bridge:null,calm:0,siege:0}}
 function findSpot(T,type){const b=T.ai.base,S=T.stats;for(let t=0;t<90;t++){const a=R()*TAU,r=4.5+R()*Math.min(24,7+S.blds*1.6),v=validSpot(T.id,type,b.x+Math.cos(a)*r,b.z+Math.sin(a)*r);if(!v.err)return v}return null}
 function aiThink(T){const ai=T.ai,S=T.stats,base=ai.base,sh=T.shaman;
   let threat=null;for(const b of blds)if(b.alive&&b.tribe===T.id){const e=enemyNear(b.x,b.z,T.id,11);if(e){threat=e;break}}
@@ -1147,7 +1163,7 @@ function aiThink(T){const ai=T.ai,S=T.stats,base=ai.base,sh=T.shaman;
   if(gt>ai.nextBuild){ai.nextBuild=gt+ai.D.build+R()*2;aiBuild(T)}
   aiTrain(T,army.length);
   if(sh&&sh.st==='idle'&&!threat){const e=enemyNear(sh.x,sh.z,T.id,15);if(e)ai.calm=gt;else if(gt-ai.calm>20&&d2(sh.x,sh.z,base.x,base.z)>18*18){orderUnit(sh,base.x+(R()-.5)*4,base.z+2+R()*3,false)}}
-  if(gt>ai.siege){ai.siege=gt+5;for(const u of army)if(u.st==='idle'&&d2(u.x,u.z,base.x,base.z)>25*25){const b=nearestEnemyBld(u.x,u.z,T.id,26);if(b)orderUnit(u,b.x,b.z,true);else if(!enemyNear(u.x,u.z,T.id,12))orderUnit(u,base.x+(R()-.5)*8,base.z+(R()-.5)*8,false)}}
+  if(gt>ai.siege){ai.siege=gt+5;for(const u of army)if(u.st==='idle'&&d2(u.x,u.z,base.x,base.z)>25*25){const b=nearestEnemyBld(u.x,u.z,T.id,26);if(b&&!(ai.only0&&b.tribe!==0&&!watching))orderUnit(u,b.x,b.z,true);else if(!enemyNear(u.x,u.z,T.id,12))orderUnit(u,base.x+(R()-.5)*8,base.z+(R()-.5)*8,false)}}
   if(ai.wave){const set=new Set(ai.wave.ids),alive=units.filter(u=>u.alive&&set.has(u.id)&&u.tribe===T.id);
     if((ai.wave.n0>=4&&alive.length<ai.wave.n0*TUNE.breakAt)||gt-ai.wave.t>200||!alive.length){if(alive.length&&gt-ai.wave.t<=200){for(const u of alive){orderUnit(u,base.x+(R()-.5)*6,base.z+(R()-.5)*6,false);u.raidT=0}
         if(ai.wave.tgt===0&&!watching)toast(`The ${T.name} attack breaks. Their fighters are running for home.`)}else for(const u of alive)u.raidT=0;ai.wave=null}}
@@ -1168,15 +1184,18 @@ function orderUnit(u,x,z,am,fx,fz){if(u.type==='oss'){u.rcx=wrap(x);u.rcz=wrap(z
 function aiAttack(T,army){const ai=T.ai,base=ai.base;const foes=tribes.filter(o=>o.alive&&o.id!==T.id&&!o.wild);if(!foes.length)return;
   const others=watching?foes:foes.filter(o=>o.id!==0);let pick=(!watching&&tribes[0].alive&&(R()<ai.D.pTarget||!others.length))?tribes[0]:others[(R()*others.length)|0];
   if(settings.diff==='hard'||watching){const avg=foes.reduce((a,o)=>a+o.stats.pop,0)/foes.length;let tot=0;const w=foes.map(o=>{let x=1;if(o.stats.pop>avg*1.3)x+=1.5;if(tribes.some(t=>t.ai&&t!==T&&t.ai.wave&&t.ai.wave.tgt===o.id))x*=.4;tot+=x;return x});let r=R()*tot;pick=foes[0];for(let i=0;i<foes.length;i++){r-=w[i];if(r<=0){pick=foes[i];break}}}
+  if(ai.only0&&!watching){if(!tribes[0].alive)return;pick=tribes[0]}
   let tgt=null,bd=1e9;for(const b of blds)if(b.alive&&b.tribe===pick.id&&!BT[b.bt].inv&&b.bt!=='hedge'){const d=d2(base.x,base.z,b.x,b.z);if(d<bd){bd=d;tgt=b}}
   const tomb=blds.find(b=>b.alive&&b.bt==='tomb'&&b.tribe!==T.id);if(tomb&&R()<.5)tgt=tomb;const oak=blds.find(b=>b.alive&&b.bt==='oak'&&b.tribe!==T.id&&(b.awake||b.hangUntil));if(oak&&R()<.4)tgt=oak;
   if(!tgt){for(const u of units)if(u.alive&&u.tribe===pick.id&&!u.inV){const d=d2(base.x,base.z,u.x,u.z);if(d<bd){bd=d;tgt=u}}}if(!tgt)return;
-  const f=field(tgt.x,tgt.z,false),reach=f[cidx(base.x,base.z)]>=0;
+  const f=field(tgt.x,tgt.z,false),reach=f[cidx(base.x,base.z)]>=0||walkReach(tgt.x,tgt.z,base.x,base.z);
   if(reach){for(const u of army){const a=R()*TAU,r=R()*3;orderUnit(u,tgt.x+Math.cos(a)*r,tgt.z+Math.sin(a)*r,true,tgt.x,tgt.z);u.raidT=gt+150}
     ai.wave={ids:army.map(u=>u.id),n0:army.length,tgt:pick.id,t:gt};
     if(pick.id===0&&!watching){toast(`A horn sounds from the ${T.name} lands: ${army.length} of their fighters are marching on you. Watch the map.`);sfx('horn',1)}
-    const sh=T.shaman;if(sh&&sh.st==='idle'&&T.mana>150)orderUnit(sh,tgt.x,tgt.z,true);ai.nextAtk=gt+ai.int*(.8+R()*.4);ai.need+=ai.D.needInc}
+    const sh=T.shaman;if(sh&&sh.st==='idle'&&T.mana>150)orderUnit(sh,tgt.x,tgt.z,true);ai.nextAtk=gt+ai.int*(ai.only0?1:(.8+R()*.4));ai.need+=ai.needInc??ai.D.needInc}
   else if(allowS('bridge')){ai.bridge={x:tgt.x,z:tgt.z,t:gt};ai.nextAtk=gt+25}else ai.nextAtk=gt+60}
+function walkReach(tx,tz,sx,sz){const seen=new Uint8Array(N*N),c0=cidx(tx,tz),goal=cidx(sx,sz);if(!walk[c0])return false;seen[c0]=1;let qh=0,qt=0;bfsQ[qt++]=c0;
+  while(qh<qt){const c=bfsQ[qh++];if(c===goal)return true;const x=c%N,z=(c/N)|0;for(let i=0;i<4;i++){const n=wi(z+NB[i][1])*N+wi(x+NB[i][0]);if(seen[n]||!walk[n])continue;seen[n]=1;bfsQ[qt++]=n}}return false}
 function aiBridge(T){const ai=T.ai,sh=T.shaman,br=ai.bridge,base=ai.base;if(T.tomb&&T.mana>=SPK.bridge.c&&(T.cd.bridge||0)<=gt){tryCast(T.id,'bridge',br.x,br.z,casterOf(T));ai.bridge=null;ai.nextAtk=gt+5;return}if(!sh||sh.st==='cast')return;if(gt-br.t>150){ai.bridge=null;return}
   const fb=field(base.x,base.z,false),dx=wd(br.x-base.x),dz=wd(br.z-base.z),L=Math.hypot(dx,dz)||1;let last=null;
   for(let t=0;t<=L;t+=1){const x=base.x+dx*t/L,z=base.z+dz*t/L;if(fb[cidx(x,z)]>=0)last={x,z,t};else if(last&&t-last.t>1.5)break}
@@ -1778,7 +1797,7 @@ function drawPreview(){const pc=$('prev'),px=pc.getContext('2d');const tmp=docum
   const land=(()=>{let n=0;for(let c=0;c<N*N;c++)if(!water[c])n++;return Math.round(n/(N*N)*100)})();
   $('prevCap').textContent=`Your tribe is ochre. ${land}% land, ${settings.enemies} rival${settings.enemies>1?'s':''}. Pale marks are the Moot and the hollow hills.`}
 function openMenu(){if(settings.campaign!=null){if(skirmishSettings)Object.assign(settings,skirmishSettings);settings.campaign=null}allowSets=null;applyAllow();showContinue();scene.fog.near=30;scene.fog.far=80;watching=false;document.body.classList.remove('watch');running=false;droneLevel();over=false;inMenu=true;$('menu').hidden=false;for(const id of['top','mini','side','dock'])$(id).hidden=true;hint(null);armed=null;placing=null;$('oSeed').value=settings.seed;buildWorld()}
-function buildWorld(){const SC=scen();const w=genWorld(settings.seed,settings.style,settings.enemies+1,{centre:SC&&SC.centre});world=w;H=w.h;TN=w.tn;
+function buildWorld(){const SC=scen();const w=genWorld(settings.seed,settings.style,settings.enemies+1,{centre:SC&&SC.centre,keep:SC&&SC.keep});world=w;H=w.h;TN=w.tn;
   walk=new Uint8Array(N*N);water=new Uint8Array(N*N);pass=new Uint8Array(N*N);hazU=new Float32Array(N*N);hazType=new Int8Array(N*N);hazOwner=new Int8Array(N*N).fill(-1);hazGrp=new Int32Array(N*N);swamps={};swampSeq=1;hedgeA=new Uint8Array(N*N);bOcc=new Int32Array(N*N);colW=new Float32Array(N*N*3);
   armageddon=false;$('app').classList.remove('arma');scene.fog.color.setHex(0x7f725b);fogOn=false;vis.fill(1);visNow.fill(0);seen.fill(0);wildT=40;
   for(const d of debris)scene.remove(d.m);debris=[];
@@ -1807,7 +1826,7 @@ function buildWorld(){const SC=scen();const w=genWorld(settings.seed,settings.st
 function beginGame(){fogOn=!!settings.fog;if(fogOn){vis.fill(.035);updFog()}startDrone();$('menu').hidden=true;inMenu=false;running=true;paused=false;over=false;speed=1;$('bSpeed').textContent='1×';$('bPause').textContent='Pause';
   for(const id of['top','mini','side','dock'])$(id).hidden=false;const p=tribes[0].shaman;cam.fx=p.x;cam.fz=p.z;cam.dist=30;setSel([]);setTab('spells');resize();
   droneLevel();applyAllow();const SC=scen();if(SC)toast(goalText(SC));else{const fm=Math.round(DIFF[settings.diff].first/60);toast(`Grow your tribe while you can. Rivals usually first attack after about ${fm} minutes.`)}}
-function applyAllow(){for(const t of spTiles)t.hidden=!allowS(t.dataset.k);for(const t of bTiles)t.hidden=!allowB(t.dataset.b)}
+function applyAllow(){for(const t of spTiles)t.hidden=!allowS(t.dataset.k);for(const t of bTiles)t.hidden=!allowPB(t.dataset.b)}
 function goalText(SC){const g=SC.goal;return g.type==='survive'?`Hold out for ${Math.round(g.n/60)} minutes.`:g.type==='captives'?`Hold ${g.n} captives in your folds at once.`:g.type==='queen'?'Crown a May Queen and offer her to the fire.':'Break every rival people.'}
 function beginWatch(){allowSets=null;if(settings.campaign!=null&&skirmishSettings){Object.assign(settings,skirmishSettings)}settings.campaign=null;watching=true;buildWorld();fogOn=false;startDrone();$('menu').hidden=true;inMenu=false;running=true;paused=false;over=false;speed=1;$('bSpeed').textContent='1×';$('bPause').textContent='Pause';
   document.body.classList.add('watch');for(const id of['top','mini'])$(id).hidden=false;for(const id of['side','dock'])$(id).hidden=true;cam.fx=moot.x;cam.fz=moot.z;cam.dist=52;setSel([]);hint(null);resize();droneLevel();
@@ -1819,7 +1838,7 @@ function endWatch(T){over=true;running=false;droneLevel();$('endT').textContent=
 const REJOICE=['There is no first or last!','The harvest shall be fruitful this year.','Come now, rise now, from the forest, from the furrows, from the fields, and live!','Happy day!','Thou livest deliciously!',
   'Sumer is icumen in, lhude sing cuccu!','The barns will be full and the hearths warm.','The old fires are lit on every hill.','The earth is fed, and the earth is grateful.','Dance, for none are left to mourn.','Every furrow sings tonight.'];
 let celebrating=0;
-function openCampaign(){const pr=campProg(),L=$('levels');let h='';SCEN.forEach((sc,i)=>{const lock=i>pr.unlocked,done=pr.best[i]!=null;const bt=done?`Won in ${Math.floor(pr.best[i]/60)} min`:lock?'Locked':'Not yet won';
+function openCampaign(){const pr=campProg(),L=$('levels');let h='';const dev=devMode();$('devMode').checked=dev;SCEN.forEach((sc,i)=>{const lock=i>pr.unlocked&&!dev,done=pr.best[i]!=null;const bt=done?`Won in ${Math.floor(pr.best[i]/60)} min`:lock?'Locked':'Not yet won';
     h+=`<button class="lvl${done?' done':''}${i===pr.unlocked&&!done?' next':''}" data-l="${i}" ${lock?'disabled':''}><b>${i+1}. ${sc.title}</b><span>${bt}</span></button>`});L.innerHTML=h;
   $('campSub').textContent=pr.complete?'The wheel has turned. Every level is yours to play again.':`Twenty years of the wheel, each harder than the last. ${pr.unlocked+1} of 20 open.`;$('menu').hidden=true;$('campaign').hidden=false}
 function showLevel(i){const sc=SCEN[i];if(settings.campaign==null)skirmishSettings=Object.assign({},settings);
@@ -1829,6 +1848,7 @@ function showLevel(i){const sc=SCEN[i];if(settings.campaign==null)skirmishSettin
   $('campaign').hidden=true;$('menu').hidden=true;$('levelIntro').hidden=false}
 $('bCampaign').addEventListener('click',()=>{audio();openCampaign()});
 $('campBack').addEventListener('click',()=>{$('campaign').hidden=true;openMenu()});
+$('devMode').addEventListener('change',e=>{try{localStorage.setItem(DEV_KEY,e.target.checked?'1':'0')}catch(_){}openCampaign()});
 $('levels').addEventListener('click',e=>{const b=e.target.closest('[data-l]');if(!b||b.disabled)return;audio();showLevel(+b.dataset.l)});
 $('liBegin').addEventListener('click',()=>{audio();$('levelIntro').hidden=true;beginGame()});
 $('liBack').addEventListener('click',()=>{$('levelIntro').hidden=true;openMenu();openCampaign()});
@@ -1841,7 +1861,7 @@ function celebrateFrame(){const T=tribes[0];let n=0;for(const u of units){if(!u.
 const DIFFNAME={easy:'Easy',normal:'Normal',hard:'Hard'};
 function endGame(win){clearSave();$('bAgain').textContent='Play this world again';$('bNew').textContent='Choose a new world';$('bNext').hidden=true;
   {const SC=scen();if(SC){const i=settings.campaign;$('bAgain').textContent=win?'Play this level again':'Try again';$('bNew').textContent='Back to the campaign';
-    if(win){const pr=campProg();pr.unlocked=Math.max(pr.unlocked,Math.min(SCEN.length-1,i+1));if(!pr.best[i]||gt<pr.best[i])pr.best[i]=Math.round(gt);if(i===SCEN.length-1)pr.complete=true;campSave(pr);if(i<SCEN.length-1){$('bNext').hidden=false;$('bNext').textContent=`Onward: ${i+2}. ${SCEN[i+1].title}`}}}}over=true;running=false;droneLevel();sfx(win?'built':'die',1);$('endT').textContent=win?'Victory':'Defeat';
+    if(win){if(!devMode()){const pr=campProg();pr.unlocked=Math.max(pr.unlocked,Math.min(SCEN.length-1,i+1));if(!pr.best[i]||gt<pr.best[i])pr.best[i]=Math.round(gt);if(i===SCEN.length-1)pr.complete=true;campSave(pr)}if(i<SCEN.length-1){$('bNext').hidden=false;$('bNext').textContent=`Onward: ${i+2}. ${SCEN[i+1].title}`}}}}over=true;running=false;droneLevel();sfx(win?'built':'die',1);$('endT').textContent=win?'Victory':'Defeat';
   $('endS').textContent=win?(armageddon?'The Moot is quiet. Of all the peoples who walked there, only yours walked away.':'Every rival shaman has been cast out. The world is yours to shape.'):(armageddon?'Your people fell at the Moot. The world goes on without them.':'Your tribe has been wiped from the world. The fields grow over the huts.');
   const m=Math.floor(gt/60),s=Math.floor(gt%60);$('endStats').innerHTML=`<div><b>${DIFFNAME[settings.diff]}</b>difficulty</div><div><b>${m}:${String(s).padStart(2,'0')}</b>time</div><div><b>${stats.casts}</b>spells cast</div><div><b>${stats.killed}</b>enemies slain</div><div><b>${stats.razed}</b>buildings razed</div><div><b>${stats.burned}</b>given to the wicker</div>`;
   $('endT').textContent=win?`Victory · ${DIFFNAME[settings.diff]}`:`Defeat · ${DIFFNAME[settings.diff]}`;
