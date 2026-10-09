@@ -241,7 +241,7 @@ details.help summary{cursor:pointer;color:var(--text);font:14px var(--f-display)
           <li>Send fighters to your oak, your tomb or a hollow hill and they are posted there as guards. Guards stay put and are left out when you select your army.</li>
           <li>A tribe that loses every building, trained unit and its shaman is finished: its last braves are dragged off as captives by whoever broke it. A tribe whose people are all dead hands its empty buildings to the conqueror, with an offering of mana.</li>
           <li>Training buildings turn a brave into a warrior, archer, Oss or balloonist.</li>
-          <li>To cross water, select followers and tap land on the far shore. If you own a boat nearby they board it (six at a time), sail across and walk on to where you tapped. You can also select a boat and tap the land yourself.</li>
+          <li>To cross water, have your shaman raise a Land Bridge from the shore towards the land you want. Anyone can walk it, your enemies included.</li>
           <li>Balloonists drift above the fighting and drop charges. Only other balloonists can reach them.</li>
           <li>Wildmen wander the wilds. They make easy captives.</li>
           <li>Hollow hills lie out in the wilderness. Bring your shaman to one with twenty followers and she is sealed inside for good. The hill becomes a wicker fortress: from it she sees everything and casts anywhere at half the mana. If enemies tear it down she is lost for a minute, then rises at your stone circle, and half your mana goes with her.</li>
@@ -377,7 +377,6 @@ const UT={
   archer:{hp:70,spd:2.2,dmg:11,cd:1.6,rng:8,aggro:8.5,label:'Archer',pl:'archers',ranged:true},
   shaman:{hp:260,spd:2.5,dmg:10,cd:1,rng:1.1,aggro:6,label:'Shaman',pl:'shamans'},
   ghost:{hp:1,spd:2.6,dmg:7,cd:.9,rng:1,aggro:8,label:'Ghost',pl:'ghosts'},
-  boat:{hp:120,spd:3.4,cap:6,label:'Boat',pl:'boats',veh:true},
   balloon:{hp:110,spd:2.8,cap:4,dmg:22,cd:3.2,rng:6.5,aggro:8,label:'Balloonist',pl:'balloonists',veh:true,fly:true,bomb:true},
   wild:{hp:40,spd:1.6,dmg:0,cd:1,rng:.9,aggro:0,label:'Wildman',pl:'wildmen'},
 };
@@ -396,13 +395,12 @@ const BT={
   tomb:{s:3,wood:0,time:1,hp:5000,label:'Tomb Fortress',info:'Your shaman lies sealed here'},
   oak:{s:4,wood:300,time:50,hp:1500,label:"Herne's Oak",info:'Hang your shaman from it for two minutes and the Wild Hunt rides'},
   balloon:{s:4,wood:80,time:26,hp:400,label:'Balloon Works',train:'balloon',mana:60,tt:14,info:'Builds balloons'},
-  boat:{s:3,wood:50,time:18,hp:350,label:'Boathouse',train:'boat',mana:25,tt:10,shore:true,info:'Builds boats; must touch water'},
   wicker:{s:3,wood:80,time:20,hp:300,label:'Wicker Man',site:'wicker',holdN:5,burnT:8,info:'Holds five; burns for mana and a frenzy'},
   reinc:{s:3,wood:0,time:1,hp:1e9,label:'Stone Circle',info:'Your shaman is reborn here',inv:true},
   barrow:{s:3,wood:0,time:1,hp:1e9,label:'Hollow Hill',info:'Seal your shaman inside with twenty followers',inv:true},
   moot:{s:5,wood:0,time:1,hp:1e9,label:'The Moot',info:'Where every people gathers at the end',inv:true}
 };
-const BUILDABLE=['hut','altar','camp','range','osshouse','fold','nest','hedge','maypole','wicker','god','oak','balloon','boat'];
+const BUILDABLE=['hut','altar','camp','range','osshouse','fold','nest','hedge','maypole','wicker','god','oak','balloon'];
 const SP=[
   {k:'blast',n:'Blast',c:25,cd:1.5,r:11,rad:1.8,s:0},
   {k:'lightning',n:'Lightning',c:90,cd:6,r:14,rad:1.2,s:0},
@@ -453,8 +451,7 @@ const ICON={
   fold:'<path d="M3 20V9M21 20V9M3 12h18M3 16h18M8 9v11M13 9v11M17 9v11"/>',
   altar:'<path d="M4 14h16M6 14v6M18 14v6M9 14V8l3-4 3 4v6"/><path d="M5 6l2 2M19 6l-2 2"/>',
   god:'<path d="M8 6c-3 0-4 3-2 4M16 6c3 0 4 3 2 4"/><rect x="9" y="4" width="6" height="5"/><path d="M7 11h10v6H7zM9 17v5M15 17v5M10 11v6M14 11v6"/>',
-  balloonB:'<path d="M12 3a6 6 0 0 1 6 6c0 4-4 7-6 8-2-1-6-4-6-8a6 6 0 0 1 6-6z"/><path d="M10 17l-1 2h6l-1-2M9 19h6v2H9z"/>',
-  boatB:'<path d="M3 15h18l-3 5H6z"/><path d="M12 3v12M12 4l6 9h-6"/>'
+  balloonB:'<path d="M12 3a6 6 0 0 1 6 6c0 4-4 7-6 8-2-1-6-4-6-8a6 6 0 0 1 6-6z"/><path d="M10 17l-1 2h6l-1-2M9 19h6v2H9z"/>'
 };
 
 // =====================================================================================
@@ -493,10 +490,10 @@ const SCEN=[
   addB:['hedge','nest'],addS:['swamp','erode'],lockB:['camp'],news:['Blackthorn Hedge','Rook Tree','Swamp','Erode'],
   me:{mana:400,wood:260,huts:2,warriors:4,manaMult:2},them:{mana:400,warriors:4},ai:{first:150,int:110,need:4,needInc:1,only0:true,mil:.36,cap:70},
   intro:'Two peoples have smelt our smoke, and both are coming for us. We cannot beat them and we have no camp to raise more warriors. But our valley is ringed with crags, and there are only three ways in. Plant blackthorn across the gaps, wake the bog beyond them, sink the ground under anyone who forces a way through, and hold the village for ten minutes until they tire of us. The altar gives twice what it usually does here; feed it.'},
- {title:'Over the Water',seed:6607,style:'islands',enemies:2,diff:'normal',fog:true,goal:{type:'conquer'},
-  addB:['boat'],addS:['ghost','flatten'],news:['Boathouse','Ghost Army','Flatten'],
+ {title:'The High Places',seed:6607,style:'highlands',enemies:2,diff:'normal',fog:true,goal:{type:'conquer'},
+  addS:['ghost','flatten'],news:['Ghost Army','Flatten'],
   me:{mana:300,wood:180,huts:2},
-  intro:'The sea is wide here and the bridges will not reach. Build boats; every crossing carries six. The far shores are thick with people who think the water keeps them safe.'},
+  intro:'Up here the land is stepped like a stair and there is little level ground to build on. Flatten what you need, and send ghosts ahead to draw their spears while the real fighters come up behind.'},
  {title:'Fire from the Sky',seed:7717,style:'continent',enemies:2,diff:'normal',fog:true,goal:{type:'conquer'},
   addB:['balloon'],addS:['whirl'],news:['Balloon Works','Whirlwind'],
   me:{mana:300,wood:180,huts:2},
@@ -655,10 +652,10 @@ function hazardTick(){let ch=false;for(const c of hazList)if(hazU[c]<=gt){hazLis
 // flow fields
 const fcache=new Map(),bfsQ=new Int32Array(N*N);
 const NB=[[1,0],[-1,0],[0,1],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]];
-function field(tx,tz,boat){const c0=cidx(tx,tz),key=boat?c0+N*N:c0;let f=fcache.get(key);if(f&&f.v===tver){f.u=gt;return f.d}
+function field(tx,tz){const c0=cidx(tx,tz),key=c0;let f=fcache.get(key);if(f&&f.v===tver){f.u=gt;return f.d}
   if(fcache.size>48){let ok=null,ou=1e18;for(const [k,v] of fcache)if(v.u<ou){ou=v.u;ok=k}fcache.delete(ok)}
   const d=new Int16Array(N*N).fill(-1);d[c0]=0;let qh=0,qt=0;bfsQ[qt++]=c0;const sx=c0%N,sz=(c0/N)|0;
-  const ok=boat?(n=>{if(water[n]&&!(hazU[n]>gt&&hazType[n]===2))return true;const nx=n%N,nz=(n/N)|0;return Math.max(Math.abs(wd(nx-sx)),Math.abs(wd(nz-sz)))<=4}):(n=>pass[n]===1);
+  const ok=n=>pass[n]===1;
   while(qh<qt){const c=bfsQ[qh++],x=c%N,z=(c/N)|0,dc=d[c]+1;
     for(let i=0;i<8;i++){const nx=wi(x+NB[i][0]),nz=wi(z+NB[i][1]),n=nz*N+nx;if(d[n]>=0||!ok(n))continue;
       if(i>=4&&(!ok(z*N+nx)||!ok(nz*N+x)))continue;d[n]=dc;bfsQ[qt++]=n}}
@@ -683,21 +680,20 @@ function killTree(t){if(!t.alive)return;t.alive=false;tGridDirty=true}
 
 // ---------------- entities ----------------
 function spawnUnit(type,ti,x,z){const d=UT[type];const u={id:nextId++,type,tribe:ti,x:wrap(x),z:wrap(z),hp:d.hp,mhp:d.hp,alive:true,st:'idle',face:R()*TAU,cd:0,think:R(),gx:wrap(x),gz:wrap(z),anim:R()*10,pass:d.veh?[]:null,tx:wrap(x),tz:wrap(z),fx:wrap(x),fz:wrap(z),hitT:-9,swing:-9,shield:0};units.push(u);return u}
-function unitY(u){if(u.air)return u.ay;const h=hAt(u.x,u.z);if(u.type==='boat')return Math.max(0,h)+.02;if(u.type==='balloon')return Math.max(h,0)+5;return h}
+function unitY(u){if(u.air)return u.ay;const h=hAt(u.x,u.z);if(u.type==='balloon')return Math.max(h,0)+5;return h}
 function removeUnit(u){u.alive=false;u.removed=true;if(u.sel)deselect(u)}
 function deselect(e){e.sel=false;sel=sel.filter(o=>o!==e);dockDirty=true}
 function setTarget(u,x,z,fx,fz){u.tx=wrap(x);u.tz=wrap(z);u.fx=wrap(fx===undefined?x:fx);u.fz=wrap(fz===undefined?z:fz);u.useField=0;u.stuck=0}
 
-function moveStep(u,dt){const D=UT[u.type];const fz=tribes[u.tribe]&&tribes[u.tribe].frenzyUntil>gt;const spd=D.spd*(fz?TUNE.frenzySpeed:1)*(u.carry?TUNE.ossCarrySpeed:1);const boat=u.type==='boat';
+function moveStep(u,dt){const D=UT[u.type];const fz=tribes[u.tribe]&&tribes[u.tribe].frenzyUntil>gt;const spd=D.spd*(fz?TUNE.frenzySpeed:1)*(u.carry?TUNE.ossCarrySpeed:1);
   const dx=wd(u.tx-u.x),dz=wd(u.tz-u.z),dd=Math.hypot(dx,dz);if(dd<.2)return 1;
   let wx=dx,wz=dz;
-  if(!D.fly&&dd>2&&(dd>10||u.useField>gt||boat)){const f=field(u.fx,u.fz,boat),c=cidx(u.x,u.z),dc=f[c];
+  if(!D.fly&&dd>2&&(dd>10||u.useField>gt)){const f=field(u.fx,u.fz),c=cidx(u.x,u.z),dc=f[c];
     if(dc>0){const x=c%N,z=(c/N)|0;let best=dc,bn=-1;
       for(let i=0;i<8;i++){const nx=wi(x+NB[i][0]),nz=wi(z+NB[i][1]),n=nz*N+nx,v=f[n];if(v<0||v>=best)continue;if(i>=4&&(f[z*N+nx]<0||f[nz*N+x]<0))continue;best=v;bn=n}
-      if(bn>=0){if(boat&&!water[bn])return 3;wx=wd((bn%N)+.5-u.x);wz=wd(((bn/N)|0)+.5-u.z)}}
-    else if(dc===0&&boat&&!water[c])return 3}
+      if(bn>=0){wx=wd((bn%N)+.5-u.x);wz=wd(((bn/N)|0)+.5-u.z)}}}
   const l=Math.hypot(wx,wz)||1,st=Math.min(spd*dt,dd);let nx=u.x+wx/l*st,nz=u.z+wz/l*st;
-  if(!D.fly){const okc=boat?(c=>water[c]===1):(c=>pass[c]===1);const cur=cidx(u.x,u.z);
+  if(!D.fly){const okc=c=>pass[c]===1;const cur=cidx(u.x,u.z);
     if(okc(cur)&&!okc(cidx(nx,nz))){if(okc(cidx(nx,u.z)))nz=u.z;else if(okc(cidx(u.x,nz)))nx=u.x;else{nx=u.x;nz=u.z}}
     if(nx===u.x&&nz===u.z){u.stuck=(u.stuck||0)+dt;if(dd<=10&&u.useField<=gt)u.useField=gt+4;if(u.stuck>1.4){u.stuck=0;return 2}}else u.stuck=0}
   u.x=wrap(nx);u.z=wrap(nz);u.face=Math.atan2(wx,wz);u.moving=true;return 0}
@@ -735,7 +731,6 @@ const s=BT[type].s;const cx0=Math.floor(x-s/2+.5),cz0=Math.floor(z-s/2+.5);let m
   if(mx-mn>3.2)return {err:'Too steep to build on'};if(mn<.05)return {err:'Too close to the waterline'};
   if(type==='oak'){let n=0;const cx=cx0+s/2,cz=cz0+s/2;for(const t of trees)if(t.alive&&d2(cx,cz,t.x,t.z)<64)n++;if(n<8)return {err:"Herne's Oak must stand in deep woodland"}}
   if(type==='altar'){let n=0;const cx=cx0+s/2,cz=cz0+s/2;for(const t of trees)if(t.alive&&d2(cx,cz,t.x,t.z)<36)n++;if(n<3)return {err:'A forest altar must stand among trees'}}
-  if(BT[type].shore){let ok=false;for(let dz=-2;dz<=s+1&&!ok;dz++)for(let dx=-2;dx<=s+1;dx++){if(dx>=0&&dz>=0&&dx<s&&dz<s)continue;if(water[wi(cz0+dz)*N+wi(cx0+dx)]){ok=true;break}}if(!ok)return {err:'A boathouse must touch water'}}
   return {cx0,cz0,x:wrap(cx0+s/2),z:wrap(cz0+s/2)}}
 function placeBuilding(ti,type,spot,instant){const D=BT[type],s=D.s,{cx0,cz0}=spot;
   let sum=0,n=0;for(let dz=0;dz<=s;dz++)for(let dx=0;dx<=s;dx++){sum+=H[wi(cz0+dz)*N+wi(cx0+dx)];n++}
@@ -844,7 +839,6 @@ function getFreeBrave(T,x,z){let best=null,bd=1e9;
   for(const b of blds)if(b.alive&&b.tribe===T.id&&b.bt==='hut'&&b.occ>0){const d=d2(x,z,b.x,b.z);if(d<bd){bd=d;hb=b}}
   if(hb){hb.occ--;return spawnUnit('brave',T.id,hb.dx,hb.dz)}return null}
 function produce(b){const type=BT[b.bt].train,T=tribes[b.tribe];
-  if(type==='boat'){const w=nearestCell(b.x,b.z,5,c=>water[c]===1);if(!w){T.mana+=BT.boat.mana;if(b.tribe===0)toast('No open water beside the boathouse');return}spawnUnit('boat',b.tribe,w.x,w.z);return}
   const u=spawnUnit(type,b.tribe,b.dx,b.dz);const gx=b.dx+(R()-.5)*3,gz=b.dz+1+R()*2;u.st='move';setTarget(u,gx,gz);u.gx=wrap(gx);u.gz=wrap(gz);
   for(let i=0;i<8;i++)PA.emit(u.x,hAt(u.x,u.z)+.5,u.z,(R()-.5),1+R()*1.5,(R()-.5),.6,.9,.8,.4,1,.3,-1)}
 function unload(v){if(!v.pass||!v.pass.length)return;const dest=v.dest;const lf=dest?field(dest.x,dest.z,false):null;
@@ -853,24 +847,8 @@ function unload(v){if(!v.pass||!v.pass.length)return;const dest=v.dest;const lf=
   const ps=v.pass.slice();v.pass.length=0;for(const u of ps){u.inV=null;u.x=wrap(c.x+(R()-.5)*1.2);u.z=wrap(c.z+(R()-.5)*1.2);u.st='idle';u.gx=u.x;u.gz=u.z;u.think=1.5;u.order=null}
   if(dest&&d2(c.x,c.z,dest.x,dest.z)>4){if(dest.am){for(const u of ps)orderUnit(u,dest.x+(R()-.5)*3,dest.z+(R()-.5)*3,true,dest.x,dest.z)}else orderMove(ps,dest.x,dest.z)}
   v.dest=null;dockDirty=true}
-function findLanding(v,x,z){const lf=field(x,z,false),bf=field(v.x,v.z,true);let best=null,bd=1e9;const cx=Math.floor(x),cz=Math.floor(z);
-  for(let dz=-32;dz<=32;dz++)for(let dx=-32;dx<=32;dx++){const c=wi(cz+dz)*N+wi(cx+dx);if(!water[c]||bf[c]<0)continue;const px=c%N,pz=(c/N)|0;let ld=1e9;
-    for(let i=0;i<8;i++){const n=wi(pz+NB[i][1])*N+wi(px+NB[i][0]);if(!water[n]&&lf[n]>=0&&lf[n]<ld)ld=lf[n]}
-    if(ld===1e9)continue;const sc=ld*3+bf[c]*.25;if(sc<bd){bd=sc;best={x:wrap(cx+dx+.5),z:wrap(cz+dz+.5)}}}
-  return best}
 function sendVehicle(v,x,z,am){v.dest={x:wrap(x),z:wrap(z),am:!!am};
-  if(v.type==='balloon'){v.st='move';setTarget(v,x,z);v.unloadArrive=!water[cidx(x,z)];return true}
-  if(water[cidx(x,z)]){v.st='move';setTarget(v,x,z);v.unloadArrive=false;v.dest=null;return true}
-  const L=findLanding(v,x,z);if(!L){v.dest=null;return false}v.st='move';setTarget(v,L.x,L.z);v.unloadArrive=true;return true}
-function transportOrder(grp,x,z){const ground=grp.filter(u=>!UT[u.type].veh);if(!ground.length)return false;
-  let boats=grp.filter(u=>u.type==='boat'&&u.pass.length<6);
-  if(!boats.length){const c=ground[0];const cand=[];for(const v of units)if(v.alive&&v.tribe===ground[0].tribe&&v.type==='boat'&&v.st==='idle'&&v.pass.length<6&&d2(c.x,c.z,v.x,v.z)<40*40)cand.push(v);
-    cand.sort((a,b)=>d2(c.x,c.z,a.x,a.z)-d2(c.x,c.z,b.x,b.z));boats=cand}
-  if(!boats.length)return false;let i=0;
-  for(const v of boats){if(i>=ground.length)break;const take=ground.slice(i,i+6-v.pass.length);i+=take.length;v.ferry={x,z,n:take.length+v.pass.length,until:gt+25};v.st='idle';
-    for(const u of take){u.st='board';u.veh=v;u.tgt=null;u.stuck=0;u.order=null;u.cmd=true}}
-  if(i<ground.length&&ground[0].tribe===0)toast(`${ground.length-i} followers could not fit in a boat and stay ashore`);
-  return true}
+  v.st='move';setTarget(v,x,z);v.unloadArrive=!water[cidx(x,z)];return true}
 
 // ---------------- unit behaviour ----------------
 function updUnit(u,dt){const D=UT[u.type],T=tribes[u.tribe];
@@ -884,13 +862,11 @@ function updUnit(u,dt){const D=UT[u.type],T=tribes[u.tribe];
   if(u.hyp&&u.hyp.until<gt){const o=u.hyp.orig;u.hyp=null;convertUnit(u,o)}
   if(u.listen>gt)return;
   const c=cidx(u.x,u.z);
-  if(!D.fly&&u.type!=='boat'){
+  if(!D.fly){
     if(hazU[c]>gt&&(hazType[c]===2||(hazOwner[c]!==u.tribe&&u.tribe!==wildId))){if(hazType[c]===1){for(let i=0;i<8;i++)PN.emit(u.x,hAt(u.x,u.z)+.1,u.z,(R()-.5)*.6,.5+R(),(R()-.5)*.6,1.2,.18,.22,.1,.8,.5,-.1);swampKill(c)}if(hazType[c]===2)for(let i=0;i<6;i++)PA.emit(u.x,hAt(u.x,u.z)+.3,u.z,(R()-.5),1+R()*2,(R()-.5),.5,1,.5,.1,1,.5,-1);killUnit(u,null);return}
     if(hAt(u.x,u.z)<-.25){killUnit(u,null);return}}
-  if(u.type==='boat'&&!water[c]&&hAt(u.x,u.z)>.8){dmgUnit(u,30*dt,null);if(!u.alive)return}
   if(u.type==='shaman'&&u.hp<u.mhp)u.hp=Math.min(u.mhp,u.hp+3*dt);
   if(T.frenzyUntil>gt&&!D.veh&&R()<dt*.6)PA.emit(u.x,unitY(u)+.6,u.z,(R()-.5)*.3,1,(R()-.5)*.3,.6,1,.35,.1,1,.22,-1);
-  if(D.veh&&u.st==='idle'&&u.ferry){const f=u.ferry;if(u.pass.length>=f.n||gt>f.until){u.ferry=null;if(u.pass.length&&!sendVehicle(u,f.x,f.z)&&u.tribe===0)toast('The boat cannot find a landing there')}}
   switch(u.st){
   case 'idle':u.think-=dt;if(u.think<=0){u.think=.6+R()*.4;idleThink(u,D,T)}break;
   case 'move':case 'amove':{
@@ -932,7 +908,7 @@ function updUnit(u,dt){const D=UT[u.type],T=tribes[u.tribe];
     else{b.trainee=true;b.tt=BT[b.bt].tt;b.claim=null;removeUnit(u)}
     break}
   case 'board':{const v=u.veh;if(!v||!v.alive||v.tribe!==u.tribe||v.pass.length>=UT[v.type].cap){u.st='idle';break}
-    const dd=Math.sqrt(d2(u.x,u.z,v.x,v.z));const lim=v.type==='boat'?2.8:1.3;
+    const dd=Math.sqrt(d2(u.x,u.z,v.x,v.z));const lim=1.3;
     if(dd<=lim||(dd<3.6&&u.stuck>.6)){u.inV=v;v.pass.push(u);u.st='idle';if(u.sel)deselect(u);dockDirty=true;break}
     u.tx=v.x;u.tz=v.z;u.fx=v.x;u.fz=v.z;const r=moveStep(u,dt);if(r===2){if(dd<3.6){u.inV=v;v.pass.push(u);u.st='idle';if(u.sel)deselect(u);dockDirty=true}else u.st='idle'}
     break}
@@ -1177,7 +1153,7 @@ function aiBuild(T){const S=T.stats,ai=T.ai;if(S.sites>=2)return;let want=null;c
   S.b=realB;if(!want||!allowB(want))return;if(T.wood<BT[want].wood){T.woodGoal=Math.max(120,BT[want].wood+30);return}
   const sp=findSpot(T,want);if(sp)placeBuilding(T.id,want,sp)}
 function aiTrain(T,armyN){const S=T.stats,ai=T.ai;if(S.braves<6)return;const target=Math.floor(S.pop*(ai.milR+(T.mana>1500?.15:0)));if(armyN+S.queued>=target)return;
-  if(armageddon)return;const opts=[];for(const b of blds)if(b.alive&&b.done&&b.tribe===T.id&&BT[b.bt].train&&b.bt!=='boat'&&b.q<2)opts.push(b);if(!opts.length)return;
+  if(armageddon)return;const opts=[];for(const b of blds)if(b.alive&&b.done&&b.tribe===T.id&&BT[b.bt].train&&b.q<2)opts.push(b);if(!opts.length)return;
   const w=(TRIBES[T.id].pers||{}).train||{camp:.4,range:.3,osshouse:.22,balloon:.1};let tot=0;for(const b of opts)tot+=w[b.bt];let r=R()*tot,pick=opts[0];for(const b of opts){r-=w[b.bt];if(r<=0){pick=b;break}}
   const cost=BT[pick.bt].mana;if(T.mana>=cost+ai.res){T.mana-=cost;pick.q++}}
 function orderUnit(u,x,z,am,fx,fz){if(u.type==='oss'){u.rcx=wrap(x);u.rcz=wrap(z)}u.st=am?'amove':'move';setTarget(u,x,z,fx,fz);u.order=am?'amove':null;u.otx=u.tx;u.otz=u.tz;u.ofx=u.fx;u.ofz=u.fz;u.gx=u.tx;u.gz=u.tz;u.tgt=null;u.scan=0}
@@ -1289,9 +1265,9 @@ function sim(dt){gt+=dt;
   cleanT-=dt;if(cleanT<=0){cleanT=2;units=units.filter(u=>u.alive);for(const b of blds)if(!b.alive)bById.delete(b.id);blds=blds.filter(b=>b.alive);if(trees.length>treeCap*1.6)trees=trees.filter(t=>t.alive)}}
 function separation(){for(const arr of grid){const n=Math.min(arr.length,90);if(n<2)continue;
   for(let i=0;i<n;i++){const a=arr[i];if(a.air||a.type==='balloon')continue;
-    for(let j=i+1;j<n;j++){const b=arr[j];if(b.air||b.type==='balloon'||(a.type==='boat')!==(b.type==='boat'))continue;let dx=wd(b.x-a.x),dz=wd(b.z-a.z);const dd=dx*dx+dz*dz,lim=a.type==='boat'?1.6:.16;
+    for(let j=i+1;j<n;j++){const b=arr[j];if(b.air||b.type==='balloon')continue;let dx=wd(b.x-a.x),dz=wd(b.z-a.z);const dd=dx*dx+dz*dz,lim=.16;
       if(dd<lim&&dd>1e-6){const d=Math.sqrt(dd),p=(Math.sqrt(lim)-d)*.25/d;dx*=p;dz*=p;
-        if(a.type==='boat'||pass[cidx(a.x-dx,a.z-dz)]){a.x=wrap(a.x-dx);a.z=wrap(a.z-dz)}if(b.type==='boat'||pass[cidx(b.x+dx,b.z+dz)]){b.x=wrap(b.x+dx);b.z=wrap(b.z+dz)}}}}}}
+        if(pass[cidx(a.x-dx,a.z-dz)]){a.x=wrap(a.x-dx);a.z=wrap(a.z-dz)}if(pass[cidx(b.x+dx,b.z+dz)]){b.x=wrap(b.x+dx);b.z=wrap(b.z+dz)}}}}}}
 function regrow(){let alive=0;for(const t of trees)if(t.alive)alive++;if(alive>=treeCap||!alive)return;
   for(let k=0;k<2;k++){const t=trees[(R()*trees.length)|0];if(!t||!t.alive)continue;const a=R()*TAU,r=1.2+R()*2,x=wrap(t.x+Math.cos(a)*r),z=wrap(t.z+Math.sin(a)*r),c=cidx(x,z),h=hAt(x,z);
     if(h>.8&&h<9.5&&walk[c]&&!bOcc[c]&&!(hazU[c]>gt)){trees.push({x,z,wood:TUNE.woodPerTree,alive:true,sc:.8+R()*.45,tint:.85+R()*.25,born:gt});tGridDirty=true}}}
@@ -1301,7 +1277,7 @@ function wildSpot(){for(let t=0;t<60;t++){const x=R()*N,z=R()*N,c=cidx(x,z);if(!
 function wildTick(){if(armageddon||gt<wildT)return;wildT=gt+TUNE.wildEvery;let n=0;for(const u of units)if(u.alive&&u.tribe===wildId)n++;if(n>=TUNE.wildMax)return;const p=wildSpot();if(!p)return;const k=2+(R()*2|0);for(let i=0;i<k;i++)spawnWild(p.x+(R()-.5)*2,p.z+(R()-.5)*2)}
 function updFog(){if(!fogOn)return;visNow.fill(0);const T=tribes[0];if(T&&T.tomb){visNow.fill(1);seen.fill(1);return}
   const mark=(x,z,r)=>{const cx=Math.floor(x),cz=Math.floor(z),r2=r*r;for(let dz=-r;dz<=r;dz++){const w=Math.floor(Math.sqrt(r2-dz*dz)),row=wi(cz+dz)*N;for(let dx=-w;dx<=w;dx++){const c=row+wi(cx+dx);visNow[c]=1;seen[c]=1}}};
-  for(const u of units)if(u.alive&&u.tribe===0&&!u.inV)mark(u.x,u.z,u.type==='shaman'?11:u.type==='balloon'?13:u.type==='boat'?9:7);
+  for(const u of units)if(u.alive&&u.tribe===0&&!u.inV)mark(u.x,u.z,u.type==='shaman'?11:u.type==='balloon'?13:7);
   for(const b of blds)if(b.alive&&b.tribe===0)mark(b.x,b.z,b.bt==='nest'&&b.done?TUNE.nestSight:8)}
 const isVis=(x,z)=>!fogOn||visNow[cidx(x,z)]===1,seenAt=(x,z)=>!fogOn||seen[cidx(x,z)]===1;
 function invokeArma(ti){const T=tribes[ti];if(!allowS('arma'))return false;if(armageddon){if(ti===0)toast('Armageddon has already begun');return false}
@@ -1318,7 +1294,7 @@ function startArma(){armageddon=true;$('app').classList.add('arma');scene.fog.co
   for(const u of units)if(u.alive&&u.tribe===wildId)removeUnit(u);
   for(const v of units)if(v.alive&&v.pass&&v.pass.length){for(const p of v.pass){p.inV=null;p.x=v.x;p.z=v.z;p.st='idle'}v.pass.length=0;v.dest=null;v.ferry=null}
   const lf=field(moot.x,moot.z,false);
-  for(const u of units){if(!u.alive||u.tribe===wildId||u.type==='boat')continue;
+  for(const u of units){if(!u.alive||u.tribe===wildId)continue;
     if(u.type!=='balloon'&&lf[cidx(u.x,u.z)]<0){const a=R()*TAU,r=5+R()*7,c=nearestCell(moot.x+Math.cos(a)*r,moot.z+Math.sin(a)*r,5,c=>pass[c]===1&&lf[c]>=0);if(c){u.x=c.x;u.z=c.z;u.air=false;for(let i=0;i<6;i++)PA.emit(u.x,hAt(u.x,u.z)+.5,u.z,(R()-.5),1+R()*2,(R()-.5),.6,1,.3,.15,1,.4,-1)}}
     orderUnit(u,moot.x+(R()-.5)*6,moot.z+(R()-.5)*6,true,moot.x,moot.z);u.cmd=false}
   if(placing)unplace();toast('Armageddon. The huts are burning, and every soul walks to the Moot.')}
@@ -1376,7 +1352,6 @@ const UMOD={
   archer:()=>({t:[P(cyl(.11,.2,.46),WT,0,.23,0)],f:[P(new C.SphereGeometry(.11,6,5),SKIN,0,.57,0),P(new C.ConeGeometry(.14,.2,6),0x3f5a35,0,.71,0),P(bowG(),WOOD,.2,.38,.05),P(new C.BoxGeometry(.08,.28,.08),WOOD,0,.4,-.16)]}),
   shaman:()=>{const f=[P(new C.SphereGeometry(.12,6,5),SKIN,0,.73,0),P(cyl(.025,.03,1.1,5),WOOD,.28,.55,0),P(new C.SphereGeometry(.07,6,5),0xd8cbb0,.28,1.13,0)];
     for(const sd of[-1,1]){f.push(P(new C.ConeGeometry(.025,.42,4),BONE,sd*.11,1.0,0,0,0,-sd*.5));f.push(P(new C.ConeGeometry(.018,.2,4),BONE,sd*.2,1.08,0,0,0,-sd*1.1));f.push(P(new C.ConeGeometry(.018,.18,4),BONE,sd*.13,1.12,.06,-.4,0,-sd*.3))}return {t:[P(cyl(.13,.27,.62),WT,0,.31,0)],f}},
-  boat:()=>({t:[P(new C.BoxGeometry(.7,.6,.04),WT,0,.78,0)],f:[P(new C.BoxGeometry(.75,.26,1.7),WOOD,0,.08,0),P(new C.BoxGeometry(.55,.1,1.4),0x5a3b22,0,.22,0),P(cyl(.03,.03,1.1,4),WOOD,0,.6,0)]}),
   balloon:()=>{const f=[P(new C.BoxGeometry(.42,.3,.42),WOOD,0,.15,0)];for(const sx of[-1,1])for(const sz of[-1,1])f.push(P(cyl(.012,.012,1.05,3),0x4a3a28,sx*.18,.8,sz*.18));return {t:[P(new C.SphereGeometry(.62,10,8),WT,0,1.55,0)],f}},
 };
 UMOD.ghost=UMOD.warrior;
@@ -1422,7 +1397,6 @@ const BMOD={
     f.push(P(new C.BoxGeometry(.5,1.6,.4),0x9b7b48,0,1.8,0),P(new C.BoxGeometry(1.6,.22,.22),0x6e5530,0,2.3,0),P(new C.BoxGeometry(.45,.5,.45),0x9b7b48,0,2.85,0),P(new C.ConeGeometry(.04,.3,4),BONE,-.15,3.2,0,0,0,.5),P(new C.ConeGeometry(.04,.3,4),BONE,.15,3.2,0,0,0,-.5));
     return {t:[P(new C.BoxGeometry(.06,.6,.5),WT,1.95,1.7,0),P(new C.BoxGeometry(.06,.6,.5),WT,-1.95,1.7,0),P(new C.BoxGeometry(.5,.6,.06),WT,0,1.7,1.95)],f}},
   balloon:()=>{const f=[P(new C.BoxGeometry(3.4,.3,3.4),0x6b4a2c,0,.15,0),P(new C.BoxGeometry(.6,.45,.6),WOOD,0,.5,0)];for(const sx of[-1,1])for(const sz of[-1,1])f.push(P(cyl(.08,.08,2,4),WOOD,sx*1.2,1.1,sz*1.2));return {t:[P(new C.SphereGeometry(1.15,10,6,0,TAU,0,Math.PI/2),WT,0,2,0)],f}},
-  boat:()=>({t:[P(new C.BoxGeometry(2.7,.12,1.7),WT,0,1.55,.6,-.75),P(new C.BoxGeometry(2.7,.12,1.7),WT,0,1.55,-.6,.75)],f:[P(new C.BoxGeometry(2.8,.25,2.8),0x6b4a2c,0,.12,0),P(new C.BoxGeometry(2.6,1,.12),WOOD,0,.75,-1.2),P(cyl(.06,.06,1.6,4),WOOD,1.2,.9,1.1),P(cyl(.06,.06,1.6,4),WOOD,-1.2,.9,1.1)]}),
   wicker:()=>{const wk=0x9b7b48,dk=0x6e5530;return {t:[P(new C.BoxGeometry(1.16,.26,.66),WT,0,2.0,0),P(new C.BoxGeometry(.04,.5,.36),WT,0,2.45,.34)],f:[P(new C.BoxGeometry(2.6,.25,2.6),0x3e2f22,0,.12,0),P(new C.BoxGeometry(.34,1.7,.34),wk,-.38,1.0,0),P(new C.BoxGeometry(.34,1.7,.34),wk,.38,1.0,0),P(new C.BoxGeometry(1.1,1.4,.6),wk,0,2.45,0),P(new C.BoxGeometry(2.6,.28,.3),dk,0,2.95,0),P(new C.BoxGeometry(.6,.7,.6),wk,0,3.55,0),P(new C.BoxGeometry(.1,.5,.1),dk,-1.25,2.75,0),P(new C.BoxGeometry(.1,.5,.1),dk,1.25,2.75,0),P(new C.ConeGeometry(.05,.3,4),BONE,-.22,4.0,0,0,0,.4),P(new C.ConeGeometry(.05,.3,4),BONE,.22,4.0,0,0,0,-.4)]}},
   barrow:()=>{const g=new C.SphereGeometry(1.75,10,6,0,TAU,0,Math.PI/2);g.scale(1,.55,1);return {t:[P(new C.BoxGeometry(.22,.22,.22),WT,0,1.02,0)],f:[P(g,0x4b5532,0,0,0),P(new C.BoxGeometry(.3,1,.3),0x67645c,-.45,.5,1.3),P(new C.BoxGeometry(.3,1,.3),0x67645c,.45,.5,1.3),P(new C.BoxGeometry(1.35,.24,.62),0x5d5a53,0,1.1,1.3),P(new C.BoxGeometry(.6,.72,.1),0x0f0c0a,0,.36,1.38)]}},
   moot:()=>{const f=[];for(let i=0;i<12;i++){const a=i/12*TAU,h=i%3?1.25:1.7;f.push(P(new C.BoxGeometry(.38,h,.3),0x6f6b62,Math.cos(a)*2.3,h/2,Math.sin(a)*2.3,0,-a,0))}return {t:[P(new C.BoxGeometry(1.3,.32,.8),WT,0,.16,0)],f}},
@@ -1433,7 +1407,7 @@ const gMatT=new C.MeshLambertMaterial({color:0xffffff,transparent:true,opacity:.
 const FRENZY_C=new C.Color(1,.35,.1),WHITE_C=new C.Color(1,1,1),SHIELD_C=new C.Color(.6,.95,1),_c=new C.Color();
 function inst(g,m,cap){const im=new C.InstancedMesh(g,m,cap);im.instanceMatrix.setUsage(C.DynamicDrawUsage);im.setColorAt(0,WHITE_C);im.count=0;im.frustumCulled=false;scene.add(im);return im}
 function mkPair(def,cap,ghost){const d=def();return {t:inst(merge(d.t),ghost?gMatT:matT,cap),f:inst(merge(d.f),ghost?gMatF:matF,cap),n:0,cap}}
-const UCAP={queen:8,hunter:40,brave:700,warrior:360,oss:240,captive:120,archer:300,shaman:8,ghost:120,boat:60,balloon:60,wild:200};
+const UCAP={queen:8,hunter:40,brave:700,warrior:360,oss:240,captive:120,archer:300,shaman:8,ghost:120,balloon:60,wild:200};
 const UM={};for(const k in UMOD)UM[k]=mkPair(UMOD[k],UCAP[k],k==='ghost');
 const BM={};for(const k in BMOD)BM[k]=mkPair(BMOD[k],k==='reinc'||k==='barrow'||k==='moot'||k==='tomb'?8:k==='hut'?180:k==='hedge'?600:60);
 const SIL=inst(merge([P(cyl(.09,.15,.42,5),0xffffff,0,.21,0),P(new C.SphereGeometry(.1,6,5),0xffffff,0,.53,0)]),new C.MeshBasicMaterial({vertexColors:true}),200);
@@ -1494,7 +1468,7 @@ function drawEntities(){
     if(u.moving)y+=Math.abs(Math.sin(gt*11+u.anim))*.07;
     if(u.chop)y+=Math.abs(Math.sin(gt*8+u.anim))*.05;
     if(gt-u.swing<.18){ox=Math.sin(u.face)*.13;oz=Math.cos(u.face)*.13}
-    if(u.type==='balloon'){y+=Math.sin(gt*1.5+u.anim)*.15}else if(u.type==='boat')y+=Math.sin(gt*2+u.anim)*.04;
+    if(u.type==='balloon'){y+=Math.sin(gt*1.5+u.anim)*.15}
     if(u.air)yaw+=gt*9;
     const i=M.n++;place(M.t,i,rx+ox,y,rz+oz,yaw,sc);place(M.f,i,rx+ox,y,rz+oz,yaw,sc);
     _c.copy(tribes[u.tribe].c);if(gt-u.hitT<.12)_c.setRGB(1,1,1);else if(tribes[u.tribe].frenzyUntil>gt)_c.lerp(FRENZY_C,.25+.15*Math.sin(gt*9+u.anim));else if(u.shield>gt)_c.lerp(SHIELD_C,.5+.15*Math.sin(gt*5));if(u.hyp)_c.lerp(WHITE_C,.3+.3*Math.sin(gt*7));
@@ -1523,7 +1497,7 @@ function drawEntities(){
   let sn=0;for(const st of stones){const rx=wd(st.x-cam.fx),rz=wd(st.z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2||!seenAt(st.x,st.z)||sn>=80)continue;place(SM,sn,rx,hAt(st.x,st.z)-r2*K-.1,rz,st.r,st.s);const fv=fogOn?Math.max(.42,vis[cidx(st.x,st.z)]):1;_c.setRGB(fv,fv,fv);SM.setColorAt(sn,_c);sn++}
   fin(SM,sn);
   let rn=0;for(const e of sel){if(rn>=300)break;const rx=wd(e.x-cam.fx),rz=wd(e.z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2)continue;
-    if(e.bt){place(RM,rn,rx,hAt(e.x,e.z)-r2*K+.08,rz,0,BT[e.bt].s*.85,.01)}else{const y=e.type==='balloon'||e.type==='boat'?unitY(e)-(e.type==='balloon'?0:0):unitY(e);place(RM,rn,rx,y-r2*K+.06,rz,0,e.type==='shaman'?1.3:UT[e.type].veh?2:1,.01)}
+    if(e.bt){place(RM,rn,rx,hAt(e.x,e.z)-r2*K+.08,rz,0,BT[e.bt].s*.85,.01)}else{const y=unitY(e);place(RM,rn,rx,y-r2*K+.06,rz,0,e.type==='shaman'?1.3:UT[e.type].veh?2:1,.01)}
     _c.setRGB(.85,.95,1);RM.setColorAt(rn,_c);rn++}
   fin(RM,rn)}
 let hoverSX=-1,hoverSY=-1,hoverMouse=false;
@@ -1542,7 +1516,7 @@ function toScreen(rx,y,rz){_v.set(rx,y,rz).project(camera);return [(_v.x+1)/2*cw
 function bar(x,y,w,f,col){ctx.fillStyle='rgba(0,0,0,.55)';ctx.fillRect(x-w/2-1,y-1,w+2,5);ctx.fillStyle=col;ctx.fillRect(x-w/2,y,w*clamp(f,0,1),3)}
 function drawOverlay(){ctx.clearRect(0,0,cw,ch);if(!tribes.length)return;
   for(const u of units){if(!u.alive||u.inV)continue;if(!u.sel&&gt-u.hitT>2.5&&!(u.type==='queen'&&u.tribe===0))continue;if(u.tribe!==0&&!isVis(u.x,u.z))continue;const rx=wd(u.x-cam.fx),rz=wd(u.z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2)continue;
-    const top=u.type==='balloon'?2.4:u.type==='boat'?1.4:u.type==='shaman'?2:1.15;const [sx,sy,ok]=toScreen(rx,unitY(u)-r2*K+top,rz);if(!ok)continue;const f=u.hp/u.mhp;
+    const top=u.type==='balloon'?2.4:u.type==='shaman'?2:1.15;const [sx,sy,ok]=toScreen(rx,unitY(u)-r2*K+top,rz);if(!ok)continue;const f=u.hp/u.mhp;
     bar(sx,sy,u.type==='shaman'?30:20,f,f>.5?'#7fcf6a':f>.25?'#e8b64c':'#e55a46');
     if(u.type==='queen'&&(u.tribe===0||u.sel)){ctx.fillStyle='#f3e2a8';ctx.font='12px "Alegreya Sans",sans-serif';ctx.textAlign='center';ctx.fillText((u.thrall?'Captive · ':'')+queenValue(u),sx,sy-4)}
     if(u.pass&&u.pass.length&&u.tribe===0){ctx.fillStyle='#ece2cc';ctx.font='12px "Alegreya Sans",sans-serif';ctx.textAlign='center';ctx.fillText(u.pass.length+'/'+UT[u.type].cap,sx,sy-4)}}
@@ -1663,11 +1637,11 @@ function command(grp,g,hu,hb,ht){grp=grp.filter(u=>!u.carry);if(!grp.length){toa
     if(rest.length&&g)orderMove(rest,hb.dx,wrap(hb.dz+1.5));mark(hb.x,hb.z,.5,1,.6);return}
   if(ht&&grp.some(u=>u.type==='brave')){const rest=[];for(const u of grp){if(u.type==='brave'){assignGather(u,ht);u.cmdGather=true}else rest.push(u)}if(rest.length)orderMove(rest,ht.x,ht.z);mark(ht.x,ht.z,.5,1,.5);return}
   if(!g)return;
-  const lead=grp.find(u=>!UT[u.type].veh);if(lead&&!water[cidx(g.x,g.z)]){const lf=field(g.x,g.z,false);if(lf[cidx(lead.x,lead.z)]<0&&pass[cidx(g.x,g.z)]){if(transportOrder(grp,g.x,g.z)){const veh=grp.filter(u=>UT[u.type].veh&&u.type!=='boat');if(veh.length)orderMove(veh,g.x,g.z);mark(g.x,g.z,.5,.8,1);toast('Your followers are boarding a boat');return}toast('There is no way across. Build a boathouse, or raise a Land Bridge.')}}
+  const lead=grp.find(u=>!UT[u.type].veh);if(lead&&!water[cidx(g.x,g.z)]){const lf=field(g.x,g.z,false);if(lf[cidx(lead.x,lead.z)]<0&&pass[cidx(g.x,g.z)]){toast('There is no way across. Your shaman can raise a Land Bridge.')}}
   orderMove(grp,g.x,g.z);mark(g.x,g.z,.6,.85,1);sfx('select',.35)}
 function formation(i){if(i===0)return[0,0];let r=1,k=i-1;while(k>=r*6){k-=r*6;r++}const a=k/(r*6)*TAU+r;return[Math.cos(a)*r*.85,Math.sin(a)*r*.85]}
 function orderMove(grp,x,z){let gi=0;for(const u of grp){if(!u.alive)continue;
-  if(UT[u.type].veh){if(!sendVehicle(u,x,z)&&u.tribe===0)toast('That boat cannot reach a landing there');u.cmd=true;continue}
+  if(UT[u.type].veh){if(!sendVehicle(u,x,z)&&u.tribe===0)toast('The balloon cannot set down there');u.cmd=true;continue}
   const [ox,oz]=formation(gi++);orderUnit(u,x+ox,z+oz,false,x,z);u.cmd=true;u.cmdAtk=false}}
 
 document.addEventListener('keydown',e=>{if(!running||e.target.tagName==='INPUT')return;const k=e.key.toLowerCase();keys[k]=true;
@@ -1688,7 +1662,7 @@ function toast(msg){if(!msg)return;if(watching&&/\b[Yy]our\b|\+\d|^You /.test(ms
 function flash(a){const f=$('flash');f.style.transition='none';f.style.opacity=a;requestAnimationFrame(()=>{f.style.transition='';f.style.opacity=0})}
 const svg=p=>`<svg viewBox="0 0 24 24" aria-hidden="true">${p}</svg>`;
 $('pSpells').innerHTML=SP.map((s,i)=>`<button class="tile sp s${s.s}" data-k="${s.k}" title="${s.n}${i<10?' ('+(i+1)%10+')':''}: ${SPDESC[s.k]}">${svg(ICON[s.k])}<span class="nm">${s.n}</span><span class="cost">${s.k==='arma'?'Full + 10':s.c}</span><i class="cdm"></i></button>`).join('');
-$('pBuild').innerHTML=BUILDABLE.map(k=>`<button class="tile bt" data-b="${k}" title="${BT[k].label} — ${BT[k].info}">${svg(ICON[k==='balloon'?'balloonB':k==='boat'?'boatB':k])}<span class="nm">${BT[k].label}</span><span class="cost wood">${BT[k].wood} wood</span></button>`).join('');
+$('pBuild').innerHTML=BUILDABLE.map(k=>`<button class="tile bt" data-b="${k}" title="${BT[k].label} — ${BT[k].info}">${svg(ICON[k==='balloon'?'balloonB':k])}<span class="nm">${BT[k].label}</span><span class="cost wood">${BT[k].wood} wood</span></button>`).join('');
 const spTiles=[...document.querySelectorAll('#pSpells .tile')],bTiles=[...document.querySelectorAll('#pBuild .tile')];
 $('pSpells').addEventListener('click',e=>{const t=e.target.closest('.tile');if(!t)return;audio();t.classList.remove('pulse');void t.offsetWidth;t.classList.add('pulse');sfx('select',.5);const k=t.dataset.k;if(armed===k)disarm();else arm(k)});
 $('pBuild').addEventListener('click',e=>{const t=e.target.closest('.tile');if(!t)return;audio();t.classList.remove('pulse');void t.offsetWidth;t.classList.add('pulse');sfx('select',.5);const k=t.dataset.b;if(armageddon){toast('Nothing can be built while the world ends');return}if(tribes[0].wood<BT[k].wood){tribes[0].woodGoal=Math.max(tribes[0].woodGoal,BT[k].wood+20);toast(`Your braves will gather wood for it. ${BT[k].label} needs ${BT[k].wood} wood`);return}placing=k;armed=null;hedgeStart=null;hint(k==='hedge'?`Tap where the hedge begins. Each length costs ${BT.hedge.wood} wood.`:`Tap where to build the ${BT[k].label}`)});
@@ -1738,7 +1712,7 @@ function renderTribe(force){const T=tribes[0];if(!T)return;let h='';const b=sel.
     const guards=myUnits(u=>u.post).length,army=myUnits(u=>MIL[u.type]&&!u.post).length;
     h+=q('army','Army',army,army+' fighters')+q('warrior','Warriors',S.warrior||0,(S.warrior||0)+' ready')+q('archer','Archers',S.archer||0,(S.archer||0)+' ready')+q('oss','Osses',S.oss||0,(S.oss||0)+' ready')+q('guard','Guards',guards,guards+' posted');
     const br=T.stats.outB||0;h+=q('brave','Braves',br,br+' outside, '+(T.stats.housed||0)+' in huts');
-    const vn=(S.boat||0)+(S.balloon||0);h+=q('veh','Vehicles',vn,vn+' boats & balloons')}
+    const vn=S.balloon||0;h+=q('veh','Balloons',vn,vn+' balloons')}
   if(force||h!==lastTribeHTML){$('pTribe').innerHTML=h;lastTribeHTML=h;if(performance.now()-pulseAct.t<450){const el=$('pTribe').querySelector(`[data-act="${pulseAct.a}"]`);if(el)el.classList.add('pulse')}}}
 $('pTribe').addEventListener('click',e=>{const t=e.target.closest('[data-act]');if(!t||t.disabled)return;audio();const T=tribes[0],a=t.dataset.act;const b=sel[0];
   pulseAct={a:t.dataset.act,t:performance.now()};t.classList.remove('pulse');void t.offsetWidth;t.classList.add('pulse');sfx('select',.6);const nm=b&&b.bt?BT[b.bt].label.toLowerCase():'';
@@ -1931,6 +1905,8 @@ function loadGame(){const d=readSave();if(!d)return false;
   const dec=v=>{if(v===null||typeof v!=='object')return v;if(Array.isArray(v))return v.map(dec);if('$u' in v)return uMap.get(v.$u)||null;if('$b' in v)return bMap.get(v.$b)||null;if('$t' in v)return trees[v.$t]||null;const o={};for(const k in v)o[k]=dec(v[k]);return o};
   for(const e of units)for(const k in e)if(e[k]&&typeof e[k]==='object')e[k]=dec(e[k]);
   for(const e of blds)for(const k in e)if(e[k]&&typeof e[k]==='object')e[k]=dec(e[k]);
+  for(const v of units)if(v.type==='boat'){for(const p of (v.pass||[])){if(!p)continue;p.inV=null;p.st='idle';const c=nearestCell(v.x,v.z,8,c=>pass[c]===1);p.x=c?c.x:v.x;p.z=c?c.z:v.z;p.gx=p.x;p.gz=p.z}v.alive=false}
+  units=units.filter(u=>u.type!=='boat');blds=blds.filter(b=>b.bt!=='boat');
   for(const u of units){if(u.pass)u.pass=u.pass.filter(Boolean);u.sel=false}
   for(const b of blds){b.sel=false;bById.set(b.id,b);const sz=BT[b.bt].s;for(let dz=0;dz<sz;dz++)for(let dx=0;dx<sz;dx++)bOcc[wi(b.cz0+dz)*N+wi(b.cx0+dx)]=b.id}
   tribes=d.tribes.map(o=>{const T={};for(const k in o)T[k]=k==='ai'?o.ai:dec(o[k]);T.c=new C.Color(T.col);T.roof=T.wild?T.c.clone():T.c.clone().lerp(new C.Color(0xc9a55a),.3);if(T.ai)T.ai.D=DIFF[settings.diff];
@@ -1974,6 +1950,6 @@ function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;fogK=Math.mi
   }catch(err){if(!errShown){errShown=true;console.error(err);toast('Something went wrong: '+err.message)}}
   requestAnimationFrame(frame)}
 resize();buildWorld();showContinue();requestAnimationFrame(frame);
-window.__ws={get units(){return units},get tribes(){return tribes},get blds(){return blds},sim,beginGame,get gt(){return gt},castSpell,tryCast,saveGame,loadGame,setSel,command,showLevel,SCEN,field,get walkA(){return walk},hAt,get water(){return water},findSpot,get allow(){return allowSets},get pass(){return pass},get swamps(){return swamps},get debris(){return debris},queenValue,invokeArma,startRitual,sendVehicle,transportOrder,get wildId(){return wildId},get armageddon(){return armageddon},placeBuilding,validSpot,orderMove,spawnUnit,command,get water(){return water},findSpot};
+window.__ws={get units(){return units},get tribes(){return tribes},get blds(){return blds},sim,beginGame,get gt(){return gt},castSpell,tryCast,saveGame,loadGame,setSel,command,showLevel,SCEN,field,get walkA(){return walk},hAt,get water(){return water},findSpot,get allow(){return allowSets},get pass(){return pass},get swamps(){return swamps},get debris(){return debris},queenValue,invokeArma,startRitual,sendVehicle,get wildId(){return wildId},get armageddon(){return armageddon},placeBuilding,validSpot,orderMove,spawnUnit,command,get water(){return water},findSpot};
 })();
 </script>
