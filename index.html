@@ -367,7 +367,7 @@ const TUNE={
   frenzyPerHead:15,frenzyMax:180,frenzySpeed:1.45,frenzyAttack:.8,
   shamanRespawn:45,tombRespawn:60,tombManaKeep:.5,
   entombFollowers:20,entombMana:1500,
-  flowerCap:480,flowerPerBld:7,  // village flowers: total, and per building
+  flowerEvery:12,buntingMax:9,     // a settled building gains a flower every this many seconds; huts this close are strung with bunting
   saltTime:180,saltPad:4,        // seconds a razed building's ground stays salted against its old owner, and how far beyond the walls
   brokenFrac:.2,brokenCrumble:60,  // a rival falling below this share of its peak population breaks; its buildings fall in over this many seconds
  entombChannel:10,
@@ -666,7 +666,7 @@ function vcol(c){const h=H[c],x=c%N,z=(c/N)|0;
   else if(h<7){const t=h/7;r=lerp(.44,.34,t);g=lerp(.52,.41,t);b=lerp(.26,.22,t)}
   else if(h<10.5){r=.42;g=.33;b=.31}
   else{r=.56;g=.54;b=.5}
-  if(wearShown[c]&&hazU[c]<=gt&&h>=.55){const k=.18+wearShown[c]/8*.5;r=lerp(r,.5,k);g=lerp(g,.41,k);b=lerp(b,.28,k)}
+  if(wearShown[c]&&hazU[c]<=gt&&h>=.55){const k=.25+wearShown[c]/8*.6;r=lerp(r,.3,k);g=lerp(g,.23,k);b=lerp(b,.14,k)}
   if(saltU[c]>gt&&hazU[c]<=gt&&h>=0){r=lerp(r,.7,.55);g=lerp(g,.68,.55);b=lerp(b,.62,.55)}
   const v=hazU[c]>gt?1:TN[c];colW[c*3]=r*v;colW[c*3+1]=g*v;colW[c*3+2]=b*v}
 function recompute(x0,z0,x1,z1){
@@ -685,22 +685,23 @@ function swampKill(c){const g=hazGrp[c],sw=swamps[g];if(!sw)return;sw.kills++;if
   delete swamps[g];if(x0<1e9)recompute(x0,z0,x1,z1);if(sw.owner===0&&!watching)toast(`Your bog has drowned ${TUNE.swampLives} and drains away, sated.`)}
 function setHedge(b,on){const c=wi(b.cz0)*N+wi(b.cx0);hedgeA[c]=on?1:0;recompute(b.cx0,b.cz0,b.cx0,b.cz0)}
 // ---- village colour: worn paths and flowers (cosmetic only) ----
-const FLOWER_C=[0x3f6fd0,0xc8302a,0xe8c63a,0xefeadc,0x9a5ac0,0xd86a9a];
+const FLOWER_C=[0x3f6fd0,0xc8302a,0xe8c63a,0xefeadc,0x9a5ac0,0xd86a9a],FLAG_C=[0xb8322a,0xe0b440,0xeee6d2,0x35629e,0x4f7a38];let buntings=[];
+// the fixed places around a building where flowers grow, nearest the walls first; the door side of a hut is left clear
+const FSPOTS=new WeakMap(),_fq=new C.Quaternion(),_fe=new C.Euler();
+function flowerSpots(b){const got=FSPOTS.get(b);if(got)return got;const s=BT[b.bt].s,out=[],r=s*.5+(b.bt==='hut'?.08:.3),n=Math.max(8,Math.round(TAU*r/.34));for(let k=0;k<n;k++){const a=k/n*TAU+(b.id%7)*.11;if(b.bt==='hut'&&Math.abs(Math.atan2(Math.sin(a-Math.PI/2),Math.cos(a-Math.PI/2)))<.45)continue;out.push({a,r:r+((k*37+b.id)%5)*.04,c:FLOWER_C[(b.id*3+((k/3)|0))%FLOWER_C.length]})}
+  const ord=out.map((_,i)=>i).sort((x,y)=>((x*2654435761+b.id)%997)-((y*2654435761+b.id)%997));const res=ord.map(i=>out[i]);FSPOTS.set(b,res);return res}
 function decorTick(dt){wearT-=dt;if(wearT<=0){wearT=.5;
     for(const u of units){if(!u.alive||!u.moving||u.inV||u.air||u.tribe===wildId)continue;const c=cidx(u.x,u.z);if(water[c])continue;wear[c]=Math.min(1,wear[c]+(u.type==='brave'?.07:.025))}}
   decoT-=dt;if(decoT>0)return;decoT=4;
   for(let c=0;c<N*N;c++){if(wear[c]>0){wear[c]=Math.max(0,wear[c]*.996-.0004)}const q=wear[c]<.16?0:Math.min(8,1+((wear[c]-.16)/.84*8)|0);if(q!==wearShown[c]){wearShown[c]=q;vcol(c)}}
-  for(const f of flowers){if(f.die)continue;const c=cidx(f.x,f.z);if(wear[c]>.4||water[c]||hazU[c]>gt||saltU[c]>gt||bOcc[c]){f.die=gt;continue}
-    if(gt-(f.chk||0)>20){f.chk=gt;if(!blds.some(b=>b.alive&&b.done&&!BT[b.bt].inv&&b.bt!=='hedge'&&b.tribe!==wildId&&d2(b.x,b.z,f.x,f.z)<9*9))f.die=gt}}
-  flowers=flowers.filter(f=>!f.die||gt-f.die<5);
-  if(flowers.length>=TUNE.flowerCap||armageddon)return;
-  for(let k=0;k<6;k++){const b=blds[(R()*blds.length)|0];if(!b||!b.alive||!b.done||BT[b.bt].inv||b.bt==='hedge'||b.tribe===wildId)continue;
-    let nb=0;for(const o of blds)if(o!==b&&o.alive&&o.done&&o.tribe===b.tribe&&!BT[o.bt].inv&&o.bt!=='hedge'&&d2(o.x,o.z,b.x,b.z)<10*10)nb++;if(nb<2)continue;
-    let mine=0;for(const f of flowers)if(!f.die&&d2(f.x,f.z,b.x,b.z)<36)mine++;if(mine>=TUNE.flowerPerBld)continue;
-    const a=R()*TAU,r=BT[b.bt].s*.5+1+R()*3.5,x=wrap(b.x+Math.cos(a)*r),z=wrap(b.z+Math.sin(a)*r),c=cidx(x,z);
-    if(!walk[c]||water[c]||bOcc[c]||wear[c]>.2||hazU[c]>gt||saltU[c]>gt||H[c]<.6)continue;
-    const near=flowers.find(f=>!f.die&&d2(f.x,f.z,x,z)<4);const col=near&&R()<.7?near.col:FLOWER_C[(R()*FLOWER_C.length)|0];
-    flowers.push({x,z,col,born:gt,sc:.7+R()*.5,r:R()*TAU})}}
+  // a building with two or more neighbours is settled: flowers grow around it, and settled huts are strung together with bunting
+  for(const b of blds){if(!b.alive||!b.done||BT[b.bt].inv||b.bt==='hedge'||b.tribe===wildId){continue}
+    let nb=0;for(const o of blds)if(o!==b&&o.alive&&o.done&&o.tribe===b.tribe&&!BT[o.bt].inv&&o.bt!=='hedge'&&d2(o.x,o.z,b.x,b.z)<10*10)nb++;
+    if(nb>=2){if(!b.flT)b.flT=gt}else if(nb===0)b.flT=0}
+  buntings=[];if(armageddon)return;const seenP=new Set();
+  for(const b of blds){if(!b.alive||!b.done||b.bt!=='hut'||!b.flT||gt-b.flT<30)continue;let best=null,bd=TUNE.buntingMax*TUNE.buntingMax;
+    for(const o of blds)if(o!==b&&o.alive&&o.done&&o.bt==='hut'&&o.tribe===b.tribe&&o.flT&&gt-o.flT>=30){const d=d2(o.x,o.z,b.x,b.z);if(d>9&&d<bd){bd=d;best=o}}
+    if(best){const key=Math.min(b.id,best.id)+'-'+Math.max(b.id,best.id);if(!seenP.has(key)){seenP.add(key);buntings.push([b,best])}}}}
 function hazardTick(){let ch=false;for(const c of hazList)if(hazU[c]<=gt){hazList.delete(c);const x=c%N,z=(c/N)|0;recompute(x,z,x,z);ch=true}for(const c of saltList)if(saltU[c]<=gt){saltList.delete(c);const x=c%N,z=(c/N)|0;recompute(x,z,x,z);ch=true}return ch}
 function saltGround(b,owner){const s=BT[b.bt].s,p=TUNE.saltPad;for(let dz=-p;dz<s+p;dz++)for(let dx=-p;dx<s+p;dx++){const ex=Math.max(0,-dx,dx-s+1),ez=Math.max(0,-dz,dz-s+1);if(ex*ex+ez*ez>p*p)continue;const c=wi(b.cz0+dz)*N+wi(b.cx0+dx);saltU[c]=gt+TUNE.saltTime;saltOwner[c]=owner;saltList.add(c)}recompute(b.cx0-p-1,b.cz0-p-1,b.cx0+s+p,b.cz0+s+p)}
 
@@ -1058,8 +1059,8 @@ function pastime(u,T){
     if(p){const a=Math.atan2(wd(u.z-p.z),wd(u.x-p.x));if(pastGo(u,wrap(p.x+Math.cos(a)*.75),wrap(p.z+Math.sin(a)*.75),'chat',8+R()*10,p.x,p.z,p.id))return}}
   else if(r<.55){let hb=null,hd=14*14;for(const b of blds)if(b.alive&&b.done&&b.bt==='hut'&&b.tribe===u.tribe){const dd=d2(u.x,u.z,b.x,b.z);if(dd<hd){hd=dd;hb=b}}
     if(hb){const a=R()*TAU,rr=1.9+R()*.5;if(pastGo(u,wrap(hb.x+Math.cos(a)*rr),wrap(hb.z+Math.sin(a)*rr),'sit',12+R()*14,hb.x+Math.cos(a)*6,hb.z+Math.sin(a)*6))return}}
-  else if(r<.68){let f=null,fd=9*9;for(const o of flowers){if(o.die)continue;const dd=d2(u.x,u.z,o.x,o.z);if(dd<fd){fd=dd;f=o}}
-    if(f){const a=R()*TAU;if(pastGo(u,wrap(f.x+Math.cos(a)*.45),wrap(f.z+Math.sin(a)*.45),'tend',9+R()*9,f.x,f.z))return}}
+  else if(r<.68){let b=null,bd=12*12;for(const o of blds){if(!o.alive||!o.done||!o.flT||o.tribe!==u.tribe||gt-o.flT<TUNE.flowerEvery*2)continue;const dd=d2(u.x,u.z,o.x,o.z);if(dd<bd){bd=dd;b=o}}
+    if(b){const sp=flowerSpots(b),f=sp[(R()*Math.min(sp.length,Math.floor((gt-b.flT)/TUNE.flowerEvery)))|0];if(f){const fx=b.x+Math.cos(f.a)*f.r,fz=b.z+Math.sin(f.a)*f.r;if(pastGo(u,wrap(b.x+Math.cos(f.a)*(f.r+.45)),wrap(b.z+Math.sin(f.a)*(f.r+.45)),'tend',9+R()*9,fx,fz))return}}}
   else if(r<.8){const rc=T.home||(T.home=blds.find(b=>b.bt==='reinc'&&b.tribe===T.id));if(rc&&d2(u.x,u.z,rc.x,rc.z)<18*18){const a=R()*TAU;if(pastGo(u,wrap(rc.x+Math.cos(a)*2),wrap(rc.z+Math.sin(a)*2),'sit',14+R()*14,rc.x,rc.z))return}}
   const x=u.gx+(R()-.5)*6,z=u.gz+(R()-.5)*6;if(pass[cidx(x,z)]){u.st='move';setTarget(u,x,z)}}
 function fireCharge(u,t){const ty=t.bt?hAt(t.x,t.z)+.6:unitY(t)+.3,dd=Math.sqrt(d2(u.x,u.z,t.x,t.z)),ti=u.tribe,air=!t.bt&&UT[t.type].fly;
@@ -1552,7 +1553,9 @@ const UM={};for(const k in UMOD)UM[k]=mkPair(UMOD[k],UCAP[k],k==='ghost');
 const BM={};for(const k in BMOD)BM[k]=mkPair(BMOD[k],k==='reinc'||k==='barrow'||k==='moot'||k==='tomb'?8:k==='hut'?180:k==='hedge'?600:60);
 const SIL=inst(merge([P(cyl(.09,.15,.42,5),0xffffff,0,.21,0),P(new C.SphereGeometry(.1,6,5),0xffffff,0,.53,0)]),new C.MeshBasicMaterial({vertexColors:true}),200);
 const CM=inst(merge([P(cyl(.1,.1,.42,5),0xa59d8c,0,0,0,0,0,Math.PI/2),P(new C.SphereGeometry(.1,6,5),0xc49a7c,.26,.02,0)]),matF,240);
-const FLS=inst(merge([P(cyl(.012,.012,.16,3),0x3d6b2a,-.06,.08,0),P(cyl(.012,.012,.2,3),0x3d6b2a,.05,.1,.03),P(cyl(.012,.012,.13,3),0x3d6b2a,0,.065,-.06),P(new C.ConeGeometry(.07,.06,4),0x4a7a32,0,.03,0)]),matF,500);
+const FLAG=(()=>{const g=new C.BufferGeometry(),v=new Float32Array([-.06,0,0,.06,0,0,0,-.14,0]);g.setAttribute('position',new C.BufferAttribute(v,3));g.computeVertexNormals();return inst(g,new C.MeshLambertMaterial({color:0xffffff,side:C.DoubleSide}),900)})();
+const CORD=inst(new C.BoxGeometry(1,.02,.02),new C.MeshBasicMaterial({color:0xffffff}),900);
+const FLS=inst(merge([P(cyl(.012,.012,.16,3),0x3d6b2a,-.06,.08,0),P(cyl(.012,.012,.2,3),0x3d6b2a,.05,.1,.03),P(cyl(.012,.012,.13,3),0x3d6b2a,0,.065,-.06),P(new C.ConeGeometry(.07,.06,4),0x4a7a32,0,.03,0)]),matF,1400);
 const FLB=inst(merge([P(new C.SphereGeometry(.045,5,3),0xffffff,-.06,.17,0),P(new C.SphereGeometry(.05,5,3),0xffffff,.05,.21,.03),P(new C.SphereGeometry(.04,5,3),0xffffff,0,.14,-.06)]),new C.MeshLambertMaterial({color:0xffffff,flatShading:true}),500);
 const TM=inst(merge([P(cyl(.07,.1,.5,5),0x4a3322,0,.25,0),P(new C.ConeGeometry(.52,1.05,6),0x203a26,0,.95,0),P(new C.ConeGeometry(.37,.8,6),0x2a4a2e,0,1.45,0)]),matF,1800);
 const SM=inst(merge([P(new C.BoxGeometry(.42,1.6,.32),0x6f6a60,0,.78,0),P(new C.BoxGeometry(.3,.2,.26),0x5e5a52,0,1.65,0)]),matF,80);
@@ -1637,9 +1640,15 @@ function drawEntities(){
   let tn=0;for(const t of trees){if(!t.alive)continue;const rx=wd(t.x-cam.fx),rz=wd(t.z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2||tn>=1800)continue;if(!seenAt(t.x,t.z))continue;const fv=fogOn?Math.max(.42,vis[cidx(t.x,t.z)]):1;
     const gr=t.born?Math.min(1,(gt-t.born)/30):1;place(TM,tn,rx,hAt(t.x,t.z)-r2*K,rz,t.tint*7,t.sc*(.45+.55*clamp(t.wood/TUNE.woodPerTree,0,1))*(.3+.7*gr));_c.setRGB(t.tint*fv,t.tint*fv,t.tint*fv);TM.setColorAt(tn,_c);tn++}
   fin(TM,tn);
-  let fn=0;for(const f of flowers){if(fn>=500)break;const rx=wd(f.x-cam.fx),rz=wd(f.z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2*.7||!seenAt(f.x,f.z))continue;
-    const g=Math.min(1,(gt-f.born)/8)*(f.die?Math.max(0,1-(gt-f.die)/5):1);if(g<=.02)continue;const y=hAt(f.x,f.z)-r2*K,yaw=f.r+Math.sin(gt*1.3+f.r*5)*.15,sc=f.sc*g*2.3;
-    place(FLS,fn,rx,y,rz,yaw,sc);place(FLB,fn,rx,y,rz,yaw,sc);const fv=fogOn?Math.max(.42,vis[cidx(f.x,f.z)]):1;_c.setRGB(fv,fv,fv);FLS.setColorAt(fn,_c);_c.setHex(f.col).multiplyScalar(fv);FLB.setColorAt(fn,_c);fn++}
+  let fn=0;for(const b of blds){if(!b.alive||!b.done||!b.flT||fn>=1400)continue;const rx=wd(b.x-cam.fx),rz=wd(b.z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2*.75||!visB(b))continue;
+    const sp=flowerSpots(b),cnt=Math.min(sp.length,Math.floor((gt-b.flT)/TUNE.flowerEvery));const fv=fogOn?Math.max(.42,vis[cidx(b.x,b.z)]):1;
+    for(let k=0;k<cnt&&fn<1400;k++){const f=sp[k],x=rx+Math.cos(f.a)*f.r,z=rz+Math.sin(f.a)*f.r,wx=b.x+Math.cos(f.a)*f.r,wz=b.z+Math.sin(f.a)*f.r,gr=Math.min(1,(gt-b.flT-k*TUNE.flowerEvery)/6);
+      const y=hAt(wx,wz)-(x*x+z*z)*K,sc=1.9*(.4+.6*gr);place(FLS,fn,x,y,z,f.a,sc);place(FLB,fn,x,y,z,f.a,sc);_c.setRGB(fv,fv,fv);FLS.setColorAt(fn,_c);_c.setHex(f.c).multiplyScalar(fv);FLB.setColorAt(fn,_c);fn++}}
+  let bn=0,cn2=0;for(const [a,b] of buntings){if(!a.alive||!b.alive)continue;const ax=wd(a.x-cam.fx),az=wd(a.z-cam.fz);if(ax*ax+az*az>VR2*.75)continue;if(!visB(a)&&!visB(b))continue;
+    const dx=wd(b.x-a.x),dz=wd(b.z-a.z),L=Math.hypot(dx,dz),ya=hAt(a.x,a.z)+1.78,yb=hAt(b.x,b.z)+1.78,sag=.3+L*.05,yaw=Math.atan2(-dz,dx),n=Math.max(3,Math.floor(L/.3)),fv=fogOn?Math.max(.42,vis[cidx(a.x,a.z)]):1;
+    for(let k=1;k<n&&bn<900;k++){const t=k/n,x=ax+dx*t,z=az+dz*t,y=ya+(yb-ya)*t-sag*4*t*(1-t)-(x*x+z*z)*K;place(FLAG,bn,x,y,z,yaw,1.7);_c.setHex(FLAG_C[(k+a.id)%FLAG_C.length]).multiplyScalar(fv);FLAG.setColorAt(bn,_c);bn++}
+    for(let k=0;k<n&&cn2<900;k++){const t=(k+.5)/n,x=ax+dx*t,z=az+dz*t,y=ya+(yb-ya)*t-sag*4*t*(1-t)-(x*x+z*z)*K,sl=(yb-ya)/L-sag*4*(1-2*t)/L;_fq.setFromEuler(_fe.set(0,yaw,Math.atan(sl)));_p.set(x,y,z);_s.set(L/n,1,1);_m.compose(_p,_fq,_s);CORD.setMatrixAt(cn2,_m);_c.setRGB(.25*fv,.2*fv,.15*fv);CORD.setColorAt(cn2,_c);cn2++}}
+  fin(FLAG,bn);fin(CORD,cn2);
   fin(FLS,fn);fin(FLB,fn);
   let sn=0;for(const st of stones){const rx=wd(st.x-cam.fx),rz=wd(st.z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2||!seenAt(st.x,st.z)||sn>=80)continue;place(SM,sn,rx,hAt(st.x,st.z)-r2*K-.1,rz,st.r,st.s);const fv=fogOn?Math.max(.42,vis[cidx(st.x,st.z)]):1;_c.setRGB(fv,fv,fv);SM.setColorAt(sn,_c);sn++}
   fin(SM,sn);
@@ -2186,6 +2195,6 @@ function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;fogK=Math.mi
   }catch(err){if(!errShown){errShown=true;console.error(err);toast('Something went wrong: '+err.message)}}
   requestAnimationFrame(frame)}
 resize();buildWorld();showContinue();requestAnimationFrame(frame);
-window.__ws={get WS(){return WS},wsOpen,wsClose,captureDef,defFromData,merge,ORIG_UMOD,ORIG_BMOD,get UM(){return UM},get BM(){return BM},get wear(){return wear},get flowers(){return flowers},get units(){return units},get tribes(){return tribes},get blds(){return blds},sim,beginGame,get gt(){return gt},castSpell,tryCast,saveGame,loadGame,setSel,command,showLevel,SCEN,field,get walkA(){return walk},hAt,get water(){return water},findSpot,get allow(){return allowSets},get pass(){return pass},get swamps(){return swamps},get debris(){return debris},queenValue,invokeArma,startRitual,sendVehicle,get wildId(){return wildId},get armageddon(){return armageddon},placeBuilding,validSpot,orderMove,spawnUnit,command,get water(){return water},findSpot};
+window.__ws={get WS(){return WS},wsOpen,wsClose,captureDef,defFromData,merge,ORIG_UMOD,ORIG_BMOD,get UM(){return UM},get BM(){return BM},get wear(){return wear},get buntings(){return buntings},get units(){return units},get tribes(){return tribes},get blds(){return blds},sim,beginGame,get gt(){return gt},castSpell,tryCast,saveGame,loadGame,setSel,command,showLevel,SCEN,field,get walkA(){return walk},hAt,get water(){return water},findSpot,get allow(){return allowSets},get pass(){return pass},get swamps(){return swamps},get debris(){return debris},queenValue,invokeArma,startRitual,sendVehicle,get wildId(){return wildId},get armageddon(){return armageddon},placeBuilding,validSpot,orderMove,spawnUnit,command,get water(){return water},findSpot};
 })();
 </script>
