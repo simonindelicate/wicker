@@ -703,9 +703,19 @@ function decorTick(dt){
     let nb=0;for(const o of blds)if(o!==b&&o.alive&&o.done&&o.tribe===b.tribe&&!BT[o.bt].inv&&o.bt!=='hedge'&&d2(o.x,o.z,b.x,b.z)<10*10)nb++;
     if(nb>=2){if(!b.flT)b.flT=gt}else if(nb===0)b.flT=0}
   buntings=[];if(armageddon)return;const seenP=new Set();
-  for(const b of blds){if(!b.alive||!b.done||b.bt!=='hut'||!b.flT||gt-b.flT<30)continue;let best=null,bd=TUNE.buntingMax*TUNE.buntingMax;
-    for(const o of blds)if(o!==b&&o.alive&&o.done&&o.bt==='hut'&&o.tribe===b.tribe&&o.flT&&gt-o.flT>=30){const d=d2(o.x,o.z,b.x,b.z);if(d>9&&d<bd){bd=d;best=o}}
-    if(best){const key=Math.min(b.id,best.id)+'-'+Math.max(b.id,best.id);if(!seenP.has(key)){seenP.add(key);buntings.push({a:{x:b.x,z:b.z,h:1.78},b:{x:best.x,z:best.z,h:1.78},id:b.id,src:[b,best]})}}}
+  // hub and spoke: each cluster of huts is strung from a central point (maypole, stone circle, well, or the most central hut) out to the huts around it
+  {const R=TUNE.buntingMax,R2=R*R,ready=b=>b.alive&&b.done&&b.flT&&gt-b.flT>=30;const byT={};
+    for(const b of blds)if(b.bt==='hut'&&ready(b))(byT[b.tribe]=byT[b.tribe]||[]).push(b);
+    for(const t in byT){const huts=byT[t],free=new Set(huts),hubs=[];
+      for(const b of blds)if(b.alive&&b.done&&b.tribe==t&&(b.bt==='maypole'&&b.flT||b.bt==='reinc'))hubs.push({x:b.x,z:b.z,h:b.bt==='maypole'?3.1:1.25,id:b.id,src:[b],bonus:b.bt==='maypole'?2:1.5});
+      for(const w of wells)if(w.tribe==t)hubs.push({x:w.x,z:w.z,h:1.55,id:w.x*7|0,src:[],bonus:1});
+      for(const b of huts)hubs.push({x:b.x,z:b.z,h:1.78,id:b.id,src:[b],hut:b,bonus:0});
+      for(let pass=0;pass<6&&free.size>=2;pass++){let best=null,bs=0;
+        for(const h of hubs){if(h.used||(h.hut&&!free.has(h.hut)))continue;let n=0,sd=0;for(const b of free)if(b!==h.hut){const d=d2(h.x,h.z,b.x,b.z);if(d>4&&d<R2){n++;sd+=Math.sqrt(d)}}
+          const sc=n+h.bonus-sd*.01;if(n>=2&&sc>bs){bs=sc;best=h}}
+        if(!best)break;best.used=true;if(best.hut)free.delete(best.hut);
+        const sp=[...free].filter(b=>{const d=d2(best.x,best.z,b.x,b.z);return d>4&&d<R2}).sort((p,q)=>d2(best.x,best.z,p.x,p.z)-d2(best.x,best.z,q.x,q.z)).slice(0,7);
+        for(const b of sp){free.delete(b);buntings.push({a:{x:best.x,z:best.z,h:best.h},b:{x:b.x,z:b.z,h:1.78},id:best.id+b.id,src:best.src.concat([b])})}}}}
   // an entombed Cunning Woman's hill: five strings from the centre pole out to five flower beds
   tombBeds=[];for(const b of blds){if(!b.alive||b.bt!=='tomb')continue;for(let i=0;i<5;i++){const a=i/5*TAU+.31,x=wrap(b.x+Math.cos(a)*5.4),z=wrap(b.z+Math.sin(a)*5.4);if(water[cidx(x,z)]||H[cidx(x,z)]<.3)continue;
     tombBeds.push({x,z,id:b.id*5+i});buntings.push({a:{x:b.x,z:b.z,h:3.0},b:{x,z,h:1.05},id:b.id+i*2,src:[b]})}}
