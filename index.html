@@ -146,7 +146,7 @@ details.help summary{cursor:pointer;color:var(--text);font:14px var(--f-display)
 .wsTribe{display:flex;gap:5px}.wsTribe button{width:20px;height:20px;border-radius:50%;border:2px solid transparent;padding:0}.wsTribe button.on{border-color:var(--text)}
 .wsChk{display:flex;gap:4px;align-items:center;color:var(--muted);font-size:12px}
 .wsParts{display:flex;flex-direction:column;gap:2px;max-height:150px;overflow-y:auto;border:1px solid var(--line);border-radius:6px;padding:4px;margin:6px 0}
-.wsP{display:flex;align-items:center;gap:7px;text-align:left;background:none;border:0;color:var(--text);padding:3px 5px;border-radius:4px;font-size:12px}.wsP.on{background:rgba(211,155,60,.25)}.wsP i{width:12px;height:12px;border-radius:3px;border:1px solid rgba(255,255,255,.25)}
+.wsP{display:flex;align-items:center;gap:7px;text-align:left;background:none;border:0;color:var(--text);padding:3px 5px;border-radius:4px;font-size:12px}.wsP.on{background:rgba(211,155,60,.25)}.wsP.on2{background:rgba(120,170,220,.2)}.wsP em{color:var(--muted);font-style:normal;margin-left:auto;font-size:11px}#ws .btn.on{border-color:var(--ochre);color:var(--ochre)}.wsP i{width:12px;height:12px;border-radius:3px;border:1px solid rgba(255,255,255,.25)}
 .wsS{display:grid;grid-template-columns:96px 1fr 62px;gap:6px;align-items:center;margin:3px 0;font-size:12px;color:var(--muted)}.wsS input[type=range]{width:100%;accent-color:var(--ochre)}.wsS input[type=number]{width:100%;box-sizing:border-box;padding:2px 4px}
 .wsRow{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.wsRow input[type=color]{width:34px;height:26px;border:1px solid var(--line);background:none;padding:0;border-radius:4px}
 .wsHint{color:var(--muted);font-size:12px;line-height:1.4;margin:6px 0}#ws details{margin-top:6px}#ws summary{font:13px var(--f-display);color:var(--ochre);cursor:pointer}
@@ -201,6 +201,7 @@ details.help summary{cursor:pointer;color:var(--text);font:14px var(--f-display)
     <div id="wsParts" class="wsParts"></div>
     <div class="wsBar wsSmall" id="wsAddRow"><span>Add</span><button class="btn" data-s="box">Box</button><button class="btn" data-s="cyl">Cylinder</button><button class="btn" data-s="cone">Cone</button><button class="btn" data-s="sphere">Ball</button><button class="btn" data-s="ring">Ring</button></div>
     <div class="wsBar wsSmall"><span>Part</span><button class="btn" id="wsDup">Copy</button><button class="btn" id="wsMirror" title="Copy to the other side, mirrored">Mirror</button><button class="btn" id="wsDel">Delete</button></div>
+    <div class="wsBar wsSmall"><span>Several</span><button class="btn" id="wsAddSel" aria-pressed="false" title="While on, taps add to the selection (same as shift-click)">Add</button><button class="btn" id="wsGroup" title="Keep the selected parts together">Group</button><button class="btn" id="wsUngroup">Ungroup</button></div>
     <div id="wsProps"></div>
     <div class="wsBar wsSmall wsFoot"><button class="btn" id="wsReset">Back to original</button><button class="btn" id="wsExport">Export</button><button class="btn" id="wsImport">Import</button></div>
     <p class="wsHint" id="wsStatus"></p>
@@ -714,13 +715,13 @@ function decorTick(dt){
     for(const t in byT){const huts=byT[t],free=new Set(huts),hubs=[];
       for(const b of blds)if(b.alive&&b.done&&b.tribe==t&&(b.bt==='maypole'&&b.flT||b.bt==='reinc'))hubs.push({x:b.x,z:b.z,h:b.bt==='maypole'?3.1:1.25,id:b.id,src:[b],bonus:b.bt==='maypole'?2:1.5});
       for(const w of wells)if(w.tribe==t)hubs.push({x:w.x,z:w.z,h:1.55,id:w.x*7|0,src:[],bonus:1});
-      for(const b of huts)hubs.push({x:b.x,z:b.z,h:1.78,id:b.id,src:[b],hut:b,bonus:0});
+      for(const b of huts)hubs.push({x:b.x,z:b.z,h:HUT_TOP,id:b.id,src:[b],hut:b,bonus:0});
       for(let pass=0;pass<6&&free.size>=2;pass++){let best=null,bs=0;
         for(const h of hubs){if(h.used||(h.hut&&!free.has(h.hut)))continue;let n=0,sd=0;for(const b of free)if(b!==h.hut){const d=d2(h.x,h.z,b.x,b.z);if(d>4&&d<R2){n++;sd+=Math.sqrt(d)}}
           const sc=n+h.bonus-sd*.01;if(n>=2&&sc>bs){bs=sc;best=h}}
         if(!best)break;best.used=true;if(best.hut)free.delete(best.hut);
         const sp=[...free].filter(b=>{const d=d2(best.x,best.z,b.x,b.z);return d>4&&d<R2}).sort((p,q)=>d2(best.x,best.z,p.x,p.z)-d2(best.x,best.z,q.x,q.z)).slice(0,7);
-        for(const b of sp){free.delete(b);buntings.push({a:{x:best.x,z:best.z,h:best.h},b:{x:b.x,z:b.z,h:1.78},id:best.id+b.id,src:best.src.concat([b])})}}}}
+        for(const b of sp){free.delete(b);buntings.push({a:{x:best.x,z:best.z,h:best.h},b:{x:b.x,z:b.z,h:HUT_TOP},id:best.id+b.id,src:best.src.concat([b])})}}}}
   // an entombed Cunning Woman's hill: five strings from the centre pole out to five flower beds
   tombBeds=[];for(const b of blds){if(!b.alive||b.bt!=='tomb')continue;for(let i=0;i<5;i++){const a=i/5*TAU+.31,x=wrap(b.x+Math.cos(a)*5.4),z=wrap(b.z+Math.sin(a)*5.4);if(water[cidx(x,z)]||H[cidx(x,z)]<.3)continue;
     tombBeds.push({x,z,id:b.id*5+i});buntings.push({a:{x:b.x,z:b.z,h:3.0},b:{x,z,h:1.05},id:b.id+i*2,src:[b]})}}
@@ -1562,7 +1563,151 @@ const UCAP={queen:8,hunter:40,brave:700,warrior:360,oss:240,captive:120,archer:3
 // Models edited in the Model workshop (menu) are stored as lists of parts. Edits you export from the
 // workshop can be pasted into MODEL_DATA here so that they ship with the game for everyone; edits made
 // in the workshop itself are kept in this browser and override these.
-const MODEL_DATA={};
+const MODEL_DATA={
+ "b:hut":[
+  {"s":"cone","a":[1.07,0.605,8],"p":[0,1.112,0],"r":[0,-1,0],"k":[1,1,1],"c":"#ffffff","t":1},
+  {"s":"cyl","a":[1,1.1,0.85,8],"p":[0,0.42,0],"r":[0,0,0],"k":[1,1,1],"c":"#b08f63","t":0},
+  {"s":"box","a":[0.4,0.55,0.12],"p":[0,0.28,1.05],"r":[0,0,0],"k":[1,1,1],"c":"#3a2a1c","t":0},
+  {"s":"cyl","a":[0.115,0.15,0.3,8],"p":[-0.621,1.102,0],"r":[0,0,0],"k":[1,1,1],"c":"#0a0905","t":0},
+  {"s":"cyl","a":[0.115,0.115,0.3,8],"p":[-0.621,1.286,0.047],"r":[24,22,0],"k":[1,1,1],"c":"#433a27","t":0}
+ ],
+ "b:barrow":[
+  {"s":"sphere","a":[1.75,10,4,0,6.2832,0,1.5708],"p":[0,0,0],"r":[0,0,0],"k":[1,0.55,1],"c":"#4b5532","t":0},
+  {"s":"box","a":[0.3,1,0.3],"p":[-0.45,0.5,1.3],"r":[0,0,0],"k":[1,1,1],"c":"#67645c","t":0},
+  {"s":"box","a":[0.3,1,0.3],"p":[0.45,0.5,1.3],"r":[0,0,0],"k":[1,1,1],"c":"#67645c","t":0},
+  {"s":"box","a":[1.35,0.24,0.62],"p":[0,1.1,1.3],"r":[0,0,0],"k":[1,1,1],"c":"#5d5a53","t":0},
+  {"s":"box","a":[0.6,0.72,0.1],"p":[0,0.274,1.536],"r":[-30,0,0],"k":[1,1,1],"c":"#0f0c0a","t":0},
+  {"s":"box","a":[0.3,0.68,0.3],"p":[-0.472,0.2,1.436],"r":[-13,4,-4],"k":[1,1,1],"c":"#575757","t":0},
+  {"s":"box","a":[0.3,0.68,0.3],"p":[0.506,0.2,1.436],"r":[-4,-22,4],"k":[1,1,1],"c":"#575757","t":0},
+  {"s":"sphere","a":[0.255,5,3,0,6.283185307179586,0,3.141592653589793],"p":[0.53,0.05,1.588],"r":[0,0,0],"k":[1,1,1],"c":"#696969","t":0},
+  {"s":"sphere","a":[0.255,5,3,0,6.283185307179586,0,3.141592653589793],"p":[-0.53,-0.108,1.588],"r":[0,30,0],"k":[1,1,1],"c":"#696969","t":0},
+  {"s":"box","a":[0.3,0.5,0.7],"p":[-0.378,0.01,1.36],"r":[-30,0,0],"k":[1,1,1],"c":"#676767","t":0},
+  {"s":"box","a":[0.3,0.5,0.7],"p":[0.378,0.01,1.366],"r":[-30,0,-13],"k":[1,1,1],"c":"#676767","t":0},
+  {"s":"sphere","a":[0.1,5,3,0,6.283185307179586,0,3.141592653589793],"p":[0.68,0.01,1.588],"r":[0,0,0],"k":[1,1,1],"c":"#696969","t":0},
+  {"s":"box","a":[1.17,0.03,0.3],"p":[0,0.6,1.436],"r":[0,0,-1],"k":[1,1,1],"c":"#676767","t":0},
+  {"s":"sphere","a":[1.51,10,4,0,6.2832,0,1.5708],"p":[0.58,-0.186,-1.134],"r":[0,0,0],"k":[1,0.55,1],"c":"#4b5532","t":0}
+ ],
+ "b:reinc":[
+  {"s":"box","a":[0.44,0.38,0.44],"p":[0,1.45,0],"r":[0,0,0],"k":[1,1,1],"c":"#ffffff","t":1},
+  {"s":"box","a":[0.26,0.75,0.22],"p":[1.2,0.37,0],"r":[0,0,0],"k":[1,1,1],"c":"#8c877c","t":0},
+  {"s":"box","a":[0.26,0.75,0.22],"p":[0.8485,0.37,0.8485],"r":[0,-45,0],"k":[1,1,1],"c":"#8c877c","t":0},
+  {"s":"box","a":[0.26,0.75,0.22],"p":[0,0.37,1.2],"r":[0,-90,3],"k":[1,1,1],"c":"#8c877c","t":0},
+  {"s":"box","a":[0.245,0.805,0.22],"p":[-0.8485,0.37,0.8485],"r":[-180,-45,-181],"k":[1,1,1],"c":"#8c877c","t":0},
+  {"s":"box","a":[0.26,0.75,0.22],"p":[-1.2,0.37,0],"r":[-182,-3,-180],"k":[1,1,1],"c":"#8c877c","t":0},
+  {"s":"box","a":[0.26,0.685,0.22],"p":[-0.8485,0.214,-0.8485],"r":[-180,45,-180],"k":[1,1,1],"c":"#8c877c","t":0},
+  {"s":"box","a":[0.315,0.75,0.24],"p":[0,0.34,-1.2],"r":[0,109,-8],"k":[1,1,1],"c":"#8c877c","t":0},
+  {"s":"box","a":[0.26,0.75,0.22],"p":[0.8485,0.37,-0.8485],"r":[0,45,0],"k":[1,1,1],"c":"#8c877c","t":0},
+  {"s":"cyl","a":[0.16,0.2,1.3,6],"p":[0,0.65,0],"r":[0,0,0],"k":[1,1,1],"c":"#7a5130","t":0}
+ ],
+ "b:god":[
+  {"s":"box","a":[2.9,0.35,2.1],"p":[0,3.3,0],"r":[0,0,0],"k":[1,1,1],"c":"#ffffff","t":1},
+  {"s":"box","a":[0.05,1.2,0.8],"p":[0,5.1,1.02],"r":[0,0,0],"k":[1,1,1],"c":"#ffffff","t":1},
+  {"s":"box","a":[4.8,0.3,4.8],"p":[0,0.15,0],"r":[0,0,0],"k":[1,1,1],"c":"#3e2f22","t":0},
+  {"s":"box","a":[0.6,3.2,0.6],"p":[-0.9,1.9,0],"r":[0,0,0],"k":[1,1,1],"c":"#9b7b48","t":0},
+  {"s":"box","a":[0.6,3.2,0.6],"p":[0.9,1.9,0],"r":[0,0,0],"k":[1,1,1],"c":"#9b7b48","t":0},
+  {"s":"box","a":[0.22,2.8,0.22],"p":[-1.25,4.9,-0.85],"r":[0,0,0],"k":[1,1,1],"c":"#6e5530","t":0},
+  {"s":"box","a":[0.22,2.8,0.22],"p":[-1.25,4.9,0.85],"r":[0,0,0],"k":[1,1,1],"c":"#6e5530","t":0},
+  {"s":"box","a":[0.22,2.8,0.22],"p":[1.25,4.9,-0.85],"r":[0,0,0],"k":[1,1,1],"c":"#6e5530","t":0},
+  {"s":"box","a":[0.22,2.8,0.22],"p":[1.25,4.9,0.85],"r":[0,0,0],"k":[1,1,1],"c":"#6e5530","t":0},
+  {"s":"box","a":[2.8,0.25,2],"p":[0,3.55,0],"r":[0,0,0],"k":[1,1,1],"c":"#9b7b48","t":0},
+  {"s":"box","a":[2.8,0.25,2],"p":[0,6.25,0],"r":[0,0,0],"k":[1,1,1],"c":"#9b7b48","t":0},
+  {"s":"box","a":[0.08,2.6,0.08],"p":[-1,4.9,0.9],"r":[0,0,0],"k":[1,1,1],"c":"#9b7b48","t":0},
+  {"s":"box","a":[0.08,2.6,0.08],"p":[-0.5,4.9,0.9],"r":[0,0,0],"k":[1,1,1],"c":"#9b7b48","t":0},
+  {"s":"box","a":[0.08,2.6,0.08],"p":[0,4.9,0.9],"r":[0,0,0],"k":[1,1,1],"c":"#9b7b48","t":0},
+  {"s":"box","a":[0.08,2.6,0.08],"p":[0.5,4.9,0.9],"r":[0,0,0],"k":[1,1,1],"c":"#9b7b48","t":0},
+  {"s":"box","a":[0.08,2.6,0.08],"p":[1,4.9,0.9],"r":[0,0,0],"k":[1,1,1],"c":"#9b7b48","t":0},
+  {"s":"box","a":[4.6,0.4,0.4],"p":[0,6,0],"r":[0,0,10.31],"k":[1,1,1],"c":"#6e5530","t":0},
+  {"s":"box","a":[0.6,1.6,0.6],"p":[0,6.9,0],"r":[0,0,0],"k":[1,1,1],"c":"#9b7b48","t":0},
+  {"s":"box","a":[1.1,1.2,1.3],"p":[0,7.9,0.1],"r":[0,0,0],"k":[1,1,1],"c":"#9b7b48","t":0},
+  {"s":"box","a":[0.7,0.6,0.8],"p":[0,7.6,0.85],"r":[0,0,0],"k":[1,1,1],"c":"#9b7b48","t":0},
+  {"s":"ring","a":[0.5,0.13,5,10,4.7124],"p":[-0.65,8.3,0.05],"r":[0,90,0],"k":[1,1,1],"c":"#d9cfb6","t":0},
+  {"s":"ring","a":[0.5,0.13,5,10,4.7124],"p":[0.65,8.3,0.05],"r":[0,90,0],"k":[1,1,1],"c":"#d9cfb6","t":0},
+  {"s":"box","a":[0.08,2.6,0.08],"p":[-0.5,4.9,-0.952],"r":[0,0,0],"k":[1,1,1],"c":"#9b7b48","t":0},
+  {"s":"box","a":[0.08,2.6,0.08],"p":[0.5,4.9,-0.952],"r":[0,0,0],"k":[1,1,1],"c":"#9b7b48","t":0},
+  {"s":"box","a":[0.08,2.6,0.08],"p":[0,4.9,-0.95],"r":[0,0,0],"k":[1,1,1],"c":"#9b7b48","t":0},
+  {"s":"box","a":[0.08,2.6,0.08],"p":[-1.27,4.9,-0.086],"r":[0,0,0],"k":[1,1,1],"c":"#9b7b48","t":0},
+  {"s":"box","a":[0.08,2.6,0.08],"p":[-1.288,4.9,-0.604],"r":[0,0,0],"k":[1,1,1],"c":"#9b7b48","t":0},
+  {"s":"box","a":[0.08,2.6,0.08],"p":[1.288,4.9,-0.604],"r":[0,0,0],"k":[1,1,1],"c":"#9b7b48","t":0},
+  {"s":"box","a":[0.08,2.6,0.08],"p":[1.27,4.9,-0.086],"r":[0,0,0],"k":[1,1,1],"c":"#9b7b48","t":0},
+  {"s":"box","a":[0.08,2.6,0.08],"p":[1.28,4.9,0.432],"r":[0,0,0],"k":[1,1,1],"c":"#9b7b48","t":0},
+  {"s":"box","a":[0.08,2.6,0.08],"p":[-1.28,4.9,0.432],"r":[0,0,0],"k":[1,1,1],"c":"#9b7b48","t":0}
+ ],
+ "u:shaman":[
+  {"s":"cyl","a":[0.13,0.27,0.62,6],"p":[0,0.31,0],"r":[0,0,0],"k":[1,1,1],"c":"#ffffff","t":1},
+  {"s":"sphere","a":[0.12,6,5,0,6.2832,0,3.1416],"p":[0,0.73,0],"r":[0,0,0],"k":[1,1,1],"c":"#d9a27a","t":0},
+  {"s":"cyl","a":[0.025,0.03,1.1,5],"p":[0.28,0.55,0],"r":[0,0,-1],"k":[1,1,1],"c":"#7a5130","t":0},
+  {"s":"sphere","a":[0.07,7,4,0,6.2832,0,6.7387],"p":[0.29,1.13,0],"r":[0,0,0],"k":[1,1,1],"c":"#d8cbb0","t":0},
+  {"s":"cone","a":[0.025,0.42,4],"p":[-0.11,1,0],"r":[0,0,28.65],"k":[1,1,1],"c":"#d9cfb6","t":0},
+  {"s":"cone","a":[0.013,0.2,4],"p":[-0.22,1.078,0],"r":[0,0,63.03],"k":[1,1,1],"c":"#d9cfb6","t":0},
+  {"s":"cone","a":[0.018,0.18,3],"p":[-0.106,1.0373,-0.062],"r":[-29,-62,15.9],"k":[1,1,1],"c":"#d9cfb6","t":0},
+  {"s":"cone","a":[0.025,0.42,4],"p":[0.11,1,0],"r":[0,0,-28.65],"k":[1,1,1],"c":"#d9cfb6","t":0},
+  {"s":"cone","a":[0.013,0.2,4],"p":[0.22,1.078,0],"r":[0,0,-63.03],"k":[1,1,1],"c":"#d9cfb6","t":0},
+  {"s":"cone","a":[0.018,0.18,3],"p":[0.106,1.0373,-0.062],"r":[-29,62,-15.9],"k":[1,1,1],"c":"#d9cfb6","t":0},
+  {"s":"ring","a":[0.07,0.04,6,12,6.283185307179586],"p":[0,0.6173,0],"r":[90,0,0],"k":[1,1,1],"c":"#2f3868","t":0},
+  {"s":"sphere","a":[0.125,6,5,0,6.2832,0,3.1416],"p":[0,0.752,-0.028],"r":[0,0,0],"k":[1,1,1],"c":"#ffffff","t":0},
+  {"s":"cyl","a":[0.035,0.045,0.35,8],"p":[0,0.5773,-0.129],"r":[10,0,0],"k":[1,1,1],"c":"#ffffff","t":0},
+  {"s":"ring","a":[0.03,0.025,5,10,6.2832],"p":[0,0.555,-0.138],"r":[90,0,0],"k":[1,1,1],"c":"#2f3868","t":0},
+  {"s":"cyl","a":[0.025,0.04,0.3,8],"p":[0.153,0.5773,0],"r":[180,0,105],"k":[1,1,1],"c":"#b8a888","t":1}
+ ],
+ "u:queen":[
+  {"s":"cyl","a":[0.215,0.235,0.06,8],"p":[0,0.42,0],"r":[0,0,0],"k":[1,1,1],"c":"#ffffff","t":1},
+  {"s":"cone","a":[0.26,0.62,8],"p":[0,0.31,0],"r":[0,0,0],"k":[1,1,1],"c":"#f1ece0","t":0},
+  {"s":"sphere","a":[0.11,6,5,0,6.2832,0,3.1416],"p":[0,0.7,0],"r":[0,0,0],"k":[1,1,1],"c":"#d9a27a","t":0},
+  {"s":"sphere","a":[0.12,6,3,0,6.2832,0,1.5708],"p":[0,0.72,0],"r":[0,0,0],"k":[1,1,1],"c":"#8a5a2a","t":0},
+  {"s":"cyl","a":[0.07,0.06,0.35,5],"p":[0,0.55,-0.064],"r":[5,0,0],"k":[1,1,1],"c":"#8a5a2a","t":0},
+  {"s":"ring","a":[0.13,0.035,4,10,6.2832],"p":[0,0.82,0],"r":[90,0,0],"k":[1,1,1],"c":"#4f7a32","t":0},
+  {"s":"sphere","a":[0.035,4,3,0,6.2832,0,3.1416],"p":[0.14,0.85,0],"r":[0,0,0],"k":[1,1,1],"c":"#d85a7a","t":0},
+  {"s":"sphere","a":[0.035,4,3,0,6.2832,0,3.1416],"p":[0.07,0.85,0.1212],"r":[0,0,0],"k":[1,1,1],"c":"#e7c84a","t":0},
+  {"s":"sphere","a":[0.035,4,3,0,6.2832,0,3.1416],"p":[-0.07,0.85,0.1212],"r":[0,0,0],"k":[1,1,1],"c":"#d85a7a","t":0},
+  {"s":"sphere","a":[0.035,4,3,0,6.2832,0,3.1416],"p":[-0.14,0.85,0],"r":[0,0,0],"k":[1,1,1],"c":"#e7c84a","t":0},
+  {"s":"sphere","a":[0.035,4,3,0,6.2832,0,3.1416],"p":[-0.07,0.85,-0.1212],"r":[0,0,0],"k":[1,1,1],"c":"#d85a7a","t":0},
+  {"s":"sphere","a":[0.035,4,3,0,6.2832,0,3.1416],"p":[0.07,0.85,-0.1212],"r":[0,0,0],"k":[1,1,1],"c":"#e7c84a","t":0},
+  {"s":"cone","a":[0.02,0.1,4],"p":[0.08,0.9,0],"r":[0,0,0],"k":[1,1,1],"c":"#e7c84a","t":0},
+  {"s":"cone","a":[0.02,0.1,4],"p":[0.0247,0.9,0.0761],"r":[0,0,0],"k":[1,1,1],"c":"#e7c84a","t":0},
+  {"s":"cone","a":[0.02,0.1,4],"p":[-0.0647,0.9,0.047],"r":[0,0,0],"k":[1,1,1],"c":"#e7c84a","t":0},
+  {"s":"cone","a":[0.02,0.1,4],"p":[-0.0647,0.9,-0.047],"r":[0,0,0],"k":[1,1,1],"c":"#e7c84a","t":0},
+  {"s":"cone","a":[0.02,0.1,4],"p":[0.0247,0.9,-0.0761],"r":[0,0,0],"k":[1,1,1],"c":"#e7c84a","t":0}
+ ],
+ "u:hunter":[
+  {"s":"cyl","a":[0.12,0.24,0.52,6],"p":[0,1.186,-0.05],"r":[13,0,0],"k":[1,1,1],"c":"#ffffff","t":1},
+  {"s":"box","a":[0.32,0.36,1],"p":[0,0.78,0],"r":[0,0,0],"k":[1,1,1],"c":"#16120f","t":0},
+  {"s":"box","a":[0.16,0.42,0.18],"p":[0,1.124,0.5],"r":[-17,0,0],"k":[1.16,1,1.06],"c":"#16120f","t":0},
+  {"s":"box","a":[0.14,0.16,0.38],"p":[0,1.248,0.6394],"r":[13,0,0],"k":[1,0.93,0.65],"c":"#16120f","t":0},
+  {"s":"sphere","a":[0.1,6,5,0,6.2832,0,3.1416],"p":[0,1.554,0.057],"r":[0,0,0],"k":[1,1,1],"c":"#d9cfb6","t":0},
+  {"s":"cone","a":[0.02,0.32,4],"p":[0.09,1.762,0.044],"r":[0,0,-28.65],"k":[1,1,1],"c":"#d9cfb6","t":0},
+  {"s":"box","a":[0.03,0.03,1.3],"p":[0.2,1.3,0.2],"r":[0,0,0],"k":[1,1,1],"c":"#6e5530","t":0},
+  {"s":"box","a":[0.08,0.62,0.08],"p":[-0.11,0.31,-0.38],"r":[0,0,0],"k":[1,1,1],"c":"#16120f","t":0},
+  {"s":"box","a":[0.08,0.62,0.08],"p":[-0.11,0.31,0.38],"r":[5,0,4],"k":[1,1,1],"c":"#16120f","t":0},
+  {"s":"box","a":[0.08,0.62,0.08],"p":[0.11,0.31,-0.38],"r":[7,0,3],"k":[1,1,1],"c":"#16120f","t":0},
+  {"s":"box","a":[0.08,0.62,0.08],"p":[0.11,0.31,0.38],"r":[0,0,0],"k":[1,1,1],"c":"#16120f","t":0},
+  {"s":"cone","a":[0.04,0.3,8],"p":[0.198,1.294,0.909],"r":[90,0,0],"k":[1,1,1],"c":"#d6d6d6","t":0},
+  {"s":"ring","a":[0.025,0.02,6,12,6.283185307179586],"p":[0.2,1.294,0.667],"r":[0,0,0],"k":[1,1,1],"c":"#ff1a1f","t":0},
+  {"s":"cone","a":[0.02,0.32,4],"p":[-0.09,1.762,0.044],"r":[0,0,28.65],"k":[1,1,1],"c":"#d9cfb6","t":0},
+  {"s":"cone","a":[0.01,0.19,8],"p":[0.09,1.862,0.044],"r":[0,0,0],"k":[1,1,1],"c":"#b8a888","t":0},
+  {"s":"cone","a":[0.01,0.19,8],"p":[-0.092,1.862,0.01],"r":[-19,0,0],"k":[1,1,1],"c":"#b8a888","t":0},
+  {"s":"sphere","a":[0.115,6,5,0,6.2832,0,1.508],"p":[0,1.554,0.033],"r":[0,0,0],"k":[1,1,1],"c":"#f88410","t":1},
+  {"s":"box","a":[0.3,0.3,0.3],"p":[0,1.492,-0.0586],"r":[39,0,0],"k":[0.4,0.95,0.33],"c":"#b8a888","t":1},
+  {"s":"cone","a":[0.01,0.095,8],"p":[-0.036,1.6,0.122],"r":[151,0,0],"k":[1,1,1],"c":"#b8a888","t":1},
+  {"s":"cone","a":[0.01,0.095,8],"p":[0.036,1.6,0.122],"r":[151,0,0],"k":[1,1,1],"c":"#b8a888","t":1},
+  {"s":"sphere","a":[0.01,8,6,0,6.283185307179586,0,3.141592653589793],"p":[-0.0586,1.322,0.6394],"r":[0,0,0],"k":[1,1,1],"c":"#b8a888","t":1},
+  {"s":"sphere","a":[0.01,8,6,0,6.283185307179586,0,3.141592653589793],"p":[0.0586,1.322,0.6394],"r":[0,0,0],"k":[1,1,1],"c":"#b8a888","t":1}
+ ],
+ "b:range":[
+  {"s":"cone","a":[1.05,1,8],"p":[0,2.95,0],"r":[0,0,0],"k":[1,1,1],"c":"#ffffff","t":1},
+  {"s":"box","a":[3.4,0.25,3.4],"p":[0,0.12,0],"r":[0,0,0],"k":[1,1,1],"c":"#7d776c","t":0},
+  {"s":"cyl","a":[0.75,0.9,2.3,8],"p":[0,1.3,0],"r":[0,0,0],"k":[1,1,1],"c":"#8c877c","t":0},
+  {"s":"cyl","a":[0.36,0.36,0.06,10],"p":[1.2,0.75,1.15],"r":[90,0,0],"k":[1,1,1],"c":"#f3efe4","t":0},
+  {"s":"cyl","a":[0.2,0.2,0.07,10],"p":[1.2,0.75,1.17],"r":[90,0,0],"k":[1,1,1],"c":"#c23b2b","t":0},
+  {"s":"cyl","a":[0.1,0.2,0.07,10],"p":[1.208,0.75,1.174],"r":[90,0,0],"k":[1,1,1],"c":"#000000","t":0},
+  {"s":"box","a":[0.3,0.845,0.3],"p":[0,1.706,0.67],"r":[-6,0,0],"k":[0.4,0.78,1],"c":"#000000","t":0},
+  {"s":"box","a":[0.3,0.845,0.3],"p":[0,1.706,-0.67],"r":[6,0,0],"k":[0.4,0.78,1],"c":"#000000","t":0},
+  {"s":"cyl","a":[0.36,0.36,0.06,10],"p":[-1.2,0.75,-0.399],"r":[90,0,0],"k":[1,1,1],"c":"#f3efe4","t":0},
+  {"s":"cyl","a":[0.2,0.2,0.07,10],"p":[-1.2,0.75,-0.399],"r":[90,0,0],"k":[1,1,1],"c":"#c23b2b","t":0},
+  {"s":"cyl","a":[0.1,0.2,0.07,10],"p":[-1.208,0.75,-0.385],"r":[90,0,0],"k":[1,1,1],"c":"#000000","t":0},
+  {"s":"box","a":[0.03,0.42,0.03],"p":[1.139,0.444,1.049],"r":[18,0,-19],"k":[1,1,1],"c":"#b69d7c","t":0},
+  {"s":"box","a":[0.03,0.47,0.03],"p":[1.257,0.444,1.055],"r":[18,0,19],"k":[1,1,1],"c":"#b69d7c","t":0}
+ ]
+};
 const MODEL_KEY='wicker-models-v1',D2R=Math.PI/180;
 const SHAPES={
   box:{n:'Box',make:a=>new C.BoxGeometry(a[0],a[1],a[2]),args:[['Width',.01,3],['Height',.01,3],['Depth',.01,3]],def:[.3,.3,.3]},
@@ -1599,6 +1744,8 @@ function applyModelEdits(){const E=modelEdits();for(const k in ORIG_UMOD)UMOD[k]
 try{applyModelEdits()}catch(e){console.error(e)}
 const UM={};for(const k in UMOD)UM[k]=mkPair(UMOD[k],UCAP[k],k==='ghost');
 const BM={};for(const k in BMOD)BM[k]=mkPair(BMOD[k],k==='reinc'||k==='barrow'||k==='moot'||k==='tomb'?8:k==='hut'?180:k==='hedge'?600:60);
+// where hut bunting is tied: just under the roof peak of whatever the hut model is now
+let HUT_TOP=1.78;function measureHut(){let y=0;for(const m of[BM.hut.t,BM.hut.f]){m.geometry.computeBoundingBox();y=Math.max(y,m.geometry.boundingBox.max.y)}HUT_TOP=Math.max(.8,y-.06)}measureHut();
 const SIL=inst(merge([P(cyl(.09,.15,.42,5),0xffffff,0,.21,0),P(new C.SphereGeometry(.1,6,5),0xffffff,0,.53,0)]),new C.MeshBasicMaterial({vertexColors:true}),200);
 const CM=inst(merge([P(cyl(.1,.1,.42,5),0xa59d8c,0,0,0,0,0,Math.PI/2),P(new C.SphereGeometry(.1,6,5),0xc49a7c,.26,.02,0)]),matF,240);
 const FLAG=(()=>{const g=new C.BufferGeometry(),v=new Float32Array([-.06,0,0,.06,0,0,0,-.14,0]);g.setAttribute('position',new C.BufferAttribute(v,3));g.computeVertexNormals();return inst(g,new C.MeshLambertMaterial({color:0xffffff,side:C.DoubleSide}),900)})();
@@ -2190,7 +2337,7 @@ window.addEventListener('pagehide',()=>saveGame());document.addEventListener('vi
 // sliders, add new shapes. Edits are kept in this browser automatically and appear in the game; Export
 // gives a block of text that can be baked into MODEL_DATA so they ship with the game.
 let wsOn=false,galleryOn=false;
-const WS={scene:null,group:null,key:null,parts:[],sel:-1,undo:[],lastPush:0,yaw:.6,pitch:.42,dist:4,ty:.5,tribe:0,ref:true,refMesh:null,box:null,drag:null,pts:new Map(),dirty:new Set()};
+const WS={multi:new Set(),addMode:false,scene:null,group:null,key:null,parts:[],sel:-1,undo:[],lastPush:0,yaw:.6,pitch:.42,dist:4,ty:.5,tribe:0,ref:true,refMesh:null,box:null,drag:null,pts:new Map(),dirty:new Set()};
 function wsLabel(k){const n=k.slice(2);return k[0]==='u'?(UT[n]?UT[n].label:n):(BT[n]?BT[n].label:n)}
 function wsKeys(){return Object.keys(ORIG_UMOD).filter(k=>k!=='ghost').map(k=>'u:'+k).concat(Object.keys(ORIG_BMOD).map(k=>'b:'+k))}
 function wsOrigParts(k){const n=k.slice(2);return captureDef(k[0]==='u'?ORIG_UMOD[n]:ORIG_BMOD[n])}
@@ -2199,16 +2346,21 @@ function wsSaveCurrent(){const loc=wsStore();const orig=JSON.stringify(wsOrigPar
   if(cur===orig&&!MODEL_DATA[WS.key])delete loc[WS.key];else loc[WS.key]=WS.parts;try{localStorage.setItem(MODEL_KEY,JSON.stringify(loc))}catch(e){toast('This browser would not keep the change')}
   WS.dirty.add(WS.key);wsStatus()}
 function wsStatus(){const n=Object.keys(modelEdits()).length;$('wsStatus').textContent=n?`Changes are kept automatically. ${n} model${n===1?'':'s'} edited.`:'Changes are kept automatically.'}
-function wsPush(force){const now=performance.now();if(!force&&now-WS.lastPush<700)return;WS.lastPush=now;WS.undo.push(JSON.stringify({p:WS.parts,s:WS.sel}));if(WS.undo.length>80)WS.undo.shift()}
+function wsPush(force){const now=performance.now();if(!force&&now-WS.lastPush<700)return;WS.lastPush=now;WS.undo.push(JSON.stringify({p:WS.parts,s:WS.sel,m:[...WS.multi]}));if(WS.undo.length>80)WS.undo.shift()}
 function wsChanged(rebuildPanel){wsBuild();if(rebuildPanel)wsPanel();wsSaveCurrent()}
-function wsLoad(k){WS.key=k;const E=modelEdits();WS.parts=E[k]?JSON.parse(JSON.stringify(E[k])):wsOrigParts(k);WS.sel=-1;WS.undo=[];
+function wsLoad(k){WS.key=k;const E=modelEdits();WS.parts=E[k]?JSON.parse(JSON.stringify(E[k])):wsOrigParts(k);WS.sel=-1;WS.multi.clear();WS.undo=[];
   let top=0,ext=0;for(const p of WS.parts){top=Math.max(top,p.p[1]+.3);ext=Math.max(ext,Math.abs(p.p[0])+.3,Math.abs(p.p[2])+.3)}
   WS.ty=Math.min(top,4)*.45;WS.dist=Math.max(2.4,Math.max(top,ext*2)*2.1)*(cw<720?Math.max(1,.9/Math.max(.3,cw/ch)):1);wsBuild();wsPanel()}
+const wsSelIdx=()=>{const a=new Set(WS.multi);if(WS.sel>=0)a.add(WS.sel);return [...a].filter(i=>i>=0&&i<WS.parts.length).sort((x,y)=>x-y)};
+function wsCentre(ids){const c=[0,0,0];for(const i of ids)for(let a=0;a<3;a++)c[a]+=WS.parts[i].p[a]/ids.length;return c}
+function wsTurnGroup(ids,ax,deg){const c=wsCentre(ids),e=[0,0,0];e[ax]=deg*D2R;const dq=new C.Quaternion().setFromEuler(new C.Euler(e[0],e[1],e[2],'XYZ')),v=new C.Vector3(),q=new C.Quaternion(),eu=new C.Euler();
+  for(const i of ids){const p=WS.parts[i];v.set(p.p[0]-c[0],p.p[1]-c[1],p.p[2]-c[2]).applyQuaternion(dq);p.p=[r4(c[0]+v.x),r4(c[1]+v.y),r4(c[2]+v.z)];q.setFromEuler(new C.Euler(p.r[0]*D2R,p.r[1]*D2R,p.r[2]*D2R,'XYZ')).premultiply(dq);eu.setFromQuaternion(q,'XYZ');p.r=[eu.x,eu.y,eu.z].map(a=>Math.round(a/D2R*100)/100)}}
+function wsScaleGroup(ids,f){const c=wsCentre(ids);for(const i of ids){const p=WS.parts[i];p.p=p.p.map((v,a)=>r4(c[a]+(v-c[a])*f));p.k=(p.k||[1,1,1]).map(v=>r4(v*f))}}
 function wsMat(p){const c=new C.Color(p.c);if(p.t)c.multiply(new C.Color(TRIBES[WS.tribe].col));return new C.MeshLambertMaterial({color:c,flatShading:true})}
 function wsBuild(){const S=WS.scene;if(WS.group){S.remove(WS.group);WS.group.traverse(o=>{if(o.geometry)o.geometry.dispose();if(o.material)o.material.dispose()})}
-  const g=new C.Group();WS.parts.forEach((p,i)=>{let m;try{m=new C.Mesh(partGeo(p),wsMat(p))}catch(e){return}m.userData.i=i;if(i===WS.sel){m.material.emissive=new C.Color(0x241a06)}g.add(m)});
+  const g=new C.Group();WS.parts.forEach((p,i)=>{let m;try{m=new C.Mesh(partGeo(p),wsMat(p))}catch(e){return}m.userData.i=i;if(i===WS.sel||WS.multi.has(i)){m.material.emissive=new C.Color(i===WS.sel?0x2a1e06:0x1a1406)}g.add(m)});
   S.add(g);WS.group=g;if(WS.box){S.remove(WS.box);WS.box=null}
-  const sm=g.children.find(m=>m.userData.i===WS.sel);if(sm){WS.box=new C.BoxHelper(sm,0xffd27a);S.add(WS.box)}
+  const ids=wsSelIdx();if(ids.length){const bx=new C.Box3();for(const m of g.children)if(ids.includes(m.userData.i))bx.expandByObject(m);WS.box=new C.Box3Helper(bx,ids.length>1?0x9fd0ff:0xffd27a);WS.box.update=()=>{};S.add(WS.box)}
   if(WS.refMesh){WS.refMesh.visible=WS.ref;const bb=new C.Box3().setFromObject(g);WS.refMesh.position.set(Math.max(.7,bb.max.x+.5),0,0)}}
 function wsOpen(){if(!WS.scene){const S=new C.Scene();S.background=new C.Color(0x16110d);S.add(new C.HemisphereLight(0xfff1d8,0x30251a,.85));const d=new C.DirectionalLight(0xffffff,.75);d.position.set(4,9,6);S.add(d);
     const grid=new C.GridHelper(12,12,0x5a4a35,0x3a2f24);S.add(grid);const disc=new C.Mesh(new C.CircleGeometry(7,40),new C.MeshLambertMaterial({color:0x221b14}));disc.rotation.x=-Math.PI/2;disc.position.y=-.01;S.add(disc);
@@ -2219,7 +2371,7 @@ function wsOpen(){if(!WS.scene){const S=new C.Scene();S.background=new C.Color(0
   sel.value=WS.key||'u:brave';camera.near=.05;wsLoad(sel.value);wsStatus();resize();wsView()}
 function wsClose(){wsOn=false;$('ws').hidden=true;$('wsIO').hidden=true;camera.near=.5;camera.clearViewOffset();camera.updateProjectionMatrix();
   if(WS.dirty.size){applyModelEdits();for(const k of WS.dirty){const n=k.slice(2);const pr=k[0]==='u'?UM[n]:BM[n],set=k[0]==='u'?UMOD:BMOD;if(!pr)continue;const d=set[n]();pr.t.geometry.dispose();pr.f.geometry.dispose();pr.t.geometry=merge(d.t);pr.f.geometry=merge(d.f);
-      if(n==='warrior'&&UM.ghost){const dg=UMOD.ghost();UM.ghost.t.geometry=merge(dg.t);UM.ghost.f.geometry=merge(dg.f)}}WS.dirty.clear()}
+      if(n==='warrior'&&UM.ghost){const dg=UMOD.ghost();UM.ghost.t.geometry=merge(dg.t);UM.ghost.f.geometry=merge(dg.f)}}WS.dirty.clear();measureHut()}
   openMenu()}
 function wsView(){const narrow=cw<720;camera.setViewOffset(cw,ch,narrow?0:170,narrow?ch*.24:0,cw,ch);camera.updateProjectionMatrix()}
 function wsFrame(dt){const d=WS.dist,cp=Math.cos(WS.pitch);camera.position.set(Math.sin(WS.yaw)*cp*d,WS.ty+Math.sin(WS.pitch)*d,Math.cos(WS.yaw)*cp*d);camera.lookAt(0,WS.ty,0);
@@ -2228,8 +2380,17 @@ function wsFrame(dt){const d=WS.dist,cp=Math.cos(WS.pitch);camera.position.set(M
 function wsSlider(lab,min,max,step,val,on,hint){const id='w'+Math.random().toString(36).slice(2,8);const st=step||.005;
   return {html:`<label class="wsS" title="${hint||''}"><span>${lab}</span><input type="range" id="${id}" min="${min}" max="${max}" step="${st}" value="${val}"><input type="number" id="${id}n" step="${st}" value="${+(+val).toFixed(3)}"></label>`,bind(){const r=$(id),n=$(id+'n');
     const go=v=>{v=+v;if(!isFinite(v))return;wsPush();on(v);n.value=+v.toFixed(3);r.value=v;wsBuild();wsSaveCurrent()};r.addEventListener('pointerdown',()=>wsPush(true));r.addEventListener('input',()=>go(r.value));n.addEventListener('change',()=>{wsPush(true);go(n.value)})}}}
-function wsPanel(){const L=$('wsParts');L.innerHTML=WS.parts.map((p,i)=>`<button class="wsP${i===WS.sel?' on':''}" data-i="${i}"><i style="background:${p.t?TRIBES[WS.tribe].css:p.c}"></i>${i+1}. ${SHAPES[p.s].n}${p.t?' · tribe':''}</button>`).join('')||'<span class="wsHint">No parts. Add a shape below.</span>';
-  const P=$('wsProps'),p=WS.parts[WS.sel];if(!p){P.innerHTML='<p class="wsHint">Tap a part in the picture or the list to change it. Drag a selected part to move it; drag anywhere else to turn the view.</p>';return}
+function wsPanel(){const L=$('wsParts');L.innerHTML=WS.parts.map((p,i)=>`<button class="wsP${i===WS.sel?' on':WS.multi.has(i)?' on2':''}" data-i="${i}"><i style="background:${p.t?TRIBES[WS.tribe].css:p.c}"></i>${i+1}. ${SHAPES[p.s].n}${p.t?' · tribe':''}${p.g?' <em>group '+p.g%100+'</em>':''}</button>`).join('')||'<span class="wsHint">No parts. Add a shape below.</span>';
+  const P=$('wsProps'),p=WS.parts[WS.sel];if(!p){P.innerHTML='<p class="wsHint">Tap a part in the picture or the list to change it. Shift-click (or turn on Add) to pick several at once. Drag a selected part to move it; drag anywhere else to turn the view.</p>';return}
+  const ids=wsSelIdx();if(ids.length>1){const binds=[];const c0=wsCentre(ids);let h=`<div class="wsRow"><b>${ids.length} parts</b><input type="color" id="wsColM" value="${p.c}" title="Colour for all"><label class="wsChk"><input type="checkbox" id="wsTeamM"${ids.every(i=>WS.parts[i].t)?' checked':''}> Tribe colour</label></div><h4>Move together</h4>`;
+    const bb=new C.Box3().setFromObject(WS.group),bs=new C.Vector3();bb.getSize(bs);const M=Math.max(.6,bs.x,bs.y,bs.z)*1.1;
+    [['Left – right',0],['Down – up',1],['Back – front',2]].forEach(([l,ax])=>{let last=c0[ax];const sl=wsSlider(l,c0[ax]-M,c0[ax]+M,.002,c0[ax],v=>{const d=v-last;last=v;for(const i of ids)WS.parts[i].p[ax]=r4(WS.parts[i].p[ax]+d)});h+=sl.html;binds.push(sl)});
+    h+='<h4>Turn together</h4>';[['Tip forward',0],['Spin',1],['Lean sideways',2]].forEach(([l,ax])=>{let last=0;const sl=wsSlider(l,-180,180,1,0,v=>{wsTurnGroup(ids,ax,v-last);last=v});h+=sl.html;binds.push(sl)});
+    h+='<h4>Size together</h4>';{let last=1;const sl=wsSlider('Scale',.2,3,.01,1,v=>{wsScaleGroup(ids,v/last);last=v});h+=sl.html;binds.push(sl)}
+    h+='<p class="wsHint">Turning and scaling work around the middle of the selection. The sliders start from zero each time you pick the group.</p>';
+    P.innerHTML=h;binds.forEach(b=>b.bind());
+    $('wsColM').addEventListener('input',e=>{wsPush();for(const i of ids)WS.parts[i].c=e.target.value;wsBuild();wsSaveCurrent();wsPanelListAll()});
+    $('wsTeamM').addEventListener('change',e=>{wsPush(true);for(const i of ids)WS.parts[i].t=e.target.checked?1:0;wsChanged(true)});return}
   const binds=[];let h=`<div class="wsRow"><b>${WS.sel+1}. </b><select id="wsShape">${Object.keys(SHAPES).map(s=>`<option value="${s}"${s===p.s?' selected':''}>${SHAPES[s].n}</option>`).join('')}</select>
     <input type="color" id="wsCol" value="${p.c}" title="Colour"><label class="wsChk"><input type="checkbox" id="wsTeam"${p.t?' checked':''}> Tribe colour</label></div><h4>Size</h4>`;
   const bb=new C.Box3().setFromObject(WS.group),bs=new C.Vector3();bb.getSize(bs);const M=Math.max(.3,bs.x,bs.y,bs.z);
@@ -2243,33 +2404,43 @@ function wsPanel(){const L=$('wsParts');L.innerHTML=WS.parts.map((p,i)=>`<button
   $('wsTeam').addEventListener('change',e=>{wsPush(true);p.t=e.target.checked?1:0;wsChanged(true)});
   $('wsShape').addEventListener('change',e=>{wsPush(true);const s=e.target.value,sz=sh=>SHAPES[sh].args.map((e2,j)=>(!e2[3]&&(e2[4]??j)<3)?(e2[4]??j):-1).filter(i=>i>=0);
     const big=Math.max(.01,...sz(p.s).map(i=>p.a[i]||0));p.s=s;p.a=SHAPES[s].def.slice();const f=big/Math.max(.01,...sz(s).map(i=>p.a[i]));for(const i of sz(s))p.a[i]=r4(p.a[i]*f);wsChanged(true)})}
+function wsPanelListAll(){for(const i of wsSelIdx()){const p=WS.parts[i],b=document.querySelector(`#wsParts [data-i="${i}"] i`);if(b&&p)b.style.background=p.t?TRIBES[WS.tribe].css:p.c}}
 function wsPanelList(){const p=WS.parts[WS.sel];const b=document.querySelector(`#wsParts [data-i="${WS.sel}"] i`);if(b&&p)b.style.background=p.t?TRIBES[WS.tribe].css:p.c}
-function wsSelect(i){WS.sel=i;wsBuild();wsPanel();const b=document.querySelector(`#wsParts [data-i="${i}"]`);if(b)b.scrollIntoView({block:'nearest'})}
+function wsSelect(i,add,fromList){
+  if(add&&i>=0){if(i===WS.sel){const rest=[...WS.multi];WS.multi.delete(rest[rest.length-1]);WS.sel=rest.length?rest[rest.length-1]:-1}else if(WS.multi.has(i)){WS.multi.delete(i)}else{if(WS.sel>=0)WS.multi.add(WS.sel);WS.sel=i}}
+  else{WS.multi.clear();WS.sel=i;const p=WS.parts[i];if(p&&p.g&&!fromList)WS.parts.forEach((q,j)=>{if(j!==i&&q.g===p.g)WS.multi.add(j)})}
+  wsBuild();wsPanel();const b=document.querySelector(`#wsParts [data-i="${i}"]`);if(b)b.scrollIntoView({block:'nearest'})}
 function wsAdd(s){wsPush(true);const base=WS.parts[WS.sel];const p={s,a:SHAPES[s].def.slice(),p:base?[base.p[0],base.p[1]+.1,base.p[2]]:[0,.2,0],r:[0,0,0],k:[1,1,1],c:'#b8a888',t:0};WS.parts.push(p);WS.sel=WS.parts.length-1;wsChanged(true)}
 function wsHit(sx,sy){const rc=new C.Raycaster(),r=glc.getBoundingClientRect();rc.setFromCamera(new C.Vector2((sx-r.left)/r.width*2-1,-((sy-r.top)/r.height)*2+1),camera);const h=rc.intersectObjects(WS.group.children,false)[0];return h?h:null}
 function wsDown(e){try{glc.setPointerCapture(e.pointerId)}catch(_){}WS.pts.set(e.pointerId,{x:e.clientX,y:e.clientY,sx:e.clientX,sy:e.clientY,moved:false});
   if(WS.pts.size===2){const [a,b]=[...WS.pts.values()];WS.drag={kind:'pinch',d0:Math.hypot(a.x-b.x,a.y-b.y),dist0:WS.dist};return}
-  const h=wsHit(e.clientX,e.clientY);if(h&&h.object.userData.i===WS.sel&&e.button!==2){wsPush(true);const n=new C.Vector3();camera.getWorldDirection(n);WS.drag={kind:'part',plane:new C.Plane().setFromNormalAndCoplanarPoint(n,h.point),last:h.point.clone()}}else WS.drag={kind:'rot'}}
+  const h=wsHit(e.clientX,e.clientY);if(h&&wsSelIdx().includes(h.object.userData.i)&&!e.shiftKey&&!WS.addMode&&e.button!==2){wsPush(true);const n=new C.Vector3();camera.getWorldDirection(n);WS.drag={kind:'part',plane:new C.Plane().setFromNormalAndCoplanarPoint(n,h.point),last:h.point.clone()}}else WS.drag={kind:'rot'}}
 function wsMove(e){const q=WS.pts.get(e.pointerId);if(!q||!WS.drag)return;const px=q.x,py=q.y;q.x=e.clientX;q.y=e.clientY;if(Math.hypot(q.x-q.sx,q.y-q.sy)>6)q.moved=true;
   const D=WS.drag;if(D.kind==='pinch'){const [a,b]=[...WS.pts.values()];if(!b)return;WS.dist=clamp(D.dist0*D.d0/Math.max(20,Math.hypot(a.x-b.x,a.y-b.y)),1,40);return}
   if(!q.moved)return;
   if(D.kind==='rot'){WS.yaw-=(q.x-px)*.008;WS.pitch=clamp(WS.pitch+(q.y-py)*.006,-.2,1.45);return}
   if(D.kind==='part'){const r=glc.getBoundingClientRect(),rc=new C.Raycaster();rc.setFromCamera(new C.Vector2((q.x-r.left)/r.width*2-1,-((q.y-r.top)/r.height)*2+1),camera);const pt=new C.Vector3();if(!rc.ray.intersectPlane(D.plane,pt))return;
-    const p=WS.parts[WS.sel];if(!p)return;p.p=[r4(p.p[0]+pt.x-D.last.x),r4(p.p[1]+pt.y-D.last.y),r4(p.p[2]+pt.z-D.last.z)];D.last.copy(pt);wsBuild();D.moved=true}}
+    const dx=pt.x-D.last.x,dy=pt.y-D.last.y,dz=pt.z-D.last.z;for(const i of wsSelIdx()){const p=WS.parts[i];p.p=[r4(p.p[0]+dx),r4(p.p[1]+dy),r4(p.p[2]+dz)]}D.last.copy(pt);wsBuild();D.moved=true}}
 function wsUp(e){const q=WS.pts.get(e.pointerId);WS.pts.delete(e.pointerId);if(!q)return;
   if(WS.drag&&WS.drag.kind==='part'&&WS.drag.moved){wsSaveCurrent();wsPanel()}
-  else if(!q.moved&&WS.pts.size===0&&e.type==='pointerup'){const h=wsHit(q.sx,q.sy);wsSelect(h?h.object.userData.i:-1)}
+  else if(!q.moved&&WS.pts.size===0&&e.type==='pointerup'){const h=wsHit(q.sx,q.sy);if(h)wsSelect(h.object.userData.i,e.shiftKey||WS.addMode);else if(!(e.shiftKey||WS.addMode))wsSelect(-1)}
   if(WS.pts.size===0)WS.drag=null}
-$('wsParts').addEventListener('click',e=>{const b=e.target.closest('[data-i]');if(b)wsSelect(+b.dataset.i)});
+$('wsParts').addEventListener('click',e=>{const b=e.target.closest('[data-i]');if(b)wsSelect(+b.dataset.i,e.shiftKey||WS.addMode,true)});
 $('wsModel').addEventListener('change',e=>wsLoad(e.target.value));
 $('wsTribe').addEventListener('click',e=>{const b=e.target.closest('[data-i]');if(!b)return;WS.tribe=+b.dataset.i;$('wsTribe').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));wsBuild();wsPanel()});
 $('wsRef').addEventListener('change',e=>{WS.ref=e.target.checked;wsBuild()});
 $('wsAddRow').addEventListener('click',e=>{const b=e.target.closest('[data-s]');if(b)wsAdd(b.dataset.s)});
-$('wsDup').addEventListener('click',()=>{const p=WS.parts[WS.sel];if(!p)return toast('Select a part first');wsPush(true);const c=JSON.parse(JSON.stringify(p));c.p[0]=r4(c.p[0]+.1);WS.parts.push(c);WS.sel=WS.parts.length-1;wsChanged(true)});
-$('wsMirror').addEventListener('click',()=>{const p=WS.parts[WS.sel];if(!p)return toast('Select a part first');wsPush(true);const c=JSON.parse(JSON.stringify(p));c.p[0]=r4(-c.p[0]);c.r[1]=-c.r[1];c.r[2]=-c.r[2];WS.parts.push(c);WS.sel=WS.parts.length-1;wsChanged(true)});
-$('wsDel').addEventListener('click',()=>{if(WS.sel<0)return toast('Select a part first');wsPush(true);WS.parts.splice(WS.sel,1);WS.sel=Math.min(WS.sel,WS.parts.length-1);wsChanged(true)});
-$('wsUndo').addEventListener('click',()=>{const s=WS.undo.pop();if(!s)return toast('Nothing to undo');const o=JSON.parse(s);WS.parts=o.p;WS.sel=o.s;wsChanged(true)});
-$('wsReset').addEventListener('click',()=>{wsPush(true);WS.parts=MODEL_DATA[WS.key]?JSON.parse(JSON.stringify(MODEL_DATA[WS.key])):wsOrigParts(WS.key);WS.sel=-1;wsChanged(true);toast(`${wsLabel(WS.key)} is back as it was. Undo brings your version back.`)});
+const wsCopySel=fn=>{const ids=wsSelIdx();if(!ids.length)return toast('Select a part first');wsPush(true);const ng=ids.some(i=>WS.parts[i].g)?Date.now()%1e6:0,map={};const made=[];
+  for(const i of ids){const c=JSON.parse(JSON.stringify(WS.parts[i]));fn(c);if(c.g){map[c.g]=map[c.g]||(ng+Object.keys(map).length+1);c.g=map[c.g]}WS.parts.push(c);made.push(WS.parts.length-1)}
+  WS.multi=new Set(made.slice(0,-1));WS.sel=made[made.length-1];wsChanged(true)};
+$('wsDup').addEventListener('click',()=>wsCopySel(c=>{c.p[0]=r4(c.p[0]+.1)}));
+$('wsMirror').addEventListener('click',()=>wsCopySel(c=>{c.p[0]=r4(-c.p[0]);c.r[1]=-c.r[1];c.r[2]=-c.r[2]}));
+$('wsDel').addEventListener('click',()=>{const ids=wsSelIdx();if(!ids.length)return toast('Select a part first');wsPush(true);for(const i of ids.slice().reverse())WS.parts.splice(i,1);WS.multi.clear();WS.sel=-1;wsChanged(true)});
+$('wsGroup').addEventListener('click',()=>{const ids=wsSelIdx();if(ids.length<2)return toast('Shift-click (or turn on Add) to pick two or more parts first');wsPush(true);const g=1+Math.max(0,...WS.parts.map(p=>p.g||0));for(const i of ids)WS.parts[i].g=g;wsChanged(true);toast(`${ids.length} parts grouped. Tapping any of them in the picture now picks up the whole group.`)});
+$('wsUngroup').addEventListener('click',()=>{const ids=wsSelIdx();if(!ids.some(i=>WS.parts[i].g))return toast('Nothing selected is grouped');wsPush(true);for(const i of ids)delete WS.parts[i].g;wsChanged(true)});
+$('wsAddSel').addEventListener('click',e=>{WS.addMode=!WS.addMode;e.currentTarget.setAttribute('aria-pressed',WS.addMode);e.currentTarget.classList.toggle('on',WS.addMode)});
+$('wsUndo').addEventListener('click',()=>{const s=WS.undo.pop();if(!s)return toast('Nothing to undo');const o=JSON.parse(s);WS.parts=o.p;WS.sel=o.s;WS.multi=new Set(o.m||[]);wsChanged(true)});
+$('wsReset').addEventListener('click',()=>{wsPush(true);WS.parts=MODEL_DATA[WS.key]?JSON.parse(JSON.stringify(MODEL_DATA[WS.key])):wsOrigParts(WS.key);WS.sel=-1;WS.multi.clear();wsChanged(true);toast(`${wsLabel(WS.key)} is back as it was. Undo brings your version back.`)});
 $('wsClose').addEventListener('click',wsClose);
 $('wsExport').addEventListener('click',()=>{const E=modelEdits();const keys=Object.keys(E);if(!keys.length)return toast('No models have been edited yet');
   const txt='{\n'+keys.map(k=>' "'+k+'":[\n'+E[k].map(p=>'  '+JSON.stringify(p)).join(',\n')+'\n ]').join(',\n')+'\n}';
@@ -2294,6 +2465,6 @@ function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;fogK=Math.mi
   }catch(err){if(!errShown){errShown=true;console.error(err);toast('Something went wrong: '+err.message)}}
   requestAnimationFrame(frame)}
 resize();buildWorld();showContinue();requestAnimationFrame(frame);
-window.__ws={light,memorial,get stats(){return stats},get cam(){return cam},get WS(){return WS},wsOpen,wsClose,captureDef,defFromData,merge,ORIG_UMOD,ORIG_BMOD,get UM(){return UM},get BM(){return BM},get wear(){return wear},get buntings(){return buntings},get patches(){return patches},get wells(){return wells},get units(){return units},get tribes(){return tribes},get blds(){return blds},sim,beginGame,get gt(){return gt},castSpell,tryCast,saveGame,loadGame,setSel,command,showLevel,SCEN,field,get walkA(){return walk},hAt,get water(){return water},findSpot,get allow(){return allowSets},get pass(){return pass},get swamps(){return swamps},get debris(){return debris},queenValue,invokeArma,startRitual,sendVehicle,get wildId(){return wildId},get armageddon(){return armageddon},placeBuilding,validSpot,orderMove,spawnUnit,command,get water(){return water},findSpot};
+window.__ws={get HUT_TOP(){return HUT_TOP},light,memorial,get stats(){return stats},get cam(){return cam},get WS(){return WS},wsOpen,wsClose,captureDef,defFromData,merge,ORIG_UMOD,ORIG_BMOD,get UM(){return UM},get BM(){return BM},get wear(){return wear},get buntings(){return buntings},get patches(){return patches},get wells(){return wells},get units(){return units},get tribes(){return tribes},get blds(){return blds},sim,beginGame,get gt(){return gt},castSpell,tryCast,saveGame,loadGame,setSel,command,showLevel,SCEN,field,get walkA(){return walk},hAt,get water(){return water},findSpot,get allow(){return allowSets},get pass(){return pass},get swamps(){return swamps},get debris(){return debris},queenValue,invokeArma,startRitual,sendVehicle,get wildId(){return wildId},get armageddon(){return armageddon},placeBuilding,validSpot,orderMove,spawnUnit,command,get water(){return water},findSpot};
 })();
 </script>
