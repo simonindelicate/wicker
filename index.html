@@ -274,6 +274,7 @@ details.help summary{cursor:pointer;color:var(--text);font:14px var(--f-display)
           <li>Hollow hills lie out in the wilderness. Bring your Cunning Woman to one with twenty followers and at least 1,500 mana and she is sealed inside for good. The hill becomes a wicker fortress: from it she sees everything and casts anywhere at half the mana. If enemies tear it down she is lost for a minute, then rises at your stone circle, and half your mana goes with her.</li>
           <li>All-against-all needs an unlit wicker man, ten followers to burn and a full bar of mana. Every hut falls, and every soul walks to the Moot at the world's heart to fight to the end.</li>
           <li>Pick a spell and tap a target. Your Cunning Woman walks into range and casts. If she dies she returns at your stone circle after forty-five seconds, as long as your tribe survives.</li>
+          <li>The Scrying Torch plants a burning beacon where the Cunning Woman aims it. The land around it stays in sight for as long as it stands, which makes it a lookout over a pass, a rival's door or a hollow hill. Enemies can tear it down.</li>
           <li>You win when every rival tribe has no followers or buildings left.</li>
         </ul>
       </details>
@@ -388,6 +389,7 @@ const TUNE={
   hearth:.08,                // damage reduction for fighters near their own buildings (0.08 = 8%)
   breakAt:.5,                // an attack wave turns for home once it has lost this share of its strength
   boltEvery:60,              // the AI aims Lightning at your shaman at most this often (seconds)
+  torchSight:15,                    // Scrying Torch: how far around it the fog stays lifted
   nestRange:16,nestSight:18,nestReload:2.2,nestDamage:38,  // Rook Tree: balloons have 110 health, so 38 is three hits
   zoomMax:112,curveNear:1/170,curveFar:1/88
 };
@@ -423,6 +425,7 @@ const BT={
   fold:{s:3,wood:40,time:14,hp:350,label:'Thrall Fold',hold:15,info:'Pens up to fifteen captives your osses bring home'},
   altar:{s:2,wood:20,time:10,hp:250,label:'Forest Altar',site:'altar',info:'Takes one offering at a time; stronger among trees'},
   god:{s:5,wood:260,time:60,hp:900,label:'Wicker God',site:'god',holdN:12,burnT:16,info:'Holds twelve; burns for an enormous offering'},
+  torch:{s:1,wood:0,time:1,hp:1400,label:'Scrying Torch',info:'A burning beacon; the land around it stays in sight while it stands'},
   tomb:{s:3,wood:0,time:1,hp:5000,label:'Tomb Fortress',info:'Your Cunning Woman lies sealed here'},
   oak:{s:4,wood:300,time:50,hp:1500,label:"Herne's Oak",info:'Hang your Cunning Woman from it for two minutes and the Wild Hunt rides'},
   balloon:{s:4,wood:80,time:26,hp:400,label:'Balloon Works',train:'balloon',mana:60,tt:14,info:'Builds balloons'},
@@ -442,6 +445,7 @@ const SP=[
   {k:'flatten',n:'Flatten',c:150,cd:8,r:14,rad:7,s:2},
   {k:'hypno',n:'Hypnotise',c:260,cd:15,r:12,rad:3,s:1},
   {k:'whirl',n:'Whirlwind',c:320,cd:18,r:14,rad:2,s:0},
+  {k:'torch',n:'Scrying Torch',c:120,cd:20,r:15,rad:1,s:0},
   {k:'swamp',n:'Bog',c:300,cd:18,r:13,rad:3,s:2},
   {k:'erode',n:'Erode',c:340,cd:20,r:14,rad:4.5,s:2},
   {k:'quake',n:'Earthquake',c:450,cd:25,r:15,rad:3,s:2},
@@ -451,7 +455,7 @@ const SP=[
   {k:'arma',n:'All-against-all',c:TUNE.manaMax,cd:1,r:0,rad:0,s:0},
 ];
 const SPK={};SP.forEach(s=>SPK[s.k]=s);
-const SPDESC={blast:'Hurls a fireball that scorches and knocks people flying.',lightning:'A single bolt that kills almost anything it strikes, Cunning Women included.',swarm:'A black cloud of flies that bites and scatters enemies for ten seconds.',convert:'Turns wandering wildmen within the circle into your villagers.',shield:'Your followers in the area take far less damage for 30 seconds.',ghost:'Six illusory warriors that distract the enemy and vanish when struck.',bridge:'Raises a causeway from your Cunning Woman towards the target, across water.',flatten:'Levels a wide stretch of land, smoothing cliffs and filling shallows. Deep water is beyond it.',hypno:'Enemies in the area fight for you for 25 seconds.',whirl:'A wandering tornado that flings people and tears down buildings.',swamp:'A hidden bog your own people cross safely. Enemies cannot see it and walk straight in; it drowns them until it has claimed ten, then drains away.',erode:'Sinks the land, drowning whatever stands on it.',quake:'Splits the ground into cliffs and shakes buildings apart.',fire:'Rains fire on an area for eight seconds.',angel:'An angel hunts enemy followers for 25 seconds.',volcano:'Raises a burning mountain that destroys everything around it.',arma:'Burn ten followers in your wicker man and spend a full bar of mana. Every hut falls and every people marches to the Moot to fight to the end.'};
+const SPDESC={torch:'Plants a burning beacon where you aim. While it stands, the land around it stays in sight. Enemies can tear it down.',blast:'Hurls a fireball that scorches and knocks people flying.',lightning:'A single bolt that kills almost anything it strikes, Cunning Women included.',swarm:'A black cloud of flies that bites and scatters enemies for ten seconds.',convert:'Turns wandering wildmen within the circle into your villagers.',shield:'Your followers in the area take far less damage for 30 seconds.',ghost:'Six illusory warriors that distract the enemy and vanish when struck.',bridge:'Raises a causeway from your Cunning Woman towards the target, across water.',flatten:'Levels a wide stretch of land, smoothing cliffs and filling shallows. Deep water is beyond it.',hypno:'Enemies in the area fight for you for 25 seconds.',whirl:'A wandering tornado that flings people and tears down buildings.',swamp:'A hidden bog your own people cross safely. Enemies cannot see it and walk straight in; it drowns them until it has claimed ten, then drains away.',erode:'Sinks the land, drowning whatever stands on it.',quake:'Splits the ground into cliffs and shakes buildings apart.',fire:'Rains fire on an area for eight seconds.',angel:'An angel hunts enemy followers for 25 seconds.',volcano:'Raises a burning mountain that destroys everything around it.',arma:'Burn ten followers in your wicker man and spend a full bar of mana. Every hut falls and every people marches to the Moot to fight to the end.'};
 const ICON={
   blast:'<circle cx="12" cy="12" r="4"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l3 3M16 16l3 3M5 19l3-3M16 8l3-3"/>',
   lightning:'<path d="M13 2L5 14h6l-2 8 8-12h-6l2-8z"/>',
@@ -463,6 +467,7 @@ const ICON={
   flatten:'<path d="M3 8l4-3 4 4 4-4 6 3"/><path d="M3 15h18M3 19h18"/>',
   hypno:'<path d="M12 12a1 1 0 0 1 1 1 2 2 0 0 1-2 2 3 3 0 0 1-3-3 4 4 0 0 1 4-4 5 5 0 0 1 5 5 6 6 0 0 1-6 6 7 7 0 0 1-7-7"/>',
   whirl:'<path d="M3 5h18M5 9h14M7 13h10M9 17h6M11 21h2"/>',
+  torch:'<path d="M12 22v-9M9 13h6l-1 2h-4z"/><path d="M12 11c-2-1-2-3-1-5 0 2 2 2 2 0 1 2 1 4-1 5z"/>',
   swamp:'<path d="M2 14c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 19c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/><circle cx="8" cy="8" r="2"/><circle cx="15" cy="6" r="1.3"/>',
   erode:'<path d="M2 5h20"/><path d="M6 9l6 5 6-5M8 15l4 4 4-4"/>',
   quake:'<path d="M2 12h4l2-5 3 10 3-12 3 9 2-2h3"/>',
@@ -513,7 +518,7 @@ const SCEN=[
   me:{mana:250,wood:150,huts:2,manaMult:1.5},ai:{first:720,breed:.6,cap:40,mil:.25,gap:2},
   intro:'The grove gives a little for each life. The wicker man gives far more, but it takes five at once, and it must burn to give anything at all. Feed it, and the Cunning Woman will have what she needs.'},
  {title:'Hobby Horse',seed:3313,style:'continent',enemies:1,diff:'easy',fog:true,goal:{type:'captives',n:10},
-  addB:['osshouse','fold'],addS:['swarm'],news:['Oss House','Thrall Fold','Plague of Flies'],wild:1.8,
+  addB:['osshouse','fold'],addS:['swarm','torch'],news:['Oss House','Thrall Fold','Plague of Flies','Scrying Torch'],wild:1.8,
   me:{mana:250,wood:180,huts:2},ai:{first:900,cap:50},
   intro:'The wild folk wander the woods with no hearth and no name. The Oss will bring them in. Fill the fold with ten of them and the people will know we can feed the fires for a long winter.'},
  {title:'Bowmen',seed:4421,style:'continent',enemies:1,diff:'normal',fog:true,goal:{type:'conquer'},
@@ -831,7 +836,7 @@ function placeBuilding(ti,type,spot,instant){const D=BT[type],s=D.s,{cx0,cz0}=sp
   blds.push(b);bById.set(b.id,b);
   if(!instant){tribes[ti].wood-=D.wood;for(let k=0;k<(type==='hedge'?1:3);k++){const br=getFreeBrave(tribes[ti],b.x,b.z);if(!br)break;assignBuild(br,b)}}
   return b}
-function destroyBld(b){if(!b.alive||BT[b.bt].inv)return;b.alive=false;const s=BT[b.bt].s;if(b.bt!=='hedge'&&!armageddon&&!b.burnt&&atk>=0&&atk!==b.tribe&&tribes[atk]&&!tribes[atk].wild&&tribes[b.tribe]&&!tribes[b.tribe].wild)saltGround(b,b.tribe);if(b.bt==='hedge'){if(b.done)setHedge(b,0)}
+function destroyBld(b){if(!b.alive||BT[b.bt].inv)return;b.alive=false;const s=BT[b.bt].s;if(b.bt!=='hedge'&&b.bt!=='torch'&&!armageddon&&!b.burnt&&atk>=0&&atk!==b.tribe&&tribes[atk]&&!tribes[atk].wild&&tribes[b.tribe]&&!tribes[b.tribe].wild)saltGround(b,b.tribe);if(b.bt==='hedge'){if(b.done)setHedge(b,0)}
   for(let dz=0;dz<s;dz++)for(let dx=0;dx<s;dx++){const c=wi(b.cz0+dz)*N+wi(b.cx0+dx);if(bOcc[c]===b.id)bOcc[c]=0}
   for(let i=0;i<b.occ;i++){const a=R()*TAU,u=spawnUnit('brave',b.tribe,b.x+Math.cos(a)*s*.6,b.z+Math.sin(a)*s*.6);if(water[cidx(u.x,u.z)]){killUnit(u);continue}u.st='flee';u.ft=4+R()*2;setTarget(u,b.x+Math.cos(a)*(9+R()*4),b.z+Math.sin(a)*(9+R()*4));u.think=2}
   for(const ct of b.capt)spawnWild(b.x+(R()-.5)*s,b.z+(R()-.5)*s);b.capt.length=0;
@@ -1112,6 +1117,7 @@ function fireArrow(u,t){const ty=t.bt?hAt(t.x,t.z)+1:unitY(t)+.4;const dd=Math.s
 function updBld(b,dt){const D=BT[b.bt],T=tribes[b.tribe];if(D.inv)return;
   if(!b.done){if(b.prog>=1){b.done=true;b.prog=1;b.hp=b.mhp;if(b.bt==='hedge')setHedge(b,1);else if(b.tribe===0){toast(D.label+' finished');sfx('built',.7)}}return}
   if(b.bt==='hedge')return;
+  if(b.bt==='torch'){if(R()<dt*14){const y=hAt(b.x,b.z)+2.75;PA.emit(b.x+(R()-.5)*.2,y,b.z+(R()-.5)*.2,(R()-.5)*.3,.9+R()*.8,(R()-.5)*.3,.6,1,.55+R()*.3,.12,1,.3,-.4)}return}
   if(b.bt==='nest'){b.cd=(b.cd||0)-dt;if(b.cd>0)return;let tg=null,bd=TUNE.nestRange*TUNE.nestRange;
     for(const u of units)if(u.alive&&u.type==='balloon'&&u.tribe!==b.tribe&&u.tribe!==wildId){const d=d2(b.x,b.z,u.x,u.z);if(d<bd){bd=d;tg=u}}
     if(!tg){b.cd=.4;return}b.cd=TUNE.nestReload;const sy=hAt(b.x,b.z)+3.4,ty=unitY(tg)+1.4,dd=Math.sqrt(bd),ti=b.tribe;b.aim=Math.atan2(wd(tg.x-b.x),wd(tg.z-b.z));
@@ -1179,6 +1185,9 @@ function castSpell(ti,k,px,pz,cu){atk=ti;let sx=cu?cu.x:px,sz=cu?cu.z:pz,sy=cu?u
   case 'convert':{let n=0;query(grid,px,pz,5,u=>{if(u.tribe===wildId&&u.alive&&d2(px,pz,u.x,u.z)<16){convertUnit(u,ti);n++}});ring(px,pz,4,.95,.9,.55);if(ti===0&&!n)toast('There were no wildmen in the circle');break}
   case 'shield':query(grid,px,pz,4.5,u=>{if(u.tribe===ti&&u.alive&&d2(px,pz,u.x,u.z)<16)u.shield=gt+30});ring(px,pz,4,.5,.85,1);break;
   case 'ghost':for(let i=0;i<6;i++){const a=i/6*TAU,g=spawnUnit('ghost',ti,px+Math.cos(a)*1.2,pz+Math.sin(a)*1.2);g.life=gt+30;g.gx=g.x;g.gz=g.z}ring(px,pz,1.5,.8,.85,1);break;
+  case 'torch':{let v=validSpot(ti,'torch',px,pz);if(v.err){for(let r=.7;r<3&&v.err;r+=.7)for(let a=0;a<8;a++){const w=validSpot(ti,'torch',px+Math.cos(a/8*TAU)*r,pz+Math.sin(a/8*TAU)*r);if(!w.err){v=w;break}}}
+    if(v.err){T.mana+=spellCost(T,'torch');T.cd.torch=0;if(ti===0)toast('The torch needs a scrap of level, open ground');break}
+    const b=placeBuilding(ti,'torch',v,true);const y=hAt(b.x,b.z);for(let i=0;i<30;i++)PA.emit(b.x,y+2.6,b.z,(R()-.5)*2,1+R()*3,(R()-.5)*2,.8,1,.6,.15,1,.45,-1);if(ti===0)toast('A scrying torch burns. The land around it will stay in sight while it stands.');break}
   case 'bridge':{const ex=wd(px-sx),ez=wd(pz-sz),L2=ex*ex+ez*ez||1,h0=Math.max(hAt(sx,sz),.9),h1=Math.max(hAt(px,pz),.9);
     const x0=Math.floor(sx+Math.min(0,ex))-3,x1=Math.ceil(sx+Math.max(0,ex))+3,z0=Math.floor(sz+Math.min(0,ez))-3,z1=Math.ceil(sz+Math.max(0,ez))+3;
     for(let vz=z0;vz<=z1;vz++)for(let vx=x0;vx<=x1;vx++){const qx=vx-sx,qz=vz-sz,t=clamp((qx*ex+qz*ez)/L2,0,1),ox=qx-ex*t,oz=qz-ez*t,d=Math.hypot(ox,oz);if(d>3)continue;
@@ -1343,7 +1352,7 @@ function computeStats(){for(const T of tribes)T.stats={pop:0,braves:0,outB:0,hou
   for(const u of units){if(!u.alive)continue;const S=tribes[u.tribe].stats;S.cnt[u.type]=(S.cnt[u.type]||0)+1;if(UT[u.type].veh||u.type==='ghost'||u.type==='captive'||u.type==='hunter'||u.thrall)continue;S.pop++;
     if(u.type==='brave'){S.braves++;if(!u.inV)S.outB++}else S.others++;if(MIL[u.type])S.mil++;if(u.st==='build'&&u.bld)u.bld.nb++}
   homeBits.fill(0);for(const b of blds){if(!b.alive||!b.done||BT[b.bt].inv||b.bt==='hedge'||b.tribe===wildId)continue;const bx=wi(Math.floor(b.x))>>3,bz=wi(Math.floor(b.z))>>3;for(let j=-1;j<=1;j++)for(let i=-1;i<=1;i++)homeBits[(((bz+j)&15)<<4)|((bx+i)&15)]|=1<<b.tribe}
-  for(const b of blds){if(!b.alive||BT[b.bt].inv||b.bt==='hedge')continue;const S=tribes[b.tribe].stats;S.blds++;S.b[b.bt]=(S.b[b.bt]||0)+1;
+  for(const b of blds){if(!b.alive||BT[b.bt].inv||b.bt==='hedge'||b.bt==='torch')continue;const S=tribes[b.tribe].stats;S.blds++;S.b[b.bt]=(S.b[b.bt]||0)+1;
     if(isHold(b))S.caps+=b.capt.length;
     if(!b.done){S.sites++;continue}if(b.bt==='hut'){S.huts++;S.pop+=b.occ;S.housed+=b.occ;S.braves+=b.occ}if(b.trainee)S.pop++;S.queued+=b.q}
   for(const T of tribes)T.stats.cap=Math.min(T.capMax||TUNE.popMax,TUNE.popBase+T.stats.huts*TUNE.popPerHut)}
@@ -1416,7 +1425,7 @@ function wildTick(){if(armageddon||gt<wildT)return;wildT=gt+TUNE.wildEvery;let n
 function updFog(){if(!fogOn)return;visNow.fill(0);const T=tribes[0];if(T&&T.tomb){visNow.fill(1);seen.fill(1);return}
   const mark=(x,z,r)=>{const cx=Math.floor(x),cz=Math.floor(z),r2=r*r;for(let dz=-r;dz<=r;dz++){const w=Math.floor(Math.sqrt(r2-dz*dz)),row=wi(cz+dz)*N;for(let dx=-w;dx<=w;dx++){const c=row+wi(cx+dx);visNow[c]=1;seen[c]=1}}};
   for(const u of units)if(u.alive&&u.tribe===0&&!u.inV)mark(u.x,u.z,u.type==='shaman'?11:u.type==='balloon'?13:7);
-  for(const b of blds)if(b.alive&&b.tribe===0)mark(b.x,b.z,b.bt==='nest'&&b.done?TUNE.nestSight:8)}
+  for(const b of blds)if(b.alive&&b.tribe===0)mark(b.x,b.z,b.bt==='nest'&&b.done?TUNE.nestSight:b.bt==='torch'?TUNE.torchSight:8)}
 const isVis=(x,z)=>!fogOn||visNow[cidx(x,z)]===1,seenAt=(x,z)=>!fogOn||seen[cidx(x,z)]===1;
 const visU=u=>u.tribe===0||isVis(u.x,u.z)||!!(tribes[u.tribe]&&tribes[u.tribe].broken),visB=b=>b.tribe===0||seenAt(b.x,b.z)||!!(tribes[b.tribe]&&tribes[b.tribe].broken);
 function invokeArma(ti){const T=tribes[ti];if(!allowS('arma'))return false;if(armageddon){if(ti===0)toast('The battle of all-against-all has already begun');return false}
@@ -1512,6 +1521,7 @@ const BMOD={
     for(let i=0;i<8;i++){const a=i/8*TAU;f.push(P(new C.SphereGeometry(.07,4,3),i%2?0xe7c84a:0xd85a7a,Math.cos(a)*.35,4.55,Math.sin(a)*.35));f.push(P(cyl(.04,.05,.3,4),0x6e5530,Math.cos(a)*1.35,.15,Math.sin(a)*1.35))}
     const t=[];for(let i=0;i<8;i++){const a=i/8*TAU;t.push(seg([0,4.4,0],[Math.cos(a)*1.35,.3,Math.sin(a)*1.35],.07,WT,true))}
     t.push(P(new C.ConeGeometry(.16,.3,6),WT,0,4.75,0));return {t,f}},
+  torch:()=>({t:[P(new C.BoxGeometry(.06,.34,.26),WT,.09,1.55,0)],f:[P(cyl(.07,.1,2.2,5),0x5a3d24,0,1.1,0),P(cyl(.24,.1,.26,6),0x3a2c20,0,2.3,0),P(cyl(.26,.26,.05,6),0x6b6458,0,2.43,0),P(new C.ConeGeometry(.2,.5,5),0xffa23a,0,2.66,0),P(new C.ConeGeometry(.11,.36,5),0xffe08a,0,2.62,0),P(cyl(.22,.3,.18,6),0x6f6b62,0,.09,0)]}),
   nest:()=>{const bk=0x3e3128,f=[P(cyl(.18,.32,3.4,6),bk,0,1.7,0),P(new C.BoxGeometry(.12,1.2,.12),bk,.35,2.3,0,0,0,-.6),P(new C.BoxGeometry(.1,1,.1),bk,-.3,2.6,.1,0,0,.7),P(new C.BoxGeometry(.1,.9,.1),bk,0,3.9,0,.5,0,0)];
     f.push(P(cyl(.75,.75,.12,8),0x6e5530,0,3.3,0));for(let i=0;i<8;i++){const a=i/8*TAU;f.push(P(new C.BoxGeometry(.06,.45,.06),0x5a4428,Math.cos(a)*.7,3.55,Math.sin(a)*.7))}
     f.push(P(new C.SphereGeometry(.09,5,4),0xd4582f,.3,3.5,.2),P(new C.SphereGeometry(.07,5,4),0x15100c,.35,4.25,-.1),P(new C.SphereGeometry(.07,5,4),0x15100c,-.3,4.1,.2));
