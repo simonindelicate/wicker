@@ -1613,7 +1613,8 @@ const EMBER=inst(merge([P(new C.ConeGeometry(.16,.18,5),0xffffff,0,.09,0)]),new 
 const POST=inst(merge([P(cyl(.05,.06,1.1,5),0x6b4a2c,0,.55,0),P(new C.SphereGeometry(.07,5,4),0x8a6c3e,0,1.12,0)]),matF,60);
 const EDGE=inst(merge([P(new C.BoxGeometry(.78,.07,.05),0x6a4a2c,0,.035,0),P(new C.BoxGeometry(.05,.07,.4),0x6a4a2c,.37,.035,-.2),P(new C.BoxGeometry(.05,.07,.4),0x6a4a2c,-.37,.035,-.2)]),matF,400);
 const WELL=(()=>{const f=[P(cyl(.5,.55,.55,10),0x8a857a,0,.27,0),P(cyl(.4,.4,.02,10),0x24323a,0,.5,0),P(new C.BoxGeometry(.08,1,.08),0x6b4a2c,.5,.75,0),P(new C.BoxGeometry(.08,1,.08),0x6b4a2c,-.5,.75,0),P(new C.BoxGeometry(1.1,.07,.07),0x6b4a2c,0,1.12,0),
-  P(cyl(.06,.06,.5,6),0x5a3d24,0,1.0,0,0,0,Math.PI/2),P(new C.BoxGeometry(.14,.14,.14),0x7a5634,0,.78,0),P(new C.ConeGeometry(.78,.45,4),0xb58a4a,0,1.42,0,0,Math.PI/4)];return inst(merge(f),matF,40)})();
+  P(cyl(.06,.06,.5,6),0x5a3d24,0,1.0,0,0,0,Math.PI/2),P(new C.BoxGeometry(.14,.14,.14),0x7a5634,0,.78,0)];return inst(merge(f),matF,40)})();
+const WELLT=inst(merge([P(new C.ConeGeometry(.78,.45,4),0xffffff,0,1.42,0,0,Math.PI/4)]),new C.MeshLambertMaterial({color:0xffffff,flatShading:true}),40);
 const FLS=inst(merge([P(cyl(.012,.012,.16,3),0x3d6b2a,-.06,.08,0),P(cyl(.012,.012,.2,3),0x3d6b2a,.05,.1,.03),P(cyl(.012,.012,.13,3),0x3d6b2a,0,.065,-.06),P(new C.ConeGeometry(.07,.06,4),0x4a7a32,0,.03,0)]),matF,2400);
 const FLB=inst(merge([P(new C.SphereGeometry(.045,5,3),0xffffff,-.06,.17,0),P(new C.SphereGeometry(.05,5,3),0xffffff,.05,.21,.03),P(new C.SphereGeometry(.04,5,3),0xffffff,0,.14,-.06)]),new C.MeshLambertMaterial({color:0xffffff,flatShading:true}),500);
 const TM=inst(merge([P(cyl(.07,.1,.5,5),0x4a3322,0,.25,0),P(new C.ConeGeometry(.52,1.05,6),0x203a26,0,.95,0),P(new C.ConeGeometry(.37,.8,6),0x2a4a2e,0,1.45,0)]),matF,1800);
@@ -1741,8 +1742,8 @@ function drawEntities(){
   fin(POST,pn);
   fin(FLS,fn);fin(FLB,fn);fin(EDGE,en);
   let wn=0;for(const w of wells){const rx=wd(w.x-cam.fx),rz=wd(w.z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2||!seenAt(w.x,w.z)||wn>=40)continue;const fv=fogOn?Math.max(.42,vis[cidx(w.x,w.z)]):1,sy=Math.min(1,(gt-w.born)/8);
-    place(WELL,wn,rx,hAt(w.x,w.z)-r2*K,rz,w.x*3,1,sy);_c.setRGB(fv,fv,fv);WELL.setColorAt(wn,_c);wn++}
-  fin(WELL,wn);
+    place(WELL,wn,rx,hAt(w.x,w.z)-r2*K,rz,w.x*3,1,sy);place(WELLT,wn,rx,hAt(w.x,w.z)-r2*K,rz,w.x*3,1,sy);_c.setRGB(fv,fv,fv);WELL.setColorAt(wn,_c);const T=tribes[w.tribe];_c.copy(T&&T.roof?T.roof:WHITE_C).multiplyScalar(fv);WELLT.setColorAt(wn,_c);wn++}
+  fin(WELL,wn);fin(WELLT,wn);
   let bn=0,cn2=0;for(const bu of buntings){if(bu.src.some(o=>!o.alive))continue;const a=bu.a,b=bu.b;const ax=wd(a.x-cam.fx),az=wd(a.z-cam.fz);if(ax*ax+az*az>VR2*.75)continue;if(!bu.src.some(visB))continue;
     const dx=wd(b.x-a.x),dz=wd(b.z-a.z),L=Math.hypot(dx,dz),ya=hAt(a.x,a.z)+a.h,yb=hAt(b.x,b.z)+b.h,sag=.3+L*.05,yaw=Math.atan2(-dz,dx),n=Math.max(3,Math.floor(L/.3)),fv=fogOn?Math.max(.42,vis[cidx(a.x,a.z)]):1;
     for(let k=1;k<n&&bn<900;k++){const t=k/n,x=ax+dx*t,z=az+dz*t,y=ya+(yb-ya)*t-sag*4*t*(1-t)-(x*x+z*z)*K;place(FLAG,bn,x,y,z,yaw,1.7);_c.setHex(FLAG_C[(k+bu.id)%FLAG_C.length]).multiplyScalar(fv);FLAG.setColorAt(bn,_c);bn++}
