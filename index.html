@@ -684,9 +684,10 @@ function swampKill(c){const g=hazGrp[c],sw=swamps[g];if(!sw)return;sw.kills++;if
   delete swamps[g];if(x0<1e9)recompute(x0,z0,x1,z1);if(sw.owner===0&&!watching)toast(`Your bog has drowned ${TUNE.swampLives} and drains away, sated.`)}
 function setHedge(b,on){const c=wi(b.cz0)*N+wi(b.cx0);hedgeA[c]=on?1:0;recompute(b.cx0,b.cz0,b.cx0,b.cz0)}
 // ---- village colour: worn paths and flowers (cosmetic only) ----
-const FLOWER_C=[0xd85a7a,0xe7c84a,0xf1ece0,0xd85a7a,0xe7c84a,0xf1ece0],FLAG_C=[0xb8322a,0xe0b440,0xeee6d2,0x35629e,0x4f7a38];let buntings=[],patches=[],wells=[],lanes=[],tombBeds=[];
+const FLOWER_C=[0xd85a7a,0xe7c84a,0xf1ece0,0xd85a7a,0xe7c84a,0xf1ece0],FLAG_C=[0xb8322a,0xe0b440,0xeee6d2,0x35629e,0x4f7a38];let buntings=[],patches=[],wells=[],lanes=[],tombBeds=[];const laneQ=[];
 // the fixed places around a building where flowers grow, nearest the walls first; the door side of a hut is left clear
 const FSPOTS=new WeakMap(),_fq=new C.Quaternion(),_fe=new C.Euler();
+const PALE_C=[0xeee6d2,0xd8c9a8,0xb8322a,0x9a6a4a,0xe9ddc3];
 const hsh=n=>{n=(n^61)^(n>>>16);n=n+(n<<3);n=n^(n>>>4);n=Math.imul(n,0x27d4eb2d);return ((n^(n>>>15))>>>0)/4294967296};
 // a hut's front garden: two little beds either side of the door, filled one plant at a time in a settled order
 function flowerSpots(b){const got=FSPOTS.get(b);if(got)return got;const out=[],pal=[FLOWER_C[(b.id*5)%6],FLOWER_C[(b.id*5+2)%6],FLOWER_C[(b.id*5+3)%6]];
@@ -842,10 +843,13 @@ function sacrifice(u,b){const T=tribes[u.tribe];if(b.claim===u)b.claim=null;cons
   if(b.lit)return;
   if(b.bt==='altar'){const v=Math.round(offerValue(b,cap,wild)*T.manaMult);T.mana=Math.min(MANA_MAX,T.mana+v);if(!cap)T.dread=Math.min(100,T.dread+DREAD.altar);b.busy=gt+2.5;
     const y=hAt(b.x,b.z);for(let i=0;i<18;i++)PA.emit(b.x+(R()-.5)*.6,y+.9,b.z+(R()-.5)*.6,(R()-.5)*1.2,1+R()*2,(R()-.5)*1.2,.7,.75,.08,.06,1,.4,2);
-    sfx('die',.5,b.x,b.z);if(u.tribe===0){toast(`${cap?'A captive':'A villager'} is given to the grove. +${v} mana`);stats.burned++}return}
+    b.mem=(b.mem||0)+1;sfx('die',.5,b.x,b.z);if(u.tribe===0){toast(`${cap?'A captive':'A villager'} is given to the grove. +${v} mana`);stats.burned++}return}
   b.inside.push({cap,wild});if(u.tribe===0)stats.burned++;dockDirty=true;
   if(b.inside.length>=BT[b.bt].holdN)light(b)}
-function light(b){const T=tribes[b.tribe],D=BT[b.bt];if(b.lit)return;b.lit=true;b.litT=gt;b.burnEnd=gt+D.burnT;if(b.bt==='god')b.burnEnd+=3;let v=0,own=0;
+function memorial(kind,x,z,tribe){const M=stats.mem||(stats.mem=[]);if(M.length>=60)return;
+  if(kind==='doll'){const near=M.filter(m=>m.k==='doll'&&d2(m.cx,m.cz,x,z)<5*5);const c=near[0]||{cx:x,cz:z};const i=near.length,a=i*2.39996+.5,r=2.4+(i>=8?.7:0);M.push({k:'doll',cx:c.cx,cz:c.cz,x:wrap(c.cx+Math.cos(a)*r),z:wrap(c.cz+Math.sin(a)*r),tribe,t:gt})}
+  else M.push({k:kind,x,z,tribe,t:gt})}
+function light(b){const T=tribes[b.tribe],D=BT[b.bt];if(b.lit)return;b.lit=true;if(!armageddon)memorial('doll',b.x,b.z,b.tribe);b.litT=gt;b.burnEnd=gt+D.burnT;if(b.bt==='god')b.burnEnd+=3;let v=0,own=0;
   for(const o of b.inside){v+=offerValue(b,o.cap,o.wild);if(!o.cap)own++}
   v=Math.round(v*T.manaMult);T.mana=Math.min(MANA_MAX,T.mana+v);T.dread=Math.min(100,T.dread+own*DREAD[D.site]);
   if(b.bt==='wicker')T.frenzyUntil=Math.min(gt+TUNE.frenzyMax,Math.max(gt,T.frenzyUntil||0)+TUNE.frenzyPerHead*b.inside.length);
@@ -887,6 +891,7 @@ function crown(T,mp){const ds=units.filter(u=>u.alive&&u.tribe===T.id&&u.st==='d
   const y=hAt(mp.x,mp.z);for(let i=0;i<60;i++){const a=R()*TAU,r=R()*2.5;PA.emit(mp.x+Math.cos(a)*r,y+.5+R()*4,mp.z+Math.sin(a)*r,Math.cos(a)*1.5,1+R()*2.5,Math.sin(a)*1.5,1.6,i%3?.95:.92,i%3?.45:.85,i%3?.6:.3,1,.4,1.2)}
   sfx('built',1,mp.x,mp.z);toast(T.id===0&&!watching?'A May Queen is crowned. Keep her alive and her offering grows richer; guard her well.':`The ${T.name} folk have crowned a May Queen`)}
 function offerQueen(T,b,u){if(T.id===0){stats.queenOffered=(stats.queenOffered||0)+1;const SC=scen();if(SC&&SC.goal.type==='queen'&&(SC.goal.n||1)>1&&stats.queenOffered<SC.goal.n)setTimeout(()=>toast(`${stats.queenOffered} of ${SC.goal.n} May Queens given to the fire`),2500)}const v=Math.round(queenValue(u)*T.manaMult);T.mana=Math.min(MANA_MAX,T.mana+v);T.frenzyUntil=Math.min(gt+TUNE.frenzyMax,Math.max(gt,T.frenzyUntil||0)+TUNE.queenFrenzy);
+  {let a=hsh(((b.x*31+b.z*17)*10)|0)*TAU,qx=0,qz=0;for(let t=0;t<12;t++,a+=.6){qx=wrap(b.x+Math.cos(a)*(BT[b.bt].s*.5+2.4));qz=wrap(b.z+Math.sin(a)*(BT[b.bt].s*.5+2.4));if(!bOcc[cidx(qx,qz)]&&!water[cidx(qx,qz)])break}memorial('queen',qx,qz,T.id)}
   queenSpectacle(b);toast(T.id===0&&!watching?`The May Queen goes willingly. +${v} mana, and your people are in a frenzy.`:`The ${T.name} folk have given a May Queen to the fire`)}
 function desert(T){const c=units.filter(u=>u.alive&&u.tribe===T.id&&u.type==='brave'&&!u.inV&&!u.air&&u.st!=='enter'&&u.st!=='wait');let u=c.length?c[(R()*c.length)|0]:null;
   if(!u){const hb=blds.find(b=>b.alive&&b.tribe===T.id&&b.bt==='hut'&&b.occ>0);if(hb){hb.occ--;u=spawnUnit('brave',T.id,hb.dx,hb.dz)}}
@@ -1586,11 +1591,18 @@ const LANE=(()=>{const cv=document.createElement('canvas');cv.width=4;cv.height=
   gr.addColorStop(0,'rgba(0,0,0,1)');gr.addColorStop(.22,'rgb(70,70,70)');gr.addColorStop(.38,'rgb(150,150,150)');gr.addColorStop(.5,'rgb(165,165,165)');gr.addColorStop(.62,'rgb(150,150,150)');gr.addColorStop(.78,'rgb(70,70,70)');gr.addColorStop(1,'rgba(0,0,0,1)');x.fillStyle=gr;x.fillRect(0,0,4,64);
   const tex=new C.CanvasTexture(cv);const g=new C.PlaneGeometry(1,.34);g.rotateX(-Math.PI/2);
   const m=new C.MeshLambertMaterial({color:0xffffff,alphaMap:tex,transparent:true,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-2});return inst(g,m,2400)})();
+const PEBBLE=inst(merge([P(new C.DodecahedronGeometry(.13,0),0xb9b3a4,0,.05,0)]),matF,500);
+const STAKE=inst(merge([P(cyl(.03,.035,.9,4),0x6b4a2c,0,.45,0)]),matF,400);
+const RIB=(()=>{const g=new C.BoxGeometry(.04,.32,.012);g.translate(0,-.16,0);return inst(g,new C.MeshLambertMaterial({color:0xffffff}),900)})();
+const KIND=inst(merge([P(new C.ConeGeometry(.28,.32,5),0x5a3d24,0,.16,0),P(new C.BoxGeometry(.5,.05,.06),0x7a5634,0,.08,0,0,.6,.2),P(new C.BoxGeometry(.46,.05,.06),0x6b4a2c,0,.1,0,0,-.7,-.2)]),matF,120);
+const BENCH=inst(merge([P(cyl(.11,.11,1,6),0x6b4a2c,0,.26,0,0,0,Math.PI/2),P(new C.BoxGeometry(.08,.2,.2),0x5a3d24,-.35,.1,0),P(new C.BoxGeometry(.08,.2,.2),0x5a3d24,.35,.1,0)]),matF,60);
+const DOLL=inst(merge([P(cyl(.03,.035,1.2,4),0x6b4a2c,0,.6,0),P(new C.ConeGeometry(.13,.42,6),0xd9b45a,0,1.05,0),P(new C.SphereGeometry(.07,5,4),0xd9b45a,0,1.32,0),P(new C.BoxGeometry(.34,.05,.05),0xc9a24a,0,1.15,0),P(new C.ConeGeometry(.03,.14,4),0xe9ddc3,-.06,1.42,0,0,0,.6),P(new C.ConeGeometry(.03,.14,4),0xe9ddc3,.06,1.42,0,0,0,-.6)]),matF,80);
+const EMBER=inst(merge([P(new C.ConeGeometry(.16,.18,5),0xffffff,0,.09,0)]),new C.MeshBasicMaterial({color:0xff7a2a}),40);
 const POST=inst(merge([P(cyl(.05,.06,1.1,5),0x6b4a2c,0,.55,0),P(new C.SphereGeometry(.07,5,4),0x8a6c3e,0,1.12,0)]),matF,60);
 const EDGE=inst(merge([P(new C.BoxGeometry(.78,.07,.05),0x6a4a2c,0,.035,0),P(new C.BoxGeometry(.05,.07,.4),0x6a4a2c,.37,.035,-.2),P(new C.BoxGeometry(.05,.07,.4),0x6a4a2c,-.37,.035,-.2)]),matF,400);
 const WELL=(()=>{const f=[P(cyl(.5,.55,.55,10),0x8a857a,0,.27,0),P(cyl(.4,.4,.02,10),0x24323a,0,.5,0),P(new C.BoxGeometry(.08,1,.08),0x6b4a2c,.5,.75,0),P(new C.BoxGeometry(.08,1,.08),0x6b4a2c,-.5,.75,0),P(new C.BoxGeometry(1.1,.07,.07),0x6b4a2c,0,1.12,0),
   P(cyl(.06,.06,.5,6),0x5a3d24,0,1.0,0,0,0,Math.PI/2),P(new C.BoxGeometry(.14,.14,.14),0x7a5634,0,.78,0),P(new C.ConeGeometry(.78,.45,4),0xb58a4a,0,1.42,0,0,Math.PI/4)];return inst(merge(f),matF,40)})();
-const FLS=inst(merge([P(cyl(.012,.012,.16,3),0x3d6b2a,-.06,.08,0),P(cyl(.012,.012,.2,3),0x3d6b2a,.05,.1,.03),P(cyl(.012,.012,.13,3),0x3d6b2a,0,.065,-.06),P(new C.ConeGeometry(.07,.06,4),0x4a7a32,0,.03,0)]),matF,1400);
+const FLS=inst(merge([P(cyl(.012,.012,.16,3),0x3d6b2a,-.06,.08,0),P(cyl(.012,.012,.2,3),0x3d6b2a,.05,.1,.03),P(cyl(.012,.012,.13,3),0x3d6b2a,0,.065,-.06),P(new C.ConeGeometry(.07,.06,4),0x4a7a32,0,.03,0)]),matF,2400);
 const FLB=inst(merge([P(new C.SphereGeometry(.045,5,3),0xffffff,-.06,.17,0),P(new C.SphereGeometry(.05,5,3),0xffffff,.05,.21,.03),P(new C.SphereGeometry(.04,5,3),0xffffff,0,.14,-.06)]),new C.MeshLambertMaterial({color:0xffffff,flatShading:true}),500);
 const TM=inst(merge([P(cyl(.07,.1,.5,5),0x4a3322,0,.25,0),P(new C.ConeGeometry(.52,1.05,6),0x203a26,0,.95,0),P(new C.ConeGeometry(.37,.8,6),0x2a4a2e,0,1.45,0)]),matF,1800);
 const SM=inst(merge([P(new C.BoxGeometry(.42,1.6,.32),0x6f6a60,0,.78,0),P(new C.BoxGeometry(.3,.2,.26),0x5e5a52,0,1.65,0)]),matF,80);
@@ -1675,7 +1687,7 @@ function drawEntities(){
   let tn=0;for(const t of trees){if(!t.alive)continue;const rx=wd(t.x-cam.fx),rz=wd(t.z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2||tn>=1800)continue;if(!seenAt(t.x,t.z))continue;const fv=fogOn?Math.max(.42,vis[cidx(t.x,t.z)]):1;
     const gr=t.born?Math.min(1,(gt-t.born)/30):1;place(TM,tn,rx,hAt(t.x,t.z)-r2*K,rz,t.tint*7,t.sc*(.45+.55*clamp(t.wood/TUNE.woodPerTree,0,1))*(.3+.7*gr));_c.setRGB(t.tint*fv,t.tint*fv,t.tint*fv);TM.setColorAt(tn,_c);tn++}
   fin(TM,tn);
-  let fn=0,en=0;const flw=(x,z,wx,wz,yaw,sc,col,fv)=>{if(fn>=1400)return;const y=hAt(wx,wz)-(x*x+z*z)*K;place(FLS,fn,x,y,z,yaw,sc);place(FLB,fn,x,y,z,yaw,sc);_c.setRGB(fv,fv,fv);FLS.setColorAt(fn,_c);_c.setHex(col).multiplyScalar(fv);FLB.setColorAt(fn,_c);fn++};
+  let fn=0,en=0;const flw=(x,z,wx,wz,yaw,sc,col,fv,yo)=>{if(fn>=2400)return;const y=hAt(wx,wz)-(x*x+z*z)*K+(yo||0);place(FLS,fn,x,y,z,yaw,sc);place(FLB,fn,x,y,z,yaw,sc);_c.setRGB(fv,fv,fv);FLS.setColorAt(fn,_c);_c.setHex(col).multiplyScalar(fv);FLB.setColorAt(fn,_c);fn++};
   for(const b of blds){if(!b.alive||!b.done||!b.flT||b.bt!=='hut')continue;const rx=wd(b.x-cam.fx),rz=wd(b.z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2*.75||!visB(b))continue;
     const sp=flowerSpots(b),cnt=Math.min(sp.length,Math.floor((gt-b.flT)/TUNE.flowerEvery));if(!cnt)continue;const fv=fogOn?Math.max(.42,vis[cidx(b.x,b.z)]):1;
     for(let k=0;k<cnt;k++){const f=sp[k];flw(rx+f.x,rz+f.z,b.x+f.x,b.z+f.z,f.o*6,f.s,f.c,fv)}
@@ -1685,6 +1697,38 @@ function drawEntities(){
   let pn=0;for(const q of tombBeds){const rx=wd(q.x-cam.fx),rz=wd(q.z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2*.75||!seenAt(q.x,q.z))continue;const fv=fogOn?Math.max(.42,vis[cidx(q.x,q.z)]):1;
     if(pn<60){place(POST,pn,rx,hAt(q.x,q.z)-r2*K,rz,0,1);_c.setRGB(fv,fv,fv);POST.setColorAt(pn,_c);pn++}
     for(let k=0;k<14;k++){const ring=k<5?.38:.68,a=k<5?k/5*TAU:(k-5)/9*TAU+.2,fx=Math.cos(a)*ring,fz=Math.sin(a)*ring;flw(rx+fx,rz+fz,q.x+fx,q.z+fz,a,1.5+hsh(q.id*31+k)*.4,FLOWER_C[(q.id+(k<5?0:1+(k&1)))%3],fv)}}
+  // ---- dressing of the meaningful places, and memorials of what was given there ----
+  let kn=0,sn2=0,rn2=0,bn2=0,dn=0,mn=0,hn=0;const vf=(x,z)=>fogOn?Math.max(.42,vis[cidx(x,z)]):1;
+  const at=(b,lx,lz)=>{const x=wd(b.x-cam.fx)+lx,z=wd(b.z-cam.fz)+lz;return [x,z,b.x+lx,b.z+lz,hAt(b.x+lx,b.z+lz)-(x*x+z*z)*K]};
+  const pebble=(b,lx,lz,sc,yaw)=>{if(mn>=500)return;const [x,z,,,y]=at(b,lx,lz);place(PEBBLE,mn,x,y,z,yaw,sc);_c.setRGB(1,1,1).multiplyScalar(vf(b.x,b.z));PEBBLE.setColorAt(mn,_c);mn++};
+  const lane=(b,lx,lz,lx2,lz2,dark)=>{const [x,z,,,y]=at(b,(lx+lx2)/2,(lz+lz2)/2);laneQ.push([x,y,z,lx2-lx,lz2-lz,dark])};laneQ.length=0;
+  const settledT=new Set();for(const b of blds)if(b.alive&&b.flT)settledT.add(b.tribe);
+  const oldest={};for(const b of blds)if(b.alive&&b.done&&b.bt==='hut'&&b.flT&&(!oldest[b.tribe]||b.id<oldest[b.tribe].id))oldest[b.tribe]=b;
+  for(const b of blds){if(!b.alive||!b.done)continue;const rx=wd(b.x-cam.fx),rz=wd(b.z-cam.fz);if(rx*rx+rz*rz>VR2*.75||!visB(b))continue;const fv=vf(b.x,b.z);
+    if(b.bt==='reinc'&&settledT.has(b.tribe)){for(let i=0;i<8;i++){const a=i/8*TAU+.393;for(let j=0;j<3;j++){const aa=a+(j-1)*.14,r=1.62+(j===1?.12:0),fx=Math.cos(aa)*r,fz=Math.sin(aa)*r;const [x,z,wx,wz]=at(b,fx,fz);flw(x,z,wx,wz,aa,1.25,FLOWER_C[(i+j)%3],fv)}}
+      for(let i=0;i<9;i++){const a=i/9*TAU,fx=Math.cos(a)*.22,fz=Math.sin(a)*.22;const [x,z,wx,wz]=at(b,fx,fz);flw(x,z,wx,wz,a,1.05,FLOWER_C[i%3],fv,1.02)}}
+    else if(b.bt==='maypole'){for(let i=0;i<12;i++){const a=i/12*TAU+.13,fx=Math.cos(a)*3.05,fz=Math.sin(a)*3.05;const [x,z,wx,wz]=at(b,fx,fz);flw(x,z,wx,wz,a,1.45,FLOWER_C[i%3],fv)}
+      for(let i=0;i<3&&bn2<60;i++){const a=i/3*TAU+.9,[x,z,,,y]=at(b,Math.cos(a)*3.9,Math.sin(a)*3.9);place(BENCH,bn2,x,y,z,-a+Math.PI/2,1);_c.setRGB(fv,fv,fv);BENCH.setColorAt(bn2,_c);bn2++}
+      for(let i=0;i<24;i++){const a0=i/24*TAU,a1=(i+1)/24*TAU;lane(b,Math.cos(a0)*2.3,Math.sin(a0)*2.3,Math.cos(a1)*2.3,Math.sin(a1)*2.3,.8*fv)}}
+    else if((b.bt==='wicker'||b.bt==='god')&&!b.lit){const R0=BT[b.bt].s*.5+.9,ns=b.bt==='god'?10:7;
+      for(let i=0;i<ns&&sn2<400;i++){const a=i/ns*TAU+.2,[x,z,,,y]=at(b,Math.cos(a)*R0,Math.sin(a)*R0);place(STAKE,sn2,x,y,z,a,1);_c.setRGB(fv,fv,fv);STAKE.setColorAt(sn2,_c);sn2++;
+        if(rn2<900){place(RIB,rn2,x+.03,y+.86,z,a,1);_c.setHex(FLAG_C[(i+b.id)%FLAG_C.length]).multiplyScalar(fv);RIB.setColorAt(rn2,_c);rn2++}}
+      for(let i=0;i<(b.bt==='god'?6:4)&&kn<120;i++){const a=i/(b.bt==='god'?6:4)*TAU+.6,r=BT[b.bt].s*.5+.15,[x,z,,,y]=at(b,Math.cos(a)*r,Math.sin(a)*r);place(KIND,kn,x,y,z,a*3,b.bt==='god'?1.3:1);_c.setRGB(fv,fv,fv);KIND.setColorAt(kn,_c);kn++}
+      const tr=BT[b.bt].s*.5+1.8;for(let i=0;i<28;i++){const a0=i/28*TAU,a1=(i+1)/28*TAU;lane(b,Math.cos(a0)*tr,Math.sin(a0)*tr,Math.cos(a1)*tr,Math.sin(a1)*tr,.75*fv)}}
+    else if(b.bt==='oak'){for(let i=0;i<12;i++){const a=i/12*TAU+.1,r=2.5+hsh(b.id*7+i)*.25;pebble(b,Math.cos(a)*r,Math.sin(a)*r,1+hsh(b.id+i*3)*.6,a*5)}
+      const br=[[-1.5,5.0,.2],[.9,5.4,.9],[.5,5.6,-1.1],[-2.1,5.3,-.6],[1.7,5.7,.5]];let k=0;for(const e of br)for(const t of[.45,.7,.9]){if(rn2>=900)break;const lx=e[0]*t,ly=3.6+(e[1]-3.6)*t,lz=e[2]*t,[x,z,,,y]=at(b,lx,lz);place(RIB,rn2,x,y+ly-.05,z,k*1.3,1.2);_c.setHex(PALE_C[(k+b.id)%PALE_C.length]).multiplyScalar(fv*.9);RIB.setColorAt(rn2,_c);rn2++;k++}}
+    else if(b.bt==='altar'&&b.mem){let left=Math.min(40,b.mem),k=0;const near=trees.filter(t=>t.alive&&d2(t.x,t.z,b.x,b.z)<6.5*6.5).sort((p,q)=>d2(p.x,p.z,b.x,b.z)-d2(q.x,q.z,b.x,b.z)).slice(0,6);
+      while(left>0&&near.length&&rn2<900){const t=near[k%near.length],j=(k/near.length)|0,a=hsh(t.x*100+j*7|0)*TAU,rr=.28*t.sc,lx=wd(t.x-b.x)+Math.cos(a)*rr,lz=wd(t.z-b.z)+Math.sin(a)*rr,[x,z,,,y]=at(b,lx,lz);
+        place(RIB,rn2,x,y+(.75+((j*.17)%.5))*t.sc,z,a,1);_c.setHex(PALE_C[(k+b.id)%PALE_C.length]).multiplyScalar(fv);RIB.setColorAt(rn2,_c);rn2++;k++;left--}}
+    if(b.bt==='hut'&&oldest[b.tribe]===b){const [hx,hz,,,hy]=at(b,1.95,1.05);for(let i=0;i<7;i++){const a=i/7*TAU;pebble(b,1.95+Math.cos(a)*.32,1.05+Math.sin(a)*.32,.9,a)}
+      if(hn<40){place(EMBER,hn,hx,hy,hz,0,1);_c.setRGB(1,1,1).multiplyScalar(fv);EMBER.setColorAt(hn,_c);hn++}
+      for(let i=0;i<9;i++){const t=i/8,fx=-.42+t*.84,fz=1.13,yo=.62+Math.sin(t*Math.PI)*.22;const [x,z,wx,wz]=at(b,fx,fz);flw(x,z,wx,wz,0,.9,FLOWER_C[i%3],fv,yo-(hAt(wx,wz)-hAt(b.x,b.z)))}}}
+  for(const m of (stats.mem||[])){const rx=wd(m.x-cam.fx),rz=wd(m.z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2*.75||!seenAt(m.x,m.z))continue;const fv=vf(m.x,m.z),y=hAt(m.x,m.z)-r2*K;
+    if(m.k==='doll'&&dn<80){place(DOLL,dn,rx,y,rz,m.x*5,1);_c.setRGB(fv,fv,fv);DOLL.setColorAt(dn,_c);dn++}
+    else if(m.k==='queen'){if(pn<60){place(POST,pn,rx,y,rz,0,1);_c.setRGB(fv,fv,fv);POST.setColorAt(pn,_c);pn++}
+      for(let k=0;k<6;k++){const a=k/6*TAU;flw(rx+Math.cos(a)*.1,rz+Math.sin(a)*.1,m.x+Math.cos(a)*.1,m.z+Math.sin(a)*.1,a,.7,FLOWER_C[k%2],fv,1.08)}
+      for(let k=0;k<16;k++){const ring=k<6?.42:.75,a=k<6?k/6*TAU:(k-6)/10*TAU+.3,fx=Math.cos(a)*ring,fz=Math.sin(a)*ring;flw(rx+fx,rz+fz,m.x+fx,m.z+fz,a,1.5,FLOWER_C[k%3],fv)}}}
+  fin(PEBBLE,mn);fin(STAKE,sn2);fin(RIB,rn2);fin(KIND,kn);fin(BENCH,bn2);fin(DOLL,dn);fin(EMBER,hn);
   fin(POST,pn);
   fin(FLS,fn);fin(FLB,fn);fin(EDGE,en);
   let ln=0;for(const [a,b] of lanes){const ax=wd(a.x-cam.fx),az=wd(a.z-cam.fz);if(ax*ax+az*az>VR2*.8||!seenAt(a.x,a.z))continue;const dx=wd(b.x-a.x),dz=wd(b.z-a.z),L=Math.hypot(dx,dz);if(L<.5)continue;
@@ -1696,6 +1740,7 @@ function drawEntities(){
       if(t>.2&&t<.8&&bOcc[cidx(wx,wz)]){lx=x;lz=z;ly=y;continue}
       _fq.setFromEuler(_fe.set(0,Math.atan2(-sz,sx),Math.atan2(y-ly,sl),'YXZ'));_p.set(mx,my,mz);_s.set(sl,1,1);_m.compose(_p,_fq,_s);LANE.setMatrixAt(ln,_m);
       const v=(.9+hsh(ln*13+k)*.1)*fv;_c.setRGB(.27*v,.2*v,.13*v);LANE.setColorAt(ln,_c);ln++;lx=x;lz=z;ly=y}}
+  for(const [x,y,z,sx,sz,dark] of laneQ){if(ln>=2400)break;_fq.setFromEuler(_fe.set(0,Math.atan2(-sz,sx),0));_p.set(x,y+.04,z);_s.set(Math.hypot(sx,sz)+.05,1,1.3);_m.compose(_p,_fq,_s);LANE.setMatrixAt(ln,_m);_c.setRGB(.24*dark,.18*dark,.12*dark);LANE.setColorAt(ln,_c);ln++}
   fin(LANE,ln);
   let wn=0;for(const w of wells){const rx=wd(w.x-cam.fx),rz=wd(w.z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2||!seenAt(w.x,w.z)||wn>=40)continue;const fv=fogOn?Math.max(.42,vis[cidx(w.x,w.z)]):1,sy=Math.min(1,(gt-w.born)/8);
     place(WELL,wn,rx,hAt(w.x,w.z)-r2*K,rz,w.x*3,1,sy);_c.setRGB(fv,fv,fv);WELL.setColorAt(wn,_c);wn++}
@@ -2250,6 +2295,6 @@ function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;fogK=Math.mi
   }catch(err){if(!errShown){errShown=true;console.error(err);toast('Something went wrong: '+err.message)}}
   requestAnimationFrame(frame)}
 resize();buildWorld();showContinue();requestAnimationFrame(frame);
-window.__ws={get cam(){return cam},get WS(){return WS},wsOpen,wsClose,captureDef,defFromData,merge,ORIG_UMOD,ORIG_BMOD,get UM(){return UM},get BM(){return BM},get lanes(){return lanes},get wear(){return wear},get buntings(){return buntings},get patches(){return patches},get wells(){return wells},get units(){return units},get tribes(){return tribes},get blds(){return blds},sim,beginGame,get gt(){return gt},castSpell,tryCast,saveGame,loadGame,setSel,command,showLevel,SCEN,field,get walkA(){return walk},hAt,get water(){return water},findSpot,get allow(){return allowSets},get pass(){return pass},get swamps(){return swamps},get debris(){return debris},queenValue,invokeArma,startRitual,sendVehicle,get wildId(){return wildId},get armageddon(){return armageddon},placeBuilding,validSpot,orderMove,spawnUnit,command,get water(){return water},findSpot};
+window.__ws={light,memorial,get stats(){return stats},get cam(){return cam},get WS(){return WS},wsOpen,wsClose,captureDef,defFromData,merge,ORIG_UMOD,ORIG_BMOD,get UM(){return UM},get BM(){return BM},get lanes(){return lanes},get wear(){return wear},get buntings(){return buntings},get patches(){return patches},get wells(){return wells},get units(){return units},get tribes(){return tribes},get blds(){return blds},sim,beginGame,get gt(){return gt},castSpell,tryCast,saveGame,loadGame,setSel,command,showLevel,SCEN,field,get walkA(){return walk},hAt,get water(){return water},findSpot,get allow(){return allowSets},get pass(){return pass},get swamps(){return swamps},get debris(){return debris},queenValue,invokeArma,startRitual,sendVehicle,get wildId(){return wildId},get armageddon(){return armageddon},placeBuilding,validSpot,orderMove,spawnUnit,command,get water(){return water},findSpot};
 })();
 </script>
