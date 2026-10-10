@@ -138,6 +138,20 @@ details.help summary{cursor:pointer;color:var(--text);font:14px var(--f-display)
 .lvl.done{border-color:rgba(211,155,60,.5)}
 .lvl.next{border-color:var(--ochre);background:rgba(211,155,60,.12)}
 .lvl:disabled{opacity:.35}
+#ws{position:absolute;right:0;top:0;bottom:0;width:340px;overflow-y:auto;background:var(--panel);border-left:1px solid var(--line);padding:10px 12px calc(12px + env(safe-area-inset-bottom,0px));z-index:30;color:var(--text);font-size:13px;-webkit-overflow-scrolling:touch}
+#ws[hidden]{display:none}
+#ws h4{font:13px var(--f-display);letter-spacing:.06em;color:var(--ochre);margin:10px 0 4px;font-weight:400}
+#ws select,#ws input[type=number],#ws textarea{background:rgba(0,0,0,.35);color:var(--text);border:1px solid var(--line);border-radius:6px;font:13px inherit;padding:4px 6px}
+.wsBar{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:6px 0}.wsBar select{flex:1;min-width:0}.wsSmall .btn{padding:4px 8px;font-size:12px}.wsSmall>span{color:var(--muted);font-size:12px}
+.wsTribe{display:flex;gap:5px}.wsTribe button{width:20px;height:20px;border-radius:50%;border:2px solid transparent;padding:0}.wsTribe button.on{border-color:var(--text)}
+.wsChk{display:flex;gap:4px;align-items:center;color:var(--muted);font-size:12px}
+.wsParts{display:flex;flex-direction:column;gap:2px;max-height:150px;overflow-y:auto;border:1px solid var(--line);border-radius:6px;padding:4px;margin:6px 0}
+.wsP{display:flex;align-items:center;gap:7px;text-align:left;background:none;border:0;color:var(--text);padding:3px 5px;border-radius:4px;font-size:12px}.wsP.on{background:rgba(211,155,60,.25)}.wsP i{width:12px;height:12px;border-radius:3px;border:1px solid rgba(255,255,255,.25)}
+.wsS{display:grid;grid-template-columns:96px 1fr 62px;gap:6px;align-items:center;margin:3px 0;font-size:12px;color:var(--muted)}.wsS input[type=range]{width:100%;accent-color:var(--ochre)}.wsS input[type=number]{width:100%;box-sizing:border-box;padding:2px 4px}
+.wsRow{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.wsRow input[type=color]{width:34px;height:26px;border:1px solid var(--line);background:none;padding:0;border-radius:4px}
+.wsHint{color:var(--muted);font-size:12px;line-height:1.4;margin:6px 0}#ws details{margin-top:6px}#ws summary{font:13px var(--f-display);color:var(--ochre);cursor:pointer}
+#wsIO{position:fixed;inset:10% 6%;background:#1b1510;border:1px solid var(--line);border-radius:10px;padding:12px;display:flex;flex-direction:column;z-index:40}#wsIO[hidden]{display:none}#wsIO textarea{flex:1;font:11px ui-monospace,Menlo,monospace;white-space:pre}
+@media (max-width:719px){#ws{left:0;right:0;top:auto;width:auto;height:52%;border-left:0;border-top:1px solid var(--line)}}
 #foes .foe{cursor:pointer}#foes .foe.broken{opacity:.7;font-style:italic}
 .devTog{display:flex;gap:8px;align-items:center;font-size:12px;color:var(--muted);margin:10px 0 4px;cursor:pointer}
 .eyebrow{font:12px var(--f-display);letter-spacing:.16em;color:var(--muted);margin:0 0 4px}
@@ -181,7 +195,17 @@ details.help summary{cursor:pointer;color:var(--text);font:14px var(--f-display)
   <div id="hint" hidden><span id="hintT"></span><button class="btn go" id="hintGo" hidden>Invoke</button><button class="btn" id="hintX">Cancel</button></div>
   <div id="toasts"></div>
   <div id="rejoice" hidden><h1>Rejoice!</h1><p id="rejoiceLine"></p></div>
-  <button class="btn" id="galBack" hidden style="position:absolute;left:12px;top:calc(12px + env(safe-area-inset-top,0px))">Back to menu</button>
+  <div id="ws" hidden>
+    <div class="wsBar"><select id="wsModel" aria-label="Model"></select><button class="btn" id="wsUndo">Undo</button><button class="btn" id="wsClose">Done</button></div>
+    <div class="wsBar wsSmall"><span>Preview in</span><span id="wsTribe" class="wsTribe"></span><label class="wsChk"><input type="checkbox" id="wsRef" checked> Villager for scale</label></div>
+    <div id="wsParts" class="wsParts"></div>
+    <div class="wsBar wsSmall" id="wsAddRow"><span>Add</span><button class="btn" data-s="box">Box</button><button class="btn" data-s="cyl">Cylinder</button><button class="btn" data-s="cone">Cone</button><button class="btn" data-s="sphere">Ball</button><button class="btn" data-s="ring">Ring</button></div>
+    <div class="wsBar wsSmall"><span>Part</span><button class="btn" id="wsDup">Copy</button><button class="btn" id="wsMirror" title="Copy to the other side, mirrored">Mirror</button><button class="btn" id="wsDel">Delete</button></div>
+    <div id="wsProps"></div>
+    <div class="wsBar wsSmall wsFoot"><button class="btn" id="wsReset">Back to original</button><button class="btn" id="wsExport">Export</button><button class="btn" id="wsImport">Import</button></div>
+    <p class="wsHint" id="wsStatus"></p>
+    <div id="wsIO" hidden><p class="wsHint" id="wsIOh"></p><textarea id="wsIOt" spellcheck="false"></textarea><div class="wsBar wsSmall"><button class="btn" id="wsIOcopy">Copy</button><button class="btn" id="wsIOsave">Save as file</button><button class="btn" id="wsIOapply">Use these models</button><button class="btn" id="wsIOclose">Close</button></div></div>
+  </div>
   <footer id="dock" hidden>
     <div id="selLine"><span id="selT">Nothing selected</span><button class="btn" id="selX" hidden>Clear</button></div>
     <div id="tabs" role="tablist">
@@ -212,7 +236,7 @@ details.help summary{cursor:pointer;color:var(--text);font:14px var(--f-display)
       <button class="primary" id="bStart">Begin</button>
       <button class="secondary" id="bCampaign">Campaign</button>
       <button class="secondary" id="bWatch">Watch the tribes fight among themselves</button>
-      <button class="secondary" id="bGallery">Model gallery</button>
+      <button class="secondary" id="bGallery">Model workshop</button>
       <details class="help">
         <summary>How to play</summary>
         <h3>Touch</h3>
@@ -331,7 +355,7 @@ const R=Math.random;
 //    SP/SPDESC spells: mana cost, cooldown, cast range, effect radius, names, tooltips
 //    DIFF      per-difficulty AI and player multipliers
 //  Models are further down, in UMOD (units) and BMOD (buildings); open the Model
-//  gallery from the menu to see your edits. Menu and help text is plain HTML near the top.
+//  workshop from the menu to edit them visually. Menu and help text is plain HTML near the top.
 // =====================================================================================
 const TUNE={
   manaMax:3000,                 // the full mana bar; Armageddon costs exactly this
@@ -1413,7 +1437,7 @@ const bowG=()=>{const g=new C.TorusGeometry(.24,.022,4,10,Math.PI);g.rotateZ(-Ma
 // Parts listed under t: are painted in the owning tribe's colour; parts under f: keep their own colour.
 // Handy shapes: cyl(topRadius, bottomRadius, height, sides), new C.BoxGeometry(w,h,d),
 // new C.SphereGeometry(r,wSeg,hSeg), new C.ConeGeometry(r,h,sides), new C.TorusGeometry(r,tube,rs,ts,arc).
-// Open "Model gallery" from the menu to see every model turning on a plinth after a reload.
+// Or open "Model workshop" from the menu to edit any model with sliders; see MODEL_DATA below.
 const UMOD={
   brave:()=>({t:[P(cyl(.11,.2,.42),WT,0,.21,0)],f:[P(new C.SphereGeometry(.11,6,5),SKIN,0,.53,0),P(new C.SphereGeometry(.118,6,3,0,TAU,0,Math.PI/2),HAIR,0,.55,0)]}),
   warrior:()=>({t:[P(cyl(.14,.25,.5),WT,0,.25,0)],f:[P(new C.SphereGeometry(.12,6,5),SKIN,0,.62,0),P(new C.ConeGeometry(.14,.2,6),STEEL,0,.77,0),P(new C.BoxGeometry(.05,.46,.05),STEEL,.26,.38,.08),P(cyl(.17,.17,.05,8),WOOD,-.26,.3,.02,0,0,Math.PI/2)]}),
@@ -1485,6 +1509,45 @@ const FRENZY_C=new C.Color(1,.35,.1),WHITE_C=new C.Color(1,1,1),SHIELD_C=new C.C
 function inst(g,m,cap){const im=new C.InstancedMesh(g,m,cap);im.instanceMatrix.setUsage(C.DynamicDrawUsage);im.setColorAt(0,WHITE_C);im.count=0;im.frustumCulled=false;scene.add(im);return im}
 function mkPair(def,cap,ghost){const d=def();return {t:inst(merge(d.t),ghost?gMatT:matT,cap),f:inst(merge(d.f),ghost?gMatF:matF,cap),n:0,cap}}
 const UCAP={queen:8,hunter:40,brave:700,warrior:360,oss:240,captive:120,archer:300,shaman:8,ghost:120,balloon:60,wild:200};
+// ---------------- MODEL EDITS ----------------
+// Models edited in the Model workshop (menu) are stored as lists of parts. Edits you export from the
+// workshop can be pasted into MODEL_DATA here so that they ship with the game for everyone; edits made
+// in the workshop itself are kept in this browser and override these.
+const MODEL_DATA={};
+const MODEL_KEY='wicker-models-v1',D2R=Math.PI/180;
+const SHAPES={
+  box:{n:'Box',make:a=>new C.BoxGeometry(a[0],a[1],a[2]),args:[['Width',.01,3],['Height',.01,3],['Depth',.01,3]],def:[.3,.3,.3]},
+  cyl:{n:'Cylinder',make:a=>new C.CylinderGeometry(a[0],a[1],a[2],Math.max(3,Math.round(a[3]))),args:[['Top radius',0,2],['Bottom radius',0,2],['Height',.01,3],['Sides',3,16,1]],def:[.15,.15,.3,8]},
+  cone:{n:'Cone',make:a=>new C.ConeGeometry(a[0],a[1],Math.max(3,Math.round(a[2]))),args:[['Radius',.01,2],['Height',.01,3],['Sides',3,16,1]],def:[.15,.3,8]},
+  sphere:{n:'Ball',make:a=>new C.SphereGeometry(a[0],Math.max(3,Math.round(a[1])),Math.max(2,Math.round(a[2])),a[3]??0,a[4]??TAU,a[5]??0,(a[6]??Math.PI)),args:[['Radius',.01,2],['Smoothness around',3,16,1],['Smoothness up',2,12,1],['How much of the ball',.05,1,0,6,Math.PI]],def:[.15,8,6,0,TAU,0,Math.PI]},
+  ring:{n:'Ring',make:a=>new C.TorusGeometry(a[0],a[1],Math.max(3,Math.round(a[2])),Math.max(3,Math.round(a[3])),a[4]??TAU),args:[['Radius',.01,2],['Thickness',.005,.6],['Tube sides',3,12,1],['Segments',3,24,1],['How much of the ring',.05,1,0,4,TAU]],def:[.2,.04,6,12,TAU]}};
+const r4=v=>Math.round(v*1e4)/1e4;
+function partGeo(p){const g=SHAPES[p.s].make(p.a);const k=p.k||[1,1,1];
+  g.applyMatrix4(new C.Matrix4().compose(new C.Vector3(p.p[0],p.p[1],p.p[2]),new C.Quaternion().setFromEuler(new C.Euler(p.r[0]*D2R,p.r[1]*D2R,p.r[2]*D2R,'XYZ')),new C.Vector3(k[0],k[1],k[2])));return g}
+function defFromData(parts){return ()=>{const t=[],f=[];for(const p of parts)(p.t?t:f).push({g:partGeo(p),c:new C.Color(p.c).getHex()});
+  const tiny=()=>({g:new C.BoxGeometry(.001,.001,.001),c:0xffffff});if(!t.length)t.push(tiny());if(!f.length)f.push(tiny());return {t,f}}}
+// Reads one of the hand-written model functions into an editable list of parts.
+function captureDef(def){const proto=C.BufferGeometry.prototype,AM=proto.applyMatrix4;
+  proto.applyMatrix4=function(m){(this.__m||(this.__m=new C.Matrix4())).premultiply(m);return AM.call(this,m)};
+  let d;try{d=def()}finally{proto.applyMatrix4=AM}
+  const out=[],pp=new C.Vector3(),q=new C.Quaternion(),sc=new C.Vector3(),eu=new C.Euler();
+  for(const [team,list] of [[1,d.t],[0,d.f]])for(const part of list){const g=part.g,pr=g.parameters||{};let s,a;
+    if(g.type==='BoxGeometry'){s='box';a=[pr.width,pr.height,pr.depth]}
+    else if(g.type==='ConeGeometry'){s='cone';a=[pr.radius,pr.height,pr.radialSegments]}
+    else if(g.type==='CylinderGeometry'){s='cyl';a=[pr.radiusTop,pr.radiusBottom,pr.height,pr.radialSegments]}
+    else if(g.type==='SphereGeometry'){s='sphere';a=[pr.radius,pr.widthSegments,pr.heightSegments,pr.phiStart,pr.phiLength,pr.thetaStart,pr.thetaLength]}
+    else if(g.type==='TorusGeometry'){s='ring';a=[pr.radius,pr.tube,pr.radialSegments,pr.tubularSegments,pr.arc]}
+    else continue;
+    (g.__m||new C.Matrix4()).decompose(pp,q,sc);eu.setFromQuaternion(q,'XYZ');
+    const col=part.c&&part.c.isColor?part.c:new C.Color(part.c);
+    out.push({s,a:a.map(v=>r4(+v)),p:[pp.x,pp.y,pp.z].map(r4),r:[eu.x,eu.y,eu.z].map(v=>Math.round(v/D2R*100)/100),k:[sc.x,sc.y,sc.z].map(r4),c:'#'+col.getHexString(),t:team})}
+  return out}
+function modelEdits(){let loc={};try{loc=JSON.parse(localStorage.getItem(MODEL_KEY))||{}}catch(e){}return Object.assign({},MODEL_DATA,loc)}
+const ORIG_UMOD=Object.assign({},UMOD),ORIG_BMOD=Object.assign({},BMOD);
+function applyModelEdits(){const E=modelEdits();for(const k in ORIG_UMOD)UMOD[k]=ORIG_UMOD[k];for(const k in ORIG_BMOD)BMOD[k]=ORIG_BMOD[k];
+  for(const k in E){const name=k.slice(2),set=k[0]==='u'?UMOD:BMOD,orig=k[0]==='u'?ORIG_UMOD:ORIG_BMOD;if(!orig[name]||!Array.isArray(E[k]))continue;try{set[name]=defFromData(E[k])}catch(e){console.error('model edit',k,e)}}
+  if(!E['u:ghost'])UMOD.ghost=UMOD.warrior}
+try{applyModelEdits()}catch(e){console.error(e)}
 const UM={};for(const k in UMOD)UM[k]=mkPair(UMOD[k],UCAP[k],k==='ghost');
 const BM={};for(const k in BMOD)BM[k]=mkPair(BMOD[k],k==='reinc'||k==='barrow'||k==='moot'||k==='tomb'?8:k==='hut'?180:k==='hedge'?600:60);
 const SIL=inst(merge([P(cyl(.09,.15,.42,5),0xffffff,0,.21,0),P(new C.SphereGeometry(.1,6,5),0xffffff,0,.53,0)]),new C.MeshBasicMaterial({vertexColors:true}),200);
@@ -1645,13 +1708,13 @@ function pickUnit(sx,sy){const pb=pickBalloon(sx,sy,false);if(pb)return pb;let b
 const pointers=new Map();let gest=null,lastTap={t:0,type:null};
 function setSel(arr){for(const e of sel)e.sel=false;sel=arr;for(const e of sel)e.sel=true;dockDirty=true;if(arr.length===1&&arr[0].bt&&(arr[0].tribe===0||arr[0].tribe===wildId))setTab('tribe')}
 glc.addEventListener('contextmenu',e=>e.preventDefault());
-glc.addEventListener('pointerdown',e=>{audio();if(galleryOn){try{glc.setPointerCapture(e.pointerId)}catch(_){}pointers.set(e.pointerId,{x:e.clientX,y:e.clientY,sx:e.clientX,sy:e.clientY,btn:e.button,type:e.pointerType,moved:true});gest={kind:'rot'};return}if(!running)return;try{glc.setPointerCapture(e.pointerId)}catch(_){}
+glc.addEventListener('pointerdown',e=>{audio();if(wsOn){wsDown(e);return}if(galleryOn){try{glc.setPointerCapture(e.pointerId)}catch(_){}pointers.set(e.pointerId,{x:e.clientX,y:e.clientY,sx:e.clientX,sy:e.clientY,btn:e.button,type:e.pointerType,moved:true});gest={kind:'rot'};return}if(!running)return;try{glc.setPointerCapture(e.pointerId)}catch(_){}
   pointers.set(e.pointerId,{x:e.clientX,y:e.clientY,sx:e.clientX,sy:e.clientY,btn:e.button,type:e.pointerType,moved:false});
   if(pointers.size===1&&e.pointerType!=='mouse'){const pid=e.pointerId,sx0=e.clientX,sy0=e.clientY;clearTimeout(lpTimer);lpTimer=setTimeout(()=>{const p=pointers.get(pid);if(!p||p.moved||pointers.size!==1||!running)return;if(pickUnit(sx0,sy0))return;const g=pickGround(sx0,sy0);if(g&&bOcc[cidx(g.x,g.z)])return;p.moved=true;p.long=true;clearSel();if(navigator.vibrate)try{navigator.vibrate(15)}catch(_){}},550)}
   if(pointers.size===2){clearTimeout(lpTimer);const [a,b]=[...pointers.values()];a.moved=b.moved=true;gest={t0:performance.now(),kind:'pinch',d0:Math.hypot(a.x-b.x,a.y-b.y),a0:Math.atan2(b.y-a.y,b.x-a.x),dist0:cam.dist,yaw0:cam.yaw,mx:(a.x+b.x)/2,my:(a.y+b.y)/2}}
   else if(pointers.size===1){if(e.pointerType==='mouse'){gest=e.button===0?{kind:'maybeBox'}:e.button===2?{kind:'maybeRot'}:{kind:'pan'}}else gest={kind:boxMode?'maybeBox':'pan'}}});
 function panBy(x0,y0,x1,y1){const a=pickGround(x0,y0),b=pickGround(x1,y1);if(a&&b){cam.fx=wrap(cam.fx+(a.rx-b.rx));cam.fz=wrap(cam.fz+(a.rz-b.rz))}else{const s=cam.dist*.0025,dx=x0-x1,dy=y0-y1,cy=Math.cos(cam.yaw),sy=Math.sin(cam.yaw);cam.fx=wrap(cam.fx+(dx*cy+dy*sy)*s);cam.fz=wrap(cam.fz+(-dx*sy+dy*cy)*s)}}
-glc.addEventListener('pointermove',e=>{if(e.pointerType==='mouse'){hoverSX=e.clientX;hoverSY=e.clientY;hoverMouse=true}
+glc.addEventListener('pointermove',e=>{if(wsOn){wsMove(e);return}if(e.pointerType==='mouse'){hoverSX=e.clientX;hoverSY=e.clientY;hoverMouse=true}
   const p=pointers.get(e.pointerId);if(!p||(!running&&!galleryOn))return;const px=p.x,py=p.y;p.x=e.clientX;p.y=e.clientY;if(Math.hypot(p.x-p.sx,p.y-p.sy)>8)p.moved=true;if(!gest)return;
   if(gest.kind==='pinch'){const [a,b]=[...pointers.values()];if(!b)return;const d=Math.hypot(a.x-b.x,a.y-b.y),an=Math.atan2(b.y-a.y,b.x-a.x);cam.dist=clamp(gest.dist0*gest.d0/Math.max(20,d),14,MAXD);cam.yaw=gest.yaw0+(an-gest.a0);
     const mx=(a.x+b.x)/2,my=(a.y+b.y)/2;panBy(gest.mx,gest.my,mx,my);gest.mx=mx;gest.my=my;return}
@@ -1662,7 +1725,7 @@ glc.addEventListener('pointermove',e=>{if(e.pointerType==='mouse'){hoverSX=e.cli
   if(gest.kind==='rot'){cam.yaw-=(p.x-px)*.006;cam.dist=clamp(cam.dist+(p.y-py)*.08,galleryOn?6:14,MAXD);return}
   if(gest.kind==='pan')panBy(px,py,p.x,p.y)});
 let lpTimer=0;
-function endPointer(e){const p=pointers.get(e.pointerId);if(!p)return;clearTimeout(lpTimer);
+function endPointer(e){if(wsOn){wsUp(e);return}const p=pointers.get(e.pointerId);if(!p)return;clearTimeout(lpTimer);
   if(gest&&gest.kind==='pinch'&&!gest.done&&e.type==='pointerup'&&performance.now()-gest.t0<350){let still=true;for(const q of pointers.values())if(Math.hypot(q.x-q.sx,q.y-q.sy)>14)still=false;if(still){gest.done=true;clearSel()}}
   pointers.delete(e.pointerId);
   if(gest&&gest.kind==='box'&&pointers.size===0){boxSelect(gest);gest=null;return}
@@ -1670,7 +1733,7 @@ function endPointer(e){const p=pointers.get(e.pointerId);if(!p)return;clearTimeo
   if(pointers.size===0)gest=null;else if(pointers.size===1){gest={kind:boxMode?'none':'pan'};const q=[...pointers.values()][0];q.moved=true}}
 glc.addEventListener('pointerup',endPointer);glc.addEventListener('pointercancel',endPointer);
 glc.addEventListener('pointerleave',e=>{if(e.pointerType==='mouse')hoverMouse=false});
-glc.addEventListener('wheel',e=>{e.preventDefault();cam.dist=clamp(cam.dist*Math.exp(e.deltaY*.001),galleryOn?6:14,MAXD)},{passive:false});
+glc.addEventListener('wheel',e=>{e.preventDefault();if(wsOn){WS.dist=clamp(WS.dist*Math.exp(e.deltaY*.001),1,40);return}cam.dist=clamp(cam.dist*Math.exp(e.deltaY*.001),galleryOn?6:14,MAXD)},{passive:false});
 function boxSelect(g){const x0=Math.min(g.x0,g.x1),x1=Math.max(g.x0,g.x1),y0=Math.min(g.y0,g.y1),y1=Math.max(g.y0,g.y1);const out=[];
   for(const u of units){if(!u.alive||u.inV||u.tribe!==0||u.type==='captive'||u.type==='hunter')continue;const p=unitScreen(u);if(p&&p[0]>=x0&&p[0]<=x1&&p[1]>=y0&&p[1]<=y1)out.push(u)}
   if(out.length){setSel(out);sfx('select',.4)}if(boxMode){boxMode=false;$('bBox').setAttribute('aria-pressed','false')}}
@@ -1962,7 +2025,7 @@ function sfx(kind,vol=1,x,z){if(!AC||!soundOn||!running&&kind!=='built'&&kind!==
 // ---------------- loop ----------------
 function resize(){const w=app.clientWidth,h=app.clientHeight;dpr=Math.min(window.devicePixelRatio||1,1.75);renderer.setPixelRatio(dpr);renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();
   ov.width=w*dpr;ov.height=h*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);cw=w;ch=h;ovR=glc.getBoundingClientRect();const us=h*dpr/(2*Math.tan(camera.fov*Math.PI/360));PA.mat.uniforms.uScale.value=us;PN.mat.uniforms.uScale.value=us;
-  const m=Math.round(mini.getBoundingClientRect().width*dpr)||128;if(m>0&&mini.width!==m){mini.width=mini.height=m}}
+  const m=Math.round(mini.getBoundingClientRect().width*dpr)||128;if(m>0&&mini.width!==m){mini.width=mini.height=m}if(typeof wsOn!=='undefined'&&wsOn)wsView()}
 window.addEventListener('resize',resize);
 let last=performance.now(),hudT=0,errShown=false,saveT=20;
 // ---------------- save / continue ----------------
@@ -2014,23 +2077,105 @@ function showContinue(){const d=readSave(),b=$('bCont');if(!d){b.hidden=true;ret
   b.hidden=false;b.textContent=`Continue your game · ${m} min, ${st}, seed ${d.settings.seed}`}
 $('bCont').addEventListener('click',()=>{audio();if(!loadGame())toast('The saved game could not be read');});
 window.addEventListener('pagehide',()=>saveGame());document.addEventListener('visibilitychange',()=>{if(document.hidden)saveGame()});
-let galleryOn=false,galGroup=null,galLabels=[];
-function startGallery(){galleryOn=true;inMenu=false;running=false;$('menu').hidden=true;$('galBack').hidden=false;for(const id of['top','mini','side','dock'])$(id).hidden=true;
-  units=[];blds=[];trees=[];stones=[];PA.n=0;PN.n=0;terrain.visible=false;waterMesh.visible=false;scene.fog.near=200;scene.fog.far=400;
-  galGroup=new C.Group();scene.add(galGroup);galLabels=[];const tc=new C.Color(TRIBES[0].col);
-  const ground=new C.Mesh(new C.CylinderGeometry(40,40,.4,48),new C.MeshLambertMaterial({color:0x2e2a22}));ground.position.y=-.2;galGroup.add(ground);
-  const add=(def,x,z,sc,label,col)=>{const d=def();const g=new C.Group();g.add(new C.Mesh(merge(d.t),new C.MeshLambertMaterial({color:col||tc,flatShading:true})));g.add(new C.Mesh(merge(d.f),matF));g.position.set(x,0,z);g.scale.setScalar(sc);galGroup.add(g);galLabels.push({x,z,label,y:0});return g};
-  const uk=Object.keys(UMOD).filter(k=>k!=='ghost');uk.forEach((k,i)=>add(UMOD[k],(i-(uk.length-1)/2)*2.6,-5,2.6,UT[k]?UT[k].label:k));
-  const bk=Object.keys(BMOD);const row=Math.ceil(bk.length/2);bk.forEach((k,i)=>{const r=i<row?0:1,j=i<row?i:i-row,n=r?bk.length-row:row;add(BMOD[k],(j-(n-1)/2)*7.5,4+r*9,1,BT[k]?BT[k].label:k,k==='hut'?new C.Color(TRIBES[0].col).lerp(new C.Color(0xc9a55a),.3):null)});
-  for(const [m,x,lab] of [[TM,-18,'Tree'],[SM,-21,'Standing stone']]){const mm=new C.Mesh(m.geometry,matF);mm.position.set(x,0,-12);mm.scale.setScalar(2);galGroup.add(mm);galLabels.push({x,z:-12,label:lab,y:0})}
-  cam.yaw=.5;cam.dist=46;resize()}
-function stopGallery(){galleryOn=false;if(galGroup){scene.remove(galGroup);galGroup=null}terrain.visible=true;waterMesh.visible=true;$('galBack').hidden=true;openMenu()}
-$('bGallery').addEventListener('click',()=>startGallery());$('galBack').addEventListener('click',()=>stopGallery());
-function galleryFrame(dt){if(!gest)cam.yaw+=dt*.12;const p=.75,d=cam.dist;camera.position.set(Math.sin(cam.yaw)*Math.cos(p)*d,Math.sin(p)*d,Math.cos(cam.yaw)*Math.cos(p)*d);camera.lookAt(0,1.5,0);
-  renderer.render(scene,camera);ctx.clearRect(0,0,cw,ch);ctx.font='13px "Alegreya Sans",sans-serif';ctx.textAlign='center';
-  for(const l of galLabels){_v.set(l.x,-.1,l.z+ (l.z<0?2.2:4.5)).project(camera);if(_v.z>1)continue;const x=(_v.x+1)/2*cw,y=(1-_v.y)/2*ch;ctx.fillStyle='rgba(13,10,8,.7)';const w=ctx.measureText(l.label).width+10;ctx.fillRect(x-w/2,y-9,w,18);ctx.fillStyle='#e9ddc3';ctx.fillText(l.label,x,y+4)}}
+// ---------------- MODEL WORKSHOP ----------------
+// Opened from the menu. Pick a model, tap a part to select it (or drag it to move it), change it with the
+// sliders, add new shapes. Edits are kept in this browser automatically and appear in the game; Export
+// gives a block of text that can be baked into MODEL_DATA so they ship with the game.
+let wsOn=false,galleryOn=false;
+const WS={scene:null,group:null,key:null,parts:[],sel:-1,undo:[],lastPush:0,yaw:.6,pitch:.42,dist:4,ty:.5,tribe:0,ref:true,refMesh:null,box:null,drag:null,pts:new Map(),dirty:new Set()};
+function wsLabel(k){const n=k.slice(2);return k[0]==='u'?(UT[n]?UT[n].label:n):(BT[n]?BT[n].label:n)}
+function wsKeys(){return Object.keys(ORIG_UMOD).filter(k=>k!=='ghost').map(k=>'u:'+k).concat(Object.keys(ORIG_BMOD).map(k=>'b:'+k))}
+function wsOrigParts(k){const n=k.slice(2);return captureDef(k[0]==='u'?ORIG_UMOD[n]:ORIG_BMOD[n])}
+function wsStore(){let loc={};try{loc=JSON.parse(localStorage.getItem(MODEL_KEY))||{}}catch(e){}return loc}
+function wsSaveCurrent(){const loc=wsStore();const orig=JSON.stringify(wsOrigParts(WS.key)),cur=JSON.stringify(WS.parts);
+  if(cur===orig&&!MODEL_DATA[WS.key])delete loc[WS.key];else loc[WS.key]=WS.parts;try{localStorage.setItem(MODEL_KEY,JSON.stringify(loc))}catch(e){toast('This browser would not keep the change')}
+  WS.dirty.add(WS.key);wsStatus()}
+function wsStatus(){const n=Object.keys(modelEdits()).length;$('wsStatus').textContent=n?`Changes are kept automatically. ${n} model${n===1?'':'s'} edited.`:'Changes are kept automatically.'}
+function wsPush(force){const now=performance.now();if(!force&&now-WS.lastPush<700)return;WS.lastPush=now;WS.undo.push(JSON.stringify({p:WS.parts,s:WS.sel}));if(WS.undo.length>80)WS.undo.shift()}
+function wsChanged(rebuildPanel){wsBuild();if(rebuildPanel)wsPanel();wsSaveCurrent()}
+function wsLoad(k){WS.key=k;const E=modelEdits();WS.parts=E[k]?JSON.parse(JSON.stringify(E[k])):wsOrigParts(k);WS.sel=-1;WS.undo=[];
+  let top=0,ext=0;for(const p of WS.parts){top=Math.max(top,p.p[1]+.3);ext=Math.max(ext,Math.abs(p.p[0])+.3,Math.abs(p.p[2])+.3)}
+  WS.ty=Math.min(top,4)*.45;WS.dist=Math.max(2.4,Math.max(top,ext*2)*2.1)*(cw<720?Math.max(1,.9/Math.max(.3,cw/ch)):1);wsBuild();wsPanel()}
+function wsMat(p){const c=new C.Color(p.c);if(p.t)c.multiply(new C.Color(TRIBES[WS.tribe].col));return new C.MeshLambertMaterial({color:c,flatShading:true})}
+function wsBuild(){const S=WS.scene;if(WS.group){S.remove(WS.group);WS.group.traverse(o=>{if(o.geometry)o.geometry.dispose();if(o.material)o.material.dispose()})}
+  const g=new C.Group();WS.parts.forEach((p,i)=>{let m;try{m=new C.Mesh(partGeo(p),wsMat(p))}catch(e){return}m.userData.i=i;if(i===WS.sel){m.material.emissive=new C.Color(0x241a06)}g.add(m)});
+  S.add(g);WS.group=g;if(WS.box){S.remove(WS.box);WS.box=null}
+  const sm=g.children.find(m=>m.userData.i===WS.sel);if(sm){WS.box=new C.BoxHelper(sm,0xffd27a);S.add(WS.box)}
+  if(WS.refMesh){WS.refMesh.visible=WS.ref;const bb=new C.Box3().setFromObject(g);WS.refMesh.position.set(Math.max(.7,bb.max.x+.5),0,0)}}
+function wsOpen(){if(!WS.scene){const S=new C.Scene();S.background=new C.Color(0x16110d);S.add(new C.HemisphereLight(0xfff1d8,0x30251a,.85));const d=new C.DirectionalLight(0xffffff,.75);d.position.set(4,9,6);S.add(d);
+    const grid=new C.GridHelper(12,12,0x5a4a35,0x3a2f24);S.add(grid);const disc=new C.Mesh(new C.CircleGeometry(7,40),new C.MeshLambertMaterial({color:0x221b14}));disc.rotation.x=-Math.PI/2;disc.position.y=-.01;S.add(disc);
+    const rd=ORIG_UMOD.brave(),rg=new C.Group();rg.add(new C.Mesh(merge(rd.t),new C.MeshLambertMaterial({color:0x8a7a62,flatShading:true})));rg.add(new C.Mesh(merge(rd.f),matF));WS.refMesh=rg;S.add(rg);WS.scene=S}
+  wsOn=true;inMenu=false;running=false;$('menu').hidden=true;for(const id of['top','mini','side','dock'])$(id).hidden=true;$('ws').hidden=false;
+  const sel=$('wsModel');sel.innerHTML='<optgroup label="People">'+wsKeys().filter(k=>k[0]==='u').map(k=>`<option value="${k}">${wsLabel(k)}</option>`).join('')+'</optgroup><optgroup label="Buildings">'+wsKeys().filter(k=>k[0]==='b').map(k=>`<option value="${k}">${wsLabel(k)}</option>`).join('')+'</optgroup>';
+  $('wsTribe').innerHTML=TRIBES.slice(0,4).map((t,i)=>`<button data-i="${i}" title="${t.name}" style="background:${t.css}" class="${i===WS.tribe?'on':''}"></button>`).join('');
+  sel.value=WS.key||'u:brave';camera.near=.05;wsLoad(sel.value);wsStatus();resize();wsView()}
+function wsClose(){wsOn=false;$('ws').hidden=true;$('wsIO').hidden=true;camera.near=.5;camera.clearViewOffset();camera.updateProjectionMatrix();
+  if(WS.dirty.size){applyModelEdits();for(const k of WS.dirty){const n=k.slice(2);const pr=k[0]==='u'?UM[n]:BM[n],set=k[0]==='u'?UMOD:BMOD;if(!pr)continue;const d=set[n]();pr.t.geometry.dispose();pr.f.geometry.dispose();pr.t.geometry=merge(d.t);pr.f.geometry=merge(d.f);
+      if(n==='warrior'&&UM.ghost){const dg=UMOD.ghost();UM.ghost.t.geometry=merge(dg.t);UM.ghost.f.geometry=merge(dg.f)}}WS.dirty.clear()}
+  openMenu()}
+function wsView(){const narrow=cw<720;camera.setViewOffset(cw,ch,narrow?0:170,narrow?ch*.24:0,cw,ch);camera.updateProjectionMatrix()}
+function wsFrame(dt){const d=WS.dist,cp=Math.cos(WS.pitch);camera.position.set(Math.sin(WS.yaw)*cp*d,WS.ty+Math.sin(WS.pitch)*d,Math.cos(WS.yaw)*cp*d);camera.lookAt(0,WS.ty,0);
+  if(WS.box)WS.box.update();renderer.render(WS.scene,camera);ctx.clearRect(0,0,cw,ch)}
+// ---- panel ----
+function wsSlider(lab,min,max,step,val,on,hint){const id='w'+Math.random().toString(36).slice(2,8);const st=step||.005;
+  return {html:`<label class="wsS" title="${hint||''}"><span>${lab}</span><input type="range" id="${id}" min="${min}" max="${max}" step="${st}" value="${val}"><input type="number" id="${id}n" step="${st}" value="${+(+val).toFixed(3)}"></label>`,bind(){const r=$(id),n=$(id+'n');
+    const go=v=>{v=+v;if(!isFinite(v))return;wsPush();on(v);n.value=+v.toFixed(3);r.value=v;wsBuild();wsSaveCurrent()};r.addEventListener('pointerdown',()=>wsPush(true));r.addEventListener('input',()=>go(r.value));n.addEventListener('change',()=>{wsPush(true);go(n.value)})}}}
+function wsPanel(){const L=$('wsParts');L.innerHTML=WS.parts.map((p,i)=>`<button class="wsP${i===WS.sel?' on':''}" data-i="${i}"><i style="background:${p.t?TRIBES[WS.tribe].css:p.c}"></i>${i+1}. ${SHAPES[p.s].n}${p.t?' · tribe':''}</button>`).join('')||'<span class="wsHint">No parts. Add a shape below.</span>';
+  const P=$('wsProps'),p=WS.parts[WS.sel];if(!p){P.innerHTML='<p class="wsHint">Tap a part in the picture or the list to change it. Drag a selected part to move it; drag anywhere else to turn the view.</p>';return}
+  const binds=[];let h=`<div class="wsRow"><b>${WS.sel+1}. </b><select id="wsShape">${Object.keys(SHAPES).map(s=>`<option value="${s}"${s===p.s?' selected':''}>${SHAPES[s].n}</option>`).join('')}</select>
+    <input type="color" id="wsCol" value="${p.c}" title="Colour"><label class="wsChk"><input type="checkbox" id="wsTeam"${p.t?' checked':''}> Tribe colour</label></div><h4>Size</h4>`;
+  const bb=new C.Box3().setFromObject(WS.group),bs=new C.Vector3();bb.getSize(bs);const M=Math.max(.3,bs.x,bs.y,bs.z);
+  SHAPES[p.s].args.forEach((e,j)=>{const idx=e[4]??j,mul=e[5]??1,cur=(p.a[idx]??SHAPES[p.s].def[idx])/mul;const s=wsSlider(e[0],e[1],e[3]?e[2]:Math.max(cur*2.5,M*.8,.2),e[3]||.005,cur,v=>{while(p.a.length<=idx)p.a.push(SHAPES[p.s].def[p.a.length]);p.a[idx]=r4(v*mul)});h+=s.html;binds.push(s)});
+  const ext=Math.max(.6,M*.9,...WS.parts.map(q=>Math.max(Math.abs(q.p[0]),Math.abs(q.p[1]),Math.abs(q.p[2]))*1.3));h+='<h4>Position</h4>';
+  [['Left – right',0],['Down – up',1],['Back – front',2]].forEach(([l,ax])=>{const s=wsSlider(l,ax===1?-Math.min(.5,ext*.3):-ext,ext*(ax===1?1.4:1),.002,p.p[ax],v=>{p.p[ax]=r4(v)});h+=s.html;binds.push(s)});
+  h+='<h4>Turn</h4>';[['Tip forward',0],['Spin',1],['Lean sideways',2]].forEach(([l,ax])=>{const s=wsSlider(l,-180,180,1,p.r[ax],v=>{p.r[ax]=Math.round(v*10)/10});h+=s.html;binds.push(s)});
+  h+='<details><summary>Stretch</summary>';const k=p.k||(p.k=[1,1,1]);[['Wide',0],['Tall',1],['Deep',2]].forEach(([l,ax])=>{const s=wsSlider(l,.05,4,.01,k[ax],v=>{k[ax]=r4(v)});h+=s.html;binds.push(s)});h+='</details>';
+  P.innerHTML=h;binds.forEach(b=>b.bind());
+  $('wsCol').addEventListener('input',e=>{wsPush();p.c=e.target.value;wsBuild();wsSaveCurrent();wsPanelList()});
+  $('wsTeam').addEventListener('change',e=>{wsPush(true);p.t=e.target.checked?1:0;wsChanged(true)});
+  $('wsShape').addEventListener('change',e=>{wsPush(true);const s=e.target.value,sz=sh=>SHAPES[sh].args.map((e2,j)=>(!e2[3]&&(e2[4]??j)<3)?(e2[4]??j):-1).filter(i=>i>=0);
+    const big=Math.max(.01,...sz(p.s).map(i=>p.a[i]||0));p.s=s;p.a=SHAPES[s].def.slice();const f=big/Math.max(.01,...sz(s).map(i=>p.a[i]));for(const i of sz(s))p.a[i]=r4(p.a[i]*f);wsChanged(true)})}
+function wsPanelList(){const p=WS.parts[WS.sel];const b=document.querySelector(`#wsParts [data-i="${WS.sel}"] i`);if(b&&p)b.style.background=p.t?TRIBES[WS.tribe].css:p.c}
+function wsSelect(i){WS.sel=i;wsBuild();wsPanel();const b=document.querySelector(`#wsParts [data-i="${i}"]`);if(b)b.scrollIntoView({block:'nearest'})}
+function wsAdd(s){wsPush(true);const base=WS.parts[WS.sel];const p={s,a:SHAPES[s].def.slice(),p:base?[base.p[0],base.p[1]+.1,base.p[2]]:[0,.2,0],r:[0,0,0],k:[1,1,1],c:'#b8a888',t:0};WS.parts.push(p);WS.sel=WS.parts.length-1;wsChanged(true)}
+function wsHit(sx,sy){const rc=new C.Raycaster(),r=glc.getBoundingClientRect();rc.setFromCamera(new C.Vector2((sx-r.left)/r.width*2-1,-((sy-r.top)/r.height)*2+1),camera);const h=rc.intersectObjects(WS.group.children,false)[0];return h?h:null}
+function wsDown(e){try{glc.setPointerCapture(e.pointerId)}catch(_){}WS.pts.set(e.pointerId,{x:e.clientX,y:e.clientY,sx:e.clientX,sy:e.clientY,moved:false});
+  if(WS.pts.size===2){const [a,b]=[...WS.pts.values()];WS.drag={kind:'pinch',d0:Math.hypot(a.x-b.x,a.y-b.y),dist0:WS.dist};return}
+  const h=wsHit(e.clientX,e.clientY);if(h&&h.object.userData.i===WS.sel&&e.button!==2){wsPush(true);const n=new C.Vector3();camera.getWorldDirection(n);WS.drag={kind:'part',plane:new C.Plane().setFromNormalAndCoplanarPoint(n,h.point),last:h.point.clone()}}else WS.drag={kind:'rot'}}
+function wsMove(e){const q=WS.pts.get(e.pointerId);if(!q||!WS.drag)return;const px=q.x,py=q.y;q.x=e.clientX;q.y=e.clientY;if(Math.hypot(q.x-q.sx,q.y-q.sy)>6)q.moved=true;
+  const D=WS.drag;if(D.kind==='pinch'){const [a,b]=[...WS.pts.values()];if(!b)return;WS.dist=clamp(D.dist0*D.d0/Math.max(20,Math.hypot(a.x-b.x,a.y-b.y)),1,40);return}
+  if(!q.moved)return;
+  if(D.kind==='rot'){WS.yaw-=(q.x-px)*.008;WS.pitch=clamp(WS.pitch+(q.y-py)*.006,-.2,1.45);return}
+  if(D.kind==='part'){const r=glc.getBoundingClientRect(),rc=new C.Raycaster();rc.setFromCamera(new C.Vector2((q.x-r.left)/r.width*2-1,-((q.y-r.top)/r.height)*2+1),camera);const pt=new C.Vector3();if(!rc.ray.intersectPlane(D.plane,pt))return;
+    const p=WS.parts[WS.sel];if(!p)return;p.p=[r4(p.p[0]+pt.x-D.last.x),r4(p.p[1]+pt.y-D.last.y),r4(p.p[2]+pt.z-D.last.z)];D.last.copy(pt);wsBuild();D.moved=true}}
+function wsUp(e){const q=WS.pts.get(e.pointerId);WS.pts.delete(e.pointerId);if(!q)return;
+  if(WS.drag&&WS.drag.kind==='part'&&WS.drag.moved){wsSaveCurrent();wsPanel()}
+  else if(!q.moved&&WS.pts.size===0&&e.type==='pointerup'){const h=wsHit(q.sx,q.sy);wsSelect(h?h.object.userData.i:-1)}
+  if(WS.pts.size===0)WS.drag=null}
+$('wsParts').addEventListener('click',e=>{const b=e.target.closest('[data-i]');if(b)wsSelect(+b.dataset.i)});
+$('wsModel').addEventListener('change',e=>wsLoad(e.target.value));
+$('wsTribe').addEventListener('click',e=>{const b=e.target.closest('[data-i]');if(!b)return;WS.tribe=+b.dataset.i;$('wsTribe').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));wsBuild();wsPanel()});
+$('wsRef').addEventListener('change',e=>{WS.ref=e.target.checked;wsBuild()});
+$('wsAddRow').addEventListener('click',e=>{const b=e.target.closest('[data-s]');if(b)wsAdd(b.dataset.s)});
+$('wsDup').addEventListener('click',()=>{const p=WS.parts[WS.sel];if(!p)return toast('Select a part first');wsPush(true);const c=JSON.parse(JSON.stringify(p));c.p[0]=r4(c.p[0]+.1);WS.parts.push(c);WS.sel=WS.parts.length-1;wsChanged(true)});
+$('wsMirror').addEventListener('click',()=>{const p=WS.parts[WS.sel];if(!p)return toast('Select a part first');wsPush(true);const c=JSON.parse(JSON.stringify(p));c.p[0]=r4(-c.p[0]);c.r[1]=-c.r[1];c.r[2]=-c.r[2];WS.parts.push(c);WS.sel=WS.parts.length-1;wsChanged(true)});
+$('wsDel').addEventListener('click',()=>{if(WS.sel<0)return toast('Select a part first');wsPush(true);WS.parts.splice(WS.sel,1);WS.sel=Math.min(WS.sel,WS.parts.length-1);wsChanged(true)});
+$('wsUndo').addEventListener('click',()=>{const s=WS.undo.pop();if(!s)return toast('Nothing to undo');const o=JSON.parse(s);WS.parts=o.p;WS.sel=o.s;wsChanged(true)});
+$('wsReset').addEventListener('click',()=>{wsPush(true);WS.parts=MODEL_DATA[WS.key]?JSON.parse(JSON.stringify(MODEL_DATA[WS.key])):wsOrigParts(WS.key);WS.sel=-1;wsChanged(true);toast(`${wsLabel(WS.key)} is back as it was. Undo brings your version back.`)});
+$('wsClose').addEventListener('click',wsClose);
+$('wsExport').addEventListener('click',()=>{const E=modelEdits();const keys=Object.keys(E);if(!keys.length)return toast('No models have been edited yet');
+  const txt='{\n'+keys.map(k=>' "'+k+'":[\n'+E[k].map(p=>'  '+JSON.stringify(p)).join(',\n')+'\n ]').join(',\n')+'\n}';
+  $('wsIOt').value=txt;$('wsIOh').textContent=`${keys.length} edited model${keys.length===1?'':'s'}. Copy this and send it on, or save it as a file; it can be baked into the game.`;$('wsIOapply').hidden=true;$('wsIOcopy').hidden=false;$('wsIOsave').hidden=false;$('wsIO').hidden=false});
+$('wsImport').addEventListener('click',()=>{$('wsIOt').value='';$('wsIOh').textContent='Paste exported model text here, then press Use these models.';$('wsIOapply').hidden=false;$('wsIOcopy').hidden=true;$('wsIOsave').hidden=true;$('wsIO').hidden=false;$('wsIOt').focus()});
+$('wsIOcopy').addEventListener('click',async()=>{const t=$('wsIOt');t.select();let ok=false;try{await navigator.clipboard.writeText(t.value);ok=true}catch(e){try{ok=document.execCommand('copy')}catch(_){}}toast(ok?'Copied':'Select the text and copy it by hand')});
+$('wsIOsave').addEventListener('click',()=>{try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([$('wsIOt').value],{type:'application/json'}));a.download='wicker-models.json';document.body.appendChild(a);a.click();a.remove()}catch(e){toast('Saving files is blocked here; copy the text instead')}});
+$('wsIOapply').addEventListener('click',()=>{let o;try{o=JSON.parse($('wsIOt').value)}catch(e){return toast('That text is not readable model data')}
+  const loc=wsStore();let n=0;for(const k in o){if(!Array.isArray(o[k])||!wsKeys().includes(k))continue;if(!o[k].every(p=>p&&SHAPES[p.s]&&Array.isArray(p.a)&&Array.isArray(p.p)&&Array.isArray(p.r)))continue;loc[k]=o[k];WS.dirty.add(k);n++}
+  try{localStorage.setItem(MODEL_KEY,JSON.stringify(loc))}catch(e){}$('wsIO').hidden=true;wsLoad(WS.key);wsStatus();toast(n?`${n} model${n===1?'':'s'} taken in`:'Nothing in that text matched a model')});
+$('wsIOclose').addEventListener('click',()=>{$('wsIO').hidden=true});
+$('bGallery').addEventListener('click',()=>wsOpen());
 function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;fogK=Math.min(1,dt*4);
-  if(galleryOn){try{galleryFrame(dt)}catch(e){console.error(e)}requestAnimationFrame(frame);return}
+  if(wsOn){try{wsFrame(dt)}catch(e){console.error(e)}requestAnimationFrame(frame);return}
   try{
     if(running&&!paused&&!over){const steps=speed;for(let i=0;i<steps;i++)sim(dt)}
     if(inMenu){cam.yaw+=dt*.06}
@@ -2042,6 +2187,6 @@ function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;fogK=Math.mi
   }catch(err){if(!errShown){errShown=true;console.error(err);toast('Something went wrong: '+err.message)}}
   requestAnimationFrame(frame)}
 resize();buildWorld();showContinue();requestAnimationFrame(frame);
-window.__ws={get wear(){return wear},get flowers(){return flowers},get units(){return units},get tribes(){return tribes},get blds(){return blds},sim,beginGame,get gt(){return gt},castSpell,tryCast,saveGame,loadGame,setSel,command,showLevel,SCEN,field,get walkA(){return walk},hAt,get water(){return water},findSpot,get allow(){return allowSets},get pass(){return pass},get swamps(){return swamps},get debris(){return debris},queenValue,invokeArma,startRitual,sendVehicle,get wildId(){return wildId},get armageddon(){return armageddon},placeBuilding,validSpot,orderMove,spawnUnit,command,get water(){return water},findSpot};
+window.__ws={get WS(){return WS},wsOpen,wsClose,captureDef,defFromData,merge,ORIG_UMOD,ORIG_BMOD,get UM(){return UM},get BM(){return BM},get wear(){return wear},get flowers(){return flowers},get units(){return units},get tribes(){return tribes},get blds(){return blds},sim,beginGame,get gt(){return gt},castSpell,tryCast,saveGame,loadGame,setSel,command,showLevel,SCEN,field,get walkA(){return walk},hAt,get water(){return water},findSpot,get allow(){return allowSets},get pass(){return pass},get swamps(){return swamps},get debris(){return debris},queenValue,invokeArma,startRitual,sendVehicle,get wildId(){return wildId},get armageddon(){return armageddon},placeBuilding,validSpot,orderMove,spawnUnit,command,get water(){return water},findSpot};
 })();
 </script>
