@@ -710,8 +710,8 @@ function decorTick(dt){
     tombBeds.push({x,z,id:b.id*5+i});buntings.push({a:{x:b.x,z:b.z,h:3.0},b:{x,z,h:1.05},id:b.id+i*2,src:[b]})}}
   const nearB=(x,z,r,ti)=>{let n=0;for(const o of blds)if(o.alive&&o.done&&!BT[o.bt].inv&&o.bt!=='hedge'&&(ti==null||o.tribe===ti)&&d2(o.x,o.z,x,z)<r*r)n++;return n};
   const clear=(x,z,r)=>{for(let dz=-r;dz<=r;dz++)for(let dx=-r;dx<=r;dx++){const c=cidx(x+dx,z+dz);if(bOcc[c]||water[c]||!walk[c]||hazU[c]>gt||saltU[c]>gt||wearShown[c])return false}return true};
-  lanes=[];{const byT={};for(const b of blds){if(!b.alive||!b.done||!b.flT||gt-b.flT<20||BT[b.bt].inv&&b.bt!=='reinc'||b.bt==='hedge'||b.tribe===wildId)continue;(byT[b.tribe]=byT[b.tribe]||[]).push({x:b.dx,z:b.dz})}
-    for(const b of blds)if(b.alive&&b.bt==='reinc'&&byT[b.tribe])byT[b.tribe].push({x:b.x,z:wrap(b.z+2)});for(const w of wells)if(byT[w.tribe])byT[w.tribe].push({x:w.x,z:wrap(w.z+.9)});
+  lanes=[];{const byT={};for(const b of blds){if(!b.alive||!b.done||!b.flT||gt-b.flT<20||BT[b.bt].inv&&b.bt!=='reinc'||b.bt==='hedge'||b.tribe===wildId)continue;(byT[b.tribe]=byT[b.tribe]||[]).push({x:b.x,z:wrap(b.z+(b.bt==='hut'?1.1:BT[b.bt].s/2)),door:1})}
+    for(const b of blds)if(b.alive&&b.bt==='reinc'&&byT[b.tribe])byT[b.tribe].push({x:b.x,z:wrap(b.z+1.9)});for(const w of wells)if(byT[w.tribe])byT[w.tribe].push({x:w.x,z:wrap(w.z+.75)});
     for(const t in byT){const P=byT[t];if(P.length<2)continue;const inT=[0],used=new Uint8Array(P.length);used[0]=1;
       for(let n=1;n<P.length;n++){let best=null,bd=14*14;for(const i of inT)for(let j=0;j<P.length;j++){if(used[j])continue;const d=d2(P[i].x,P[i].z,P[j].x,P[j].z);if(d<bd){bd=d;best=[i,j]}}if(!best)break;used[best[1]]=1;inT.push(best[1]);lanes.push([P[best[0]],P[best[1]]])}}}
   // wild-flower patches in spare ground between buildings, where there is no room to build
@@ -1582,7 +1582,10 @@ const SIL=inst(merge([P(cyl(.09,.15,.42,5),0xffffff,0,.21,0),P(new C.SphereGeome
 const CM=inst(merge([P(cyl(.1,.1,.42,5),0xa59d8c,0,0,0,0,0,Math.PI/2),P(new C.SphereGeometry(.1,6,5),0xc49a7c,.26,.02,0)]),matF,240);
 const FLAG=(()=>{const g=new C.BufferGeometry(),v=new Float32Array([-.06,0,0,.06,0,0,0,-.14,0]);g.setAttribute('position',new C.BufferAttribute(v,3));g.computeVertexNormals();return inst(g,new C.MeshLambertMaterial({color:0xffffff,side:C.DoubleSide}),900)})();
 const CORD=inst(new C.BoxGeometry(1,.02,.02),new C.MeshBasicMaterial({color:0xffffff}),900);
-const LANE=(()=>{const m=new C.MeshLambertMaterial({color:0xffffff,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-2});return inst(new C.BoxGeometry(1,.02,.42),m,2400)})();
+const LANE=(()=>{const cv=document.createElement('canvas');cv.width=4;cv.height=64;const x=cv.getContext('2d');const gr=x.createLinearGradient(0,0,0,64);
+  gr.addColorStop(0,'rgba(0,0,0,1)');gr.addColorStop(.22,'rgb(70,70,70)');gr.addColorStop(.38,'rgb(150,150,150)');gr.addColorStop(.5,'rgb(165,165,165)');gr.addColorStop(.62,'rgb(150,150,150)');gr.addColorStop(.78,'rgb(70,70,70)');gr.addColorStop(1,'rgba(0,0,0,1)');x.fillStyle=gr;x.fillRect(0,0,4,64);
+  const tex=new C.CanvasTexture(cv);const g=new C.PlaneGeometry(1,.34);g.rotateX(-Math.PI/2);
+  const m=new C.MeshLambertMaterial({color:0xffffff,alphaMap:tex,transparent:true,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-2});return inst(g,m,2400)})();
 const POST=inst(merge([P(cyl(.05,.06,1.1,5),0x6b4a2c,0,.55,0),P(new C.SphereGeometry(.07,5,4),0x8a6c3e,0,1.12,0)]),matF,60);
 const EDGE=inst(merge([P(new C.BoxGeometry(.78,.07,.05),0x6a4a2c,0,.035,0),P(new C.BoxGeometry(.05,.07,.4),0x6a4a2c,.37,.035,-.2),P(new C.BoxGeometry(.05,.07,.4),0x6a4a2c,-.37,.035,-.2)]),matF,400);
 const WELL=(()=>{const f=[P(cyl(.5,.55,.55,10),0x8a857a,0,.27,0),P(cyl(.4,.4,.02,10),0x24323a,0,.5,0),P(new C.BoxGeometry(.08,1,.08),0x6b4a2c,.5,.75,0),P(new C.BoxGeometry(.08,1,.08),0x6b4a2c,-.5,.75,0),P(new C.BoxGeometry(1.1,.07,.07),0x6b4a2c,0,1.12,0),
@@ -1685,10 +1688,14 @@ function drawEntities(){
   fin(POST,pn);
   fin(FLS,fn);fin(FLB,fn);fin(EDGE,en);
   let ln=0;for(const [a,b] of lanes){const ax=wd(a.x-cam.fx),az=wd(a.z-cam.fz);if(ax*ax+az*az>VR2*.8||!seenAt(a.x,a.z))continue;const dx=wd(b.x-a.x),dz=wd(b.z-a.z),L=Math.hypot(dx,dz);if(L<.5)continue;
-    const n=Math.max(1,Math.ceil(L/.45)),px=-dz/L,pz=dx/L,bend=(hsh(((a.x*7+b.z*13)*100)|0)-.5)*Math.min(1.2,L*.12),fv=fogOn?Math.max(.42,vis[cidx(a.x,a.z)]):1;
-    let lx=ax,lz=az,ly=hAt(a.x,a.z);for(let k=1;k<=n&&ln<2400;k++){const t=k/n,w=Math.sin(t*Math.PI)*bend,wx=a.x+dx*t+px*w,wz=a.z+dz*t+pz*w,x=ax+dx*t+px*w,z=az+dz*t+pz*w,y=hAt(wx,wz);
-      const sx=x-lx,sz=z-lz,sl=Math.hypot(sx,sz)||1e-3,mx=(x+lx)/2,mz=(z+lz)/2,my=(y+ly)/2+.05-(mx*mx+mz*mz)*K;if(bOcc[cidx(wx,wz)]){lx=x;lz=z;ly=y;continue}_fq.setFromEuler(_fe.set(0,Math.atan2(-sz,sx),Math.atan2(y-ly,sl),'YXZ'));_p.set(mx,my,mz);_s.set(sl+.12,1,1);_m.compose(_p,_fq,_s);LANE.setMatrixAt(ln,_m);
-      const v=(.85+hsh(ln*13+k)*.15)*fv;_c.setRGB(.36*v,.28*v,.19*v);LANE.setColorAt(ln,_c);ln++;lx=x;lz=z;ly=y}}
+    // a curve that leaves each door straight out of it, then bends towards the other end
+    const st=Math.min(1.8,L*.4),c1x=a.door?0:dx*.33,c1z=a.door?st:dz*.33,c2x=b.door?dx:dx*.67,c2z=b.door?dz+st:dz*.67,fv=fogOn?Math.max(.42,vis[cidx(a.x,a.z)]):1;
+    const n=Math.max(2,Math.ceil(L*1.3/.4));let lx=ax,lz=az,ly=hAt(a.x,a.z);
+    for(let k=1;k<=n&&ln<2400;k++){const t=k/n,u=1-t,ox=3*u*u*t*c1x+3*u*t*t*c2x+t*t*t*dx,oz=3*u*u*t*c1z+3*u*t*t*c2z+t*t*t*dz,wx=a.x+ox,wz=a.z+oz,x=ax+ox,z=az+oz,y=hAt(wx,wz);
+      const sx=x-lx,sz=z-lz,sl=Math.hypot(sx,sz)||1e-3,mx=(x+lx)/2,mz=(z+lz)/2,my=(y+ly)/2+.04-(mx*mx+mz*mz)*K;
+      if(t>.2&&t<.8&&bOcc[cidx(wx,wz)]){lx=x;lz=z;ly=y;continue}
+      _fq.setFromEuler(_fe.set(0,Math.atan2(-sz,sx),Math.atan2(y-ly,sl),'YXZ'));_p.set(mx,my,mz);_s.set(sl,1,1);_m.compose(_p,_fq,_s);LANE.setMatrixAt(ln,_m);
+      const v=(.9+hsh(ln*13+k)*.1)*fv;_c.setRGB(.27*v,.2*v,.13*v);LANE.setColorAt(ln,_c);ln++;lx=x;lz=z;ly=y}}
   fin(LANE,ln);
   let wn=0;for(const w of wells){const rx=wd(w.x-cam.fx),rz=wd(w.z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2||!seenAt(w.x,w.z)||wn>=40)continue;const fv=fogOn?Math.max(.42,vis[cidx(w.x,w.z)]):1,sy=Math.min(1,(gt-w.born)/8);
     place(WELL,wn,rx,hAt(w.x,w.z)-r2*K,rz,w.x*3,1,sy);_c.setRGB(fv,fv,fv);WELL.setColorAt(wn,_c);wn++}
