@@ -343,6 +343,7 @@ const TUNE={
   frenzyPerHead:15,frenzyMax:180,frenzySpeed:1.45,frenzyAttack:.8,
   shamanRespawn:45,tombRespawn:60,tombManaKeep:.5,
   entombFollowers:20,entombMana:1500,
+  flowerCap:480,flowerPerBld:7,  // village flowers: total, and per building
   saltTime:180,saltPad:4,        // seconds a razed building's ground stays salted against its old owner, and how far beyond the walls
   brokenFrac:.2,brokenCrumble:60,  // a rival falling below this share of its peak population breaks; its buildings fall in over this many seconds
  entombChannel:10,
@@ -569,7 +570,7 @@ const DIFF={
   hard:{mana:1.25,breed:1.05,build:4,hutRate:65,first:270,int:120,need:9,needInc:2,res:110,gap:4,milR:.5,pTarget:.55,maxSpell:9999,pMana:1,pBreed:1,pWood:40,pMana0:150,pHuts:1}};
 
 // ---------------- state ----------------
-let H,walk,water,pass,hazU,hazType,hazOwner,bOcc,colW,TN,hazList=new Set(),saltU=new Float32Array(N*N),saltOwner=new Int8Array(N*N),saltList=new Set();
+let H,walk,water,pass,hazU,hazType,hazOwner,bOcc,colW,TN,hazList=new Set(),saltU=new Float32Array(N*N),saltOwner=new Int8Array(N*N),saltList=new Set(),wear=new Float32Array(N*N),wearShown=new Uint8Array(N*N),flowers=[],decoT=0,wearT=0;
 let units=[],blds=[],trees=[],tribes=[],effects=[],projs=[],bById=new Map();
 let hedgeA=new Uint8Array(N*N),hazGrp=new Int32Array(N*N),swamps={},swampSeq=1,homeBits=new Uint8Array(256),hedgeStart=null;
 let pulseAct={a:'',t:-1e9},HUNT_V=TUNE.huntKillMana,spellTgt=null,watching=false,fogK=1,dreadToastT=-99,escToastT=-99,wildId=-1,armageddon=false,moot={x:64,z:64},fogOn=false,vis=new Float32Array(N*N).fill(1),visNow=new Uint8Array(N*N),seen=new Uint8Array(N*N),stones=[],soundOn=true,wildT=0,fogT=0;
@@ -641,6 +642,7 @@ function vcol(c){const h=H[c],x=c%N,z=(c/N)|0;
   else if(h<7){const t=h/7;r=lerp(.44,.34,t);g=lerp(.52,.41,t);b=lerp(.26,.22,t)}
   else if(h<10.5){r=.42;g=.33;b=.31}
   else{r=.56;g=.54;b=.5}
+  if(wearShown[c]&&hazU[c]<=gt&&h>=.55){const k=.18+wearShown[c]/8*.5;r=lerp(r,.5,k);g=lerp(g,.41,k);b=lerp(b,.28,k)}
   if(saltU[c]>gt&&hazU[c]<=gt&&h>=0){r=lerp(r,.7,.55);g=lerp(g,.68,.55);b=lerp(b,.62,.55)}
   const v=hazU[c]>gt?1:TN[c];colW[c*3]=r*v;colW[c*3+1]=g*v;colW[c*3+2]=b*v}
 function recompute(x0,z0,x1,z1){
@@ -658,6 +660,23 @@ function swampKill(c){const g=hazGrp[c],sw=swamps[g];if(!sw)return;sw.kills++;if
   let x0=1e9,z0=1e9,x1=-1e9,z1=-1e9;for(const k of sw.cells){if(hazGrp[k]!==g)continue;hazU[k]=0;hazGrp[k]=0;const x=k%N,z=(k/N)|0;x0=Math.min(x0,x);z0=Math.min(z0,z);x1=Math.max(x1,x);z1=Math.max(z1,z)}
   delete swamps[g];if(x0<1e9)recompute(x0,z0,x1,z1);if(sw.owner===0&&!watching)toast(`Your bog has drowned ${TUNE.swampLives} and drains away, sated.`)}
 function setHedge(b,on){const c=wi(b.cz0)*N+wi(b.cx0);hedgeA[c]=on?1:0;recompute(b.cx0,b.cz0,b.cx0,b.cz0)}
+// ---- village colour: worn paths and flowers (cosmetic only) ----
+const FLOWER_C=[0x3f6fd0,0xc8302a,0xe8c63a,0xefeadc,0x9a5ac0,0xd86a9a];
+function decorTick(dt){wearT-=dt;if(wearT<=0){wearT=.5;
+    for(const u of units){if(!u.alive||!u.moving||u.inV||u.air||u.tribe===wildId)continue;const c=cidx(u.x,u.z);if(water[c])continue;wear[c]=Math.min(1,wear[c]+(u.type==='brave'?.07:.025))}}
+  decoT-=dt;if(decoT>0)return;decoT=4;
+  for(let c=0;c<N*N;c++){if(wear[c]>0){wear[c]=Math.max(0,wear[c]*.996-.0004)}const q=wear[c]<.16?0:Math.min(8,1+((wear[c]-.16)/.84*8)|0);if(q!==wearShown[c]){wearShown[c]=q;vcol(c)}}
+  for(const f of flowers){if(f.die)continue;const c=cidx(f.x,f.z);if(wear[c]>.4||water[c]||hazU[c]>gt||saltU[c]>gt||bOcc[c]){f.die=gt;continue}
+    if(gt-(f.chk||0)>20){f.chk=gt;if(!blds.some(b=>b.alive&&b.done&&!BT[b.bt].inv&&b.bt!=='hedge'&&b.tribe!==wildId&&d2(b.x,b.z,f.x,f.z)<9*9))f.die=gt}}
+  flowers=flowers.filter(f=>!f.die||gt-f.die<5);
+  if(flowers.length>=TUNE.flowerCap||armageddon)return;
+  for(let k=0;k<6;k++){const b=blds[(R()*blds.length)|0];if(!b||!b.alive||!b.done||BT[b.bt].inv||b.bt==='hedge'||b.tribe===wildId)continue;
+    let nb=0;for(const o of blds)if(o!==b&&o.alive&&o.done&&o.tribe===b.tribe&&!BT[o.bt].inv&&o.bt!=='hedge'&&d2(o.x,o.z,b.x,b.z)<10*10)nb++;if(nb<2)continue;
+    let mine=0;for(const f of flowers)if(!f.die&&d2(f.x,f.z,b.x,b.z)<36)mine++;if(mine>=TUNE.flowerPerBld)continue;
+    const a=R()*TAU,r=BT[b.bt].s*.5+1+R()*3.5,x=wrap(b.x+Math.cos(a)*r),z=wrap(b.z+Math.sin(a)*r),c=cidx(x,z);
+    if(!walk[c]||water[c]||bOcc[c]||wear[c]>.2||hazU[c]>gt||saltU[c]>gt||H[c]<.6)continue;
+    const near=flowers.find(f=>!f.die&&d2(f.x,f.z,x,z)<4);const col=near&&R()<.7?near.col:FLOWER_C[(R()*FLOWER_C.length)|0];
+    flowers.push({x,z,col,born:gt,sc:.7+R()*.5,r:R()*TAU})}}
 function hazardTick(){let ch=false;for(const c of hazList)if(hazU[c]<=gt){hazList.delete(c);const x=c%N,z=(c/N)|0;recompute(x,z,x,z);ch=true}for(const c of saltList)if(saltU[c]<=gt){saltList.delete(c);const x=c%N,z=(c/N)|0;recompute(x,z,x,z);ch=true}return ch}
 function saltGround(b,owner){const s=BT[b.bt].s,p=TUNE.saltPad;for(let dz=-p;dz<s+p;dz++)for(let dx=-p;dx<s+p;dx++){const ex=Math.max(0,-dx,dx-s+1),ez=Math.max(0,-dz,dz-s+1);if(ex*ex+ez*ez>p*p)continue;const c=wi(b.cz0+dz)*N+wi(b.cx0+dx);saltU[c]=gt+TUNE.saltTime;saltOwner[c]=owner;saltList.add(c)}recompute(b.cx0-p-1,b.cz0-p-1,b.cx0+s+p,b.cz0+s+p)}
 
@@ -999,7 +1018,26 @@ function braveThink(u,T){const S=T.stats;
   {const mp=blds.find(b=>b.alive&&b.done&&b.bt==='maypole'&&b.tribe===u.tribe&&d2(u.x,u.z,b.x,b.z)<32*32);if(mp&&(mp.dancers||0)<TUNE.mayDancers&&!armageddon&&R()<.35){u.st='dance';u.bld=mp;u.dt=25+R()*25;u.da=R()*TAU;mp.dancers=(mp.dancers||0)+1;setTarget(u,mp.x+Math.cos(u.da)*2.3,mp.z+Math.sin(u.da)*2.3);return}}
   if(S.outB>5||(T.wood>=T.woodGoal&&S.outB>2)){let hb=null,hd=25*25;for(const b of blds)if(b.alive&&b.done&&b.bt==='hut'&&b.tribe===u.tribe&&b.occ<5){const dd=d2(u.x,u.z,b.x,b.z);if(dd<hd){hd=dd;hb=b}}
     if(hb){u.st='enter';u.bld=hb;u.purpose='house';setTarget(u,hb.dx,hb.dz);return}}
-  if(R()<.25){const x=u.gx+(R()-.5)*6,z=u.gz+(R()-.5)*6;if(pass[cidx(x,z)]){u.st='move';setTarget(u,x,z)}}}
+  pastime(u,T)}
+// ---- idle pastimes: colour only; any real work or danger interrupts them ----
+function pastStart(u,k,dur,fx,fz){u.past=k;u.pastT=gt+dur;u.pastNext=null;if(fx!==undefined)u.face=Math.atan2(wd(fx-u.x),wd(fz-u.z))}
+function pastGo(u,x,z,k,dur,fx,fz,w){if(!pass[cidx(x,z)])return false;u.pastNext={k,dur,x,z,fx,fz,w,until:gt+20};u.st='move';setTarget(u,x,z);return true}
+function pastime(u,T){
+  if(u.past&&u.pastT>gt){if(u.past==='chat'){const p=u.pw&&units.find(o=>o.id===u.pw);if(!p||!p.alive||p.st!=='idle'||p.past!=='chat')u.pastT=gt}return}
+  u.past=null;const n=u.pastNext;
+  if(n){u.pastNext=null;if(gt<n.until&&d2(u.x,u.z,n.x,n.z)<1.6*1.6){
+      if(n.k==='chat'){const p=units.find(o=>o.id===n.w);if(p&&p.alive&&p.st==='idle'&&!p.pastNext&&d2(p.x,p.z,u.x,u.z)<2.5*2.5){pastStart(u,'chat',n.dur,p.x,p.z);u.pw=p.id;pastStart(p,'chat',n.dur,u.x,u.z);p.pw=u.id;u.think=2;return}}
+      else{pastStart(u,n.k,n.dur,n.fx,n.fz);u.think=2;return}}}
+  if(R()<.35){u.think=1+R()*2;return}
+  const r=R();
+  if(r<.3){let p=null;query(grid,u.x,u.z,7,o=>{if(!p&&o!==u&&o.alive&&o.tribe===u.tribe&&o.type==='brave'&&o.st==='idle'&&!o.inV&&!o.past&&!o.pastNext)p=o});
+    if(p){const a=Math.atan2(wd(u.z-p.z),wd(u.x-p.x));if(pastGo(u,wrap(p.x+Math.cos(a)*.75),wrap(p.z+Math.sin(a)*.75),'chat',8+R()*10,p.x,p.z,p.id))return}}
+  else if(r<.55){let hb=null,hd=14*14;for(const b of blds)if(b.alive&&b.done&&b.bt==='hut'&&b.tribe===u.tribe){const dd=d2(u.x,u.z,b.x,b.z);if(dd<hd){hd=dd;hb=b}}
+    if(hb){const a=R()*TAU,rr=1.9+R()*.5;if(pastGo(u,wrap(hb.x+Math.cos(a)*rr),wrap(hb.z+Math.sin(a)*rr),'sit',12+R()*14,hb.x+Math.cos(a)*6,hb.z+Math.sin(a)*6))return}}
+  else if(r<.68){let f=null,fd=9*9;for(const o of flowers){if(o.die)continue;const dd=d2(u.x,u.z,o.x,o.z);if(dd<fd){fd=dd;f=o}}
+    if(f){const a=R()*TAU;if(pastGo(u,wrap(f.x+Math.cos(a)*.45),wrap(f.z+Math.sin(a)*.45),'tend',9+R()*9,f.x,f.z))return}}
+  else if(r<.8){const rc=T.home||(T.home=blds.find(b=>b.bt==='reinc'&&b.tribe===T.id));if(rc&&d2(u.x,u.z,rc.x,rc.z)<18*18){const a=R()*TAU;if(pastGo(u,wrap(rc.x+Math.cos(a)*2),wrap(rc.z+Math.sin(a)*2),'sit',14+R()*14,rc.x,rc.z))return}}
+  const x=u.gx+(R()-.5)*6,z=u.gz+(R()-.5)*6;if(pass[cidx(x,z)]){u.st='move';setTarget(u,x,z)}}
 function fireCharge(u,t){const ty=t.bt?hAt(t.x,t.z)+.6:unitY(t)+.3,dd=Math.sqrt(d2(u.x,u.z,t.x,t.z)),ti=u.tribe,air=!t.bt&&UT[t.type].fly;
   proj({kind:'charge',sx:u.x,sz:u.z,sy:unitY(u)+.05,tx:t.x,tz:t.z,ty,dur:Math.max(.45,dd/7),arc:air?.6:.3,ti,onHit:(x,z)=>{
     if(air){if(t.alive&&d2(x,z,t.x,t.z)<2)dmgUnit(t,30,u.alive?u:null);for(let i=0;i<14;i++)PA.emit(x,ty,z,(R()-.5)*3,(R()-.5)*3,(R()-.5)*3,.35,1,.55,.15,1,.5,0)}
@@ -1296,6 +1334,7 @@ function sim(dt){gt+=dt;
   updProjs(dt);updDebris(dt);
   statT-=dt;if(statT<=0){statT=.5;computeStats()}
   hazT-=dt;if(hazT<=0){hazT=.5;hazardTick()}
+  decorTick(dt);
   secT-=dt;if(secT<=0){secT=1;for(const T of tribes){if(!T.alive||T.wild)continue;tribeUpkeep(T);if(T.ai)aiThink(T)}checkEnd();regrow();wildTick()}
   fogT-=dt;if(fogT<=0){fogT=.25;updFog()}
   cleanT-=dt;if(cleanT<=0){cleanT=2;units=units.filter(u=>u.alive);for(const b of blds)if(!b.alive)bById.delete(b.id);blds=blds.filter(b=>b.alive);if(trees.length>treeCap*1.6)trees=trees.filter(t=>t.alive)}}
@@ -1450,6 +1489,8 @@ const UM={};for(const k in UMOD)UM[k]=mkPair(UMOD[k],UCAP[k],k==='ghost');
 const BM={};for(const k in BMOD)BM[k]=mkPair(BMOD[k],k==='reinc'||k==='barrow'||k==='moot'||k==='tomb'?8:k==='hut'?180:k==='hedge'?600:60);
 const SIL=inst(merge([P(cyl(.09,.15,.42,5),0xffffff,0,.21,0),P(new C.SphereGeometry(.1,6,5),0xffffff,0,.53,0)]),new C.MeshBasicMaterial({vertexColors:true}),200);
 const CM=inst(merge([P(cyl(.1,.1,.42,5),0xa59d8c,0,0,0,0,0,Math.PI/2),P(new C.SphereGeometry(.1,6,5),0xc49a7c,.26,.02,0)]),matF,240);
+const FLS=inst(merge([P(cyl(.012,.012,.16,3),0x3d6b2a,-.06,.08,0),P(cyl(.012,.012,.2,3),0x3d6b2a,.05,.1,.03),P(cyl(.012,.012,.13,3),0x3d6b2a,0,.065,-.06),P(new C.ConeGeometry(.07,.06,4),0x4a7a32,0,.03,0)]),matF,500);
+const FLB=inst(merge([P(new C.SphereGeometry(.045,5,3),0xffffff,-.06,.17,0),P(new C.SphereGeometry(.05,5,3),0xffffff,.05,.21,.03),P(new C.SphereGeometry(.04,5,3),0xffffff,0,.14,-.06)]),new C.MeshLambertMaterial({color:0xffffff,flatShading:true}),500);
 const TM=inst(merge([P(cyl(.07,.1,.5,5),0x4a3322,0,.25,0),P(new C.ConeGeometry(.52,1.05,6),0x203a26,0,.95,0),P(new C.ConeGeometry(.37,.8,6),0x2a4a2e,0,1.45,0)]),matF,1800);
 const SM=inst(merge([P(new C.BoxGeometry(.42,1.6,.32),0x6f6a60,0,.78,0),P(new C.BoxGeometry(.3,.2,.26),0x5e5a52,0,1.65,0)]),matF,80);
 const ringG=new C.RingGeometry(.42,.54,24);ringG.rotateX(-Math.PI/2);
@@ -1508,7 +1549,8 @@ function drawEntities(){
     if(gt-u.swing<.18){ox=Math.sin(u.face)*.13;oz=Math.cos(u.face)*.13}
     if(u.type==='balloon'){y+=Math.sin(gt*1.5+u.anim)*.15}
     if(u.air)yaw+=gt*9;
-    const i=M.n++;place(M.t,i,rx+ox,y,rz+oz,yaw,sc);place(M.f,i,rx+ox,y,rz+oz,yaw,sc);
+    let sy=1;if(u.past&&u.st==='idle'&&u.pastT>gt){const ph=gt*2+u.anim;if(u.past==='sit'){y-=.13;sy=.76;yaw+=Math.sin(ph*.4)*.08}else if(u.past==='tend'){const b=Math.max(0,Math.sin(ph*1.5));y-=.09*b;sy=1-.22*b}else if(u.past==='chat'){yaw+=Math.sin(ph*1.7)*.2;if(Math.sin(ph*.8)>.92)y+=.05}}
+    const i=M.n++;place(M.t,i,rx+ox,y,rz+oz,yaw,sc,sy);place(M.f,i,rx+ox,y,rz+oz,yaw,sc,sy);
     _c.copy(tribes[u.tribe].c);if(gt-u.hitT<.12)_c.setRGB(1,1,1);else if(tribes[u.tribe].frenzyUntil>gt)_c.lerp(FRENZY_C,.25+.15*Math.sin(gt*9+u.anim));else if(u.shield>gt)_c.lerp(SHIELD_C,.5+.15*Math.sin(gt*5));if(u.hyp)_c.lerp(WHITE_C,.3+.3*Math.sin(gt*7));
     M.t.setColorAt(i,_c);M.f.setColorAt(i,WHITE_C);
     if(u.carry&&cn<240){place(CM,cn,rx+ox-Math.sin(yaw)*.32,y+.42,rz+oz-Math.cos(yaw)*.32,yaw+Math.PI/2,1);CM.setColorAt(cn,WHITE_C);cn++}}
@@ -1532,6 +1574,10 @@ function drawEntities(){
   let tn=0;for(const t of trees){if(!t.alive)continue;const rx=wd(t.x-cam.fx),rz=wd(t.z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2||tn>=1800)continue;if(!seenAt(t.x,t.z))continue;const fv=fogOn?Math.max(.42,vis[cidx(t.x,t.z)]):1;
     const gr=t.born?Math.min(1,(gt-t.born)/30):1;place(TM,tn,rx,hAt(t.x,t.z)-r2*K,rz,t.tint*7,t.sc*(.45+.55*clamp(t.wood/TUNE.woodPerTree,0,1))*(.3+.7*gr));_c.setRGB(t.tint*fv,t.tint*fv,t.tint*fv);TM.setColorAt(tn,_c);tn++}
   fin(TM,tn);
+  let fn=0;for(const f of flowers){if(fn>=500)break;const rx=wd(f.x-cam.fx),rz=wd(f.z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2*.7||!seenAt(f.x,f.z))continue;
+    const g=Math.min(1,(gt-f.born)/8)*(f.die?Math.max(0,1-(gt-f.die)/5):1);if(g<=.02)continue;const y=hAt(f.x,f.z)-r2*K,yaw=f.r+Math.sin(gt*1.3+f.r*5)*.15,sc=f.sc*g*2.3;
+    place(FLS,fn,rx,y,rz,yaw,sc);place(FLB,fn,rx,y,rz,yaw,sc);const fv=fogOn?Math.max(.42,vis[cidx(f.x,f.z)]):1;_c.setRGB(fv,fv,fv);FLS.setColorAt(fn,_c);_c.setHex(f.col).multiplyScalar(fv);FLB.setColorAt(fn,_c);fn++}
+  fin(FLS,fn);fin(FLB,fn);
   let sn=0;for(const st of stones){const rx=wd(st.x-cam.fx),rz=wd(st.z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2||!seenAt(st.x,st.z)||sn>=80)continue;place(SM,sn,rx,hAt(st.x,st.z)-r2*K-.1,rz,st.r,st.s);const fv=fogOn?Math.max(.42,vis[cidx(st.x,st.z)]):1;_c.setRGB(fv,fv,fv);SM.setColorAt(sn,_c);sn++}
   fin(SM,sn);
   let rn=0;for(const e of sel){if(rn>=300)break;const rx=wd(e.x-cam.fx),rz=wd(e.z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2)continue;
@@ -1816,7 +1862,7 @@ function drawPreview(){const pc=$('prev'),px=pc.getContext('2d');const tmp=docum
   $('prevCap').textContent=`Your tribe is ochre. ${land}% land, ${settings.enemies} rival${settings.enemies>1?'s':''}. Pale marks are the Moot and the hollow hills.`}
 function openMenu(){if(settings.campaign!=null){if(skirmishSettings)Object.assign(settings,skirmishSettings);settings.campaign=null}allowSets=null;applyAllow();showContinue();scene.fog.near=30;scene.fog.far=80;watching=false;document.body.classList.remove('watch');running=false;droneLevel();over=false;inMenu=true;$('menu').hidden=false;for(const id of['top','mini','side','dock'])$(id).hidden=true;hint(null);armed=null;placing=null;$('oSeed').value=settings.seed;buildWorld()}
 function buildWorld(){const SC=scen();const w=genWorld(settings.seed,settings.style,settings.enemies+1,{centre:SC&&SC.centre,keep:SC&&SC.keep});world=w;H=w.h;TN=w.tn;
-  walk=new Uint8Array(N*N);water=new Uint8Array(N*N);pass=new Uint8Array(N*N);hazU=new Float32Array(N*N);hazType=new Int8Array(N*N);hazOwner=new Int8Array(N*N).fill(-1);saltU=new Float32Array(N*N);saltOwner=new Int8Array(N*N);saltList.clear();hazGrp=new Int32Array(N*N);swamps={};swampSeq=1;hedgeA=new Uint8Array(N*N);bOcc=new Int32Array(N*N);colW=new Float32Array(N*N*3);
+  walk=new Uint8Array(N*N);water=new Uint8Array(N*N);pass=new Uint8Array(N*N);hazU=new Float32Array(N*N);hazType=new Int8Array(N*N);hazOwner=new Int8Array(N*N).fill(-1);saltU=new Float32Array(N*N);saltOwner=new Int8Array(N*N);saltList.clear();wear=new Float32Array(N*N);wearShown=new Uint8Array(N*N);flowers=[];hazGrp=new Int32Array(N*N);swamps={};swampSeq=1;hedgeA=new Uint8Array(N*N);bOcc=new Int32Array(N*N);colW=new Float32Array(N*N*3);
   armageddon=false;$('app').classList.remove('arma');scene.fog.color.setHex(0x7f725b);fogOn=false;vis.fill(1);visNow.fill(0);seen.fill(0);wildT=40;
   for(const d of debris)scene.remove(d.m);debris=[];
   units=[];blds=[];effects=[];projs=[];sel=[];bById.clear();fcache.clear();hazList.clear();gt=0;tver=0;PA.n=0;PN.n=0;stats={casts:0,lost:0,killed:0,razed:0,burned:0,taken:0};over=false;
@@ -1942,6 +1988,7 @@ function loadGame(){const d=readSave();if(!d)return false;
   H=unb64(d.H,Float32Array);TN=unb64(d.TN,Float32Array);hazU=unb64(d.hazU,Float32Array);hazType=unb64(d.hazType,Int8Array);hazOwner=unb64(d.hazOwner,Int8Array);hazGrp=d.hazGrp?unb64(d.hazGrp,Int32Array):new Int32Array(N*N);swamps=d.swamps||{};swampSeq=d.swampSeq||1;hedgeA=new Uint8Array(N*N);for(const b of d.blds)if(b.bt==='hedge'&&b.done)hedgeA[wi(b.cz0)*N+wi(b.cx0)]=1;
   walk=new Uint8Array(N*N);water=new Uint8Array(N*N);pass=new Uint8Array(N*N);bOcc=new Int32Array(N*N);colW=new Float32Array(N*N*3);seen.set(unb64(d.seen,Uint8Array));
   saltU=d.saltU?unb64(d.saltU,Float32Array):new Float32Array(N*N);saltOwner=d.saltOwner?unb64(d.saltOwner,Int8Array):new Int8Array(N*N);
+  wear=new Float32Array(N*N);wearShown=new Uint8Array(N*N);flowers=[];
   gt=d.gt;hazList.clear();saltList.clear();for(let c=0;c<N*N;c++){if(hazU[c]>gt)hazList.add(c);if(saltU[c]>gt)saltList.add(c)}
   for(const d of debris)scene.remove(d.m);debris=[];effects=[];projs=[];sel=[];bById.clear();fcache.clear();PA.n=0;PN.n=0;tver=0;over=false;
   trees=d.trees.map(a=>({x:a[0],z:a[1],wood:a[2],sc:a[3],tint:a[4],born:a[5]||undefined,alive:true}));treeCap=Math.max(treeCap,Math.round(trees.length*1.1));tGridDirty=true;
@@ -1995,6 +2042,6 @@ function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;fogK=Math.mi
   }catch(err){if(!errShown){errShown=true;console.error(err);toast('Something went wrong: '+err.message)}}
   requestAnimationFrame(frame)}
 resize();buildWorld();showContinue();requestAnimationFrame(frame);
-window.__ws={get units(){return units},get tribes(){return tribes},get blds(){return blds},sim,beginGame,get gt(){return gt},castSpell,tryCast,saveGame,loadGame,setSel,command,showLevel,SCEN,field,get walkA(){return walk},hAt,get water(){return water},findSpot,get allow(){return allowSets},get pass(){return pass},get swamps(){return swamps},get debris(){return debris},queenValue,invokeArma,startRitual,sendVehicle,get wildId(){return wildId},get armageddon(){return armageddon},placeBuilding,validSpot,orderMove,spawnUnit,command,get water(){return water},findSpot};
+window.__ws={get wear(){return wear},get flowers(){return flowers},get units(){return units},get tribes(){return tribes},get blds(){return blds},sim,beginGame,get gt(){return gt},castSpell,tryCast,saveGame,loadGame,setSel,command,showLevel,SCEN,field,get walkA(){return walk},hAt,get water(){return water},findSpot,get allow(){return allowSets},get pass(){return pass},get swamps(){return swamps},get debris(){return debris},queenValue,invokeArma,startRitual,sendVehicle,get wildId(){return wildId},get armageddon(){return armageddon},placeBuilding,validSpot,orderMove,spawnUnit,command,get water(){return water},findSpot};
 })();
 </script>
