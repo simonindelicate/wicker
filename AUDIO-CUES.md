@@ -25,7 +25,7 @@ Each cue has an ID that will become its filename (for example `horn.ogg`). Where
 | ID | What it is for | Length (ms) | Notes |
 |---|---|---|---|
 | `drone` | The constant bed under play (currently synthesised) | 30000 loop | Stereo. Low, slowly shifting, barely there. |
-| `drone-arma` | The bed during Armageddon | 30000 loop | Stereo. The same bed, darker and more urgent; it will crossfade from `drone`. |
+| `drone-all` | The bed during All-against-all | 30000 loop | Stereo. The same bed, darker and more urgent; it will crossfade from `drone`. |
 | `wind` | General outdoor air, louder when zoomed out | 20000 loop | Stereo. |
 | `water` | Lapping at shorelines when the camera is near the sea | 12000 loop | |
 | `forest` | Birds and leaves when the camera is over trees | 15000 loop | Should feel slightly wrong: too still, one bird too many. |
@@ -34,9 +34,9 @@ Each cue has an ID that will become its filename (for example `horn.ogg`). Where
 
 | ID | What it is for | Length (ms) | Notes |
 |---|---|---|---|
-| `chop` | A brave cutting wood | 350 | ×3. An axe biting into wet wood. |
+| `chop` | A villager cutting wood | 350 | ×3. An axe biting into wet wood. |
 | `tree-fall` | A tree coming down | 1400 | |
-| `build` | Braves working on a building site | 400 | ×3. Mallet, rope, thatch being thrown. |
+| `build` | Villagers working on a building site | 400 | ×3. Mallet, rope, thatch being thrown. |
 | `built` | A building finished | 1200 | A settling creak and a short communal "hey". |
 | `breed` | A new villager born in a hut | 600 | Very quiet. A baby's cry, or something less literal. |
 | `flee` | Housed villagers bursting out of a destroyed hut | 900 | A scattering of voices. |
@@ -56,11 +56,11 @@ Each cue has an ID that will become its filename (for example `horn.ogg`). Where
 | `bld-fall` | A building destroyed | 2000 | Timber and thatch collapsing. |
 | `hedge-hack` | Enemies hacking at a blackthorn hedge | 400 | ×3. Bill-hook through thorn. |
 
-## The shaman and her spells
+## The Cunning Woman and her spells
 
 | ID | What it is for | Length (ms) | Notes |
 |---|---|---|---|
-| `cast` | The shaman beginning any spell | 900 | A breath and a rising whisper. |
+| `cast` | The Cunning Woman beginning any spell | 900 | A breath and a rising whisper. |
 | `blast` | Blast | 800 | A rushing whump of fire. |
 | `thunder` | Lightning | 2200 | A crack, then a long roll. |
 | `swarm` | Plague of Flies | 6000 loop | Buzzing that swells and swirls. Loops for the spell's life (10 s). |
@@ -71,15 +71,15 @@ Each cue has an ID that will become its filename (for example `horn.ogg`). Where
 | `flatten` | Flatten | 2500 | A long, low settling rumble. |
 | `hypno` | Hypnotise | 2000 | A wavering, detuned chant. |
 | `whirl` | Whirlwind | 8000 loop | Roaring air. Loops while the tornado wanders. |
-| `swamp` | Swamp laid | 2000 | A wet gulp. It should be quiet, because the swamp is meant to be hidden. |
-| `swamp-claim` | Someone drowning in a swamp | 1200 | ×3. A struggle and a sucking under. |
-| `swamp-drain` | A swamp using up its ten lives and draining away | 1500 | |
+| `bog` | Bog laid | 2000 | A wet gulp. It should be quiet, because the bog is meant to be hidden. |
+| `bog-claim` | Someone drowning in a bog | 1200 | ×3. A struggle and a sucking under. |
+| `bog-drain` | A bog using up its ten lives and draining away | 1500 | |
 | `erode` | Erode | 2500 | Ground sinking, water rushing in. |
 | `quake` | Earthquake | 4000 | The deepest sound in the game. |
 | `fire` | Firestorm | 8000 loop | Crackle with intermittent impacts. |
 | `angel` | Angel of Death present | 10000 loop | High, keening and unsettling. |
 | `volcano` | Volcano rising | 6000 | Rumble building to an eruption. |
-| `reincarnate` | The shaman returning after death | 2500 | A breath drawn in. |
+| `reincarnate` | The Cunning Woman returning after death | 2500 | A breath drawn in. |
 
 ## Sacrifice and ritual
 
@@ -96,15 +96,15 @@ Each cue has an ID that will become its filename (for example `horn.ogg`). Where
 | `maypole` | Dancing at the maypole | 12000 loop | Pipe and tabor, slightly off. Loops while a festival is on. |
 | `queen-crowned` | A May Queen crowned | 3000 | A cheer and a bell. |
 | `queen-sac` | A May Queen sacrificed, with the rooks rising | 5000 | Wings, a cry, and silence. |
-| `ritual` | The shaman's entombment rite at a hollow hill | 15000 loop | A low chant that builds while the rite runs. |
+| `ritual` | The Cunning Woman's entombment rite at a hollow hill | 15000 loop | A low chant that builds while the rite runs. |
 | `entomb` | Entombment completing as the hill becomes a fortress | 5000 | Earth closing over, wicker groaning. |
-| `oak-hang` | The shaman hanging in Herne's Oak | 10000 loop | Creaking bough and wind. Runs for the two minutes. |
+| `oak-hang` | The Cunning Woman hanging in Herne's Oak | 10000 loop | Creaking bough and wind. Runs for the two minutes. |
 | `hunt-wake` | The Wild Hunt waking | 4000 | Hounds and a horn, distinct from the enemy `horn`. |
 | `hunt-roam` | The Wild Hunt passing nearby | 6000 loop | Distant baying and hooves. |
-| `armageddon` | Armageddon invoked | 8000 | Every horn at once, then the darker drone. |
+| `all-against-all` | All-against-all invoked | 8000 | Every horn at once, then the darker drone. |
 
 ## Specifics worth knowing
 
-- The cues that matter most for play are `horn`, `swamp-claim` and `die`, because they tell you something is happening off screen. They are worth getting right first.
+- The cues that matter most for play are `horn`, `bog-claim` and `die`, because they tell you something is happening off screen. They are worth getting right first.
 - The loops (`swarm`, `whirl`, `fire`, `angel`, `maypole`, `ritual`, `oak-hang`, `hunt-roam`) need clean loop points, with no click where the end meets the start.
 - The game currently synthesises 13 of these (`select`, `blast`, `quake`, `built`, `thunder`, `die`, `boom`, `arrow`, `swarm`, `horn`, `hit`, `chop` and `cast`). Everything else in this list is silent for now.
