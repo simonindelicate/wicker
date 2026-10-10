@@ -766,7 +766,8 @@ function rebuildGrid(){for(const g of grid)g.length=0;for(const u of units)if(u.
 function rebuildTGrid(){for(const g of tgrid)g.length=0;for(const t of trees)if(t.alive)tgrid[bkt(t.x,t.z)].push(t);tGridDirty=false}
 function query(g,x,z,r,fn){const b0x=Math.floor((x-r)/8),b1x=Math.min(b0x+15,Math.floor((x+r)/8)),b0z=Math.floor((z-r)/8),b1z=Math.min(b0z+15,Math.floor((z+r)/8));
   for(let bz=b0z;bz<=b1z;bz++)for(let bx=b0x;bx<=b1x;bx++){const arr=g[(((bz%16)+16)%16)*16+(((bx%16)+16)%16)];for(let i=0;i<arr.length;i++)fn(arr[i])}}
-function nearestEnemy(u,r,pred,wildOk){let best=null,bd=r*r;query(grid,u.x,u.z,r,o=>{if(o.tribe===u.tribe||!o.alive||o.air)return;if(o.type==='queen'&&u.type!=='hunter'&&u.type!=='oss')return;if(o.tribe===wildId&&!wildOk)return;if(pred&&!pred(o))return;const dd=d2(u.x,u.z,o.x,o.z);if(dd<bd){bd=dd;best=o}});return best}
+const beingTaken=(o,ti)=>o.listen>gt&&o.takenBy===ti;
+function nearestEnemy(u,r,pred,wildOk){let best=null,bd=r*r;query(grid,u.x,u.z,r,o=>{if(o.tribe===u.tribe||!o.alive||o.air)return;if(u.type!=='oss'&&beingTaken(o,u.tribe))return;if(o.type==='queen'&&u.type!=='hunter'&&u.type!=='oss')return;if(o.tribe===wildId&&!wildOk)return;if(pred&&!pred(o))return;const dd=d2(u.x,u.z,o.x,o.z);if(dd<bd){bd=dd;best=o}});return best}
 function enemyNear(x,z,ti,r){let best=null,bd=r*r;query(grid,x,z,r,o=>{if(o.tribe===ti||!o.alive||o.type==='ghost'||o.tribe===wildId)return;const dd=d2(x,z,o.x,o.z);if(dd<bd){bd=dd;best=o}});return best}
 function nearestEnemyBld(x,z,ti,r){let best=null,bd=r*r;for(const b of blds){if(!b.alive||b.tribe===ti||BT[b.bt].inv)continue;const dd=d2(x,z,b.x,b.z);if(dd<bd){bd=dd;best=b}}return best}
 function nearestTree(x,z,r){let best=null,bd=r*r;query(tgrid,x,z,r,t=>{if(!t.alive)return;const dd=d2(x,z,t.x,t.z);if(dd<bd){bd=dd;best=t}});return best}
@@ -975,7 +976,7 @@ function updUnit(u,dt){const D=UT[u.type],T=tribes[u.tribe];
     if(r===1||r===2||r===3){u.st='idle';u.gx=u.x;u.gz=u.z;u.order=null;if(u.cmd&&u.type==='queen'){u.hx=u.x;u.hz=u.z}if(u.cmd){u.cmd=false;u.think=u.type==='brave'?8:.5}if(D.veh)u.unloadArrive=false}
     break}
   case 'attack':{const t=u.tgt;
-    if(!t||!t.alive||t.tribe===u.tribe||t.inV||(!t.bt&&!canHit(u,t))){resumeAfter(u);break}
+    if(!t||!t.alive||t.tribe===u.tribe||t.inV||(!t.bt&&!canHit(u,t))||(!t.bt&&!u.cmdAtk&&beingTaken(t,u.tribe))){resumeAfter(u);break}
     const isB=!!t.bt,rr=(D.rng||1)+(isB?BT[t.bt].s*.5:.3),dd=Math.sqrt(d2(u.x,u.z,t.x,t.z));
     if(dd<=rr){u.face=Math.atan2(wd(t.x-u.x),wd(t.z-u.z));if(u.cd<=0){u.cd=D.cd*(T.frenzyUntil>gt?TUNE.frenzyAttack:1);if(D.bomb)fireCharge(u,t);else if(D.ranged)fireArrow(u,t);else{hit(t,D.dmg*(0.8+R()*.4),u);u.swing=gt;if(R()<.5)sfx('hit',.25,u.x,u.z)}}}
     else{if(!u.order&&!u.cmdAtk&&d2(u.gx,u.gz,u.x,u.z)>18*18){resumeAfter(u);break}
@@ -1014,7 +1015,7 @@ function updUnit(u,dt){const D=UT[u.type],T=tribes[u.tribe];
   case 'preach':{const t=u.tgt;if(u.carry||!t||!t.alive||t.tribe===u.tribe||t.inV||t.air||t.type==='shaman'||t.type==='captive'||UT[t.type].veh){u.st='idle';u.think=.2;break}
     const dd=Math.sqrt(d2(u.x,u.z,t.x,t.z));
     if(dd>1.1){if(!u.cmdCap&&d2(t.x,t.z,u.rcx??u.gx,u.rcz??u.gz)>20*20){u.st='idle';break}u.tx=t.x;u.tz=t.z;u.fx=t.x;u.fz=t.z;u.pt=0;if(moveStep(u,dt)===2)u.st='idle'}
-    else{u.face=Math.atan2(wd(t.x-u.x),wd(t.z-u.z));t.listen=gt+.3;u.pt=(u.pt||0)+dt;u.chop=true;
+    else{u.face=Math.atan2(wd(t.x-u.x),wd(t.z-u.z));t.listen=gt+.3;t.takenBy=u.tribe;u.pt=(u.pt||0)+dt;u.chop=true;
       if(R()<dt*10)PN.emit(t.x,unitY(t)+.5,t.z,(R()-.5)*.6,.5,(R()-.5)*.6,.5,.05,.04,.04,.9,.35,0);
       const need=TUNE.captureTime[t.type==='wild'?'wild':t.type==='brave'?'brave':'other'];
       if(u.pt>=need){if(t.carry)releaseCarry(t);atk=u.tribe;noteHit(t.tribe);u.carry={tribe:t.tribe,type:t.type,born:t.born,orig:t.thrall?t.orig:t.tribe};if(t.type==='queen'){const ot=tribes[t.tribe];if(t.tribe===0&&!watching)toast(`Your May Queen has been seized by the ${tribes[u.tribe].name} folk. Kill the Oss before it gets her home.`);else if(u.tribe===0&&!watching)toast(`Your Oss has seized the ${ot.name} May Queen.`)}if(t.sel)deselect(t);t.alive=false;t.removed=true;u.chop=false;u.st='home';u.bld=null;sfx('hit',.5,u.x,u.z)}}
