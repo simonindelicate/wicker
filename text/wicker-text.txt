@@ -1,0 +1,1783 @@
+WICKER: ALL THE WRITTEN TEXT IN THE GAME
+Taken from the published game, version 45 (commit 8ea30fc).
+
+HOW TO EDIT THIS FILE
+Each piece of text sits under a line starting ### with a number. Change the text under it as you like, then send the file back. Leave the ### lines exactly as they are, because the number is how each change finds its way back to the right place in the game.
+Text in {curly brackets} is filled in by the game as it runs: {tribe} is the name of a tribe, {building}, {unit} and {spell} are names of those things, {number} is a number, and {…} is a word or phrase the game picks, usually one of the entries listed just after it. Move it around within the sentence if you like, but keep the brackets and what is inside them. Where you see (s), the game adds an s when the number is more than one.
+If you want to leave a note for me rather than change the wording, put it on its own line starting with //.
+Text that the game uses in several places is listed once, with a note saying how many places; your change will apply everywhere it appears unless you add a // note saying otherwise ("Box", for instance, is both the selection button and a workshop shape). A few very short scraps (single lowercase words glued into longer messages) may not appear here; if you spot wording in the game that is missing from this file, just quote it in a note.
+Some messages are built from pieces, so a piece that starts with " · " or a comma is the tail of a longer line. These are marked "continues a line".
+
+========================================================================
+A. THE TITLE SCREEN AND MENU
+========================================================================
+
+### 0001
+Wicker
+
+### 0002
+Nature gives nothing for free. Every scrap of power your Cunning Woman wields is bought with a life: your own people at the forest altar, captives dragged home by the Oss, whole crowds in the wicker. Burn too many of your own and the rest will flee into the woods.
+
+### 0003
+Rival tribes
+
+### 0004
+One
+
+### 0005
+Two
+
+### 0006
+Three
+
+### 0007
+World
+
+### 0008
+Archipelago
+
+### 0009
+Continent
+
+### 0010
+Highlands
+
+### 0011
+Rival skill
+
+### 0012   (used in 2 places, also in section E)
+Easy
+
+### 0013   (used in 2 places, also in section E)
+Normal
+
+### 0014   (used in 2 places, also in section E)
+Hard
+
+### 0015
+Fog of war
+
+### 0016
+On
+
+### 0017
+Off
+
+### 0018   (used in 2 places)
+World seed
+
+### 0019
+New world
+
+### 0020
+Your tribe is ochre.
+
+### 0021
+Continue
+
+### 0022   (used in 2 places, also in section E)
+Begin
+
+### 0023   (used in 2 places, also in section E)
+Campaign
+
+### 0024
+Watch the tribes fight among themselves
+
+### 0025
+Model workshop
+
+### 0026
+Your tribe is ochre. {number}% land, {number} rival(s). Pale marks are the Moot and the hollow hills.
+
+### 0027
+Wild
+
+### 0028
+Your game is restored, {number} minute(s) in.
+
+### 0029
+Continue your game · {number} min, {…}, seed {number}
+
+========================================================================
+B. HOW TO PLAY
+========================================================================
+
+### 0030
+How to play
+
+### 0031
+Touch
+
+### 0032
+Tap your people to select them. Tap the ground to move them, or an enemy to attack.
+
+### 0033
+Drag with one finger to pan. Pinch to zoom, and twist two fingers to turn the world.
+
+### 0034
+Turn on Box, then drag to select a group. Double-tap a unit to select all of that kind nearby.
+
+### 0035
+To clear your selection, tap with two fingers at once, press and hold on empty ground, or tap the selection line above the tabs.
+
+### 0036
+Mouse and keyboard
+
+### 0037
+Left-click selects your people, or tells the selected ones what to do; drag to box-select. Right-click on empty ground clears the selection; right-click on something still commands.
+
+### 0038
+Right-drag turns the view, middle-drag or WASD pans, the wheel zooms. Space finds your Cunning Woman, keys 1–0 pick spells, F toggles full screen, Esc cancels.
+
+### 0039
+Your tribe
+
+### 0040
+Villagers chop wood, build, and go into huts to breed. Breeding is the heart of everything, because the only mana is what you give back to nature.
+
+### 0041
+The forest altar takes one offering at a time and is stronger the more trees stand around it. The wicker man takes five and burns, giving mana and a frenzy of speed. The Wicker God takes twelve and burns for an enormous offering, terrifying any enemy who sees it. Both wicker figures burn down and must be rebuilt.
+
+### 0042
+Burning your own people fills the dread meter. Past the mark, frightened villagers start slipping away into the wilds. Dread fades with time, and faster with more huts.
+
+### 0043
+Osses, from the Oss House, roam the ground around where you last sent them and seize anyone they can catch, wildmen or enemy, carrying them home to your thrall fold at a run. Once an Oss has a captive it will not take orders until it is home. Captives are worth far more than your own people and cause no dread; kill an Oss on its way home and its captive goes free. You start with one thrall fold, which holds fifteen. Two or more captives left together in a fold will breed, slowly at first and then faster, so a fold left alone fills itself.
+
+### 0044
+Herne's Oak is a vast dead tree raised in deep woodland. Hang your Cunning Woman from it for two minutes, during which she can do nothing, and the Wild Hunt rides for you: antlered horsemen who roam the whole world killing anyone they find outside the reach of an enemy Cunning Woman. Every death they cause feeds you as richly as a captive, and lost riders return.
+
+### 0045
+Build a Maypole and idle villagers will dance around it, easing your people's dread. After enough merriment a May Queen is crowned. The longer she lives, the more her offering is worth, up to a vast sum with no dread and a long frenzy. Select fighters and tap her to swear them as her guards; you can do the same for your Cunning Woman. Rival Osses will hunt her, and a captured Queen can be offered by her captors for her full worth.
+
+### 0046
+Blackthorn hedges are cheap thorny barriers. Choose the hedge, tap where it starts and where it ends, and villagers plant it a length at a time. Nothing walks through a finished hedge, your own people included, so leave gaps; enemies must go round or hack through, which turns open ground into chokepoints.
+
+### 0047
+Your Bog is a hidden trap: your own people cross it safely, but enemies cannot see it and march straight in. It lasts until it has drowned ten of them. Fighters near their own buildings also take slightly less damage.
+
+### 0048
+When a rival army sets out for you, a horn sounds and the marching column shows on your map through the fog. An attack that loses half its strength breaks and runs home.
+
+### 0049
+The Rook Tree is a lookout in a dead tree. It sees a long way and hurls fire-pots at any enemy balloon in range, bringing one down in three hits. It ignores everything on the ground.
+
+### 0050
+Send fighters to your oak, your tomb or a hollow hill and they are posted there as guards. Guards stay put and are left out when you select your army.
+
+### 0051
+A tribe that loses every building, trained unit and its Cunning Woman is finished: its last villagers are dragged off as captives by whoever broke it. A tribe whose people are all dead hands its empty buildings to the conqueror, with an offering of mana.
+
+### 0052
+Ground where a building has been razed is salted: for three minutes its old owner cannot build there. A rival that falls to a fifth of its greatest size is broken. Its people gather at their stone circle where everyone can see them, its halls fall in and its Cunning Woman does not return; destroy its last fighters and the rest are yours.
+
+### 0053
+Tap a rival's marker at the top of the screen to look at where its people are. Tap again to move on to the next group.
+
+### 0054
+Training buildings turn a villager into a warrior, archer, Oss or balloonist.
+
+### 0055
+To cross water, have your Cunning Woman raise a Land Bridge from the shore towards the land you want. Anyone can walk it, your enemies included.
+
+### 0056
+Balloonists drift above the fighting and drop charges. Only other balloonists can reach them.
+
+### 0057
+Wildmen wander the wilds. They make easy captives.
+
+### 0058
+Hollow hills lie out in the wilderness. Bring your Cunning Woman to one with twenty followers and at least 1,500 mana and she is sealed inside for good. The hill becomes a wicker fortress: from it she sees everything and casts anywhere at half the mana. If enemies tear it down she is lost for a minute, then rises at your stone circle, and half your mana goes with her.
+
+### 0059
+All-against-all needs an unlit wicker man, ten followers to burn and a full bar of mana. Every hut falls, and every soul walks to the Moot at the world's heart to fight to the end.
+
+### 0060
+Pick a spell and tap a target. Your Cunning Woman walks into range and casts. If she dies she returns at your stone circle after forty-five seconds, as long as your tribe survives.
+
+### 0061
+The Scrying Torch plants a burning beacon where the Cunning Woman aims it. The land around it stays in sight for as long as it stands, which makes it a lookout over a pass, a rival's door or a hollow hill. Enemies can tear it down.
+
+### 0062
+You win when every rival tribe has no followers or buildings left.
+
+========================================================================
+C. THE TOP BAR, BUTTONS AND SELECTION
+========================================================================
+
+### 0063
+Mana
+
+### 0064
+Dread
+
+### 0065   (used in 2 places, also in section H)
+Captives
+
+### 0066
+Wood
+
+### 0067
+Followers
+
+### 0068   (tooltip)
+Game speed
+
+### 0069   (used in 6 places, also in section A and G and I)
+Pause
+
+### 0070   (tooltip; used in 3 places, also in section G)
+Sound
+
+### 0071   (tooltip)
+Full screen (F)
+
+### 0072   (used in 2 places)
+Full screen
+
+### 0073
+Menu
+
+### 0074   (tooltip)
+Drag to select a group
+
+### 0075   (used in 3 places, also in section J)
+Box
+
+### 0076   (tooltip)
+Find your Cunning Woman (Space)
+
+### 0077   (used in 3 places, also in section D and H)
+Cunning Woman
+
+### 0078
+Invoke
+
+### 0079
+Cancel
+
+### 0080
+Rejoice!
+
+### 0081   (used in 2 places)
+Nothing selected
+
+### 0082
+Clear
+
+### 0083
+Spells
+
+### 0084
+Build
+
+### 0085
+Tribe
+
+### 0086   (used in 2 places)
+Full screen is not available here
+
+### 0087
+Exit full screen
+
+### 0088
+Level {number}
+
+### 0089   (continues a line)
+ · Hold on {number}:{…}
+
+### 0090   (continues a line)
+ · Captives {number}/{number}
+
+### 0091   (continues a line)
+ · Offer a May Queen
+
+### 0092   (continues a line)
+ · Conquer
+
+### 0093
+Entombed
+
+### 0094
+Your people are fleeing
+
+### 0095
+Frenzy {number}s
+
+### 0096
+{number} · {number} mana{…}
+
+### 0097   (continues a line)
+ · entombed
+
+### 0098
+None of the {tribe} folk are in sight. Explore, or wait for them to show themselves.
+
+### 0099
+their last known place
+
+### 0100
+group {number} of {number}, {number} here
+
+========================================================================
+D. TRIBES, PEOPLE, BUILDINGS AND SPELLS
+========================================================================
+
+### 0101   (name)
+Ochre
+
+### 0102   (name)
+Blood
+
+### 0103   (name)
+Forest
+
+### 0104   (name)
+Ash
+
+### 0105   (name)
+Villager
+
+### 0106   (plural)
+villagers
+
+### 0107   (name)
+Warrior
+
+### 0108   (plural)
+warriors
+
+### 0109   (name)
+Oss
+
+### 0110   (plural)
+osses
+
+### 0111   (name)
+Rider of the Hunt
+
+### 0112   (plural)
+riders
+
+### 0113   (name; used in 2 places, also in section H)
+May Queen
+
+### 0114   (plural)
+May Queens
+
+### 0115   (name)
+Captive
+
+### 0116   (plural)
+captives
+
+### 0117   (name)
+Archer
+
+### 0118   (plural)
+archers
+
+### 0119   (plural)
+Cunning Women
+
+### 0120   (name)
+Ghost
+
+### 0121   (plural)
+ghosts
+
+### 0122   (name)
+Balloonist
+
+### 0123   (plural)
+balloonists
+
+### 0124   (name)
+Wildman
+
+### 0125   (plural)
+wildmen
+
+### 0126   (name)
+Hut
+
+### 0127   (description)
+Villagers breed here
+
+### 0128   (name; used in 2 places, also in section F)
+Warrior Camp
+
+### 0129   (description)
+Trains warriors
+
+### 0130   (name; used in 2 places, also in section F)
+Archery Range
+
+### 0131   (description)
+Trains archers
+
+### 0132   (name; used in 2 places, also in section F)
+Oss House
+
+### 0133   (description)
+Trains osses, who roam and carry off captives
+
+### 0134   (name; used in 2 places, also in section F)
+Blackthorn Hedge
+
+### 0135   (description)
+A thorny barrier. Tap where it starts and where it ends; nothing walks through until it is hacked down
+
+### 0136   (name; used in 2 places, also in section F)
+Maypole
+
+### 0137   (description)
+Villagers dance here, easing dread, until a May Queen is crowned
+
+### 0138   (name; used in 2 places, also in section F)
+Rook Tree
+
+### 0139   (description)
+A lookout high in a dead tree; sees far and hurls fire-pots at balloons
+
+### 0140   (name; used in 2 places, also in section F)
+Thrall Fold
+
+### 0141   (description)
+Pens up to fifteen captives your osses bring home
+
+### 0142   (name; used in 2 places, also in section F)
+Forest Altar
+
+### 0143   (description)
+Takes one offering at a time; stronger among trees
+
+### 0144   (name; used in 2 places, also in section F)
+Wicker God
+
+### 0145   (description)
+Holds twelve; burns for an enormous offering
+
+### 0146   (name; used in 3 places, also in section F)
+Scrying Torch
+
+### 0147   (description)
+A burning beacon; the land around it stays in sight while it stands
+
+### 0148   (name)
+Tomb Fortress
+
+### 0149   (description)
+Your Cunning Woman lies sealed here
+
+### 0150   (name; used in 2 places, also in section F)
+Herne's Oak
+
+### 0151   (description)
+Hang your Cunning Woman from it for two minutes and the Wild Hunt rides
+
+### 0152   (name; used in 2 places, also in section F)
+Balloon Works
+
+### 0153   (description)
+Builds balloons
+
+### 0154   (name; used in 2 places, also in section F)
+Wicker Man
+
+### 0155   (description)
+Holds five; burns for mana and a frenzy
+
+### 0156   (name)
+Stone Circle
+
+### 0157   (description)
+Your Cunning Woman is reborn here
+
+### 0158   (name)
+Hollow Hill
+
+### 0159   (description)
+Seal your Cunning Woman inside with twenty followers and 1,500 mana
+
+### 0160   (name)
+The Moot
+
+### 0161   (description)
+Where every people gathers at the end
+
+### 0162   (name; used in 2 places, also in section F)
+Blast
+
+### 0163   (name; used in 2 places, also in section F)
+Lightning
+
+### 0164   (name; used in 2 places, also in section F)
+Plague of Flies
+
+### 0165   (name; used in 2 places, also in section F)
+Shield
+
+### 0166   (name; used in 2 places, also in section F)
+Ghost Army
+
+### 0167   (name; used in 2 places, also in section F)
+Land Bridge
+
+### 0168   (name; used in 2 places, also in section F)
+Flatten
+
+### 0169   (name; used in 2 places, also in section F)
+Hypnotise
+
+### 0170   (name; used in 2 places, also in section F)
+Whirlwind
+
+### 0171   (name; used in 2 places, also in section F)
+Bog
+
+### 0172   (name; used in 2 places, also in section F)
+Erode
+
+### 0173   (name; used in 2 places, also in section F)
+Earthquake
+
+### 0174   (name; used in 2 places, also in section F)
+Firestorm
+
+### 0175   (name; used in 2 places, also in section F)
+Angel of Death
+
+### 0176   (name; used in 2 places, also in section F)
+Volcano
+
+### 0177   (name; used in 3 places, also in section C and F)
+All-against-all
+
+### 0178   (spell description)
+Plants a burning beacon where you aim. While it stands, the land around it stays in sight. Enemies can tear it down.
+
+### 0179   (spell description)
+Hurls a fireball that scorches and knocks people flying.
+
+### 0180   (spell description)
+A single bolt that kills almost anything it strikes, Cunning Women included.
+
+### 0181   (spell description)
+A black cloud of flies that bites and scatters enemies for ten seconds.
+
+### 0182   (spell description)
+Turns wandering wildmen within the circle into your villagers.
+
+### 0183   (spell description)
+Your followers in the area take far less damage for 30 seconds.
+
+### 0184   (spell description)
+Six illusory warriors that distract the enemy and vanish when struck.
+
+### 0185   (spell description)
+Raises a causeway from your Cunning Woman towards the target, across water.
+
+### 0186   (spell description)
+Levels a wide stretch of land, smoothing cliffs and filling shallows. Deep water is beyond it.
+
+### 0187   (spell description)
+Enemies in the area fight for you for 25 seconds.
+
+### 0188   (spell description)
+A wandering tornado that flings people and tears down buildings.
+
+### 0189   (spell description)
+A hidden bog your own people cross safely. Enemies cannot see it and walk straight in; it drowns them until it has claimed ten, then drains away.
+
+### 0190   (spell description)
+Sinks the land, drowning whatever stands on it.
+
+### 0191   (spell description)
+Splits the ground into cliffs and shakes buildings apart.
+
+### 0192   (spell description)
+Rains fire on an area for eight seconds.
+
+### 0193   (spell description)
+An angel hunts enemy followers for 25 seconds.
+
+### 0194   (spell description)
+Raises a burning mountain that destroys everything around it.
+
+### 0195   (spell description)
+Burn ten followers in your wicker man and spend a full bar of mana. Every hut falls and every people marches to the Moot to fight to the end.
+
+========================================================================
+E. THE CAMPAIGN SCREENS
+========================================================================
+
+### 0196
+Twenty years of the wheel, each harder than the last.
+
+### 0197
+Test mode: open every level (wins in test mode are not recorded)
+
+### 0198
+Back
+
+### 0199   (used in 2 places, also in section I)
+Back to the campaign
+
+### 0200
+Hold out for {number} minutes.
+
+### 0201
+Hold {number} captives in your folds at once.
+
+### 0202
+Crown {number} May Queens and offer each to the fire.
+
+### 0203
+Crown a May Queen and offer her to the fire.
+
+### 0204
+Break every rival people.
+
+### 0205
+Won in {number} min
+
+### 0206
+Locked
+
+### 0207
+Not yet won
+
+### 0208
+The wheel has turned. Every level is yours to play again.
+
+### 0209
+Twenty years of the wheel, each harder than the last. {number} of 20 open.
+
+### 0210
+Level {number} of {number} · {difficulty} · {number} rival(s)
+
+### 0211
+New: {list}.
+
+### 0212
+Everything is open to you.
+
+========================================================================
+F. THE TWENTY LEVELS
+========================================================================
+
+--- Level 1 — The Strait ---
+
+### 0213   (title)
+The Strait
+
+Listed as new in this level: Forest Altar (see 0142), Warrior Camp (see 0128), Blast (see 0162), Land Bridge (see 0167).
+
+### 0214   (introduction)
+Across the water a people keeps its own fires and will not answer when we call. Our Cunning Woman has no power of her own: everything she does must be paid for with a life. Build a forest altar among the trees and give it villagers, one at a time. With what it gives back, raise warriors, lift the sea floor into a road, and cross.
+
+--- Level 2 — The Grove ---
+
+### 0215   (title)
+The Grove
+
+Listed as new in this level: Wicker Man (see 0154), Lightning (see 0163).
+
+### 0216   (introduction)
+The grove gives a little for each life. The wicker man gives far more, but it takes five at once, and it must burn to give anything at all. Feed it, and the Cunning Woman will have what she needs.
+
+--- Level 3 — Hobby Horse ---
+
+### 0217   (title)
+Hobby Horse
+
+Listed as new in this level: Oss House (see 0132), Thrall Fold (see 0140), Plague of Flies (see 0164), Scrying Torch (see 0146).
+
+### 0218   (introduction)
+The wild folk wander the woods with no hearth and no name. The Oss will bring them in. Fill the fold with ten of them and the people will know we can feed the fires for a long winter.
+
+--- Level 4 — Bowmen ---
+
+### 0219   (title)
+Bowmen
+
+Listed as new in this level: Archery Range (see 0130), Shield (see 0165).
+
+### 0220   (introduction)
+This neighbour is not idle. Their warriors will come. Archers behind a line of spears will meet them, and the Cunning Woman can turn a blow aside.
+
+--- Level 5 — The Long Watch ---
+
+### 0221   (title)
+The Long Watch
+
+Listed as new in this level: Blackthorn Hedge (see 0134), Rook Tree (see 0138), Bog (see 0171), Erode (see 0172).
+
+### 0222   (introduction)
+Two peoples have smelt our smoke, and both are coming for us. We cannot beat them and we have no camp to raise more warriors. But our valley is ringed with crags, and there are only three ways in. Plant blackthorn across the gaps, wake the bog beyond them, sink the ground under anyone who forces a way through, and hold the village for ten minutes until they tire of us. The altar gives twice what it usually does here; feed it.
+
+--- Level 6 — The High Places ---
+
+### 0223   (title)
+The High Places
+
+Listed as new in this level: Ghost Army (see 0166), Flatten (see 0168).
+
+### 0224   (introduction)
+Up here the land is broken into crags and there is barely room for two huts. Nobody can grow until they make level ground. Feed the altar, flatten the rock around the village, and build on what you make. Across the rocks one other people is just as cramped, and the first to spread out will win.
+
+--- Level 7 — Fire from the Sky ---
+
+### 0225   (title)
+Fire from the Sky
+
+Listed as new in this level: Balloon Works (see 0152), Whirlwind (see 0170).
+
+### 0226   (introduction)
+Every people here keeps its own island, and the sea is too deep and too wide for any bridge. Our enemies have learned to fly. Their balloonists drop fire on the huts and carry fighters over the water. Here a Cunning Woman does not come back: if ours dies we are finished, and if theirs dies so are they. Keep fighters sworn to her side, keep the Rook Trees watching, and when you are ready, put her in a balloon.
+
+--- Level 8 — May Morning ---
+
+### 0227   (title)
+May Morning
+
+Listed as new in this level: Maypole (see 0136), Hypnotise (see 0169).
+
+### 0228   (introduction)
+Raise the pole and let the people dance. When the merriment is high enough a Queen will be crowned. Keep her safe while she ripens, and then give her to the fire. Three Queens must burn before the summer is ours.
+
+--- Level 9 — The Wicker God ---
+
+### 0229   (title)
+The Wicker God
+
+Listed as new in this level: Wicker God (see 0144), Earthquake (see 0173).
+
+### 0230   (introduction)
+Twelve go into the belly of the ram and the whole world sees it burn. Fill it with strangers and the Cunning Woman will shake the earth beneath our enemies.
+
+--- Level 10 — Hollow Hills ---
+
+### 0231   (title)
+Hollow Hills
+
+### 0232   (listed as new)
+Entombment
+
+Listed as new in this level: Firestorm (see 0174).
+
+### 0233   (introduction)
+Out in the wilds the old hills are hollow. Walk the Cunning Woman there with twenty of the faithful and fifteen hundred mana and she will never walk again; but she will see everything, and reach everywhere.
+
+--- Level 11 — Herne's Oak ---
+
+### 0234   (title)
+Herne's Oak
+
+Listed as new in this level: Herne's Oak (see 0150), Angel of Death (see 0175).
+
+### 0235   (introduction)
+In the deep wood stands the dead oak. Hang the Cunning Woman from it for two minutes and the Hunt will ride for us, and every life they take will be ours. No wicker will burn in this wood, and our rivals know what the oak means: the moment she hangs, they will come for her. Guard the tree.
+
+--- Level 12 — Three Fires ---
+
+### 0236   (title)
+Three Fires
+
+Listed as new in this level: Volcano (see 0176).
+
+### 0237   (listed as new)
+Three rivals
+
+### 0238   (introduction)
+Three peoples share these hills with us, and none of them will share for long. The mountains themselves can be made to burn.
+
+--- Level 13 — The Moot ---
+
+### 0239   (title)
+The Moot
+
+Listed as new in this level: All-against-all (see 0177).
+
+### 0240   (introduction)
+Four peoples on four islands, and no road, wing or spell will carry anyone across. There is only one way this ends. Grow, fill the wicker man, gather a full bar of mana, and call every soul to the stones at the heart of the world to settle it there.
+
+--- Level 14 — Highland Winter ---
+
+### 0241   (title)
+Highland Winter
+
+### 0242   (introduction)
+The year turns cold and the rivals are hungry. Everything you have learned is yours to use.
+
+--- Level 15 — The Turning Year ---
+
+### 0243   (title)
+The Turning Year
+
+### 0244   (introduction)
+From here the land is not kind. Three peoples, each as cunning as we are. Nothing is held back from us, and nothing from them.
+
+--- Level 16 — Surrounded ---
+
+### 0245   (title)
+Surrounded
+
+### 0246   (introduction)
+We have settled in the middle of everything. Every road leads to our door, and every army will take one.
+
+--- Level 17 — Late to the Feast ---
+
+### 0247   (title)
+Late to the Feast
+
+### 0248   (introduction)
+We arrive with little, and the others have been here for years. Their halls are built and their warriors drilled. We must be cleverer than them, because we cannot be stronger.
+
+--- Level 18 — Blood Moon ---
+
+### 0249   (title)
+Blood Moon
+
+### 0250   (introduction)
+Something has stirred the neighbours to fury. They will come early and often. Make them pay for every step.
+
+--- Level 19 — The Drowned Lands ---
+
+### 0251   (title)
+The Drowned Lands
+
+### 0252   (introduction)
+The sea has taken most of the world. What land is left is small and fought over, and the others are richer in offerings than we are.
+
+--- Level 20 — The Last Harvest ---
+
+### 0253   (title)
+The Last Harvest
+
+### 0254   (introduction)
+This is the end of the year, and perhaps the end of us. Three strong peoples surround us and they have already begun. Only the bog, the thorn, the hollow hill and the Hunt can turn this. Rejoice, if we live.
+
+========================================================================
+G. MESSAGES DURING PLAY
+========================================================================
+
+### 0255   (bog)
+Your bog has drowned {number} and drains away, sated.
+
+### 0256   (Cunning Woman falls)
+Your Cunning Woman has fallen. She returns to the stone circle in {number} seconds.
+
+### 0257   (when placing a building)
+Something is already there
+
+### 0258   (when placing a building)
+A hedge needs firm, level ground
+
+### 0259   (when placing a building; used in 2 places)
+The ground there is cursed
+
+### 0260   (when placing a building)
+Too close to another building
+
+### 0261   (when placing a building)
+Cannot build on water
+
+### 0262   (when placing a building)
+This ground has been salted. Nothing of yours will stand here for a while
+
+### 0263   (when placing a building)
+The ground is too broken to build on. Flatten it first
+
+### 0264   (when placing a building)
+Too steep to build on
+
+### 0265   (when placing a building)
+Too close to the waterline
+
+### 0266   (when placing a building)
+Herne's Oak must stand in deep woodland
+
+### 0267   (when placing a building)
+A forest altar must stand among trees
+
+### 0268   (tomb falls)
+Your tomb has fallen and your Cunning Woman with it. She will rise again at the stone circle in a minute, and half your mana is lost.
+
+### 0269   (tomb falls)
+The {tribe} tomb has fallen
+
+### 0270   (altar offering)
+{…} is given to the grove. +{number} mana
+
+### 0271   (altar offering)
+A captive
+
+### 0272   (altar offering)
+A villager
+
+### 0273   (wicker burning)
+The {building} burns. +{number} mana{…}.
+
+### 0274   (wicker burning; continues a line)
+, and your people are in a frenzy
+
+### 0275   (wicker burning)
+The Wicker God of the {tribe} folk is burning
+
+### 0276   (May Queen crowned)
+A May Queen is crowned. Keep her alive and her offering grows richer; guard her well.
+
+### 0277   (May Queen crowned)
+The {tribe} folk have crowned a May Queen
+
+### 0278   (May Queen offered)
+{number} of {number} May Queens given to the fire
+
+### 0279   (May Queen offered)
+The May Queen goes willingly. +{number} mana, and your people are in a frenzy.
+
+### 0280   (May Queen offered)
+The {tribe} folk have given a May Queen to the fire
+
+### 0281   (desertion)
+A villager has fled into the wilds. Your people are afraid.
+
+### 0282   (entombment)
+The hills are silent in this land
+
+### 0283   (entombment)
+Your Cunning Woman already lies in a hill
+
+### 0284   (entombment)
+Another Cunning Woman is already at this hill
+
+### 0285   (entombment)
+The hill demands twenty followers. You have too few.
+
+### 0286   (entombment)
+The hill will not open for less than {number} mana.
+
+### 0287   (entombment)
+Your Cunning Woman walks to the hollow hill, and twenty followers go with her.
+
+### 0288   (entombment)
+Your Cunning Woman is sealed in the hill. From the tomb she sees everything and casts anywhere at half the mana. Guard it: if it falls, so does she.
+
+### 0289   (entombment)
+The {tribe} Cunning Woman has been sealed in a hollow hill
+
+### 0290   (balloon)
+No dry land close enough to unload
+
+### 0291
+The captured May Queen is home. Offer her at any altar or wicker figure for her full worth.
+
+### 0292
+Your May Queen has been seized by the {tribe} folk. Kill the Oss before it gets her home.
+
+### 0293
+Your Oss has seized the {tribe} May Queen.
+
+### 0294
+Your Cunning Woman cannot reach the oak
+
+### 0295
+Your Cunning Woman hangs from the oak. In two minutes the Wild Hunt will ride.
+
+### 0296
+The {tribe} Cunning Woman hangs from Herne's Oak
+
+### 0297
+Your Cunning Woman cannot reach the hill
+
+### 0298
+Too few followers reached the hill. The rite is abandoned.
+
+### 0299
+Your Cunning Woman cannot get within range
+
+### 0300
+{building} finished
+
+### 0301
+The oak wakes. The Wild Hunt rides for you.
+
+### 0302
+The Wild Hunt rides for the {tribe} folk
+
+### 0303   (casting; used in 2 places)
+{spell} is still gathering power
+
+### 0304   (casting; used in 2 places)
+Not enough mana for {spell}
+
+### 0305   (casting)
+The shield turned the lightning
+
+### 0306   (casting)
+There were no wildmen in the circle
+
+### 0307   (casting)
+The torch needs a scrap of level, open ground
+
+### 0308   (casting)
+A scrying torch burns. The land around it will stay in sight while it stands.
+
+### 0309   (rival attack)
+The {tribe} attack breaks. Their fighters are running for home.
+
+### 0310   (rival attack)
+A horn sounds from the {tribe} lands: {number} of their fighters are marching on you. Watch the map.
+
+### 0311   (rival attack)
+Balloons rise over the {tribe} island: {number} of them, carrying {number} fighters, are coming for you.
+
+### 0312   (rival attack)
+The {tribe} folk have seen your Cunning Woman hanging. {number} of their fighters are running for the oak.
+
+### 0313
+A captive has slipped out of the fold
+
+### 0314
+Your Cunning Woman is reborn
+
+### 0315
+Your settlement is under attack
+
+### 0316   (broken tribe)
+The {tribe} folk are broken. Their last people are gathering at their stone circle, and their halls are falling in. Their Cunning Woman will not return.
+
+### 0317   (broken tribe)
+The {tribe} folk are broken
+
+### 0318   (tribe finished)
+The {tribe} tribe is gone. Its {number} empty buildings are yours, and nature yields {number} mana from its hearths.
+
+### 0319   (tribe finished)
+Your people are all dead. The {tribe} folk take what is left.
+
+### 0320   (tribe finished)
+The {tribe} tribe is gone. The {tribe} folk take its empty halls.
+
+### 0321   (tribe finished)
+The {tribe} tribe is broken. Your osses drag its last {number} villagers to your folds.
+
+### 0322   (tribe finished)
+Your tribe is broken. The {tribe} folk drag your last villagers away.
+
+### 0323   (tribe finished)
+The {tribe} tribe is broken; the {tribe} folk drag its last villagers away.
+
+### 0324   (tribe finished)
+The {tribe} tribe has been wiped out
+
+### 0325   (tribe finished)
+The {tribe} Cunning Woman is dead, and her people scatter.{…}
+
+### 0326   (tribe finished)
+ Their halls are yours.
+
+### 0327   (All-against-all)
+The battle of all-against-all has already begun
+
+### 0328   (All-against-all)
+All-against-all needs a finished, unlit wicker man
+
+### 0329   (All-against-all)
+All-against-all needs a full bar of mana
+
+### 0330   (All-against-all)
+All-against-all needs ten followers to burn
+
+### 0331   (All-against-all)
+Ten souls burn in the wicker. The end is coming.
+
+### 0332   (All-against-all)
+The {tribe} tribe has called down the battle of all-against-all
+
+### 0333   (All-against-all)
+The battle of all-against-all. The huts are burning, and every soul walks to the Moot.
+
+### 0334   (floating label)
+Captive ·
+
+### 0335   (floating label)
+{number} to come
+
+### 0336   (tapping; used in 3 places, also in section C and H)
+Your Cunning Woman is waiting to be reborn
+
+### 0337   (tapping)
+Your Cunning Woman is hanging from the oak
+
+### 0338   (tapping; used in 2 places)
+You cannot build on land you have not explored
+
+### 0339   (tapping)
+Now tap where the hedge ends
+
+### 0340   (tapping)
+{number} lengths of hedge laid out. Villagers will plant them.{…}
+
+### 0341   (tapping; continues a line)
+ (A hedge is at most {number} long.)
+
+### 0342   (tapping)
+No hedge could be laid there
+
+### 0343   (tapping)
+Not enough wood
+
+### 0344   (orders)
+The osses will not listen until their captives are home
+
+### 0345   (orders)
+{number} posted to guard the {…}
+
+### 0346   (orders)
+Only balloonists can reach a balloon
+
+### 0347   (orders)
+One follower walks to the {…}
+
+### 0348   (orders)
+{number} followers walk to the {…}
+
+### 0349   (orders)
+the May Queen
+
+### 0350   (orders)
+your Cunning Woman
+
+### 0351   (orders)
+{number} sworn to guard {who}
+
+### 0352   (orders)
+Only warriors and archers can stand guard
+
+### 0353   (orders)
+There is no way across. Your Cunning Woman can raise a Land Bridge.
+
+### 0354   (orders)
+The balloon cannot set down there
+
+### 0355   (game start)
+Grow your tribe while you can. Rivals usually first attack after about {number} minutes.
+
+### 0356   (watch mode)
+Tap a tribe at the top to find it. The speed button goes up to four times.
+
+### 0357
+Muted
+
+### 0358
+The saved game could not be read
+
+========================================================================
+H. BUILDING TILES, SPELL HINTS AND THE TRIBE PANEL
+========================================================================
+
+### 0359
+Full + 10
+
+### 0360
+{number} wood
+
+### 0361
+Nothing can be built while the world ends
+
+### 0362
+Your villagers will gather wood for it. {building} needs {number} wood
+
+### 0363
+Tap where the hedge begins. Each length costs {number} wood.
+
+### 0364
+Tap where to build the {building}
+
+### 0365
+{spell}: tap anywhere. {spell description}
+
+### 0366
+All-against-all: ten followers burn in your wicker man and your mana is spent. Every hut falls and the last tribe standing wins. This cannot be undone.
+
+### 0367
+{spell}: tap a target. {spell description}
+
+### 0368
+She becomes a god, for good
+
+### 0369
+Begin the entombment
+
+### 0370
+Another Cunning Woman is at the hill
+
+### 0371
+Your rite is under way
+
+### 0372
+Seal your Cunning Woman inside with twenty followers
+
+### 0373
+{number} of 5 villagers inside
+
+### 0374
+Being built · {number}%
+
+### 0375
+Training {…} · {number}s · {number} queued
+
+### 0376
+Waiting for a villager · {number} queued
+
+### 0377
+{number} mana
+
+### 0378
+Train {…}
+
+### 0379
+Refund mana
+
+### 0380
+Cancel one
+
+### 0381
+Burning
+
+### 0382
+Grove strength ×{number} · a villager gives {…}, a captive {…}
+
+### 0383
+{number} of {number} inside{…} · {number} a villager, {number} a captive
+
+### 0384   (continues a line)
+ · {number} on their way
+
+### 0385
+{number} held · no dread
+
+### 0386
+Offer a captive
+
+### 0387
+Raises dread
+
+### 0388
+Offer a villager
+
+### 0389
+Captives first
+
+### 0390
+Fill it
+
+### 0391
+{number} of {number} held here
+
+### 0392
+The Hunt rides · {number} abroad · each death they cause feeds you like a captive
+
+### 0393
+Your Cunning Woman hangs here · {number}s
+
+### 0394
+Dormant. Hang your Cunning Woman here for two minutes to wake the Wild Hunt
+
+### 0395
+She is gone for two minutes
+
+### 0396
+Hang your Cunning Woman
+
+### 0397
+Your Cunning Woman lies here · {number} of {number}
+
+### 0398
+Send them to work
+
+### 0399
+Call villagers out
+
+### 0400
+{…}Worth {number} mana{…} · {number} guard(s)
+
+### 0401
+No dread
+
+### 0402
+Offer her
+
+### 0403
+Captured May Queen
+
+### 0404
+Taken from the {…} folk ·
+
+### 0405   (continues a line)
+, at her richest
+
+### 0406   (continues a line)
+, rising to {number}
+
+### 0407
+{…} aboard
+
+### 0408
+Unload
+
+### 0409
+Tomb
+
+### 0410
+Find the fortress
+
+### 0411
+Select and find
+
+### 0412
+Reborn in {…}s
+
+### 0413
+Army
+
+### 0414
+{number} fighters
+
+### 0415
+Warriors
+
+### 0416   (used in 3 places)
+{number} ready
+
+### 0417
+Archers
+
+### 0418
+Osses
+
+### 0419
+Guards
+
+### 0420
+{number} posted
+
+### 0421
+Villagers
+
+### 0422
+{number} outside, {number} in huts
+
+### 0423
+Balloons
+
+### 0424
+{number} balloons
+
+### 0425
+Not enough mana
+
+### 0426
+{unit} queued. {number} in line; a villager will walk in to be trained.
+
+### 0427
+One cancelled. {number} mana returned.
+
+### 0428
+A villager will walk to the {building}. {number} offering(s) on the way.
+
+### 0429
+A captive will be led from the fold to the {building}.
+
+### 0430
+Filling the {building}: {number} captive(s) and {…} villager(s) on the way.
+
+### 0431
+You need an altar or a wicker figure to offer her at
+
+### 0432
+The May Queen walks to the {…}
+
+### 0433
+Your Cunning Woman walks to the oak
+
+### 0434
+{number} villager(s) come out to work.
+
+========================================================================
+I. PAUSE, VICTORY AND DEFEAT
+========================================================================
+
+### 0435
+Paused
+
+### 0436   (used in 3 places, also in section C)
+Resume
+
+### 0437   (used in 2 places)
+Abandon and choose a new world
+
+### 0438   (used in 2 places)
+Victory
+
+### 0439   (used in 2 places)
+Play this world again
+
+### 0440
+Onward
+
+### 0441   (used in 2 places)
+Choose a new world
+
+### 0442
+{number} min {number} s into the {…} of seed {number}.
+
+### 0443
+Tap again to abandon. Your game stays saved.
+
+### 0444
+The {tribe} folk endure
+
+### 0445
+No one endures
+
+### 0446
+Every other people has been burned, captured or driven into the wilds. The {tribe} folk have the world to themselves.
+
+### 0447
+The last tribes fell together. The wildmen inherit the world.
+
+### 0448   (used in 2 places)
+time
+
+### 0449
+Watch this world again
+
+### 0450   (Rejoice! line)
+There is no first or last!
+
+### 0451   (Rejoice! line)
+The harvest shall be fruitful this year.
+
+### 0452   (Rejoice! line)
+Come now, rise now, from the forest, from the furrows, from the fields, and live!
+
+### 0453   (Rejoice! line)
+Happy day!
+
+### 0454   (Rejoice! line)
+Thou livest deliciously!
+
+### 0455   (Rejoice! line)
+Sumer is icumen in, lhude sing cuccu!
+
+### 0456   (Rejoice! line)
+The barns will be full and the hearths warm.
+
+### 0457   (Rejoice! line)
+The old fires are lit on every hill.
+
+### 0458   (Rejoice! line)
+The earth is fed, and the earth is grateful.
+
+### 0459   (Rejoice! line)
+Dance, for none are left to mourn.
+
+### 0460   (Rejoice! line)
+Every furrow sings tonight.
+
+### 0461
+Play this level again
+
+### 0462
+Try again
+
+### 0463
+Onward: {number}. {level title}
+
+### 0464
+Defeat
+
+### 0465
+The Moot is quiet. Of all the peoples who walked there, only yours walked away.
+
+### 0466
+Every rival Cunning Woman has been cast out. The world is yours to shape.
+
+### 0467
+Your people fell at the Moot. The world goes on without them.
+
+### 0468
+Your tribe has been wiped from the world. The fields grow over the huts.
+
+### 0469
+difficulty
+
+### 0470
+spells cast
+
+### 0471
+enemies slain
+
+### 0472
+buildings razed
+
+### 0473
+given to the wicker
+
+### 0474
+Victory · {difficulty}
+
+### 0475
+Defeat · {difficulty}
+
+### 0476
+Something went wrong: {error}
+
+========================================================================
+J. THE MODEL WORKSHOP
+========================================================================
+
+### 0477   (screen-reader label)
+Model
+
+### 0478
+Undo
+
+### 0479
+Done
+
+### 0480
+Preview in
+
+### 0481
+Villager for scale
+
+### 0482   (used in 2 places)
+Add
+
+### 0483   (used in 2 places)
+Cylinder
+
+### 0484   (used in 2 places)
+Cone
+
+### 0485   (used in 2 places)
+Ball
+
+### 0486   (used in 2 places)
+Ring
+
+### 0487
+Part
+
+### 0488   (used in 2 places)
+Copy
+
+### 0489   (tooltip)
+Copy to the other side, mirrored
+
+### 0490
+Mirror
+
+### 0491
+Delete
+
+### 0492
+Several
+
+### 0493   (tooltip)
+While on, taps add to the selection (same as shift-click)
+
+### 0494   (tooltip)
+Keep the selected parts together
+
+### 0495
+Group
+
+### 0496
+Ungroup
+
+### 0497
+Back to original
+
+### 0498
+Export
+
+### 0499
+Import
+
+### 0500
+Use these models
+
+### 0501
+Close
+
+### 0502   (slider)
+Width
+
+### 0503   (slider; used in 3 places)
+Height
+
+### 0504   (slider)
+Depth
+
+### 0505   (slider)
+Top radius
+
+### 0506   (slider)
+Bottom radius
+
+### 0507   (slider; used in 2 places)
+Sides
+
+### 0508   (slider; used in 3 places)
+Radius
+
+### 0509   (slider)
+Smoothness around
+
+### 0510   (slider)
+Smoothness up
+
+### 0511   (slider)
+How much of the ball
+
+### 0512   (slider)
+Thickness
+
+### 0513   (slider)
+Tube sides
+
+### 0514   (slider)
+Segments
+
+### 0515   (slider)
+How much of the ring
+
+### 0516
+This browser would not keep the change
+
+### 0517
+Changes are kept automatically. {number} model(s) edited.
+
+### 0518
+Changes are kept automatically.
+
+### 0519   (continues a line)
+ · tribe
+
+### 0520
+group {number}
+
+### 0521
+No parts. Add a shape below.
+
+### 0522
+Tap a part in the picture or the list to change it. Shift-click (or turn on Add) to pick several at once. Drag a selected part to move it; drag anywhere else to turn the view.
+
+### 0523
+{number} parts
+
+### 0524   (used in 2 places)
+Tribe colour
+
+### 0525
+Move together
+
+### 0526   (used in 2 places)
+Left – right
+
+### 0527   (used in 2 places)
+Down – up
+
+### 0528   (used in 2 places)
+Back – front
+
+### 0529
+Turn together
+
+### 0530   (used in 2 places)
+Tip forward
+
+### 0531   (used in 2 places)
+Spin
+
+### 0532   (used in 2 places)
+Lean sideways
+
+### 0533
+Size together
+
+### 0534
+Scale
+
+### 0535
+Turning and scaling work around the middle of the selection. The sliders start from zero each time you pick the group.
+
+### 0536
+Size
+
+### 0537
+Position
+
+### 0538
+Turn
+
+### 0539
+Stretch
+
+### 0540
+Wide
+
+### 0541
+Tall
+
+### 0542
+Deep
+
+### 0543   (used in 2 places)
+Select a part first
+
+### 0544
+Shift-click (or turn on Add) to pick two or more parts first
+
+### 0545
+{number} parts grouped. Tapping any of them in the picture now picks up the whole group.
+
+### 0546
+Nothing selected is grouped
+
+### 0547
+Nothing to undo
+
+### 0548
+{model} is back as it was. Undo brings your version back.
+
+### 0549
+No models have been edited yet
+
+### 0550
+{number} edited model(s). Copy this and send it on; it can be baked into the game so everyone gets these models.
+
+### 0551
+Paste exported model text here, then press Use these models.
+
+### 0552
+Copied
+
+### 0553
+Select the text and copy it by hand
+
+### 0554
+That text is not readable model data
+
+### 0555
+{number} model(s) taken in
+
+### 0556
+Nothing in that text matched a model
