@@ -1317,13 +1317,13 @@ function updFog(){if(!fogOn)return;visNow.fill(0);const T=tribes[0];if(T&&T.tomb
   for(const b of blds)if(b.alive&&b.tribe===0)mark(b.x,b.z,b.bt==='nest'&&b.done?TUNE.nestSight:8)}
 const isVis=(x,z)=>!fogOn||visNow[cidx(x,z)]===1,seenAt=(x,z)=>!fogOn||seen[cidx(x,z)]===1;
 const visU=u=>u.tribe===0||isVis(u.x,u.z)||!!(tribes[u.tribe]&&tribes[u.tribe].broken),visB=b=>b.tribe===0||seenAt(b.x,b.z)||!!(tribes[b.tribe]&&tribes[b.tribe].broken);
-function invokeArma(ti){const T=tribes[ti];if(!allowS('arma'))return false;if(armageddon){if(ti===0)toast('All-against-all has already begun');return false}
+function invokeArma(ti){const T=tribes[ti];if(!allowS('arma'))return false;if(armageddon){if(ti===0)toast('The battle of all-against-all has already begun');return false}
   const wm=blds.find(b=>b.alive&&b.done&&b.bt==='wicker'&&b.tribe===ti&&!b.lit);if(!wm){if(ti===0)toast('All-against-all needs a finished, unlit wicker man');return false}
   if(T.mana<MANA_MAX-.5){if(ti===0)toast('All-against-all needs a full bar of mana');return false}
   const vic=units.filter(u=>u.alive&&!u.inV&&!u.air&&u.tribe===ti&&!UT[u.type].veh&&u.type!=='shaman'&&u.type!=='ghost'&&u.st!=='wait').sort((a,b)=>d2(a.x,a.z,wm.x,wm.z)-d2(b.x,b.z,wm.x,wm.z));
   if(vic.length<10){if(ti===0)toast('All-against-all needs ten followers to burn');return false}
   T.mana=0;for(const u of vic.slice(0,10)){const y=unitY(u);for(let i=0;i<10;i++)PA.emit(u.x,y+.5,u.z,(R()-.5),2+R()*2,(R()-.5),.8,1,.4,.1,1,.5,-1);removeUnit(u)}
-  wm.lit=true;wm.burnt=true;wm.burnEnd=gt+12;flash(.5);cam.shake=Math.max(cam.shake,.6);sfx('quake',1);toast(ti===0&&!watching?'Ten souls burn in the wicker. The end is coming.':`The ${T.name} tribe has called down All-against-all`);
+  wm.lit=true;wm.burnt=true;wm.burnEnd=gt+12;flash(.5);cam.shake=Math.max(cam.shake,.6);sfx('quake',1);toast(ti===0&&!watching?'Ten souls burn in the wicker. The end is coming.':`The ${T.name} tribe has called down the battle of all-against-all`);
   effects.push({t:3,up(e,dt){e.t-=dt;if(e.t>0)return true;startArma();return false}});return true}
 function mootPull(u){if(u.type==='balloon'||u.inV)return;const lf=field(moot.x,moot.z);if(lf[cidx(u.x,u.z)]>=0)return;const a=R()*TAU,r=5+R()*7,c=nearestCell(moot.x+Math.cos(a)*r,moot.z+Math.sin(a)*r,5,c=>pass[c]===1&&lf[c]>=0);if(c){u.x=c.x;u.z=c.z;u.air=false;for(let i=0;i<6;i++)PA.emit(u.x,hAt(u.x,u.z)+.5,u.z,(R()-.5),1+R()*2,(R()-.5),.6,1,.3,.15,1,.4,-1)}}
 function startArma(){armageddon=true;$('app').classList.add('arma');scene.fog.color.setHex(0x9a4224);droneLevel();
@@ -1335,7 +1335,7 @@ function startArma(){armageddon=true;$('app').classList.add('arma');scene.fog.co
   for(const u of units){if(!u.alive||u.tribe===wildId)continue;
     mootPull(u);
     orderUnit(u,moot.x+(R()-.5)*6,moot.z+(R()-.5)*6,true,moot.x,moot.z);u.cmd=false}
-  if(placing)unplace();toast('All-against-all. The huts are burning, and every soul walks to the Moot.')}
+  if(placing)unplace();toast('The battle of all-against-all. The huts are burning, and every soul walks to the Moot.')}
 
 // ---------------- three.js setup ----------------
 const glc=$('gl'),app=$('app');
