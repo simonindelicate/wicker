@@ -204,7 +204,7 @@ details.help summary{cursor:pointer;color:var(--text);font:14px var(--f-display)
     <div id="wsProps"></div>
     <div class="wsBar wsSmall wsFoot"><button class="btn" id="wsReset">Back to original</button><button class="btn" id="wsExport">Export</button><button class="btn" id="wsImport">Import</button></div>
     <p class="wsHint" id="wsStatus"></p>
-    <div id="wsIO" hidden><p class="wsHint" id="wsIOh"></p><textarea id="wsIOt" spellcheck="false"></textarea><div class="wsBar wsSmall"><button class="btn" id="wsIOcopy">Copy</button><button class="btn" id="wsIOsave">Save as file</button><button class="btn" id="wsIOapply">Use these models</button><button class="btn" id="wsIOclose">Close</button></div></div>
+    <div id="wsIO" hidden><p class="wsHint" id="wsIOh"></p><textarea id="wsIOt" spellcheck="false"></textarea><div class="wsBar wsSmall"><button class="btn" id="wsIOcopy">Copy</button><button class="btn" id="wsIOapply">Use these models</button><button class="btn" id="wsIOclose">Close</button></div></div>
   </div>
   <footer id="dock" hidden>
     <div id="selLine"><span id="selT">Nothing selected</span><button class="btn" id="selX" hidden>Clear</button></div>
@@ -2165,10 +2165,9 @@ $('wsReset').addEventListener('click',()=>{wsPush(true);WS.parts=MODEL_DATA[WS.k
 $('wsClose').addEventListener('click',wsClose);
 $('wsExport').addEventListener('click',()=>{const E=modelEdits();const keys=Object.keys(E);if(!keys.length)return toast('No models have been edited yet');
   const txt='{\n'+keys.map(k=>' "'+k+'":[\n'+E[k].map(p=>'  '+JSON.stringify(p)).join(',\n')+'\n ]').join(',\n')+'\n}';
-  $('wsIOt').value=txt;$('wsIOh').textContent=`${keys.length} edited model${keys.length===1?'':'s'}. Copy this and send it on, or save it as a file; it can be baked into the game.`;$('wsIOapply').hidden=true;$('wsIOcopy').hidden=false;$('wsIOsave').hidden=false;$('wsIO').hidden=false});
-$('wsImport').addEventListener('click',()=>{$('wsIOt').value='';$('wsIOh').textContent='Paste exported model text here, then press Use these models.';$('wsIOapply').hidden=false;$('wsIOcopy').hidden=true;$('wsIOsave').hidden=true;$('wsIO').hidden=false;$('wsIOt').focus()});
+  $('wsIOt').value=txt;$('wsIOh').textContent=`${keys.length} edited model${keys.length===1?'':'s'}. Copy this and send it on; it can be baked into the game so everyone gets these models.`;$('wsIOapply').hidden=true;$('wsIOcopy').hidden=false;$('wsIO').hidden=false});
+$('wsImport').addEventListener('click',()=>{$('wsIOt').value='';$('wsIOh').textContent='Paste exported model text here, then press Use these models.';$('wsIOapply').hidden=false;$('wsIOcopy').hidden=true;$('wsIO').hidden=false;$('wsIOt').focus()});
 $('wsIOcopy').addEventListener('click',async()=>{const t=$('wsIOt');t.select();let ok=false;try{await navigator.clipboard.writeText(t.value);ok=true}catch(e){try{ok=document.execCommand('copy')}catch(_){}}toast(ok?'Copied':'Select the text and copy it by hand')});
-$('wsIOsave').addEventListener('click',()=>{try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([$('wsIOt').value],{type:'application/json'}));a.download='wicker-models.json';document.body.appendChild(a);a.click();a.remove()}catch(e){toast('Saving files is blocked here; copy the text instead')}});
 $('wsIOapply').addEventListener('click',()=>{let o;try{o=JSON.parse($('wsIOt').value)}catch(e){return toast('That text is not readable model data')}
   const loc=wsStore();let n=0;for(const k in o){if(!Array.isArray(o[k])||!wsKeys().includes(k))continue;if(!o[k].every(p=>p&&SHAPES[p.s]&&Array.isArray(p.a)&&Array.isArray(p.p)&&Array.isArray(p.r)))continue;loc[k]=o[k];WS.dirty.add(k);n++}
   try{localStorage.setItem(MODEL_KEY,JSON.stringify(loc))}catch(e){}$('wsIO').hidden=true;wsLoad(WS.key);wsStatus();toast(n?`${n} model${n===1?'':'s'} taken in`:'Nothing in that text matched a model')});
