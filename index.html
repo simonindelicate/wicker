@@ -568,9 +568,9 @@ const SCEN=[
  {title:'The Turning Year',seed:15907,style:'islands',enemies:3,diff:'hard',fog:true,goal:{type:'conquer'},all:true,
   me:{mana:300,wood:180,huts:2},
   intro:'From here the land is not kind. Three peoples, each as cunning as we are. Nothing is held back from us, and nothing from them.'},
- {title:'Surrounded',seed:16111,style:'hub',enemies:3,diff:'hard',fog:true,oakAwake:true,goal:{type:'conquer'},all:true,
-  me:{mana:300,wood:200,huts:2},news:['The Wild Hunt rides from the start'],
-  intro:'We have settled in the middle of everything. Three narrow causeways run from the rival islands to ours, and every army will march along one of them. But the old oak in our wood is already awake, and the Hunt rides for us from the first day.'},
+ {title:'Surrounded',seed:16111,style:'hub',enemies:3,diff:'hard',fog:true,bounty:true,goal:{type:'conquer'},all:true,
+  me:{mana:300,wood:200,huts:2},news:['Two full thrall folds and a Wicker God, ready from the start'],
+  intro:'We have settled in the middle of everything. Three narrow causeways run from the rival islands to ours, and every army will march along one of them. But we did not come empty-handed: our folds are full of the wild folk, and the Wicker God already stands in its grove, waiting to be fed.'},
  {title:'Late to the Feast',seed:17203,style:'continent',enemies:3,diff:'hard',fog:true,goal:{type:'conquer'},all:true,
   me:{mana:100,wood:40,huts:1},them:{mana:500,huts:3,warriors:4},
   intro:'We arrive with little, and the others have been here for years. Their halls are built and their warriors drilled. We must be cleverer than them, because we cannot be stronger.'},
@@ -632,7 +632,7 @@ function genWorld(seed,style,nT,opts){opts=opts||{};
   if(style==='crags'){for(let i=0;i<N*N;i++)if(h[i]>.5)h[i]+=(rng()-.5)*1.4;for(let z=0;z<N;z++)for(let x=0;x<N;x++){const d=Math.hypot(x-64,z-64),m=1-sstep(36,46,d);h[z*N+x]=lerp(-4.5,h[z*N+x],m)}}
   let twinC=null;if(twin){const j=()=>(rng()-.5)*6;twinC=!isles?[{x:33+rng()*3,z:60+rng()*8},{x:91+rng()*3,z:60+rng()*8}]:nT<=2?[{x:33+j(),z:64+j()},{x:97+j(),z:64+j()}]:nT===3?[{x:32+j(),z:36+j()},{x:96+j(),z:36+j()},{x:64+j(),z:100+j()}]:[{x:32+j(),z:32+j()},{x:96+j(),z:32+j()},{x:32+j(),z:96+j()},{x:96+j(),z:96+j()}];const R0=isles?23:26;
     for(let z=0;z<N;z++)for(let x=0;x<N;x++){const i=z*N+x,v=(h[i]+5)/30;let d=1e9;for(const c of twinC)d=Math.min(d,Math.sqrt(d2(x,z,c.x,c.z)));const m=1-sstep(R0-8,R0+1,d);h[i]=lerp(-4.5,1.4+clamp(v,0,1)*7,m)}}
-  let hubC=null,hubPaths=null,oakSpot=null;
+  let hubC=null,hubPaths=null,riteSpot=null;
   if(style==='hub'){const j=()=>(rng()-.5)*3,RR=50,RI=[19,15,15,15];hubC=[{x:64,z:64}];for(let k=1;k<nT;k++){const a=Math.PI/2+(k-1)/(nT-1)*TAU;hubC.push({x:64+Math.cos(a)*RR+j(),z:64+Math.sin(a)*RR+j()})}
     hubPaths=hubC.slice(1).map(c=>{const ph=rng()*TAU,amp=2.5+rng()*1.5,dx=c.x-64,dz=c.z-64,L=Math.hypot(dx,dz),nx=-dz/L,nz=dx/L,pts=[];for(let i=0;i<=40;i++){const t=i/40,o=Math.sin(t*Math.PI)*amp*Math.sin(t*3*Math.PI+ph);pts.push({x:64+dx*t+nx*o,z:64+dz*t+nz*o})}return pts});
     const segD=(x,z,a,b)=>{const ux=b.x-a.x,uz=b.z-a.z,t=clamp(((x-a.x)*ux+(z-a.z)*uz)/(ux*ux+uz*uz),0,1);return Math.hypot(x-a.x-ux*t,z-a.z-uz*t)};
@@ -658,19 +658,19 @@ function genWorld(seed,style,nT,opts){opts=opts||{};
   let centre,barrows=[];
   if(hubPaths){const mid=hubPaths.map(P=>P[20]);centre=mid[0];plateau(centre,3.5,6.5,2);for(let k=1;k<Math.min(3,mid.length);k++){barrows.push(mid[k]);plateau(mid[k],3,5.5,2)}
     const H0=hubC[0];let ba=0,bg=-1;const angs=hubC.slice(1).map(c=>Math.atan2(c.z-H0.z,c.x-H0.x));for(let t=0;t<36;t++){const a=t/36*TAU;let g=1e9;for(const b of angs)g=Math.min(g,Math.abs(Math.atan2(Math.sin(a-b),Math.cos(a-b))));if(g>bg){bg=g;ba=a}}
-    oakSpot={x:H0.x+Math.cos(ba)*10.5,z:H0.z+Math.sin(ba)*10.5};plateau(oakSpot,2.5,4.5,clamp(bil(h,oakSpot.x,oakSpot.z),2,5))}
+    riteSpot={x:H0.x+Math.cos(ba)*10.5,z:H0.z+Math.sin(ba)*10.5};plateau(riteSpot,2.5,4.5,clamp(bil(h,riteSpot.x,riteSpot.z),2,5))}
   else{centre=farPoint(starts,500);plateau(centre,6,12,clamp(bil(h,centre.x,centre.z),1.8,4))}
   if(!hubPaths)for(let k=0;k<2;k++){const b=farPoint(starts.concat([centre],barrows),400);barrows.push(b);plateau(b,3.5,8,clamp(bil(h,b.x,b.z),1.5,6))}
-  const spots=starts.concat([centre],barrows,oakSpot?[oakSpot]:[]);
+  const spots=starts.concat([centre],barrows,riteSpot?[riteSpot]:[]);
   const tr=[];const okTree=(x,z)=>{const hh=bil(h,x,z);if(hh<.8||hh>9.5)return false;
     if(Math.abs(bil(h,x+1,z)-bil(h,x-1,z))>1.6||Math.abs(bil(h,x,z+1)-bil(h,x,z-1))>1.6)return false;
     for(const s of spots)if(d2(x,z,s.x,s.z)<49)return false;return true};
   for(let i=0;i<5200&&tr.length<1100;i++){const x=rng()*N,z=rng()*N;if(tn(x,z)<.52&&rng()>.06)continue;if(okTree(x,z))tr.push({x,z})}
   for(const s of starts){let n=0;for(let t=0;t<300&&n<26;t++){const a=rng()*TAU,r=7+rng()*10,x=wrap(s.x+Math.cos(a)*r),z=wrap(s.z+Math.sin(a)*r);if(okTree(x,z)){tr.push({x,z});n++}}}
-  if(oakSpot){let n=0;for(let t=0;t<300&&n<26;t++){const a=rng()*TAU,r=3.6+rng()*4.6,x=wrap(oakSpot.x+Math.cos(a)*r),z=wrap(oakSpot.z+Math.sin(a)*r),hh=bil(h,x,z);if(hh>.8&&hh<9.5&&d2(x,z,starts[0].x,starts[0].z)>64){tr.push({x,z});n++}}}
+  if(riteSpot){let n=0;for(let t=0;t<300&&n<26;t++){const a=rng()*TAU,r=3.6+rng()*4.6,x=wrap(riteSpot.x+Math.cos(a)*r),z=wrap(riteSpot.z+Math.sin(a)*r),hh=bil(h,x,z);if(hh>.8&&hh<9.5&&d2(x,z,starts[0].x,starts[0].z)>64){tr.push({x,z});n++}}}
   const st=[];for(let i=0;i<4000&&st.length<46;i++){const x=rng()*N,z=rng()*N;if(okTree(x,z)&&rng()<.5)st.push({x,z,s:.7+rng()*.7,r:rng()*TAU})}
   st.push(...gateStones);
-  return {h,starts,centre,barrows,oakSpot,stones:st,trees:tr,tn:Float32Array.from({length:N*N},()=>.92+rng()*.16)};
+  return {h,starts,centre,barrows,riteSpot,stones:st,trees:tr,tn:Float32Array.from({length:N*N},()=>.92+rng()*.16)};
 }
 
 // ---------------- terrain bookkeeping ----------------
@@ -2323,9 +2323,10 @@ function buildWorld(){const SC=scen();const w=genWorld(settings.seed,settings.st
     T.shaman=spawnUnit('shaman',i,r.x,r.z+2.2);
     for(let k=0;k<(ST.braves??8);k++){const a=k/8*TAU;spawnUnit('brave',i,r.x+Math.cos(a)*2.6,r.z+Math.sin(a)*2.6)}
     for(const ty of ['warrior','archer'])for(let k=0;k<(ST[ty+'s']||0);k++){const a=R()*TAU,u=spawnUnit(ty,i,r.x+Math.cos(a)*4,r.z+Math.sin(a)*4);u.gx=u.x;u.gz=u.z}}
-  if(SC&&SC.oakAwake&&w.oakSpot){const o=w.oakSpot,sz=BT.oak.s,v=validSpot(0,'oak',o.x,o.z),b=placeBuilding(0,'oak',v.err?{cx0:Math.floor(o.x-sz/2+.5),cz0:Math.floor(o.z-sz/2+.5)}:v,true);
-    b.awake=true;b.hT=TUNE.huntRespawn;for(let k=0;k<TUNE.huntRiders;k++){const u=spawnUnit('hunter',0,b.dx+(R()-.5)*2,b.dz+(R()-.5)*2);u.think=.2+k*.4}}
   const WTr={id:tribes.length,name:'Wild',col:0x6b5a45,css:'#8a775c',wild:true,c:new C.Color(0x6b5a45),mana:0,wood:0,woodGoal:0,alive:true,shaman:null,reincT:0,cd:{},manaMult:0,breedMult:0,ai:null,stats:{pop:0,braves:0,outB:0,housed:0,others:0,mil:0,queued:0,huts:0,blds:0,sites:0,b:{},cap:0,cnt:{}}};WTr.roof=WTr.c.clone();tribes.push(WTr);wildId=WTr.id;
+  if(SC&&SC.bounty&&w.riteSpot){const T0=tribes[0],r=blds.find(b=>b.bt==='reinc'&&b.tribe===0),o=w.riteSpot,sz=BT.god.s,v=validSpot(0,'god',o.x,o.z);placeBuilding(0,'god',v.err?{cx0:Math.floor(o.x-sz/2+.5),cz0:Math.floor(o.z-sz/2+.5)}:v,true);
+    let folds=blds.filter(b=>b.bt==='fold'&&b.tribe===0).length;for(let a=0;a<48&&folds<2;a++){const ang=a/12*TAU+.9,rr=6+(a/12|0)*2.5,v=validSpot(0,'fold',r.x+Math.cos(ang)*rr,r.z+Math.sin(ang)*rr);if(!v.err){placeBuilding(0,'fold',v,true);folds++}}
+    for(const b of blds)if(b.bt==='fold'&&b.tribe===0)while(b.capt.length<BT.fold.hold)b.capt.push(wildId)}
   const neutral=(type,pt)=>{const sz=BT[type].s,v=validSpot(wildId,type,pt.x,pt.z);return placeBuilding(wildId,type,v.err?{cx0:Math.floor(pt.x-sz/2+.5),cz0:Math.floor(pt.z-sz/2+.5)}:v,true)};
   const mb=neutral('moot',w.centre);moot={x:mb.x,z:wrap(mb.z+3.2)};for(const b of w.barrows)neutral('barrow',b);
   stones=w.stones;
