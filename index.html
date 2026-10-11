@@ -568,7 +568,7 @@ const SCEN=[
  {title:'The Turning Year',seed:15907,style:'islands',enemies:3,diff:'hard',fog:true,goal:{type:'conquer'},all:true,
   me:{mana:300,wood:180,huts:2},
   intro:'From here the land is not kind. Three peoples, each as cunning as we are. Nothing is held back from us, and nothing from them.'},
- {title:'Surrounded',seed:16111,style:'hub',enemies:3,diff:'hard',fog:true,bounty:true,goal:{type:'conquer'},all:true,ai:{balCap:2},
+ {title:'Surrounded',seed:16111,style:'hub',enemies:3,diff:'hard',fog:true,bounty:true,goal:{type:'conquer'},all:true,ai:{balCap:2,freeBridge:true},
   me:{mana:300,wood:200,huts:2},news:['Two full thrall folds and a Wicker God, ready from the start'],
   intro:'We have settled in the middle of everything. Three narrow causeways run from the rival islands to ours, and every army will march along one of them. But we did not come empty-handed: our folds are full of the wild folk, and the Wicker God already stands in its grove, waiting to be fed.'},
  {title:'Late to the Feast',seed:17203,style:'continent',enemies:3,diff:'hard',fog:true,goal:{type:'conquer'},all:true,
@@ -1177,8 +1177,9 @@ function updBld(b,dt){const D=BT[b.bt],T=tribes[b.tribe];if(D.inv)return;
 function spellCost(T,k){const c=SPK[k].c;return T.tomb?Math.ceil(c/2):c}
 function tryCast(ti,k,px,pz,cu){const T=tribes[ti],s=SPK[k],cost=spellCost(T,k);
   if((T.cd[k]||0)>gt){if(ti===0)toast(s.n+' is still gathering power');return false}
-  if(T.mana<cost){if(ti===0)toast('Not enough mana for '+s.n);return false}
-  T.mana-=cost;T.cd[k]=gt+s.cd;if(ti===0)stats.casts++;
+  const gift=k==='bridge'&&T.ai&&T.ai.freeBridge&&T.ai.bridge&&T.mana<cost; // Surrounded: an attacking rival is given its bridge
+  if(T.mana<cost&&!gift){if(ti===0)toast('Not enough mana for '+s.n);return false}
+  if(!gift)T.mana-=cost;T.cd[k]=gt+s.cd;if(ti===0)stats.casts++;
   if(cu){cu.face=Math.atan2(wd(px-cu.x),wd(pz-cu.z));cu.swing=gt;const y=unitY(cu);for(let i=0;i<14;i++){const a=R()*TAU;PA.emit(cu.x+Math.cos(a)*.4,y+.3+R()*.8,cu.z+Math.sin(a)*.4,Math.cos(a)*.3,1.5+R(),Math.sin(a)*.3,.6,.9,.7,1,1,.3,0)}}
   castSpell(ti,k,px,pz,cu);sfx('cast',.6,px,pz);return true}
 function boom(x,z,r,dmg,ti,bdmg,tv,tu){atk=ti;
@@ -1268,7 +1269,7 @@ function updProjs(dt){for(let i=projs.length-1;i>=0;i--){const p=projs[i];p.t+=d
   if(f>=1){projs.splice(i,1);if(p.kind==='arrow'){const t=p.tgt;if(t&&t.alive&&d2(x,z,t.x,t.z)<(t.bt?BT[t.bt].s*BT[t.bt].s*.3:1.1))hit(t,p.dmg*(0.85+R()*.3),p.src&&p.src.alive?p.src:null);for(let k=0;k<4;k++)PA.emit(x,y,z,(R()-.5)*2,R()*2,(R()-.5)*2,.25,1,.6,.2,1,.25,4)}else if(p.onHit)p.onHit(wrap(p.tx),wrap(p.tz))}}}
 
 // ---------------- AI ----------------
-function mkAI(i,s){const D=DIFF[settings.diff],P=TRIBES[i].pers||{},SA=(scen()&&scen().ai)||{},war=(P.war||1)*(SA.war||1);return {base:{x:s.x,z:s.z},nextBuild:4+i,nextAtk:SA.first!=null?SA.first+(SA.only0?(i-1)*20:R()*40):(D.first+R()*60)/war,need:SA.need??Math.max(3,Math.round(D.need/war)),needInc:SA.needInc??D.needInc,only0:!!SA.only0,airRaid:!!SA.airRaid,hangRaid:!!SA.hangRaid,balCap:SA.balCap,routeT:30+i*5,D,int:SA.int??D.int/war,res:D.res,gap:D.gap*(P.castGap||1)*(SA.gap||1),castT:0,milR:SA.mil??(D.milR+(P.mil||0)),bridge:null,calm:0,siege:0}}
+function mkAI(i,s){const D=DIFF[settings.diff],P=TRIBES[i].pers||{},SA=(scen()&&scen().ai)||{},war=(P.war||1)*(SA.war||1);return {base:{x:s.x,z:s.z},nextBuild:4+i,nextAtk:SA.first!=null?SA.first+(SA.only0?(i-1)*20:R()*40):(D.first+R()*60)/war,need:SA.need??Math.max(3,Math.round(D.need/war)),needInc:SA.needInc??D.needInc,only0:!!SA.only0,airRaid:!!SA.airRaid,hangRaid:!!SA.hangRaid,balCap:SA.balCap,freeBridge:!!SA.freeBridge,D,int:SA.int??D.int/war,res:D.res,gap:D.gap*(P.castGap||1)*(SA.gap||1),castT:0,milR:SA.mil??(D.milR+(P.mil||0)),bridge:null,calm:0,siege:0}}
 function findSpot(T,type){const b=T.ai.base,S=T.stats,f=field(b.x,b.z);for(let t=0;t<90;t++){const a=R()*TAU,r=4.5+R()*Math.min(24,7+S.blds*1.6),v=validSpot(T.id,type,b.x+Math.cos(a)*r,b.z+Math.sin(a)*r);if(v.err)continue;const sz=type==='hedge'?1:BT[type].s;let ok=false;for(let dz=-1;dz<=sz&&!ok;dz++)for(let dx=-1;dx<=sz;dx++){if(f[wi(v.cz0+dz)*N+wi(v.cx0+dx)]>=0){ok=true;break}}if(ok)return v}return null}
 function aiThink(T){const ai=T.ai,S=T.stats,base=ai.base,sh=T.shaman;if(T.broken&&!armageddon){if(sh&&sh.st==='idle'&&d2(sh.x,sh.z,base.x,base.z)>10*10)orderUnit(sh,base.x,base.z+2,true);return}
   let threat=null;for(const b of blds)if(b.alive&&b.tribe===T.id){const e=enemyNear(b.x,b.z,T.id,11);if(e){threat=e;break}}
@@ -1290,7 +1291,6 @@ function aiThink(T){const ai=T.ai,S=T.stats,base=ai.base,sh=T.shaman;if(T.broken
     if((ai.wave.n0>=4&&alive.length<ai.wave.n0*TUNE.breakAt)||gt-ai.wave.t>200||!alive.length){if(alive.length&&gt-ai.wave.t<=200){for(const u of alive){orderUnit(u,base.x+(R()-.5)*6,base.z+(R()-.5)*6,false);u.raidT=0}
         if(ai.wave.tgt===0&&!watching)toast(`The ${T.name} attack breaks. Their fighters are running for home.`)}else for(const u of alive)u.raidT=0;ai.wave=null}}
   if(ai.hangRaid&&!watching)aiHangRaid(T,army);
-  if(!ai.bridge&&gt>ai.routeT)aiRoute(T);
   if(ai.bridge)aiBridge(T);
   else if(!threat&&gt>ai.nextAtk){const home=army.filter(u=>u.st==='idle'||u.st==='move');if(home.length>=ai.need)aiAttack(T,home);else ai.nextAtk=gt+10}}
 function enemyBalloonNear(T){const b=T.ai.base;for(const u of units)if(u.alive&&u.type==='balloon'&&u.tribe!==T.id&&u.tribe!==wildId&&d2(b.x,b.z,u.x,u.z)<30*30)return true;return false}
@@ -1307,7 +1307,7 @@ function aiTrain(T,armyN){const S=T.stats,ai=T.ai;if(S.braves<6)return;const tar
   if(armageddon)return;const opts=[];for(const b of blds)if(b.alive&&b.done&&b.tribe===T.id&&BT[b.bt].train&&b.q<2)opts.push(b);if(!opts.length)return;
   const w=ai.airRaid?{camp:.35,range:.15,osshouse:.1,balloon:.4}:(TRIBES[T.id].pers||{}).train||{camp:.4,range:.3,osshouse:.22,balloon:.1};let tot=0;for(const b of opts)tot+=w[b.bt];let r=R()*tot,pick=opts[0];for(const b of opts){r-=w[b.bt];if(r<=0){pick=b;break}}
   if(pick.bt==='balloon'&&ai.balCap!=null){let n=0;for(const u of units)if(u.alive&&u.tribe===T.id&&u.type==='balloon')n++;for(const b of blds)if(b.alive&&b.tribe===T.id&&b.bt==='balloon')n+=b.q;if(n>=ai.balCap)return}
-  const cost=BT[pick.bt].mana,keep=ai.cutOff&&allowS('bridge')?SPK.bridge.c:0;if(T.mana>=cost+ai.res+keep){T.mana-=cost;pick.q++}}
+  const cost=BT[pick.bt].mana;if(T.mana>=cost+ai.res){T.mana-=cost;pick.q++}}
 function orderUnit(u,x,z,am,fx,fz){if(u.type==='oss'){u.rcx=wrap(x);u.rcz=wrap(z)}u.st=am?'amove':'move';setTarget(u,x,z,fx,fz);u.order=am?'amove':null;u.otx=u.tx;u.otz=u.tz;u.ofx=u.fx;u.ofz=u.fz;u.gx=u.tx;u.gz=u.tz;u.tgt=null;u.scan=0}
 function aiAttack(T,army){const ai=T.ai,base=ai.base;const foes=tribes.filter(o=>o.alive&&o.id!==T.id&&!o.wild);if(!foes.length)return;
   const others=watching?foes:foes.filter(o=>o.id!==0);let pick=(!watching&&tribes[0].alive&&(R()<ai.D.pTarget||!others.length))?tribes[0]:others[(R()*others.length)|0];
@@ -1321,7 +1321,7 @@ function aiAttack(T,army){const ai=T.ai,base=ai.base;const foes=tribes.filter(o=
     ai.wave={ids:army.map(u=>u.id),n0:army.length,tgt:pick.id,t:gt};
     if(pick.id===0&&!watching){toast(`A horn sounds from the ${T.name} lands: ${army.length} of their fighters are marching on you. Watch the map.`);sfx('horn',1)}
     const sh=T.shaman;if(sh&&sh.st==='idle'&&T.mana>150)orderUnit(sh,tgt.x,tgt.z,true);ai.nextAtk=gt+ai.int*(ai.only0?1:(.8+R()*.4));ai.need+=ai.needInc??ai.D.needInc}
-  else if(army.some(u=>u.type==='balloon')&&(ai.airRaid||!allowS('bridge')||R()<.5)){const bal=army.filter(u=>u.type==='balloon'),foot=army.filter(u=>u.type!=='balloon'&&u.type!=='oss'&&!u.inV),ids=[];
+  else if(army.some(u=>u.type==='balloon')&&(ai.airRaid||!allowS('bridge'))){const bal=army.filter(u=>u.type==='balloon'),foot=army.filter(u=>u.type!=='balloon'&&u.type!=='oss'&&!u.inV),ids=[];
     for(const v of bal){const take=foot.splice(0,UT.balloon.cap-v.pass.length);for(const u of take){u.inV=v;v.pass.push(u);u.st='idle';ids.push(u.id)}sendVehicle(v,tgt.x+(R()-.5)*4,tgt.z+(R()-.5)*4,true);ids.push(v.id)}
     ai.wave={ids,n0:ids.length,tgt:pick.id,t:gt};if(pick.id===0&&!watching){toast(`Balloons rise over the ${T.name} island: ${bal.length} of them, carrying ${ids.length-bal.length} fighters, are coming for you.`);sfx('horn',1)}ai.nextAtk=gt+ai.int*(.8+R()*.4)}
   else if(allowS('bridge')){ai.bridge={x:tgt.x,z:tgt.z,t:gt};ai.nextAtk=gt+25}else ai.nextAtk=gt+60}
@@ -1334,18 +1334,12 @@ function aiHangRaid(T,army){const ai=T.ai,oak=blds.find(b=>b.alive&&b.bt==='oak'
   toast(`The ${T.name} folk have seen your Cunning Woman hanging. ${home.length} of their fighters are running for the oak.`);sfx('horn',1)}
 function walkReach(tx,tz,sx,sz){const seen=new Uint8Array(N*N),c0=cidx(tx,tz),goal=cidx(sx,sz);if(!walk[c0])return false;seen[c0]=1;let qh=0,qt=0;bfsQ[qt++]=c0;
   while(qh<qt){const c=bfsQ[qh++];if(c===goal)return true;const x=c%N,z=(c/N)|0;for(let i=0;i<4;i++){const n=wi(z+NB[i][1])*N+wi(x+NB[i][0]);if(seen[n]||!walk[n])continue;seen[n]=1;bfsQ[qt++]=n}}return false}
-// Every half minute: can we still walk to any rival? If every land route has gone (eroded, or never there), keep mana back and
-// have the Cunning Woman raise a bridge towards the nearest rival building, so the tribe is never left sitting on its island.
-function aiRoute(T){const ai=T.ai,base=ai.base;ai.routeT=gt+30;if(armageddon||T.broken)return;let near=null,nd=1e18,reach=false;
-  for(const o of tribes){if(o.wild||o.id===T.id||!o.alive)continue;let tb=null,bd=1e18;for(const b of blds)if(b.alive&&b.tribe===o.id&&!BT[b.bt].inv&&b.bt!=='hedge'){const d=d2(base.x,base.z,b.x,b.z);if(d<bd){bd=d;tb=b}}
-    if(!tb)continue;if(walkReach(tb.x,tb.z,base.x,base.z)){reach=true;break}if(bd<nd){nd=bd;near=tb}}
-  ai.cutOff=!reach;if(reach||!near||!allowS('bridge'))return;ai.bridge={x:near.x,z:near.z,t:gt}}
-function aiBridge(T){const ai=T.ai,sh=T.shaman,br=ai.bridge,base=ai.base;if(T.tomb&&T.mana>=SPK.bridge.c&&(T.cd.bridge||0)<=gt){tryCast(T.id,'bridge',br.x,br.z,casterOf(T));ai.bridge=null;ai.nextAtk=gt+5;return}if(!sh||sh.st==='cast')return;if(gt-br.t>150){ai.bridge=null;return}
+function aiBridge(T){const ai=T.ai,canB=T.mana>=SPK.bridge.c||ai.freeBridge,sh=T.shaman,br=ai.bridge,base=ai.base;if(T.tomb&&canB&&(T.cd.bridge||0)<=gt){tryCast(T.id,'bridge',br.x,br.z,casterOf(T));ai.bridge=null;ai.nextAtk=gt+5;return}if(!sh||sh.st==='cast')return;if(gt-br.t>150){ai.bridge=null;return}
   const fb=field(base.x,base.z,false),dx=wd(br.x-base.x),dz=wd(br.z-base.z),L=Math.hypot(dx,dz)||1;let last=null;
   for(let t=0;t<=L;t+=1){const x=base.x+dx*t/L,z=base.z+dz*t/L;if(fb[cidx(x,z)]>=0)last={x,z,t};else if(last&&t-last.t>1.5)break}
   if(!last||last.t>=L-2.5){ai.bridge=null;ai.nextAtk=gt;return}
   if(d2(sh.x,sh.z,last.x,last.z)>2.5*2.5){if(sh.st!=='move')orderUnit(sh,last.x,last.z,false);return}
-  if(T.mana>=SPK.bridge.c&&(T.cd.bridge||0)<=gt){const ex=last.x+dx/L*Math.min(14,L-last.t+1),ez=last.z+dz/L*Math.min(14,L-last.t+1);sh.st='cast';sh.spell='bridge';sh.px=wrap(ex);sh.pz=wrap(ez)}}
+  if(canB&&(T.cd.bridge||0)<=gt){const ex=last.x+dx/L*Math.min(14,L-last.t+1),ez=last.z+dz/L*Math.min(14,L-last.t+1);sh.st='cast';sh.spell='bridge';sh.px=wrap(ex);sh.pz=wrap(ez)}}
 function aiQueens(T,threat){const ai=T.ai;if(gt<(ai.qT||0))return;ai.qT=gt+6;
   for(const q of units){if(!q.alive||q.type!=='queen'||q.tribe!==T.id||q.st==='enter')continue;const v=queenValue(q),risk=!!enemyNear(q.x,q.z,T.id,9);
     if(v>=TUNE.queenMax*(q.thrall?.6:.85)||(risk&&v>TUNE.queenMin*2)||(q.thrall&&gt-q.born>TUNE.queenRipen*1.5)){let best=null,bd=1e18;for(const x of blds)if(x.alive&&x.done&&x.tribe===T.id&&BT[x.bt].site&&!x.lit){const d=d2(q.x,q.z,x.x,x.z);if(d<bd){bd=d;best=x}}
