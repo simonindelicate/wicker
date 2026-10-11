@@ -1209,7 +1209,7 @@ function castSpell(ti,k,px,pz,cu){atk=ti;let sx=cu?cu.x:px,sz=cu?cu.z:pz,sy=cu?u
   case 'shield':query(grid,px,pz,4.5,u=>{if(u.tribe===ti&&u.alive&&d2(px,pz,u.x,u.z)<16)u.shield=gt+30});ring(px,pz,4,.5,.85,1);break;
   case 'ghost':for(let i=0;i<6;i++){const a=i/6*TAU,g=spawnUnit('ghost',ti,px+Math.cos(a)*1.2,pz+Math.sin(a)*1.2);g.life=gt+30;g.gx=g.x;g.gz=g.z}ring(px,pz,1.5,.8,.85,1);break;
   case 'torch':{let v=validSpot(ti,'torch',px,pz);if(v.err){for(let r=.7;r<3&&v.err;r+=.7)for(let a=0;a<8;a++){const w=validSpot(ti,'torch',px+Math.cos(a/8*TAU)*r,pz+Math.sin(a/8*TAU)*r);if(!w.err){v=w;break}}}
-    if(v.err){T.mana+=spellCost(T,'torch');T.cd.torch=0;if(ti===0)toast('The torch needs a scrap of level, open ground');break}
+    if(v.err){const T=tribes[ti];T.mana+=spellCost(T,'torch');T.cd.torch=0;if(ti===0)toast('The torch needs a scrap of level, open ground');break}
     const b=placeBuilding(ti,'torch',v,true);const y=hAt(b.x,b.z);for(let i=0;i<30;i++)PA.emit(b.x,y+2.6,b.z,(R()-.5)*2,1+R()*3,(R()-.5)*2,.8,1,.6,.15,1,.45,-1);if(ti===0)toast('A scrying torch burns. The land around it will stay in sight while it stands.');break}
   case 'bridge':{const ex=wd(px-sx),ez=wd(pz-sz),L2=ex*ex+ez*ez||1,h0=Math.max(hAt(sx,sz),.9),h1=Math.max(hAt(px,pz),.9);
     const x0=Math.floor(sx+Math.min(0,ex))-3,x1=Math.ceil(sx+Math.max(0,ex))+3,z0=Math.floor(sz+Math.min(0,ez))-3,z1=Math.ceil(sz+Math.max(0,ez))+3;
@@ -2718,7 +2718,7 @@ function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;fogK=Math.mi
     updCam(dt);updTerrain();drawEntities();drawIndicators();PA.write();PN.write();HALO.write();renderer.render(scene,camera);
     if(running&&!over&&!watching){saveT-=dt;if(saveT<=0){saveT=20;saveGame()}}
     if(running||over){drawOverlay();mmT-=dt;if(mmT<=0){mmT=.3;drawMini()}hudT-=dt;if(hudT<=0||dockDirty){hudT=.25;updHUD()}}else ctx.clearRect(0,0,cw,ch);
-  }catch(err){if(!errShown){errShown=true;console.error(err);toast('Something went wrong: '+err.message)}}
+  }catch(err){if(!errShown){errShown=true;console.error(err);const fr=String(err.stack||'').split('\n').filter(l=>/\bat\b/.test(l)).slice(0,2).map(l=>{const m=l.match(/at\s+(?:Object\.)?([\w$.]+)?\s*\(?.*?:(\d+):\d+\)?\s*$/);return m?(m[1]||'?')+':'+m[2]:''}).filter(Boolean).join(' < ');toast('Something went wrong: '+err.message+(fr?' ['+fr+']':''))}}
   requestAnimationFrame(frame)}
 resize();buildWorld();showContinue();requestAnimationFrame(frame);
 window.__ws={get HUT_TOP(){return HUT_TOP},walkReach,get world(){return world},light,memorial,get stats(){return stats},get cam(){return cam},get WS(){return WS},wsOpen,wsClose,captureDef,defFromData,merge,ORIG_UMOD,ORIG_BMOD,get UM(){return UM},get BM(){return BM},get wear(){return wear},get buntings(){return buntings},get patches(){return patches},get wells(){return wells},get units(){return units},get tribes(){return tribes},get blds(){return blds},sim,beginGame,get gt(){return gt},castSpell,tryCast,saveGame,loadGame,setSel,command,showLevel,SCEN,field,get walkA(){return walk},hAt,get water(){return water},findSpot,get allow(){return allowSets},get pass(){return pass},get swamps(){return swamps},get debris(){return debris},queenValue,invokeArma,startRitual,sendVehicle,get wildId(){return wildId},get armageddon(){return armageddon},placeBuilding,validSpot,orderMove,spawnUnit,command,get water(){return water},findSpot};
