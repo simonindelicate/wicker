@@ -276,7 +276,6 @@ details.help summary{cursor:pointer;color:var(--text);font:14px var(--f-display)
           <li>All-against-all needs an unlit wicker man, ten followers to burn and a full bar of mana. Every hut falls, and every soul walks to the Moot at the world's heart to fight to the end.</li>
           <li>Pick a spell and tap a target. Your Cunning Woman walks into range and casts. If she dies she returns at your stone circle after forty-five seconds, as long as your tribe survives.</li>
           <li>The Scrying Torch plants a burning beacon where the Cunning Woman aims it. The land around it stays in sight for as long as it stands, which makes it a lookout over a pass, a rival's door or a hollow hill. Enemies can tear it down.</li>
-          <li>If your last villager dies, a Thrall Fold offers to free every captive into the tribe, to build and breed as your own. If you have no villagers and no captives, and no Oss with a fold to bring more in, your people are ended and the game is lost, however many fighters remain.</li>
           <li>You win when every rival tribe has no followers or buildings left.</li>
         </ul>
       </details>
@@ -1499,14 +1498,7 @@ function separation(){for(const arr of grid){const n=Math.min(arr.length,90);if(
 function regrow(){let alive=0;for(const t of trees)if(t.alive)alive++;if(alive>=treeCap||!alive)return;
   for(let k=0;k<2;k++){const t=trees[(R()*trees.length)|0];if(!t||!t.alive)continue;const a=R()*TAU,r=1.2+R()*2,x=wrap(t.x+Math.cos(a)*r),z=wrap(t.z+Math.sin(a)*r),c=cidx(x,z),h=hAt(x,z);
     if(h>.8&&h<9.5&&walk[c]&&!bOcc[c]&&!(hazU[c]>gt)){trees.push({x,z,wood:TUNE.woodPerTree,alive:true,sc:.8+R()*.45,tint:.85+R()*.25,born:gt});tGridDirty=true}}}
-// Who could still raise a next generation: villagers (out or in huts), captives (penned, led or carried), or an Oss with a fold to bring wildmen to.
-function villagersLeft(ti){return units.some(u=>u.alive&&u.tribe===ti&&u.type==='brave')||blds.some(b=>b.alive&&b.tribe===ti&&b.bt==='hut'&&b.occ>0)}
-function captivesLeft(ti){let n=0;for(const b of blds)if(b.alive&&b.tribe===ti&&isHold(b))n+=b.capt.length;for(const u of units)if(u.alive&&u.tribe===ti&&(u.type==='captive'||(u.carry&&u.carry.type!=='queen')))n++;return n}
-function peopleEnded(ti){if(villagersLeft(ti)||captivesLeft(ti))return false;const fold=blds.some(b=>b.alive&&b.done&&b.tribe===ti&&b.bt==='fold'),oss=units.some(u=>u.alive&&u.tribe===ti&&u.type==='oss');return !(fold&&oss)}
-function freeCaptives(){let n=0;for(const b of blds)if(b.alive&&b.tribe===0&&isHold(b)){for(const c of b.capt){const u=spawnUnit('brave',0,b.dx+(R()-.5)*2,b.dz+(R()-.5)*2);u.think=1+R();n++}b.capt.length=0}
-  if(n){sfx('built',.8);toast(`${n} captive${n===1?' is':'s are'} freed and taken into the tribe. They will build and breed as your own.`);dockDirty=true}}
-let villLast=true;
-function checkEnd(){if(over)return;if(tribes[0]&&!watching){const v=villagersLeft(0);if(v!==villLast){villLast=v;dockDirty=true}}{const SC=scen();if(SC&&tribes[0].alive){const g=SC.goal,T=tribes[0];if((g.type==='survive'&&gt>=g.n)||(g.type==='captives'&&(T.stats.caps||0)>=g.n)||(g.type==='queen'&&(stats.queenOffered||0)>=(g.n||1))){endGame(true);return}}}if(watching){const left=tribes.filter(T=>!T.wild&&T.alive);if(left.length<=1)endWatch(left[0]);return}if(!tribes[0].alive){endGame(false);return}if(!armageddon&&gt>5&&peopleEnded(0)){endGame(false,'Your people are ended. No villagers are left to raise another generation, and the last of your folk are fighters with no hearth.');return}if(tribes.slice(1).filter(T=>!T.wild).every(T=>!T.alive))endGame(true)}
+function checkEnd(){if(over)return;{const SC=scen();if(SC&&tribes[0].alive){const g=SC.goal,T=tribes[0];if((g.type==='survive'&&gt>=g.n)||(g.type==='captives'&&(T.stats.caps||0)>=g.n)||(g.type==='queen'&&(stats.queenOffered||0)>=(g.n||1))){endGame(true);return}}}if(watching){const left=tribes.filter(T=>!T.wild&&T.alive);if(left.length<=1)endWatch(left[0]);return}if(!tribes[0].alive){endGame(false);return}if(tribes.slice(1).filter(T=>!T.wild).every(T=>!T.alive))endGame(true)}
 function spawnWild(x,z){const u=spawnUnit('wild',wildId,x,z);u.hx=u.x;u.hz=u.z;return u}
 function wildSpot(){for(let t=0;t<60;t++){const x=R()*N,z=R()*N,c=cidx(x,z);if(!pass[c])continue;let ok=true;for(const b of blds)if(b.alive&&b.tribe!==wildId&&d2(x,z,b.x,b.z)<22*22){ok=false;break}if(ok)return {x,z}}return null}
 function wildTick(){if(armageddon||gt<wildT)return;wildT=gt+TUNE.wildEvery;let n=0;for(const u of units)if(u.alive&&u.tribe===wildId)n++;if(n>=TUNE.wildMax)return;const p=wildSpot();if(!p)return;const k=2+(R()*2|0);for(let i=0;i<k;i++)spawnWild(p.x+(R()-.5)*2,p.z+(R()-.5)*2)}
@@ -2657,7 +2649,7 @@ function renderTribe(force){const T=tribes[0];if(!T)return;let h='';const b=sel.
       if(!b.lit&&!armageddon){const room=b.bt==='altar'?99:D.holdN-b.inside.length-b.sq-b.cq;
         h+=`<button class="qs go" data-act="cap" ${caps>b.cq&&room>0?'':'disabled'}><span>${caps} held · no dread</span><b>Offer a captive</b></button><button class="qs" data-act="sac" ${room>0?'':'disabled'}><span>Raises dread</span><b>Offer a villager</b></button>`;
         if(b.bt!=='altar')h+=`<button class="qs" data-act="fillc" ${caps>b.cq&&room>0?'':'disabled'}><span>Captives first</span><b>Fill it</b></button>`}}
-    if(b.done&&isHold(b)){h+=`<div class="card"><b>Captives</b><span>${b.capt.length} of ${D.hold} held here</span></div>`;if(!villagersLeft(0)&&captivesLeft(0))h+=`<button class="qs go" data-act="freeall"><span>You have no villagers left</span><b>Free every captive into the tribe</b></button>`}
+    if(b.done&&isHold(b))h+=`<div class="card"><b>Captives</b><span>${b.capt.length} of ${D.hold} held here</span></div>`;
     if(b.bt==='oak'&&b.done){const riders=units.filter(u=>u.alive&&u.type==='hunter'&&u.tribe===0).length;h=`<div class="card"><b>${D.label}</b><span>${b.awake?`The Hunt rides · ${riders} abroad · each death they cause feeds you like a captive`:b.hangUntil?`Your Cunning Woman hangs here · ${Math.ceil(b.hangUntil-gt)}s`:'Dormant. Hang your Cunning Woman here for two minutes to wake the Wild Hunt'}</span></div>`;if(!b.awake&&!b.hangUntil)h+=`<button class="qs go" data-act="hang" ${T.shaman&&!T.shaman.hanging?'':'disabled'}><span>She is gone for two minutes</span><b>Hang your Cunning Woman</b></button>`}
     if(b.bt==='tomb')h=`<div class="card"><b>${D.label}</b><span>Your Cunning Woman lies here · ${Math.ceil(b.hp)} of ${b.mhp}</span></div>`;
     if(b.done&&b.bt==='hut')h+=`<button class="qs" data-act="callout" ${b.occ?'':'disabled'}><span>Send them to work</span><b>Call villagers out</b></button>`}
@@ -2670,7 +2662,7 @@ function renderTribe(force){const T=tribes[0];if(!T)return;let h='';const b=sel.
     const guards=myUnits(u=>u.post).length,army=myUnits(u=>MIL[u.type]&&!u.post).length;
     const f5=k=>{const n=myUnits(u=>u.type===k&&!u.post&&!sel.includes(u)).length;return `<button class="qs" data-act="five:${k}" ${n?'':'disabled'}><span>nearest</span><b>+5</b></button>`};
     const fr=k=>myUnits(u=>u.type===k&&!u.post).length;h+=q('army','Army',army,army+' fighters')+q('warrior','Warriors',fr('warrior'),fr('warrior')+' ready')+f5('warrior')+q('archer','Archers',fr('archer'),fr('archer')+' ready')+f5('archer')+q('oss','Osses',fr('oss'),fr('oss')+' ready')+f5('oss')+q('guard','Guards',guards,guards+' posted');
-    const br=T.stats.outB||0;h+=q('brave','Villagers',br,br+' outside, '+(T.stats.housed||0)+' in huts');if(!villagersLeft(0)&&captivesLeft(0))h+=`<button class="qs go" data-act="freeall"><span>You have no villagers left</span><b>Free every captive into the tribe</b></button>`;
+    const br=T.stats.outB||0;h+=q('brave','Villagers',br,br+' outside, '+(T.stats.housed||0)+' in huts');
     const vn=S.balloon||0;h+=q('veh','Balloons',vn,vn+' balloons')}
   if(force||h!==lastTribeHTML){$('pTribe').innerHTML=h;lastTribeHTML=h;if(performance.now()-pulseAct.t<450){const el=$('pTribe').querySelector(`[data-act="${pulseAct.a}"]`);if(el)el.classList.add('pulse')}}}
 $('pTribe').addEventListener('click',e=>{const t=e.target.closest('[data-act]');if(!t||t.disabled)return;audio();const T=tribes[0],a=t.dataset.act;const b=sel[0];
@@ -2689,7 +2681,6 @@ $('pTribe').addEventListener('click',e=>{const t=e.target.closest('[data-act]');
   else if(a==='shaman')focusShaman();
   else if(a.startsWith('five:')){const k=a.slice(5),cand=myUnits(u=>u.type===k&&!u.post&&!sel.includes(u)).sort((p,q)=>((p.st==='idle'?0:400)+d2(p.x,p.z,cam.fx,cam.fz))-((q.st==='idle'?0:400)+d2(q.x,q.z,cam.fx,cam.fz)));
     const keep=sel.filter(u=>!u.bt&&u.tribe===0&&u.alive);setSel(keep.concat(cand.slice(0,5)));sfx('select',.4)}
-  else if(a==='freeall')freeCaptives();
   else if(a==='army')pick(u=>MIL[u.type]&&!u.post);else if(a==='guard')pick(u=>!!u.post);else if(a==='brave')pick(u=>u.type==='brave');else if(a==='veh')pick(u=>UT[u.type].veh);else pick(u=>u.type===a&&!u.post);
   renderTribe(true)});
 function centerOn(arr){let sx=0,sz=0;const r=arr[0];for(const u of arr){sx+=wd(u.x-r.x);sz+=wd(u.z-r.z)}cam.fx=wrap(r.x+sx/arr.length);cam.fz=wrap(r.z+sz/arr.length)}
@@ -2803,10 +2794,10 @@ function celebrateFrame(){const T=tribes[0];let n=0;for(const u of units){if(!u.
   for(const b of blds)if(b.alive&&b.tribe===0&&R()<.15){const y=hAt(b.x,b.z);PA.emit(b.x+(R()-.5)*2,y+1+R()*2,b.z+(R()-.5)*2,(R()-.5),2+R()*3,(R()-.5),.8,1,.5,.15,1,.6,-1)}
   cam.yaw+=.0025}
 const DIFFNAME={easy:'Easy',normal:'Normal',hard:'Hard'};
-function endGame(win,why){clearSave();$('bAgain').textContent='Play this world again';$('bNew').textContent='Choose a new world';$('bNext').hidden=true;
+function endGame(win){clearSave();$('bAgain').textContent='Play this world again';$('bNew').textContent='Choose a new world';$('bNext').hidden=true;
   {const SC=scen();if(SC){const i=settings.campaign;$('bAgain').textContent=win?'Play this level again':'Try again';$('bNew').textContent='Back to the campaign';
     if(win){if(!devMode()){const pr=campProg();pr.unlocked=Math.max(pr.unlocked,Math.min(SCEN.length-1,i+1));if(!pr.best[i]||gt<pr.best[i])pr.best[i]=Math.round(gt);if(i===SCEN.length-1)pr.complete=true;campSave(pr)}if(i<SCEN.length-1){$('bNext').hidden=false;$('bNext').textContent=`Onward: ${i+2}. ${SCEN[i+1].title}`}}}}over=true;running=false;droneLevel();sfx(win?'built':'die',1);$('endT').textContent=win?'Victory':'Defeat';
-  $('endS').textContent=why||(win?(armageddon?'The Moot is quiet. Of all the peoples who walked there, only yours walked away.':'Every rival Cunning Woman has been cast out. The world is yours to shape.'):(armageddon?'Your people fell at the Moot. The world goes on without them.':'Your tribe has been wiped from the world. The fields grow over the huts.'));
+  $('endS').textContent=win?(armageddon?'The Moot is quiet. Of all the peoples who walked there, only yours walked away.':'Every rival Cunning Woman has been cast out. The world is yours to shape.'):(armageddon?'Your people fell at the Moot. The world goes on without them.':'Your tribe has been wiped from the world. The fields grow over the huts.');
   const m=Math.floor(gt/60),s=Math.floor(gt%60);$('endStats').innerHTML=`<div><b>${DIFFNAME[settings.diff]}</b>difficulty</div><div><b>${m}:${String(s).padStart(2,'0')}</b>time</div><div><b>${stats.casts}</b>spells cast</div><div><b>${stats.killed}</b>enemies slain</div><div><b>${stats.razed}</b>buildings razed</div><div><b>${stats.burned}</b>given to the wicker</div>`;
   $('endT').textContent=win?`Victory · ${DIFFNAME[settings.diff]}`:`Defeat · ${DIFFNAME[settings.diff]}`;
   if(win)rejoice(()=>{$('end').hidden=false});else setTimeout(()=>{$('end').hidden=false},900)}
