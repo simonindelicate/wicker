@@ -450,13 +450,13 @@ const SP=[
   {k:'swamp',n:'Bog',c:300,cd:18,r:13,rad:3,s:2},
   {k:'erode',n:'Erode',c:340,cd:20,r:14,rad:4.5,s:2},
   {k:'quake',n:'Earthquake',c:450,cd:25,r:15,rad:3,s:2},
-  {k:'fire',n:'Firestorm',c:550,cd:30,r:14,rad:4.5,s:0},
-  {k:'angel',n:'Angel of Death',c:650,cd:40,r:12,rad:2,s:0},
+  {k:'fire',n:"Day o'the Stones",c:550,cd:30,r:14,rad:4.5,s:0},
+  {k:'angel',n:"St. Anthony's Fire",c:650,cd:40,r:12,rad:2,s:0},
   {k:'volcano',n:'Volcano',c:1100,cd:45,r:15,rad:8,s:2},
   {k:'arma',n:'All-against-all',c:TUNE.manaMax,cd:1,r:0,rad:0,s:0},
 ];
 const SPK={};SP.forEach(s=>SPK[s.k]=s);
-const SPDESC={torch:'Plants a burning beacon where you aim. While it stands, the land around it stays in sight. Enemies can tear it down.',blast:'Hurls a fireball that scorches and knocks people flying.',lightning:'A single bolt that kills almost anything it strikes, Cunning Women included.',swarm:'A black cloud of flies that bites and scatters enemies for ten seconds.',convert:'Turns wandering wildmen within the circle into your villagers.',shield:'Your followers in the area take far less damage for 30 seconds.',ghost:'Six illusory warriors that distract the enemy and vanish when struck.',bridge:'Raises a causeway from your Cunning Woman towards the target, across water.',flatten:'Levels a wide stretch of land, smoothing cliffs and filling shallows. Deep water is beyond it.',hypno:'Enemies in the area fight for you for 25 seconds.',whirl:'A wandering tornado that flings people and tears down buildings.',swamp:'A hidden bog your own people cross safely. Enemies cannot see it and walk straight in; it drowns them until it has claimed ten, then drains away.',erode:'Sinks the land, drowning whatever stands on it.',quake:'Splits the ground into cliffs and shakes buildings apart.',fire:'Rains fire on an area for eight seconds.',angel:'An angel hunts enemy followers for 25 seconds.',volcano:'Raises a burning mountain that destroys everything around it.',arma:'Burn ten followers in your wicker man and spend a full bar of mana. Every hut falls and every people marches to the Moot to fight to the end.'};
+const SPDESC={torch:'Plants a burning beacon where you aim. While it stands, the land around it stays in sight. Enemies can tear it down.',blast:'Hurls a fireball that scorches and knocks people flying.',lightning:'A single bolt that kills almost anything it strikes, Cunning Women included.',swarm:'A black cloud of flies that bites and scatters enemies for ten seconds.',convert:'Turns wandering wildmen within the circle into your villagers.',shield:'Your followers in the area take far less damage for 30 seconds.',ghost:'Six illusory warriors that distract the enemy and vanish when struck.',bridge:'Raises a causeway from your Cunning Woman towards the target, across water.',flatten:'Levels a wide stretch of land, smoothing cliffs and filling shallows. Deep water is beyond it.',hypno:'Enemies in the area fight for you for 25 seconds.',whirl:'A wandering tornado that flings people and tears down buildings. A building it is aimed straight at is carried away whole.',swamp:'A hidden bog your own people cross safely. Enemies cannot see it and walk straight in; it drowns them until it has claimed ten, then drains away.',erode:'Sinks the land, drowning whatever stands on it.',quake:'Splits the ground into cliffs and shakes buildings apart.',fire:'Brings down a hail of small boulders for ten seconds. Any villager struck is killed outright, and buildings are badly broken.',angel:'A green blight that drifts from victim to victim for 25 seconds. Anyone it touches is seized with fits and dies three seconds later, and it can leap to anyone near someone already burning.',volcano:'Raises a burning mountain that destroys everything around it.',arma:'Burn ten followers in your wicker man and spend a full bar of mana. Every hut falls and every people marches to the Moot to fight to the end.'};
 const ICON={
   blast:'<circle cx="12" cy="12" r="4"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l3 3M16 16l3 3M5 19l3-3M16 8l3-3"/>',
   lightning:'<path d="M13 2L5 14h6l-2 8 8-12h-6l2-8z"/>',
@@ -472,8 +472,8 @@ const ICON={
   swamp:'<path d="M2 14c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 19c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/><circle cx="8" cy="8" r="2"/><circle cx="15" cy="6" r="1.3"/>',
   erode:'<path d="M2 5h20"/><path d="M6 9l6 5 6-5M8 15l4 4 4-4"/>',
   quake:'<path d="M2 12h4l2-5 3 10 3-12 3 9 2-2h3"/>',
-  fire:'<path d="M7 3L5 8M13 2l-2 6M19 3l-2 5"/><path d="M12 22a5 5 0 0 1-5-5c0-3 3-5 3-8 2 2 3 3 3 5 1-1 1-2 1-3 2 2 3 4 3 6a5 5 0 0 1-5 5z"/>',
-  angel:'<circle cx="12" cy="5" r="2"/><path d="M12 8v6M12 10c-3-3-7-3-10-1 3 1 6 3 10 5M12 10c3-3 7-3 10-1-3 1-6 3-10 5M9 21l3-7 3 7"/>',
+  fire:'<circle cx="7" cy="18" r="3"/><circle cx="16.5" cy="15" r="2.5"/><circle cx="12" cy="8" r="2"/><path d="M5 10l1.5 3M17 6l1.5 3M10 2l1 2.5"/>',
+  angel:'<path d="M5 5h14M12 5v16"/><path d="M7 14c-1-2 0-4 1-5 0 2 1 2 1 3M17 14c1-2 0-4-1-5 0 2-1 2-1 3"/>',
   volcano:'<path d="M2 21l7-11h6l7 11z"/><path d="M12 7V3M9 6L7 4M15 6l2-2"/>',
   arma:'<path d="M12 2c3 4 6 6 6 11a6 6 0 0 1-12 0c0-5 3-7 6-11z"/><path d="M9 16h6M12 12v7"/>',
   oak:'<path d="M12 22v-9M12 13c-3-1-6 0-8-3M12 13c3-1 6 0 8-3M12 16c-2 0-4 1-6 0M12 10c0-3 2-5 1-8M12 10c-1-2-3-3-4-6"/><path d="M17 10v5"/><circle cx="17" cy="16" r="1"/>',
@@ -547,11 +547,11 @@ const SCEN=[
   me:{mana:300,wood:300,huts:3},
   intro:'Twelve go into the belly of the ram and the whole world sees it burn. Fill it with strangers and the Cunning Woman will shake the earth beneath our enemies.'},
  {title:'Hollow Hills',seed:10433,style:'continent',enemies:2,diff:'normal',fog:true,goal:{type:'conquer'},
-  tomb:true,addS:['fire'],news:['Entombment','Firestorm'],
+  tomb:true,addS:['fire'],news:['Entombment',"Day o'the Stones"],
   me:{mana:400,wood:220,huts:3},
   intro:'Out in the wilds the old hills are hollow. Walk the Cunning Woman there with twenty of the faithful and fifteen hundred mana and she will never walk again; but she will see everything, and reach everywhere.'},
  {title:"Herne's Oak",seed:11551,style:'continent',enemies:2,diff:'normal',fog:true,goal:{type:'conquer'},
-  addB:['oak'],addS:['angel'],news:["Herne's Oak",'Angel of Death'],ban:['wicker','god'],
+  addB:['oak'],addS:['angel'],news:["Herne's Oak","St. Anthony's Fire"],ban:['wicker','god'],
   me:{mana:400,wood:360,huts:3},ai:{hangRaid:true},
   intro:'In the deep wood stands the dead oak. Hang the Cunning Woman from it for two minutes and the Hunt will ride for us, and every life they take will be ours. No wicker will burn in this wood, and our rivals know what the oak means: the moment she hangs, they will come for her. Guard the tree.'},
  {title:'Three Fires',seed:12619,style:'highlands',enemies:3,diff:'normal',fog:true,goal:{type:'conquer'},
@@ -972,6 +972,11 @@ function sendVehicle(v,x,z,am){v.dest={x:wrap(x),z:wrap(z),am:!!am};
 function updUnit(u,dt){const D=UT[u.type],T=tribes[u.tribe];
   if(u.hanging){if(!u.hanging.alive){const b=u.hanging;u.hanging=null;u.inV=null;u.x=b.x;u.z=b.z;killUnit(u,null)}return}
   if(u.inV){u.x=u.inV.x;u.z=u.inV.z;return}
+  if(u.fits){if(gt>=u.fits){u.fits=0;atk=u.fitsBy;dmgUnit(u,u.type==='shaman'?120:999,null);return}
+    // paroxysms: rooted to the spot, twisting and jerking, giving off a sickly green haze
+    u.st='idle';u.tgt=null;u.order=null;u.face=(u.face||0)+(R()-.5)*2.5;if(R()<dt*6)u.swing=gt;
+    const nx=wrap(u.x+(R()-.5)*.08),nz=wrap(u.z+(R()-.5)*.08);if(walk[cidx(nx,nz)]){u.x=nx;u.z=nz}u.tx=u.x;u.tz=u.z;
+    if(R()<dt*14){const y=unitY(u);PA.emit(u.x+(R()-.5)*.4,y+.4+R()*.6,u.z+(R()-.5)*.4,(R()-.5)*.6,.6+R(),(R()-.5)*.6,.6,.55,.9,.25,.9,.35,0)}return}
   u.moving=false;
   if(u.air){u.x=wrap(u.x+u.avx*dt);u.z=wrap(u.z+u.avz*dt);u.ay+=u.avy*dt;u.avy-=20*dt;const g=hAt(u.x,u.z);
     if(u.ay<=g&&u.avy<0){u.air=false;const imp=-u.avy;if(g<-.1){killUnit(u,null);return}if(imp>11)dmgUnit(u,(imp-11)*14,null);if(u.alive){u.st='idle';u.gx=u.x;u.gz=u.z}}return}
@@ -1187,6 +1192,18 @@ function boom(x,z,r,dmg,ti,bdmg,tv,tu){atk=ti;
   for(const b of blds)if(b.alive&&b.tribe!==ti){if(Math.sqrt(d2(x,z,b.x,b.z))<r+BT[b.bt].s*.5)dmgBld(b,bdmg)}
   const y=Math.max(0,hAt(x,z));for(let i=0;i<Math.min(60,10+r*12);i++){const a=R()*TAU,sp=R()*r*2;PA.emit(x,y+.3,z,Math.cos(a)*sp,1+R()*3,Math.sin(a)*sp,.35+R()*.4,1,.45+R()*.4,.12,1,.6+R()*.6,3)}
   for(let i=0;i<8;i++)PN.emit(x+(R()-.5)*r,y+.2,z+(R()-.5)*r,(R()-.5),.8+R(),(R()-.5),1.5,.3,.27,.24,.6,1.2,-.3)}
+// The whirlwind tears the building it was aimed at clean out of the ground: it goes up in pieces and is gone.
+function whirlTake(b,ti){atk=ti;const s=BT[b.bt].s,y=hAt(b.x,b.z),col=b.bt==='hut'?0x8a6a3c:0x7a5a38;dmgBld(b,b.hp+1);if(b.alive)destroyBld(b);
+  for(let i=0;i<Math.min(16,6+s*3);i++){const a=R()*TAU,r=R()*s*.5,sp=3+R()*3;spawnDebris(i%3?STICK_G:HEAD_G,i%4?col:0x5b4632,b.x+Math.cos(a)*r,y+.5+R()*1.5,b.z+Math.sin(a)*r,-Math.sin(a)*sp+Math.cos(a)*1.5,10+R()*9,Math.cos(a)*sp+Math.sin(a)*1.5,3+R()*1.5,9)}
+  for(let i=0;i<30;i++){const a=R()*TAU,h=R()*5;PN.emit(b.x+Math.cos(a)*.8,y+h,b.z+Math.sin(a)*.8,-Math.sin(a)*4,2+R()*2,Math.cos(a)*4,1.2+R(),.42,.38,.33,.7,.9+R()*.6,-.2)}
+  cam.shake=Math.max(cam.shake,.4)}
+function stoneFall(x,z,ti){atk=ti;
+  query(grid,x,z,1.6,u=>{if(u.tribe===ti||!u.alive||UT[u.type].fly||u.inV)return;if(d2(x,z,u.x,u.z)>1.05*1.05)return;
+    if(u.type==='brave'||u.type==='wild'||u.type==='captive')dmgUnit(u,999,null);else{dmgUnit(u,45,null);if(u.alive)toss(u,x,z,2.5,4)}});
+  for(const b of blds)if(b.alive&&b.tribe!==ti&&Math.sqrt(d2(x,z,b.x,b.z))<.9+BT[b.bt].s*.5)dmgBld(b,150);
+  const t=nearestTree(x,z,1);if(t&&R()<.5)killTree(t);const y=Math.max(0,hAt(x,z));
+  for(let i=0;i<10;i++){const a=R()*TAU,sp=1+R()*2;PN.emit(x,y+.2,z,Math.cos(a)*sp,.6+R()*1.2,Math.sin(a)*sp,.9+R()*.6,.42,.38,.33,.75,.7+R()*.5,-.5)}
+  cam.shake=Math.max(cam.shake,.12);if(R()<.35)sfx('boom',.25,x,z)}
 function forVerts(x,z,r,fn){const x0=Math.floor(x-r),x1=Math.ceil(x+r),z0=Math.floor(z-r),z1=Math.ceil(z+r);
   for(let vz=z0;vz<=z1;vz++)for(let vx=x0;vx<=x1;vx++){const dx=vx-x,dz=vz-z,d=Math.hypot(dx,dz);if(d>r)continue;fn(wi(vz)*N+wi(vx),d)}
   return [x0,z0,x1,z1]}
@@ -1218,7 +1235,9 @@ function castSpell(ti,k,px,pz,cu){atk=ti;let sx=cu?cu.x:px,sz=cu?cu.z:pz,sy=cu?u
     postTerrain(x0,z0,x1,z1);for(let i=0;i<30;i++){const t=R();dust(sx+ex*t,sz+ez*t)}cam.shake=Math.max(cam.shake,.15);break}
   case 'flatten':{let s=0,n=0;forVerts(px,pz,7,c=>{if(H[c]>-1.2){s+=H[c];n++}});let tg=n?s/n:.8;if(tg<.4)tg=.8;const bb=forVerts(px,pz,7,(c,d)=>{if(H[c]>-1.2)H[c]=lerp(H[c],tg,1-sstep(5,7,d))});postTerrain(...bb);for(let i=0;i<34;i++)dust(px+(R()-.5)*12,pz+(R()-.5)*12);break}
   case 'hypno':query(grid,px,pz,3.5,u=>{if(u.tribe!==ti&&u.alive&&u.type!=='shaman'&&!UT[u.type].veh&&u.type!=='ghost'&&d2(px,pz,u.x,u.z)<9){const o=u.hyp?u.hyp.orig:u.tribe;convertUnit(u,ti);u.hyp={orig:o,until:gt+25}}});ring(px,pz,3,.85,.5,1);break;
-  case 'whirl':effects.push({x:px,z:pz,a:R()*TAU,t:12,up(e,dt){e.t-=dt;e.a+=(R()-.5)*dt*2;e.x=wrap(e.x+Math.cos(e.a)*2.2*dt);e.z=wrap(e.z+Math.sin(e.a)*2.2*dt);const y=Math.max(0,hAt(e.x,e.z));
+  case 'whirl':{let aim=null,ad=1e9;for(const b of blds){if(!b.alive||b.tribe===ti||BT[b.bt].inv||b.bt==='tomb')continue;const d=Math.sqrt(d2(px,pz,b.x,b.z));if(d<BT[b.bt].s*.6+.4&&d<ad){ad=d;aim=b}}
+    if(aim)whirlTake(aim,ti)}
+    effects.push({x:px,z:pz,a:R()*TAU,t:12,up(e,dt){e.t-=dt;e.a+=(R()-.5)*dt*2;e.x=wrap(e.x+Math.cos(e.a)*2.2*dt);e.z=wrap(e.z+Math.sin(e.a)*2.2*dt);const y=Math.max(0,hAt(e.x,e.z));
       for(let i=0;i<7;i++){const hh=R()*6,r=.25+hh*.22,a=gt*9+R()*TAU;PN.emit(e.x+Math.cos(a)*r,y+hh,e.z+Math.sin(a)*r,-Math.sin(a)*3,.5,Math.cos(a)*3,.35,.55,.52,.48,.55,.5+hh*.08,0)}
       query(grid,e.x,e.z,2.2,u=>{if(u.tribe===ti||!u.alive||u.air)return;if(d2(e.x,e.z,u.x,u.z)>1.8*1.8)return;if(UT[u.type].veh)dmgUnit(u,40*dt,null);else{u.ay=hAt(u.x,u.z);toss(u,e.x,e.z,3+R()*3,9+R()*5);dmgUnit(u,8,null)}});
       for(const b of blds)if(b.alive&&b.tribe!==ti&&Math.sqrt(d2(e.x,e.z,b.x,b.z))<2.3+BT[b.bt].s*.3)dmgBld(b,140*dt);
@@ -1233,17 +1252,22 @@ function castSpell(ti,k,px,pz,cu){atk=ti;let sx=cu?cu.x:px,sz=cu?cu.z:pz,sy=cu?u
     for(const u of units)if(u.alive&&!u.inV&&u.tribe!==ti&&near(u.x,u.z,3)){toss(u,u.x+(R()-.5),u.z+(R()-.5),2,5+R()*3);dmgUnit(u,15,null)}
     for(const t of trees)if(t.alive&&near(t.x,t.z,2)&&R()<.7)killTree(t);
     postTerrain(bx0,bz0,bx1,bz1);cam.shake=Math.max(cam.shake,.9);sfx('quake',1,px,pz);break}
-  case 'fire':effects.push({x:px,z:pz,t:8,tick:0,up(e,dt){e.t-=dt;e.tick-=dt;while(e.tick<=0){e.tick+=.09;const a=R()*TAU,r=Math.sqrt(R())*4.5,x=e.x+Math.cos(a)*r,z=e.z+Math.sin(a)*r;
-      proj({kind:'fireball',sx:x+3,sz:z-2,sy:hAt(x,z)+16,tx:x,tz:z,ty:Math.max(0,hAt(x,z)),dur:.7,arc:0,ti,onHit:(x,z)=>{boom(x,z,1.3,32,ti,55,4,5);const t=nearestTree(x,z,1.2);if(t)killTree(t);if(R()<.3)sfx('blast',.3,x,z)}})}
+  // Day o'the Stones: a hail of small boulders. Any villager struck dies outright; other people are bruised and knocked down; buildings are badly broken.
+  case 'fire':effects.push({x:px,z:pz,t:10,tick:0,up(e,dt){e.t-=dt;e.tick-=dt;while(e.tick<=0){e.tick+=.13;const a=R()*TAU,r=Math.sqrt(R())*4.5,x=e.x+Math.cos(a)*r,z=e.z+Math.sin(a)*r;
+      proj({kind:'boulder',sx:x+2.5,sz:z-1.5,sy:hAt(x,z)+18,tx:x,tz:z,ty:Math.max(0,hAt(x,z))+.2,dur:.8,arc:0,ti,sc:.7+R()*.6,onHit:(x,z)=>stoneFall(x,z,ti)})}
       return e.t>0}});break;
-  case 'angel':effects.push({x:sx,z:sz,y:(cu?unitY(cu):hAt(px,pz))+3,t:25,tgt:null,rest:0,up(e,dt){e.t-=dt;e.rest-=dt;
-      if((!e.tgt||!e.tgt.alive||e.tgt.tribe===ti||e.tgt.inV)&&e.rest<=0){let best=null,bd=14*14;query(grid,e.x,e.z,14,u=>{if(u.tribe===ti||!u.alive||u.inV||u.type==='ghost')return;const dd=d2(e.x,e.z,u.x,u.z);if(dd<bd){bd=dd;best=u}});e.tgt=best}
+  // St. Anthony's Fire: a slow green blight. Whoever it touches falls into fits and dies three seconds later; it can reach anyone near someone already in fits.
+  case 'angel':effects.push({x:sx,z:sz,y:(cu?unitY(cu):hAt(px,pz))+3,t:25,tgt:null,rest:0,inf:[],up(e,dt){e.t-=dt;e.rest-=dt;
+      const ok=u=>u.tribe!==ti&&u.alive&&!u.inV&&u.type!=='ghost'&&!u.fits;
+      if((!e.tgt||!ok(e.tgt))&&e.rest<=0){let best=null,bd=1e18;const look=(x,z,r)=>query(grid,x,z,r,u=>{if(!ok(u)||d2(x,z,u.x,u.z)>r*r)return;const dd=d2(e.x,e.z,u.x,u.z);if(dd<bd){bd=dd;best=u}});
+        look(e.x,e.z,14);e.inf=e.inf.filter(v=>v.alive&&v.fits);for(const v of e.inf)look(v.x,v.z,5);e.tgt=best}
       let ty=Math.max(0,hAt(e.x,e.z))+4;if(e.tgt){const t=e.tgt,dx=wd(t.x-e.x),dz=wd(t.z-e.z),dd=Math.hypot(dx,dz);ty=unitY(t)+.6;
-        const st=Math.min(dd,8*dt);e.x=wrap(e.x+dx/(dd||1)*st);e.z=wrap(e.z+dz/(dd||1)*st);
-        if(dd<.5&&Math.abs(e.y-ty)<.8){dmgUnit(t,t.type==='shaman'?120:999,null);e.tgt=null;e.rest=.5;for(let i=0;i<12;i++)PA.emit(e.x,e.y,e.z,(R()-.5)*3,R()*3,(R()-.5)*3,.5,1,.95,.8,1,.4,0)}}
+        const st=Math.min(dd,4*dt);e.x=wrap(e.x+dx/(dd||1)*st);e.z=wrap(e.z+dz/(dd||1)*st);
+        if(dd<.6&&Math.abs(e.y-ty)<.9){t.fits=gt+3;t.fitsBy=ti;e.inf.push(t);if(t.sel)deselect(t);e.tgt=null;e.rest=.3;for(let i=0;i<14;i++)PA.emit(e.x,e.y,e.z,(R()-.5)*3,R()*2,(R()-.5)*3,.6,.6,.95,.3,1,.4,0)}}
       e.y+=(ty-e.y)*Math.min(1,dt*3);
-      for(let i=0;i<4;i++)PA.emit(e.x+(R()-.5)*.6,e.y+(R()-.5)*.6,e.z+(R()-.5)*.6,(R()-.5)*.5,.3,(R()-.5)*.5,.6,1,.97,.85,1,.45,0);
-      PA.emit(e.x,e.y,e.z,0,0,0,.08,1,1,1,1,1.6,0);
+      for(let i=0;i<4;i++)PA.emit(e.x+(R()-.5)*.7,e.y+(R()-.5)*.7,e.z+(R()-.5)*.7,(R()-.5)*.4,.25,(R()-.5)*.4,.8,.55,.9,.25,.9,.5,0);
+      if(R()<dt*12)PN.emit(e.x+(R()-.5)*.6,e.y-.3,e.z+(R()-.5)*.6,(R()-.5)*.3,-.2,(R()-.5)*.3,1.6,.32,.45,.12,.55,.9,0);
+      PA.emit(e.x,e.y,e.z,0,0,0,.08,.75,1,.45,1,1.4,0);
       return e.t>0}});sfx('cast',1,px,pz);break;
   case 'volcano':{const bb=forVerts(px,pz,7,(c,d)=>{H[c]+=10*Math.pow(1-d/7,1.5);if(d<1.3)H[c]-=2.5});
     for(const b of blds)if(b.alive&&b.tribe!==ti&&Math.sqrt(d2(px,pz,b.x,b.z))<8+BT[b.bt].s*.4)destroyBld(b);
@@ -1265,6 +1289,7 @@ function proj(p){p.t=0;projs.push(p)}
 function updProjs(dt){for(let i=projs.length-1;i>=0;i--){const p=projs[i];p.t+=dt;const f=Math.min(1,p.t/p.dur);const ex=wd(p.tx-p.sx),ez=wd(p.tz-p.sz);
   const x=p.sx+ex*f,z=p.sz+ez*f,y=lerp(p.sy,p.ty,f)+(p.arc||0)*4*f*(1-f);
   if(p.kind==='arrow'){PA.emit(x,y,z,0,0,0,.18,1,.6,.2,1,.22,0)}
+  else if(p.kind==='boulder'){if(R()<.5)PN.emit(x,y,z,0,.2,0,.5,.45,.42,.38,.35,.35,0)}
   else{for(let k=0;k<2;k++)PA.emit(x+(R()-.5)*.2,y+(R()-.5)*.2,z+(R()-.5)*.2,(R()-.5)*.5,(R()-.5)*.5,(R()-.5)*.5,.3,1,.55,.15,1,p.kind==='blast'?.9:.7,0);if(R()<.4)PN.emit(x,y,z,0,.3,0,.8,.25,.22,.2,.5,.6,-.2)}
   if(f>=1){projs.splice(i,1);if(p.kind==='arrow'){const t=p.tgt;if(t&&t.alive&&d2(x,z,t.x,t.z)<(t.bt?BT[t.bt].s*BT[t.bt].s*.3:1.1))hit(t,p.dmg*(0.85+R()*.3),p.src&&p.src.alive?p.src:null);for(let k=0;k<4;k++)PA.emit(x,y,z,(R()-.5)*2,R()*2,(R()-.5)*2,.25,1,.6,.2,1,.25,4)}else if(p.onHit)p.onHit(wrap(p.tx),wrap(p.tz))}}}
 
@@ -2087,6 +2112,7 @@ const SIL=inst(merge([P(cyl(.09,.15,.42,5),0xffffff,0,.21,0),P(new C.SphereGeome
 const CM=inst(merge([P(cyl(.1,.1,.42,5),0xa59d8c,0,0,0,0,0,Math.PI/2),P(new C.SphereGeometry(.1,6,5),0xc49a7c,.26,.02,0)]),matF,240);
 const FLAG=(()=>{const g=new C.BufferGeometry(),v=new Float32Array([-.06,0,0,.06,0,0,0,-.14,0]);g.setAttribute('position',new C.BufferAttribute(v,3));g.computeVertexNormals();return inst(g,new C.MeshLambertMaterial({color:0xffffff,side:C.DoubleSide}),900)})();
 const CORD=inst(new C.BoxGeometry(1,.02,.02),new C.MeshBasicMaterial({color:0xffffff}),900);
+const BOULDER=inst(merge([P(new C.DodecahedronGeometry(.3,0),0x7d776b)]),matF,90);
 const PEBBLE=inst(merge([P(new C.DodecahedronGeometry(.13,0),0xb9b3a4,0,.05,0)]),matF,500);
 const STAKE=inst(merge([P(cyl(.03,.035,.9,4),0x6b4a2c,0,.45,0)]),matF,400);
 const RIB=(()=>{const g=new C.BoxGeometry(.04,.32,.012);g.translate(0,-.16,0);return inst(g,new C.MeshLambertMaterial({color:0xffffff}),900)})();
@@ -2172,6 +2198,8 @@ function drawEntities(){
     for(let k=0;k<n&&sn<200;k++){let px,py,pz;if(god){px=((k%4)-1.5)*.55;pz=(Math.floor(k/4)-1)*.5;py=3.68}else{px=((k%3)-1)*.32;pz=k<3?.08:-.12;py=1.78+(k<3?0:.35)}
       const sway=Math.sin(gt*(lit?9:2)+k*1.7)*(lit?.12:.04);place(SIL,sn,rx+px+sway,by+py,rz+pz,k,.85);const gl=lit?.2+burnK*.8*(.6+.4*Math.sin(gt*11+k)):.15;_c.setRGB(gl,gl*.45,gl*.15);SIL.setColorAt(sn,_c);sn++}}
     fin(SIL,sn)}
+  {let bn=0;for(const p of projs){if(p.kind!=='boulder'||bn>=90)continue;const f=Math.min(1,p.t/p.dur),x=wrap(p.sx+wd(p.tx-p.sx)*f),z=wrap(p.sz+wd(p.tz-p.sz)*f),y=lerp(p.sy,p.ty,f);
+      const rx=wd(x-cam.fx),rz=wd(z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2||!seenAt(x,z))continue;place(BOULDER,bn,rx,y-r2*K,rz,p.t*7+p.sc*9,p.sc);_c.setRGB(1,1,1);BOULDER.setColorAt(bn,_c);bn++}fin(BOULDER,bn)}
   drawDebris();
   fin(CM,cn);
   for(const k in UM){fin(UM[k].t,UM[k].n);fin(UM[k].f,UM[k].n)}

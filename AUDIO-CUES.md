@@ -71,13 +71,15 @@ Each cue has an ID that will become its filename (for example `horn.ogg`). Where
 | `flatten` | Flatten | 2500 | A long, low settling rumble. |
 | `hypno` | Hypnotise | 2000 | A wavering, detuned chant. |
 | `whirl` | Whirlwind | 8000 loop | Roaring air. Loops while the tornado wanders. |
+| `whirl-take` | The whirlwind tearing a building out whole | 2500 | Timber wrenched apart and sucked upward. |
 | `bog` | Bog laid | 2000 | A wet gulp. It should be quiet, because the bog is meant to be hidden. |
 | `bog-claim` | Someone drowning in a bog | 1200 | ×3. A struggle and a sucking under. |
 | `bog-drain` | A bog using up its ten lives and draining away | 1500 | |
 | `erode` | Erode | 2500 | Ground sinking, water rushing in. |
 | `quake` | Earthquake | 4000 | The deepest sound in the game. |
-| `fire` | Firestorm | 8000 loop | Crackle with intermittent impacts. |
-| `angel` | Angel of Death present | 10000 loop | High, keening and unsettling. |
+| `fire` | Day o'the Stones | 10000 loop | A hail of falling stones: whistling, then heavy thuds and splintering timber. Loops for the spell's ten seconds. |
+| `angel` | St. Anthony's Fire present | 10000 loop | A low, feverish whispering hum, sickly rather than holy. |
+| `fits` | Someone seized by St. Anthony's Fire | 1200 | ×3. Choking, retching gasps. They die three seconds later. |
 | `volcano` | Volcano rising | 6000 | Rumble building to an eruption. |
 | `reincarnate` | The Cunning Woman returning after death | 2500 | A breath drawn in. |
 
