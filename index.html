@@ -876,7 +876,7 @@ function sacrifice(u,b){const T=tribes[u.tribe];if(b.claim===u)b.claim=null;cons
   if(b.lit)return;
   if(b.bt==='altar'){const v=Math.round(offerValue(b,cap,wild)*T.manaMult);T.mana=Math.min(MANA_MAX,T.mana+v);if(!cap)T.dread=Math.min(100,T.dread+DREAD.altar);b.busy=gt+2.5;
     const y=hAt(b.x,b.z);for(let i=0;i<18;i++)PA.emit(b.x+(R()-.5)*.6,y+.9,b.z+(R()-.5)*.6,(R()-.5)*1.2,1+R()*2,(R()-.5)*1.2,.7,.75,.08,.06,1,.4,2);
-    b.mem=(b.mem||0)+1;sfx('die',.5,b.x,b.z);if(u.tribe===0){toast(`${cap?'A captive':'A villager'} is given to the grove. +${v} mana`);stats.burned++}return}
+    b.mem=(b.mem||0)+1;sfx('die',.5,b.x,b.z);if(u.tribe===0){if(!u.harvest)toast(`${cap?'A captive':'A villager'} is given to the grove. +${v} mana`);stats.burned++}return}
   b.inside.push({cap,wild});if(u.tribe===0)stats.burned++;dockDirty=true;
   if(b.inside.length>=BT[b.bt].holdN)light(b)}
 function memorial(kind,x,z,tribe){const M=stats.mem||(stats.mem=[]);if(M.length>=60)return;
@@ -1321,11 +1321,31 @@ function aiThink(T){const ai=T.ai,S=T.stats,base=ai.base,sh=T.shaman;if(T.broken
   if(sh&&sh.st==='idle'&&!threat){const e=enemyNear(sh.x,sh.z,T.id,15);if(e)ai.calm=gt;else if(gt-ai.calm>20&&d2(sh.x,sh.z,base.x,base.z)>18*18){orderUnit(sh,base.x+(R()-.5)*4,base.z+2+R()*3,false)}}
   if(gt>ai.siege){ai.siege=gt+5;for(const u of army)if(u.st==='idle'&&d2(u.x,u.z,base.x,base.z)>25*25){const b=nearestEnemyBld(u.x,u.z,T.id,26);if(b&&!(ai.only0&&b.tribe!==0&&!watching))orderUnit(u,b.x,b.z,true);else if(!enemyNear(u.x,u.z,T.id,12))orderUnit(u,base.x+(R()-.5)*8,base.z+(R()-.5)*8,false)}}
   if(ai.wave){const set=new Set(ai.wave.ids),alive=units.filter(u=>u.alive&&set.has(u.id)&&u.tribe===T.id);
-    if((ai.wave.n0>=4&&alive.length<ai.wave.n0*TUNE.breakAt)||gt-ai.wave.t>200||!alive.length){if(alive.length&&gt-ai.wave.t<=200){for(const u of alive){orderUnit(u,base.x+(R()-.5)*6,base.z+(R()-.5)*6,false);u.raidT=0}
-        if(ai.wave.tgt===0&&!watching)toast(`The ${T.name} attack breaks. Their fighters are running for home.`)}else for(const u of alive)u.raidT=0;ai.wave=null}}
+    if((ai.wave.n0>=4&&alive.length<ai.wave.n0*TUNE.breakAt)||gt-ai.wave.t>200||!alive.length){if(alive.length&&gt-ai.wave.t<=200){
+        // the attack breaks: whoever is still on the defenders' ground is cut off and dragged to their altar; the rest run home, shamed
+        const tk=harvestBroken(T,alive,ai.wave.tgt);for(const u of alive)if(u.alive){orderUnit(u,base.x+(R()-.5)*6,base.z+(R()-.5)*6,false);u.raidT=0}
+        const ni=ai.needInc??ai.D.needInc;ai.need0=ai.need0||Math.max(3,Math.round(ai.D.need));ai.need=Math.max(ai.need0,ai.need-2*ni);ai.nextAtk=Math.max(ai.nextAtk,gt+ai.int*1.5);
+        if(ai.wave.tgt===0&&!watching)toast(`The ${T.name} attack breaks.${!tk.n?'':tk.where==='ground'?` ${tk.n} of their fighters are cut off and put to death where they stand; their blood goes into the earth.`:` ${tk.n} of their fighters are cut off and dragged to your ${tk.where}.`} The rest run for home, shamed; it will be a while before they come again.`)}
+      else for(const u of alive)u.raidT=0;ai.wave=null}}
   if(ai.hangRaid&&!watching)aiHangRaid(T,army);
   if(ai.bridge)aiBridge(T);
   else if(!threat&&gt>ai.nextAtk){const home=army.filter(u=>u.st==='idle'||u.st==='move');if(home.length>=ai.need)aiAttack(T,home);else ai.nextAtk=gt+10}}
+// Broken raiders still on the defenders' ground are seized and led off to be offered: to the nearest altar, else a wicker figure with room,
+// else their blood goes straight into the ground. Nearby villagers go along to drag them. No dread: they are strangers.
+function harvestBroken(T,alive,di){const Dt=tribes[di],out={n:0,where:'altar'};if(!Dt||!Dt.alive||Dt.wild||armageddon)return out;
+  const own=blds.filter(b=>b.alive&&b.tribe===di&&b.bt!=='hedge');if(!own.length)return out;
+  const onGround=u=>own.some(b=>d2(u.x,u.z,b.x,b.z)<26*26);const walking=b=>units.filter(c=>c.alive&&c.st==='enter'&&c.bld===b&&c.purpose==='sac').length;
+  const used=new Set();
+  for(const u of alive){if(!u.alive||u.inV||UT[u.type].veh||!onGround(u))continue;
+    let dest=null,bd=1e18;for(const b of own)if(b.done&&!b.lit&&b.bt==='altar'){const d=d2(u.x,u.z,b.x,b.z);if(d<bd){bd=d;dest=b}}
+    if(!dest)for(const b of own)if(b.done&&!b.lit&&(b.bt==='wicker'||b.bt==='god')&&b.inside.length+walking(b)<BT[b.bt].holdN){const d=d2(u.x,u.z,b.x,b.z);if(d<bd){bd=d;dest=b}}
+    if(u.carry)releaseCarry(u);if(u.sel)deselect(u);const x=u.x,z=u.z;removeUnit(u);out.n++;
+    if(!dest){const v=Math.round(YIELD.altar[1]*Dt.manaMult);Dt.mana=Math.min(MANA_MAX,Dt.mana+v);const y=hAt(x,z);for(let i=0;i<14;i++)PA.emit(x,y+.4,z,(R()-.5)*1.5,1+R()*2,(R()-.5)*1.5,.7,.75,.08,.06,1,.4,2);out.where='ground';continue}
+    out.where=dest.bt==='altar'?'altar':BT[dest.bt].label.toLowerCase();
+    const c=spawnUnit('captive',di,x,z);c.capt={tribe:T.id};c.harvest=true;c.st='enter';c.bld=dest;c.purpose='sac';setTarget(c,dest.dx,dest.dz);
+    let br=null,bb=18*18;for(const v of units)if(v.alive&&v.tribe===di&&v.type==='brave'&&!v.inV&&!used.has(v)&&(v.st==='idle'||v.st==='gather')){const d=d2(x,z,v.x,v.z);if(d<bb){bb=d;br=v}}
+    if(br){used.add(br);orderUnit(br,dest.dx+(R()-.5)*2,dest.dz+(R()-.5)*2,false);br.cmd=false}}
+  return out}
 function enemyBalloonNear(T){const b=T.ai.base;for(const u of units)if(u.alive&&u.type==='balloon'&&u.tribe!==T.id&&u.tribe!==wildId&&d2(b.x,b.z,u.x,u.z)<30*30)return true;return false}
 function aiBuild(T){const S=T.stats,ai=T.ai;if(S.sites>=2)return;let want=null;const realB=S.b;if(allowSets){S.b=Object.assign({},realB);for(const t of BUILDABLE)if(!allowB(t))S.b[t]=99}
   const capped=T.capMax&&TUNE.popBase+S.huts*TUNE.popPerHut>=T.capMax;
