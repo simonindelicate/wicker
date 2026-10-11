@@ -208,7 +208,7 @@ details.help summary{cursor:pointer;color:var(--text);font:14px var(--f-display)
     <div id="wsIO" hidden><p class="wsHint" id="wsIOh"></p><textarea id="wsIOt" spellcheck="false"></textarea><div class="wsBar wsSmall"><button class="btn" id="wsIOcopy">Copy</button><button class="btn" id="wsIOapply">Use these models</button><button class="btn" id="wsIOclose">Close</button></div></div>
   </div>
   <footer id="dock" hidden>
-    <div id="selLine"><span id="selT">Nothing selected</span><button class="btn" id="selX" hidden>Clear</button></div>
+    <div id="selLine"><span id="selT">Nothing selected</span><button class="btn" id="selPost" hidden title="Post the selected warriors and archers to hold a spot">Post</button><button class="btn" id="selX" hidden>Clear</button></div>
     <div id="tabs" role="tablist">
       <button data-tab="spells" class="on" role="tab">Spells</button>
       <button data-tab="build" role="tab">Build</button>
@@ -264,7 +264,7 @@ details.help summary{cursor:pointer;color:var(--text);font:14px var(--f-display)
           <li>Your Bog is a hidden trap: your own people cross it safely, but enemies cannot see it and march straight in. It lasts until it has drowned ten of them. Fighters near their own buildings also take slightly less damage.</li>
           <li>When a rival army sets out for you, a horn sounds and the marching column shows on your map through the fog. An attack that loses half its strength breaks and runs home.</li>
           <li>The Rook Tree is a lookout in a dead tree. It sees a long way and hurls fire-pots at any enemy balloon in range, bringing one down in three hits. It ignores everything on the ground.</li>
-          <li>Send fighters to your oak, your tomb or a hollow hill and they are posted there as guards. Guards stay put and are left out when you select your army.</li>
+          <li>To hold ground, select warriors or archers (the +5 buttons on the Tribe tab add the five nearest of a kind) and press Post on the selection line, then tap a spot. They form up round a banner, fight whatever comes near without chasing far, and take less harm while they stand at their post. Sending fighters to your oak, your tomb or a hollow hill posts them there the same way. Guards are left out when you select your army; give them any other order to take them off their post.</li>
           <li>A tribe that loses every building, trained unit and its Cunning Woman is finished: its last villagers are dragged off as captives by whoever broke it. A tribe whose people are all dead hands its empty buildings to the conqueror, with an offering of mana.</li>
           <li>Ground where a building has been razed is salted: for three minutes its old owner cannot build there. A rival that falls to a fifth of its greatest size is broken. Its people gather at their stone circle where everyone can see them, its halls fall in and its Cunning Woman does not return; destroy its last fighters and the rest are yours.</li>
           <li>Tap a rival's marker at the top of the screen to look at where its people are. Tap again to move on to the next group.</li>
@@ -387,7 +387,9 @@ const TUNE={
   queenMin:150,queenMax:1500,queenRipen:600,queenFrenzy:60,  // a May Queen's offering grows from min to max over queenRipen seconds
   swampLives:10,             // a Swamp lasts until it has drowned this many enemies
   hedgeWood:5,hedgeMax:16,   // wood per hedge cell; longest hedge laid in one go
-  hearth:.08,                // damage reduction for fighters near their own buildings (0.08 = 8%)
+  hearth:.08,
+  guardWard:.25,             // damage reduction for posted guards standing at their post (replaces hearth there)
+  guardLeash:9,              // how far posted guards will chase before going back to their post                // damage reduction for fighters near their own buildings (0.08 = 8%)
   breakAt:.5,                // an attack wave turns for home once it has lost this share of its strength
   boltEvery:60,              // the AI aims Lightning at your shaman at most this often (seconds)
   torchSight:15,                    // Scrying Torch: how far around it the fog stays lifted
@@ -606,7 +608,7 @@ let hedgeA=new Uint8Array(N*N),hazGrp=new Int32Array(N*N),swamps={},swampSeq=1,h
 let pulseAct={a:'',t:-1e9},HUNT_V=TUNE.huntKillMana,spellTgt=null,watching=false,fogK=1,dreadToastT=-99,escToastT=-99,wildId=-1,armageddon=false,moot={x:64,z:64},fogOn=false,vis=new Float32Array(N*N).fill(1),visNow=new Uint8Array(N*N),seen=new Uint8Array(N*N),stones=[],soundOn=true,wildT=0,fogT=0;
 let gt=0,tver=0,nextId=1,treeCap=0;
 const cam={fx:64,fz:64,yaw:.7,dist:34,fh:2,shake:0,orbit:false};
-let sel=[],armed=null,placing=null,boxMode=false;
+let sel=[],armed=null,placing=null,boxMode=false,posting=false,banners=[];
 let running=false,paused=false,speed=1,inMenu=true,over=false,stats={casts:0,lost:0,killed:0,razed:0,burned:0,taken:0};
 const settings={campaign:null,enemies:2,style:'islands',diff:'normal',fog:1,seed:(Math.random()*1e6)|0};
 let world=null;
@@ -810,7 +812,7 @@ function canHit(u,t){if(t.bt)return !BT[t.bt].inv;if(UT[t.type].fly)return !!UT[
 function resumeAfter(u){u.tgt=null;if(u.order==='amove'){u.st='amove';setTarget(u,u.otx,u.otz,u.ofx,u.ofz)}else{u.st='idle';u.gx=u.x;u.gz=u.z}}
 let atk=-1;
 function noteHit(ti){const a=atk;if(a>=0&&a!==ti&&tribes[ti]&&tribes[a]&&!tribes[a].wild)tribes[ti].lastHitBy=a}
-function dmgUnit(t,dmg,src){if(!t.alive)return;if(src&&src.tribe!==undefined)atk=src.tribe;noteHit(t.tribe);if(t.shield>gt)dmg*=.3;if(t.tribe<8&&homeBits[bkt(t.x,t.z)]&(1<<t.tribe))dmg*=1-TUNE.hearth;if(t.type==='ghost')dmg=999;t.hp-=dmg;t.hitT=gt;
+function dmgUnit(t,dmg,src){if(!t.alive)return;if(src&&src.tribe!==undefined)atk=src.tribe;noteHit(t.tribe);if(t.shield>gt)dmg*=.3;{let red=t.tribe<8&&homeBits[bkt(t.x,t.z)]&(1<<t.tribe)?TUNE.hearth:0;if(t.post&&!t.postUnit&&d2(t.x,t.z,t.gx,t.gz)<4*4)red=Math.max(red,TUNE.guardWard);dmg*=1-red}if(t.type==='ghost')dmg=999;t.hp-=dmg;t.hitT=gt;
   if(src&&src.alive&&!src.bt){t.lastAtk=src;t.lastAtkT=gt}
   if(t.hp<=0){killUnit(t,src);return}
   if(src&&src.alive&&!src.bt&&(!UT[t.type].veh||UT[t.type].bomb)&&t.type!=='brave'&&t.type!=='wild'&&t.type!=='queen'&&t.type!=='captive'&&(t.st==='idle'||(t.st==='move'&&t.tribe!==0))&&canHit(t,src)&&!(t.type==='hunter'&&src.type==='shaman'))attack(t,src)}
@@ -1010,7 +1012,7 @@ function updUnit(u,dt){const D=UT[u.type],T=tribes[u.tribe];
     if(!t||!t.alive||t.tribe===u.tribe||t.inV||(!t.bt&&!canHit(u,t))||(!t.bt&&!u.cmdAtk&&beingTaken(t,u.tribe))){resumeAfter(u);break}
     const isB=!!t.bt,rr=(D.rng||1)+(isB?BT[t.bt].s*.5:.3),dd=Math.sqrt(d2(u.x,u.z,t.x,t.z));
     if(dd<=rr){u.face=Math.atan2(wd(t.x-u.x),wd(t.z-u.z));if(u.cd<=0){u.cd=D.cd*(T.frenzyUntil>gt?TUNE.frenzyAttack:1);if(D.bomb)fireCharge(u,t);else if(D.ranged)fireArrow(u,t);else{hit(t,D.dmg*(0.8+R()*.4),u);u.swing=gt;if(R()<.5)sfx('hit',.25,u.x,u.z)}}}
-    else{if(!u.order&&!u.cmdAtk&&d2(u.gx,u.gz,u.x,u.z)>18*18){resumeAfter(u);break}
+    else{if(!u.order&&!u.cmdAtk&&d2(u.gx,u.gz,u.x,u.z)>(u.post?TUNE.guardLeash*TUNE.guardLeash:18*18)){resumeAfter(u);break}
       if(isB){const a=Math.atan2(wd(u.z-t.z),wd(u.x-t.x));setTarget(u,t.x+Math.cos(a)*(rr-.2),t.z+Math.sin(a)*(rr-.2),t.x,t.z)}else{u.tx=t.x;u.tz=t.z;u.fx=t.x;u.fz=t.z}
       if(moveStep(u,dt)===2)resumeAfter(u)}
     break}
@@ -1089,6 +1091,7 @@ function idleThink(u,D,T){if(D.veh&&!D.bomb)return;
   if(u.type==='queen'){if(u.lastAtk&&u.lastAtk.alive&&u.lastAtkT>gt-2.5){const a=u.lastAtk,dx=wd(u.x-a.x),dz=wd(u.z-a.z),l=Math.hypot(dx,dz)||1;u.st='flee';u.ft=2.5;setTarget(u,u.x+dx/l*5,u.z+dz/l*5);return}
     if(R()<.4){const x=(u.hx??u.x)+(R()-.5)*5,z=(u.hz??u.z)+(R()-.5)*5;if(pass[cidx(x,z)]){u.st='move';setTarget(u,x,z)}}return}
   if(u.postUnit){const q=units.find(o=>o.id===u.post&&o.alive);if(!q){u.post=null;u.postUnit=false}else{u.gx=q.x;u.gz=q.z}}
+  else if(u.post){if(u.postSpot?!banners.some(b=>b.id===u.post):!(bById.get(u.post)||{}).alive){u.post=null;u.postSpot=false}}
   if(u.type==='captive'){const h=nearestHolder(u.tribe,u.x,u.z,false);if(h){u.st='enter';u.bld=h;u.purpose='pen';setTarget(u,h.dx,h.dz)}return}
   if(u.carry){u.st='home';u.bld=null;return}
   if(u.type==='oss'){const cx=u.rcx??u.gx,cz=u.rcz??u.gz;const e=findPrey(u);if(e){u.st='preach';u.tgt=e;u.pt=0;u.cmdCap=false;return}
@@ -1098,7 +1101,7 @@ function idleThink(u,D,T){if(D.veh&&!D.bomb)return;
   if(u.type==='shaman'&&u.tribe!==0&&T.ai){}
   if(u.lastAtk&&u.lastAtk.alive&&u.lastAtkT>gt-3&&canHit(u,u.lastAtk)&&u.lastAtk.tribe!==u.tribe){attack(u,u.lastAtk);return}
   const e=(u.type==='oss')?null:nearestEnemy(u,D.aggro,o=>canHit(u,o));
-  if(e&&d2(u.gx,u.gz,e.x,e.z)<16*16){attack(u,e);return}
+  if(e&&d2(u.gx,u.gz,e.x,e.z)<(u.post?(TUNE.guardLeash+2)**2:16*16)){attack(u,e);return}
   if(scanFight(u,D))return;
   if(armageddon&&d2(u.x,u.z,moot.x,moot.z)>64){mootPull(u);orderUnit(u,moot.x+(R()-.5)*6,moot.z+(R()-.5)*6,true,moot.x,moot.z);return}
   if(d2(u.x,u.z,u.gx,u.gz)>6){u.st='move';setTarget(u,u.gx,u.gz)}}
@@ -1424,7 +1427,7 @@ function aiCast(T){const ai=T.ai,sh=casterOf(T);if(!sh||sh.hanging||sh.st==='cas
   if(pk[4]==='sh')ai.boltT=gt+TUNE.boltEvery;ai.castT=gt+ai.gap*(.7+R()*.6);if(sh.tomb){tryCast(T.id,pk[0],wrap(pk[1]),wrap(pk[2]),sh);return}sh.st='cast';sh.spell=pk[0];sh.px=wrap(pk[1]);sh.pz=wrap(pk[2])}
 
 // ---------------- tribe upkeep ----------------
-function computeStats(){for(const T of tribes)T.stats={pop:0,braves:0,outB:0,housed:0,others:0,mil:0,queued:0,huts:0,blds:0,sites:0,b:{},cap:15,cnt:{},caps:0};
+function computeStats(){if(banners.length)banners=banners.filter(b=>units.some(u=>u.alive&&u.post===b.id&&u.postSpot));for(const T of tribes)T.stats={pop:0,braves:0,outB:0,housed:0,others:0,mil:0,queued:0,huts:0,blds:0,sites:0,b:{},cap:15,cnt:{},caps:0};
   for(const b of blds)b.nb=0;
   for(const u of units){if(!u.alive)continue;const S=tribes[u.tribe].stats;S.cnt[u.type]=(S.cnt[u.type]||0)+1;if(UT[u.type].veh||u.type==='ghost'||u.type==='captive'||u.type==='hunter'||u.thrall)continue;S.pop++;
     if(u.type==='brave'){S.braves++;if(!u.inV)S.outB++}else S.others++;if(MIL[u.type])S.mil++;if(u.st==='build'&&u.bld)u.bld.nb++}
@@ -2275,6 +2278,8 @@ const FLAG=(()=>{const g=new C.BufferGeometry(),v=new Float32Array([-.06,0,0,.06
 const CORD=inst(new C.BoxGeometry(1,.02,.02),new C.MeshBasicMaterial({color:0xffffff}),900);
 const BOULDER=inst(merge([P(new C.DodecahedronGeometry(.3,0),0x7d776b)]),matF,90);
 const PEBBLE=inst(merge([P(new C.DodecahedronGeometry(.13,0),0xb9b3a4,0,.05,0)]),matF,500);
+const GBP=inst(merge([P(cyl(.035,.045,1.6,5),0x5b4632,0,.8,0),P(new C.BoxGeometry(.5,.04,.04),0x5b4632,.2,1.5,0),P(new C.SphereGeometry(.06,5,4),0xd9cfb6,0,1.62,0)]),matF,60);
+const GBC=inst(merge([P(new C.BoxGeometry(.42,.52,.02),0xffffff,.22,1.22,0)]),new C.MeshLambertMaterial({color:0xffffff,side:C.DoubleSide}),60);
 const STAKE=inst(merge([P(cyl(.03,.035,.9,4),0x6b4a2c,0,.45,0)]),matF,400);
 const RIB=(()=>{const g=new C.BoxGeometry(.04,.32,.012);g.translate(0,-.16,0);return inst(g,new C.MeshLambertMaterial({color:0xffffff}),900)})();
 const KIND=inst(merge([P(new C.ConeGeometry(.28,.32,5),0x5a3d24,0,.16,0),P(new C.BoxGeometry(.5,.05,.06),0x7a5634,0,.08,0,0,.6,.2),P(new C.BoxGeometry(.46,.05,.06),0x6b4a2c,0,.1,0,0,-.7,-.2)]),matF,120);
@@ -2361,6 +2366,8 @@ function drawEntities(){
     fin(SIL,sn)}
   {let bn=0;for(const p of projs){if(p.kind!=='boulder'||bn>=90)continue;const f=Math.min(1,p.t/p.dur),x=wrap(p.sx+wd(p.tx-p.sx)*f),z=wrap(p.sz+wd(p.tz-p.sz)*f),y=lerp(p.sy,p.ty,f);
       const rx=wd(x-cam.fx),rz=wd(z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2||!seenAt(x,z))continue;place(BOULDER,bn,rx,y-r2*K,rz,p.t*7+p.sc*9,p.sc);_c.setRGB(1,1,1);BOULDER.setColorAt(bn,_c);bn++}fin(BOULDER,bn)}
+  {let gn=0;for(const bn of banners){if(gn>=60)break;const rx=wd(bn.x-cam.fx),rz=wd(bn.z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2||!seenAt(bn.x,bn.z))continue;const y=hAt(bn.x,bn.z)-r2*K,yw=Math.sin(gt*1.3+bn.id)*.08;
+      place(GBP,gn,rx,y,rz,yw,1);_c.setRGB(1,1,1);GBP.setColorAt(gn,_c);place(GBC,gn,rx,y,rz,yw,1);_c.copy(tribes[bn.tribe].c);GBC.setColorAt(gn,_c);gn++}fin(GBP,gn);fin(GBC,gn)}
   drawDebris();
   fin(CM,cn);
   for(const k in UM){fin(UM[k].t,UM[k].n);fin(UM[k].f,UM[k].n)}
@@ -2525,10 +2532,17 @@ glc.addEventListener('wheel',e=>{e.preventDefault();if(wsOn){WS.dist=clamp(WS.di
 function boxSelect(g){const x0=Math.min(g.x0,g.x1),x1=Math.max(g.x0,g.x1),y0=Math.min(g.y0,g.y1),y1=Math.max(g.y0,g.y1);const out=[];
   for(const u of units){if(!u.alive||u.inV||u.tribe!==0||u.type==='captive'||u.type==='hunter')continue;const p=unitScreen(u);if(p&&p[0]>=x0&&p[0]<=x1&&p[1]>=y0&&p[1]<=y1)out.push(u)}
   if(out.length){setSel(out);sfx('select',.4)}if(boxMode){boxMode=false;$('bBox').setAttribute('aria-pressed','false')}}
-function clearSel(why){const had=sel.length||armed||placing;if(armed)disarm();if(placing)unplace();if(sel.length)setSel([]);if(had){sfx('select',.3);flashSelLine()}}
+function clearSel(why){const had=sel.length||armed||placing||posting;if(armed||posting)disarm();if(placing)unplace();if(sel.length)setSel([]);if(had){sfx('select',.3);flashSelLine()}}
 function flashSelLine(){const el=$('selLine');el.classList.remove('pulse');void el.offsetWidth;el.classList.add('pulse')}
+// Post the selected warriors and archers at a spot: they form up round a staked banner and hold that ground.
+function postAt(x,z){const f=sel.filter(u=>!u.bt&&u.alive&&u.tribe===0&&!u.inV&&(u.type==='warrior'||u.type==='archer'));posting=false;hint(null);
+  if(!f.length){toast('Only warriors and archers can stand guard');return}const c=cidx(x,z);if(!pass[c]||(fogOn&&!seen[c])){toast('They cannot stand guard there');return}
+  const bn={id:nextId++,x:wrap(x),z:wrap(z),tribe:0};banners.push(bn);f.sort((a,b)=>(a.type==='archer')-(b.type==='archer'));
+  f.forEach((u,i)=>{const a=i*2.39996,r=i?.7+.42*Math.sqrt(i):.6,px=wrap(x+Math.cos(a)*r),pz=wrap(z+Math.sin(a)*r);orderUnit(u,px,pz,false);u.post=bn.id;u.postSpot=true;u.postUnit=false;u.cmd=true});
+  mark(x,z,.7,.95,.6);sfx('order',.5);toast(`${f.length} posted here. They will hold this ground and fight whatever comes near.`)}
 function onTap(sx,sy,right,shift){if(over||watching)return;const T=tribes[0],g=pickGround(sx,sy);
   if(armed==='arma')return;
+  if(posting){if(right){posting=false;hint(null);return}if(g)postAt(g.x,g.z);return}
   if(armed){if(right){disarm();return}const tb=pickBalloon(sx,sy,true);if(tb&&(armed==='blast'||armed==='lightning')){/*aim at the balloon itself*/}if(!g&&!tb)return;const sh=T.shaman;if(!sh&&!T.tomb){toast('Your Cunning Woman is waiting to be reborn');return}if(sh&&sh.hanging){toast('Your Cunning Woman is hanging from the oak');return}const s=SPK[armed];
     const ax=tb?tb.x:g.x,az=tb?tb.z:g.z;
     if(T.tomb){spellTgt=tb;if(tryCast(0,armed,ax,az,casterOf(T)))mark(ax,az,1,.8,.4);spellTgt=null;disarm();return}
@@ -2556,7 +2570,7 @@ function onTap(sx,sy,right,shift){if(over||watching)return;const T=tribes[0],g=p
   command(grp,g,hu,hb,ht)}
 function mark(x,z,r,g,b){const y=Math.max(0,hAt(x,z))+.2;for(let i=0;i<16;i++){const a=i/16*TAU;PA.emit(x+Math.cos(a)*.6,y,z+Math.sin(a)*.6,Math.cos(a)*.6,.6,Math.sin(a)*.6,.45,r,g,b,1,.3,0)}}
 function command(grp,g,hu,hb,ht){grp=grp.filter(u=>!u.carry);if(!grp.length){toast('The osses will not listen until their captives are home');return}
-  for(const u of grp)u.post=null;
+  for(const u of grp){u.post=null;u.postSpot=false}
   const guardable=hb&&(hb.bt==='barrow'||((hb.bt==='tomb'||hb.bt==='oak')&&hb.tribe===0));
   if(guardable){const sh=grp.find(u=>u.type==='shaman');let rest=grp.filter(u=>u!==sh);
     if(sh&&hb.bt==='barrow')startRitual(sh,hb);else if(sh&&hb.bt==='oak'&&hb.done&&!hb.awake&&!hb.hangUntil)startHang(sh,hb);else if(sh)rest.push(sh);
@@ -2605,7 +2619,7 @@ $('pBuild').addEventListener('click',e=>{const t=e.target.closest('.tile');if(!t
 function arm(k){if(!allowS(k))return;if(k!=='arma'&&!tribes[0].shaman&&tribes[0].tomb){armed=k;placing=null;hint(`${SPK[k].n}: tap anywhere. ${SPDESC[k]}`);updTiles();return}
   if(k==='arma'){armed=k;placing=null;hint('All-against-all: ten followers burn in your wicker man and your mana is spent. Every hut falls and the last tribe standing wins. This cannot be undone.',true);updTiles();return}
   if(!tribes[0].shaman){toast('Your Cunning Woman is waiting to be reborn');return}armed=k;placing=null;const s=SPK[k];hint(`${s.n}: tap a target. ${SPDESC[k]}`);updTiles()}
-function disarm(){armed=null;hint(null);updTiles()}
+function disarm(){armed=null;posting=false;hint(null);updTiles()}
 function unplace(){placing=null;hedgeStart=null;hint(null)}
 function hint(t,go){$('hint').hidden=!t;$('hintGo').hidden=!go;if(t)$('hintT').textContent=t}
 $('hintGo').addEventListener('click',()=>{if(armed==='arma'){invokeArma(0)}disarm()});
@@ -2646,7 +2660,8 @@ function renderTribe(force){const T=tribes[0];if(!T)return;let h='';const b=sel.
     const q=(act,lab,n,sub)=>`<button class="qs" data-act="${act}" ${n?'':'disabled'}><span>${sub}</span><b>${lab}</b></button>`;
     h+=T.tomb&&!T.shaman?q('shaman','Tomb',1,'Find the fortress'):q('shaman','Cunning Woman',T.shaman?1:0,T.shaman?'Select and find':'Reborn in '+Math.max(0,Math.ceil(T.reincT-gt))+'s');
     const guards=myUnits(u=>u.post).length,army=myUnits(u=>MIL[u.type]&&!u.post).length;
-    h+=q('army','Army',army,army+' fighters')+q('warrior','Warriors',S.warrior||0,(S.warrior||0)+' ready')+q('archer','Archers',S.archer||0,(S.archer||0)+' ready')+q('oss','Osses',S.oss||0,(S.oss||0)+' ready')+q('guard','Guards',guards,guards+' posted');
+    const f5=k=>{const n=myUnits(u=>u.type===k&&!u.post&&!sel.includes(u)).length;return `<button class="qs" data-act="five:${k}" ${n?'':'disabled'}><span>nearest</span><b>+5</b></button>`};
+    const fr=k=>myUnits(u=>u.type===k&&!u.post).length;h+=q('army','Army',army,army+' fighters')+q('warrior','Warriors',fr('warrior'),fr('warrior')+' ready')+f5('warrior')+q('archer','Archers',fr('archer'),fr('archer')+' ready')+f5('archer')+q('oss','Osses',fr('oss'),fr('oss')+' ready')+f5('oss')+q('guard','Guards',guards,guards+' posted');
     const br=T.stats.outB||0;h+=q('brave','Villagers',br,br+' outside, '+(T.stats.housed||0)+' in huts');
     const vn=S.balloon||0;h+=q('veh','Balloons',vn,vn+' balloons')}
   if(force||h!==lastTribeHTML){$('pTribe').innerHTML=h;lastTribeHTML=h;if(performance.now()-pulseAct.t<450){const el=$('pTribe').querySelector(`[data-act="${pulseAct.a}"]`);if(el)el.classList.add('pulse')}}}
@@ -2664,13 +2679,15 @@ $('pTribe').addEventListener('click',e=>{const t=e.target.closest('[data-act]');
   else if(a==='callout'){const n=b.occ;while(b.occ>0){b.occ--;const u=spawnUnit('brave',0,b.dx+(R()-.5)*2,b.dz+R());u.think=1.5}toast(`${n} villager${n===1?'':'s'} come out to work.`)}
   else if(a==='unload'){for(const v of sel)if(v.pass&&v.pass.length)unload(v)}
   else if(a==='shaman')focusShaman();
-  else if(a==='army')pick(u=>MIL[u.type]&&!u.post);else if(a==='guard')pick(u=>!!u.post);else if(a==='brave')pick(u=>u.type==='brave');else if(a==='veh')pick(u=>UT[u.type].veh);else pick(u=>u.type===a);
+  else if(a.startsWith('five:')){const k=a.slice(5),cand=myUnits(u=>u.type===k&&!u.post&&!sel.includes(u)).sort((p,q)=>((p.st==='idle'?0:400)+d2(p.x,p.z,cam.fx,cam.fz))-((q.st==='idle'?0:400)+d2(q.x,q.z,cam.fx,cam.fz)));
+    const keep=sel.filter(u=>!u.bt&&u.tribe===0&&u.alive);setSel(keep.concat(cand.slice(0,5)));sfx('select',.4)}
+  else if(a==='army')pick(u=>MIL[u.type]&&!u.post);else if(a==='guard')pick(u=>!!u.post);else if(a==='brave')pick(u=>u.type==='brave');else if(a==='veh')pick(u=>UT[u.type].veh);else pick(u=>u.type===a&&!u.post);
   renderTribe(true)});
 function centerOn(arr){let sx=0,sz=0;const r=arr[0];for(const u of arr){sx+=wd(u.x-r.x);sz+=wd(u.z-r.z)}cam.fx=wrap(r.x+sx/arr.length);cam.fz=wrap(r.z+sz/arr.length)}
 function focusShaman(){const T=tribes[0];if(T&&T.tomb&&!T.shaman){setSel([T.tomb]);cam.fx=T.tomb.x;cam.fz=T.tomb.z;return}const s=T&&T.shaman;if(!s){toast('Your Cunning Woman is waiting to be reborn');return}setSel([s]);cam.fx=s.x;cam.fz=s.z}
 $('bFocus').addEventListener('click',()=>{audio();focusShaman()});
 $('bBox').addEventListener('click',()=>{boxMode=!boxMode;$('bBox').setAttribute('aria-pressed',String(boxMode))});
-$('selX').addEventListener('click',()=>clearSel());$('selT').addEventListener('click',()=>{if(sel.length)clearSel()});
+$('selX').addEventListener('click',()=>clearSel());$('selPost').addEventListener('click',()=>{audio();if(armed)disarm();if(placing)unplace();posting=true;hint('Tap where they should stand guard. They will form up round a banner, hold that ground and fight whatever comes near.');sfx('select',.4)});$('selT').addEventListener('click',()=>{if(sel.length)clearSel()});
 $('bSpeed').addEventListener('click',()=>{speed=watching?(speed===1?2:speed===2?4:1):(speed===1?2:1);$('bSpeed').textContent=speed+'×'});
 $('bPause').addEventListener('click',togglePause);
 const fsEl=()=>document.fullscreenElement||document.webkitFullscreenElement;
@@ -2690,7 +2707,7 @@ function updHUD(){const T=tribes[0];if(!T)return;$('rMana').textContent=Math.flo
   $('rDreadBar').style.width=Math.min(100,T.dread||0)+'%';$('rCap').textContent=T.stats.caps||0;
   let ch='';{const SC=scen();if(SC){const g=SC.goal;let t=`Level ${settings.campaign+1}`;if(g.type==='survive'){const left=Math.max(0,g.n-gt);t+=` · Hold on ${Math.floor(left/60)}:${String(Math.floor(left%60)).padStart(2,'0')}`}else if(g.type==='captives')t+=` · Captives ${T.stats.caps||0}/${g.n}`;else if(g.type==='queen')t+=' · Offer a May Queen';else t+=' · Conquer';ch+=`<span class="chip">${t}</span>`}}if(T.tomb)ch+='<span class="chip att">Entombed</span>';if((T.dread||0)>40)ch+='<span class="chip ar">Your people are fleeing</span>';if(T.frenzyUntil>gt&&!over&&!celebrating)ch+=`<span class="chip fr">Frenzy ${Math.ceil(T.frenzyUntil-gt)}s</span>`;if(armageddon)ch+='<span class="chip ar">All-against-all</span>';if($('chips').innerHTML!==ch)$('chips').innerHTML=ch;$('rWood').textContent=Math.floor(T.wood);$('rPop').textContent=T.stats.pop+' / '+T.stats.cap;
   $('foes').innerHTML=tribes.slice(watching?0:1).filter(o=>!o.wild).map(o=>watching?`<button class="foe${o.alive?'':' dead'}" data-t="${o.id}"><i style="background:${o.css}"></i>${o.name} ${o.alive?o.stats.pop+' · '+Math.floor(o.mana)+' mana'+(o.tomb?' · entombed':''):''}</button>`:`<button class="foe${o.alive?'':' dead'}${o.broken?' broken':''}" data-t="${o.id}" title="Tap to find the ${o.name} folk"><i style="background:${o.css}"></i>${o.alive?o.stats.pop:o.name}</button>`).join('');
-  updTiles();$('selT').innerHTML=selSummary();$('selX').hidden=!sel.length;if(tab==='tribe')renderTribe(dockDirty);dockDirty=false}
+  updTiles();$('selT').innerHTML=selSummary();$('selX').hidden=!sel.length;$('selPost').hidden=!sel.some(u=>!u.bt&&u.tribe===0&&(u.type==='warrior'||u.type==='archer'));if(tab==='tribe')renderTribe(dockDirty);dockDirty=false}
 
 // menu
 function segs(id,key,num){const el=$(id);el.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;el.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));settings[key]=num?+b.dataset.v:b.dataset.v;buildWorld()})}
@@ -2716,7 +2733,7 @@ function buildWorld(){const SC=scen();const w=genWorld(settings.seed,settings.st
   walk=new Uint8Array(N*N);water=new Uint8Array(N*N);pass=new Uint8Array(N*N);hazU=new Float32Array(N*N);hazType=new Int8Array(N*N);hazOwner=new Int8Array(N*N).fill(-1);saltU=new Float32Array(N*N);saltOwner=new Int8Array(N*N);saltList.clear();wear=new Float32Array(N*N);wearShown=new Uint8Array(N*N);flowers=[];hazGrp=new Int32Array(N*N);swamps={};swampSeq=1;hedgeA=new Uint8Array(N*N);bOcc=new Int32Array(N*N);colW=new Float32Array(N*N*3);
   armageddon=false;$('app').classList.remove('arma');scene.fog.color.setHex(0x7f725b);fogOn=false;vis.fill(1);visNow.fill(0);seen.fill(0);wildT=40;
   for(const d of debris)scene.remove(d.m);debris=[];
-  units=[];blds=[];effects=[];projs=[];sel=[];bById.clear();fcache.clear();hazList.clear();gt=0;tver=0;PA.n=0;PN.n=0;stats={casts:0,lost:0,killed:0,razed:0,burned:0,taken:0};over=false;
+  units=[];blds=[];effects=[];projs=[];sel=[];banners=[];posting=false;bById.clear();fcache.clear();hazList.clear();gt=0;tver=0;PA.n=0;PN.n=0;stats={casts:0,lost:0,killed:0,razed:0,burned:0,taken:0};over=false;
   recompute(0,0,N-1,N-1);
   trees=w.trees.map(t=>({x:t.x,z:t.z,wood:TUNE.woodPerTree,alive:true,sc:.8+R()*.45,tint:.85+R()*.25}));treeCap=Math.round(trees.length*1.1);tGridDirty=true;
   tribes=[];
@@ -2835,7 +2852,7 @@ function saveGame(){if(!running||over||watching||!tribes.length||inMenu&&!paused
   const d={v:1,saved:Date.now(),settings:Object.assign({},settings),gt,nextId,armageddon,moot,wildId,wildT,stats,fogOn,stones,cam:{fx:cam.fx,fz:cam.fz,yaw:cam.yaw,dist:cam.dist},
     H:b64(H),TN:b64(TN),hazU:b64(hazU),saltU:b64(saltU),saltOwner:b64(saltOwner),hazType:b64(hazType),hazOwner:b64(hazOwner),hazGrp:b64(hazGrp),swamps,swampSeq,seen:b64(seen),
     trees:live.map(t=>[+t.x.toFixed(2),+t.z.toFixed(2),t.wood,+t.sc.toFixed(2),+t.tint.toFixed(2),t.born||0]),
-    tribes:tr,units:units.filter(u=>u.alive).map(ent),blds:blds.filter(b=>b.alive).map(ent)};
+    tribes:tr,banners,units:units.filter(u=>u.alive).map(ent),blds:blds.filter(b=>b.alive).map(ent)};
   localStorage.setItem(SAVE_KEY,JSON.stringify(d));return true}catch(e){console.warn('save failed',e);return false}}
 function loadGame(){const d=readSave();if(!d)return false;
   if(d.settings.campaign!=null&&settings.campaign==null)skirmishSettings=Object.assign({},settings);Object.assign(settings,d.settings);if(settings.campaign===undefined)settings.campaign=null;allowSets=settings.campaign!=null?scenSets(settings.campaign):null;watching=false;document.body.classList.remove('watch');
@@ -2847,7 +2864,7 @@ function loadGame(){const d=readSave();if(!d)return false;
   for(const d of debris)scene.remove(d.m);debris=[];effects=[];projs=[];sel=[];bById.clear();fcache.clear();PA.n=0;PN.n=0;tver=0;over=false;
   trees=d.trees.map(a=>({x:a[0],z:a[1],wood:a[2],sc:a[3],tint:a[4],born:a[5]||undefined,alive:true}));treeCap=Math.max(treeCap,Math.round(trees.length*1.1));tGridDirty=true;
   recompute(0,0,N-1,N-1);
-  const uMap=new Map(),bMap=new Map();units=d.units;blds=d.blds;for(const u of units)uMap.set(u.id,u);for(const b of blds)bMap.set(b.id,b);
+  banners=d.banners||[];const uMap=new Map(),bMap=new Map();units=d.units;blds=d.blds;for(const u of units)uMap.set(u.id,u);for(const b of blds)bMap.set(b.id,b);
   const dec=v=>{if(v===null||typeof v!=='object')return v;if(Array.isArray(v))return v.map(dec);if('$u' in v)return uMap.get(v.$u)||null;if('$b' in v)return bMap.get(v.$b)||null;if('$t' in v)return trees[v.$t]||null;const o={};for(const k in v)o[k]=dec(v[k]);return o};
   for(const e of units)for(const k in e)if(e[k]&&typeof e[k]==='object')e[k]=dec(e[k]);
   for(const e of blds)for(const k in e)if(e[k]&&typeof e[k]==='object')e[k]=dec(e[k]);
@@ -3001,6 +3018,6 @@ function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;fogK=Math.mi
   }catch(err){if(!errShown){errShown=true;console.error(err);const fr=String(err.stack||'').split('\n').filter(l=>/\bat\b/.test(l)).slice(0,2).map(l=>{const m=l.match(/at\s+(?:Object\.)?([\w$.]+)?\s*\(?.*?:(\d+):\d+\)?\s*$/);return m?(m[1]||'?')+':'+m[2]:''}).filter(Boolean).join(' < ');toast('Something went wrong: '+err.message+(fr?' ['+fr+']':''))}}
   requestAnimationFrame(frame)}
 resize();buildWorld();showContinue();requestAnimationFrame(frame);
-window.__ws={get HUT_TOP(){return HUT_TOP},walkReach,get world(){return world},light,memorial,get stats(){return stats},get cam(){return cam},get WS(){return WS},wsOpen,wsClose,captureDef,defFromData,merge,ORIG_UMOD,ORIG_BMOD,get UM(){return UM},get BM(){return BM},get wear(){return wear},get buntings(){return buntings},get patches(){return patches},get wells(){return wells},get units(){return units},get tribes(){return tribes},get blds(){return blds},sim,beginGame,get gt(){return gt},castSpell,tryCast,saveGame,loadGame,setSel,command,showLevel,SCEN,field,get walkA(){return walk},hAt,get water(){return water},findSpot,get allow(){return allowSets},get pass(){return pass},get swamps(){return swamps},get debris(){return debris},queenValue,invokeArma,startRitual,sendVehicle,get wildId(){return wildId},get armageddon(){return armageddon},placeBuilding,validSpot,orderMove,spawnUnit,command,get water(){return water},findSpot};
+window.__ws={get HUT_TOP(){return HUT_TOP},walkReach,postAt,setSel,get banners(){return banners},get sel(){return sel},get world(){return world},light,memorial,get stats(){return stats},get cam(){return cam},get WS(){return WS},wsOpen,wsClose,captureDef,defFromData,merge,ORIG_UMOD,ORIG_BMOD,get UM(){return UM},get BM(){return BM},get wear(){return wear},get buntings(){return buntings},get patches(){return patches},get wells(){return wells},get units(){return units},get tribes(){return tribes},get blds(){return blds},sim,beginGame,get gt(){return gt},castSpell,tryCast,saveGame,loadGame,setSel,command,showLevel,SCEN,field,get walkA(){return walk},hAt,get water(){return water},findSpot,get allow(){return allowSets},get pass(){return pass},get swamps(){return swamps},get debris(){return debris},queenValue,invokeArma,startRitual,sendVehicle,get wildId(){return wildId},get armageddon(){return armageddon},placeBuilding,validSpot,orderMove,spawnUnit,command,get water(){return water},findSpot};
 })();
 </script>
