@@ -710,7 +710,7 @@ const hsh=n=>{n=(n^61)^(n>>>16);n=n+(n<<3);n=n^(n>>>4);n=Math.imul(n,0x27d4eb2d)
 // a hut's front garden: two little beds either side of the door, filled one plant at a time in a settled order
 function flowerSpots(b){const got=FSPOTS.get(b);if(got)return got;const out=[],pal=[FLOWER_C[(b.id*5)%6],FLOWER_C[(b.id*5+2)%6],FLOWER_C[(b.id*5+3)%6]];
   if(b.bt==='hut')for(const sx of[-1,1])for(let r=0;r<2;r++)for(let c=0;c<4;c++){const h=hsh(b.id*97+sx*13+r*7+c);out.push({x:sx*(.42+c*.21)+(h-.5)*.08,z:1.36+r*.22+(hsh(h*1e6|0)-.5)*.07,c:pal[(h*3)|0],s:1.25+h*.45,o:hsh(b.id*31+out.length)})}
-  out.sort((p,q)=>p.o-q.o);FSPOTS.set(b,out);return out}
+  for(const f of out){[f.x,f.z]=byaw(b,f.x,f.z);f.o+=(b.yaw||0)/6}out.sort((p,q)=>p.o-q.o);FSPOTS.set(b,out);return out}
 function patchSpots(q){if(q._sp)return q._sp;const n=6+q.seed%5,pal=[FLOWER_C[q.seed%6],FLOWER_C[(q.seed>>3)%6],FLOWER_C[(q.seed>>6)%6]],out=[];
   for(let i=0;i<n;i++){const a=i*2.39996+q.seed,r=.12+.16*Math.sqrt(i+hsh(q.seed+i));out.push({x:Math.cos(a)*r,z:Math.sin(a)*r,c:pal[(hsh(q.seed*7+i)*3)|0],s:1.1+hsh(q.seed+i*3)*.6,y:hsh(q.seed+i*11)*6})}
   Object.defineProperty(q,'_sp',{value:out,enumerable:false});return out}
@@ -839,13 +839,21 @@ const s=BT[type].s;const cx0=Math.floor(x-s/2+.5),cz0=Math.floor(z-s/2+.5);let m
   if(type==='oak'){let n=0;const cx=cx0+s/2,cz=cz0+s/2;for(const t of trees)if(t.alive&&d2(cx,cz,t.x,t.z)<64)n++;if(n<8)return {err:"Herne's Oak must stand in deep woodland"}}
   if(type==='altar'){let n=0;const cx=cx0+s/2,cz=cz0+s/2;for(const t of trees)if(t.alive&&d2(cx,cz,t.x,t.z)<36)n++;if(n<3)return {err:'A forest altar must stand among trees'}}
   return {cx0,cz0,x:wrap(cx0+s/2),z:wrap(cz0+s/2)}}
+// Turn a point given in a building's own frame (front = +z) by the way that building faces.
+function byaw(b,lx,lz){const a=b.yaw||0;if(!a)return [lx,lz];const c=Math.cos(a),s=Math.sin(a);return [lx*c+lz*s,-lx*s+lz*c]}
+// Every door opens towards the tribe's stone circle, where its Cunning Woman is reborn: the people keep their faces to the stones.
+// A little hand-made unevenness, and if the ground at the door is unwalkable the building turns to the nearest way that is.
+const UNTURNED={reinc:1,barrow:1,moot:1,tomb:1,hedge:1,torch:1};
+function faceBuilding(b){const D=BT[b.bt],s=D.s;if(UNTURNED[b.bt])return;const rc=blds.find(o=>o.alive&&o.bt==='reinc'&&o.tribe===b.tribe&&o!==b);
+  const j=(hsh(b.id*13+7)-.5)*.3;let want=rc&&d2(b.x,b.z,rc.x,rc.z)>9?Math.atan2(wd(rc.x-b.x),wd(rc.z-b.z))+j:hsh(b.id*31+5)*TAU;
+  for(const k of[0,1,-1,2,-2,3,-3,4]){const a=want+k*Math.PI/4,dx=wrap(b.x+Math.sin(a)*(s/2+.6)),dz=wrap(b.z+Math.cos(a)*(s/2+.6));if(walk[cidx(dx,dz)]||k===4){b.yaw=a;b.dx=dx;b.dz=dz;return}}}
 function placeBuilding(ti,type,spot,instant){const D=BT[type],s=D.s,{cx0,cz0}=spot;
   let sum=0,n=0;for(let dz=0;dz<=s;dz++)for(let dx=0;dx<=s;dx++){sum+=H[wi(cz0+dz)*N+wi(cx0+dx)];n++}
   const avg=Math.max(.4,sum/n);for(let dz=0;dz<=s;dz++)for(let dx=0;dx<=s;dx++)H[wi(cz0+dz)*N+wi(cx0+dx)]=avg;
   recompute(cx0-1,cz0-1,cx0+s+1,cz0+s+1);
   for(const t of trees)if(t.alive){const ax=wd(t.x-cx0),az=wd(t.z-cz0);if(ax>-.6&&az>-.6&&ax<s+.6&&az<s+.6)killTree(t)}
   const b={inside:[],capt:[],sq:0,cq:0,id:nextId++,bt:type,tribe:ti,x:wrap(cx0+s/2),z:wrap(cz0+s/2),cx0:wi(cx0),cz0:wi(cz0),hp:D.hp,mhp:D.hp,prog:instant?1:0,done:!!instant,alive:true,occ:0,q:0,breed:0,tt:0,trainee:false,claim:null,nb:0,hitT:-9};
-  b.dx=b.x;b.dz=wrap(b.z+s/2+.6);
+  b.dx=b.x;b.dz=wrap(b.z+s/2+.6);faceBuilding(b);
   for(let dz=0;dz<s;dz++)for(let dx=0;dx<s;dx++)bOcc[wi(cz0+dz)*N+wi(cx0+dx)]=b.id;
   blds.push(b);bById.set(b.id,b);
   if(!instant){tribes[ti].wood-=D.wood;for(let k=0;k<(type==='hedge'?1:3);k++){const br=getFreeBrave(tribes[ti],b.x,b.z);if(!br)break;assignBuild(br,b)}}
@@ -898,7 +906,7 @@ function burntHead(bt,tribe){const parts=modelEdits()['b:'+bt]||captureDef(ORIG_
   let cx=0,cy=0,cz=0;for(const p of sel){cx+=p.p[0]/sel.length;cy+=p.p[1]/sel.length;cz+=p.p[2]/sel.length}
   const tc=tribes[tribe]?tribes[tribe].c:WHITE_C;const g=merge(sel.map(p=>{const q=partGeo(p);q.translate(-cx,-cy,-cz);const c=new C.Color(p.c);if(p.t)c.multiply(tc);c.multiplyScalar(.55);return {g:q,c:c.getHex()}}));return {g,cx,cy,cz}}
 function collapse(b){const y=hAt(b.x,b.z),god=b.bt==='god',H=god?8:3.5;
-  const hd=burntHead(b.bt,b.tribe);if(hd){const m=new C.Mesh(hd.g,ramMat);m.frustumCulled=false;scene.add(m);const a=R()*TAU;debris.push({m,x:wrap(b.x+hd.cx),y:y+hd.cy,z:wrap(b.z+hd.cz),vx:Math.sin(a)*(god?1.6:1.1),vy:god?2.2:1.8,vz:Math.cos(a)*(god?1.6:1.1),rx:0,ry:a,rz:0,vr:god?1.3:1.8,life:god?16:12,t:0,heavy:god?2:1,own:1})}
+  const hd=burntHead(b.bt,b.tribe);if(hd){const m=new C.Mesh(hd.g,ramMat);m.frustumCulled=false;scene.add(m);const a=R()*TAU,[hx,hz]=byaw(b,hd.cx,hd.cz);debris.push({m,x:wrap(b.x+hx),y:y+hd.cy,z:wrap(b.z+hz),vx:Math.sin(a)*(god?1.6:1.1),vy:god?2.2:1.8,vz:Math.cos(a)*(god?1.6:1.1),rx:0,ry:b.yaw||0,rz:0,vr:god?1.3:1.8,life:god?16:12,t:0,heavy:god?2:1,own:1})}
   for(let i=0;i<(god?16:8);i++){const a=R()*TAU,sp=2+R()*(god?5:3);spawnDebris(STICK_G,0x3a2a1a,b.x+(R()-.5),y+1+R()*H,b.z+(R()-.5),Math.cos(a)*sp,2+R()*4,Math.sin(a)*sp,4+R()*3,5)}
   for(let i=0;i<(god?120:50);i++){const a=R()*TAU,sp=R()*(god?8:4);PA.emit(b.x,y+R()*H,b.z,Math.cos(a)*sp,1+R()*5,Math.sin(a)*sp,.8+R(),1,.4+R()*.4,.1,1,.7,3)}
   for(let i=0;i<(god?40:15);i++)PN.emit(b.x+(R()-.5)*3,y+R()*H,b.z+(R()-.5)*3,(R()-.5),1+R(),(R()-.5),3+R()*2,.12,.1,.09,.7,2.5,-.2);
@@ -1149,7 +1157,7 @@ function updBld(b,dt){const D=BT[b.bt],T=tribes[b.tribe];if(D.inv)return;
     proj({kind:'blast',sx:b.x,sz:b.z,sy,tx:tg.x,tz:tg.z,ty,dur:Math.max(.3,dd/16),arc:1.2,ti,onHit:(x,z)=>{if(tg.alive&&d2(x,z,tg.x,tg.z)<3.2*3.2){atk=ti;dmgUnit(tg,TUNE.nestDamage,null)}for(let i=0;i<18;i++)PA.emit(x,ty,z,(R()-.5)*3,(R()-.5)*3,(R()-.5)*3,.35,1,.5,.12,1,.5,2);sfx('blast',.35,x,z)}});
     sfx('arrow',.3,b.x,b.z);return}
   if(b.bt==='hut'){if(b.occ>0&&T.stats.pop<T.stats.cap){b.breed+=dt*(TUNE.breedBase+TUNE.breedPerOccupant*b.occ)*T.breedMult;if(b.breed>=1){b.breed=0;const u=spawnUnit('brave',b.tribe,b.dx,b.dz);u.think=1}}
-    if(b.occ>0&&R()<dt*.8)PN.emit(b.x+.3,hAt(b.x,b.z)+2.2,b.z,(R()-.5)*.2,.5,(R()-.5)*.2,2.5,.55,.53,.5,.35,.7,-.15)}
+    if(b.occ>0&&R()<dt*.8){const [cx,cz]=byaw(b,.3,0);PN.emit(b.x+cx,hAt(b.x,b.z)+2.2,b.z+cz,(R()-.5)*.2,.5,(R()-.5)*.2,2.5,.55,.53,.5,.35,.7,-.15)}}
   if(D.train&&!armageddon){if(b.trainee){b.tt-=dt;if(b.tt<=0){b.trainee=false;b.q--;produce(b);dockDirty=true}}
     else if(b.q>0){const cl=b.claim;if(!cl||!cl.alive||cl.st!=='enter'||cl.bld!==b){const br=getFreeBrave(T,b.x,b.z);if(br){if(T.id===0)mark(br.x,br.z,.6,.85,1);br.st='enter';br.bld=b;br.purpose='train';setTarget(br,b.dx,b.dz);b.claim=br}}}}
   if(b.bt==='oak'){
@@ -1160,14 +1168,14 @@ function updBld(b,dt){const D=BT[b.bt],T=tribes[b.tribe];if(D.inv)return;
         if(n<TUNE.huntRiders){const u=spawnUnit('hunter',b.tribe,b.dx,b.dz);u.think=.2;for(let i=0;i<14;i++)PA.emit(u.x,y+.8,u.z,(R()-.5)*1.5,1+R()*2,(R()-.5)*1.5,.7,.7,.85,.75,1,.4,-1)}}}
     return}
   if(D.site){if(b.lit){const y=hAt(b.x,b.z),god=b.bt==='god',lt=b.litT??(b.burnEnd-D.burnT),age=gt-lt,w=god?2.2:1.2;
-      if(god&&age<3){const k=age/3;PA.noFog=true;for(const sx of[-.3,.3])PA.emit(b.x+sx,y+8.1,b.z+.8,0,0,0,.12,1,.55+k*.4,.1+k*.5,1,.35+k*.5,0);for(let i=0;i<3;i++){const a=R()*TAU,r=R()*2.6;PA.emit(b.x+Math.cos(a)*r,y+.6+R()*.5,b.z+Math.sin(a)*r,(R()-.5)*.4,1+R()*2,(R()-.5)*.4,.5+R()*.4,1,.45+R()*.3,.1,1,.7,-1)}PA.noFog=false;
+      if(god&&age<3){const k=age/3;PA.noFog=true;for(const sx of[-.3,.3]){const [ex,ez]=byaw(b,sx,.8);PA.emit(b.x+ex,y+8.1,b.z+ez,0,0,0,.12,1,.55+k*.4,.1+k*.5,1,.35+k*.5,0)}for(let i=0;i<3;i++){const a=R()*TAU,r=R()*2.6;PA.emit(b.x+Math.cos(a)*r,y+.6+R()*.5,b.z+Math.sin(a)*r,(R()-.5)*.4,1+R()*2,(R()-.5)*.4,.5+R()*.4,1,.45+R()*.3,.1,1,.7,-1)}PA.noFog=false;
         if(R()<dt*6)PN.emit(b.x,y+8.4,b.z,(R()-.5)*.3,.6,(R()-.5)*.3,1.5,.1,.08,.07,.5,1,-.1);
         if(!b.roared&&age>2.4){b.roared=true;godShock(b)}}
       else{const climb=clamp((age-(god?3:0))/(D.burnT*.45),0,1),HH=(god?8.6:3.9)*Math.max(.06,climb),KR=god?2.9:1.6;PA.noFog=god;
         for(let i=0;i<(god?6:3);i++){const a=R()*TAU,r=Math.sqrt(R())*KR*(1-climb*.4);PA.emit(b.x+Math.cos(a)*r,y+.45+R()*.5,b.z+Math.sin(a)*r,(R()-.5)*.6,1.5+R()*2.5,(R()-.5)*.6,.6+R()*.4,1,.42+R()*.3,.1,1,god?1:.65,-1)}
         if(climb>.1)for(let i=0;i<(god?7:3);i++)PA.emit(b.x+(R()-.5)*w*1.4,y+.6+R()*HH,b.z+(R()-.5)*w*.9,(R()-.5)*.8,2+R()*3,(R()-.5)*.8,.7+R()*.5,1,.4+R()*.3,.1,1,god?1.2:.75,-1);
-        if(god&&climb>.6)for(const sx of[-1,1])for(let i=0;i<2;i++)PA.emit(b.x+sx*(2.5+R()*.4),y+8.6+R()*.8,b.z+(R()-.5)*.4,(R()-.5)*.5,2+R()*3,(R()-.5)*.5,.6+R()*.4,1,.5+R()*.3,.12,1,.8,-1);
-        if(god){for(const sx of[-.3,.3])PA.emit(b.x+sx,y+8.1,b.z+.8,0,0,0,.1,1,.95,.6,1,.8,0);if(climb>.8)for(let i=0;i<5;i++)PA.emit(b.x+(R()-.5)*1.2,y+8.4+R()*3,b.z+(R()-.5)*1.2,(R()-.5)*.6,8+R()*8,(R()-.5)*.6,1.6+R(),1,.45+R()*.35,.1,1,1.4+R(),-1)}
+        if(god&&climb>.6)for(const sx of[-1,1])for(let i=0;i<2;i++){const [hx,hz]=byaw(b,sx*(2.5+R()*.4),(R()-.5)*.4);PA.emit(b.x+hx,y+8.6+R()*.8,b.z+hz,(R()-.5)*.5,2+R()*3,(R()-.5)*.5,.6+R()*.4,1,.5+R()*.3,.12,1,.8,-1)}
+        if(god){for(const sx of[-.3,.3]){const [ex,ez]=byaw(b,sx,.8);PA.emit(b.x+ex,y+8.1,b.z+ez,0,0,0,.1,1,.95,.6,1,.8,0)}if(climb>.8)for(let i=0;i<5;i++)PA.emit(b.x+(R()-.5)*1.2,y+8.4+R()*3,b.z+(R()-.5)*1.2,(R()-.5)*.6,8+R()*8,(R()-.5)*.6,1.6+R(),1,.45+R()*.35,.1,1,1.4+R(),-1)}
         PA.noFog=false;if(R()<dt*(god?14:6))PN.emit(b.x,y+.8+HH,b.z,(R()-.5)*.5,2,(R()-.5)*.5,4,.13,.1,.09,.6,god?3:1.6,-.2);
         if(R()<dt*2)sfx('chop',.25,b.x,b.z)}
       if(gt>=b.burnEnd){collapse(b);b.burnt=true;destroyBld(b)}return}
@@ -2227,7 +2235,7 @@ function drawEntities(){
   {let sn=0;for(const b of blds){if(!b.alive||!b.done||!(b.bt==='wicker'||b.bt==='god')||!b.inside.length)continue;if(b.tribe!==0&&!isVis(b.x,b.z))continue;const rx=wd(b.x-cam.fx),rz=wd(b.z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2)continue;
     const by=hAt(b.x,b.z)-r2*K,god=b.bt==='god',n=Math.min(b.inside.length,god?12:5),lit=b.lit,burnK=lit?clamp((gt-(b.litT??gt))/6,0,1):0;
     for(let k=0;k<n&&sn<200;k++){let px,py,pz;if(god){px=((k%4)-1.5)*.55;pz=(Math.floor(k/4)-1)*.5;py=3.68}else{px=((k%3)-1)*.32;pz=k<3?.08:-.12;py=1.78+(k<3?0:.35)}
-      const sway=Math.sin(gt*(lit?9:2)+k*1.7)*(lit?.12:.04);place(SIL,sn,rx+px+sway,by+py,rz+pz,k,.85);const gl=lit?.2+burnK*.8*(.6+.4*Math.sin(gt*11+k)):.15;_c.setRGB(gl,gl*.45,gl*.15);SIL.setColorAt(sn,_c);sn++}}
+      const sway=Math.sin(gt*(lit?9:2)+k*1.7)*(lit?.12:.04);[px,pz]=byaw(b,px+sway,pz);place(SIL,sn,rx+px,by+py,rz+pz,k+(b.yaw||0),.85);const gl=lit?.2+burnK*.8*(.6+.4*Math.sin(gt*11+k)):.15;_c.setRGB(gl,gl*.45,gl*.15);SIL.setColorAt(sn,_c);sn++}}
     fin(SIL,sn)}
   {let bn=0;for(const p of projs){if(p.kind!=='boulder'||bn>=90)continue;const f=Math.min(1,p.t/p.dur),x=wrap(p.sx+wd(p.tx-p.sx)*f),z=wrap(p.sz+wd(p.tz-p.sz)*f),y=lerp(p.sy,p.ty,f);
       const rx=wd(x-cam.fx),rz=wd(z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2||!seenAt(x,z))continue;place(BOULDER,bn,rx,y-r2*K,rz,p.t*7+p.sc*9,p.sc);_c.setRGB(1,1,1);BOULDER.setColorAt(bn,_c);bn++}fin(BOULDER,bn)}
@@ -2236,7 +2244,7 @@ function drawEntities(){
   for(const k in UM){fin(UM[k].t,UM[k].n);fin(UM[k].f,UM[k].n)}
   for(const k in BM)BM[k].n=0;
   for(const b of blds){if(!b.alive)continue;const rx=wd(b.x-cam.fx),rz=wd(b.z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2+40)continue;if(!visB(b))continue;const M=BM[b.bt];if(M.n>=M.cap)continue;const dim=b.tribe!==0&&!isVis(b.x,b.z);
-    const y=hAt(b.x,b.z)-r2*K,sy=b.done?1:.12+.88*b.prog,i=M.n++,yw=b.bt==='hedge'?(b.id*2.39996)%TAU:0;place(M.t,i,rx,y,rz,yw,1,sy);place(M.f,i,rx,y,rz,yw,1,sy);
+    const y=hAt(b.x,b.z)-r2*K,sy=b.done?1:.12+.88*b.prog,i=M.n++,yw=b.bt==='hedge'?(b.id*2.39996)%TAU:(b.yaw||0);place(M.t,i,rx,y,rz,yw,1,sy);place(M.f,i,rx,y,rz,yw,1,sy);
     const T=tribes[b.tribe];_c.copy(b.bt==='hut'?T.roof:T.c);if(gt-b.hitT<.1)_c.setRGB(1,.9,.8);if(!b.done)_c.multiplyScalar(.7);M.t.setColorAt(i,_c);
     _c.setRGB(1,1,1);if(b.hp<b.mhp*.5)_c.multiplyScalar(.65);if(!b.done)_c.setRGB(.85,.8,.7);if(b.lit)_c.setRGB(.42,.26,.18);if(dim)_c.multiplyScalar(.5);M.f.setColorAt(i,_c)}
   {const HL=BM.hedgelink,hm=new Map();for(const b of blds)if(b.alive&&b.bt==='hedge')hm.set(wi(b.cz0)*N+wi(b.cx0),b);
@@ -2254,7 +2262,7 @@ function drawEntities(){
   for(const b of blds){if(!b.alive||!b.done||!b.flT||b.bt!=='hut')continue;const rx=wd(b.x-cam.fx),rz=wd(b.z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2*.75||!visB(b))continue;
     const sp=flowerSpots(b),cnt=Math.min(sp.length,Math.floor((gt-b.flT)/TUNE.flowerEvery));if(!cnt)continue;const fv=fogOn?Math.max(.42,vis[cidx(b.x,b.z)]):1;
     for(let k=0;k<cnt;k++){const f=sp[k];flw(rx+f.x,rz+f.z,b.x+f.x,b.z+f.z,f.o*6,f.s,f.c,fv)}
-    if(cnt>=4&&en<400)for(const sx of[-1,1]){const x=rx+sx*.73,z=rz+1.86;place(EDGE,en,x,hAt(b.x+sx*.73,b.z+1.86)-(x*x+z*z)*K,z,0,1);_c.setRGB(fv,fv,fv);EDGE.setColorAt(en,_c);en++}}
+    if(cnt>=4&&en<400)for(const sx of[-1,1]){const [ox,oz]=byaw(b,sx*.73,1.86),x=rx+ox,z=rz+oz;place(EDGE,en,x,hAt(b.x+ox,b.z+oz)-(x*x+z*z)*K,z,b.yaw||0,1);_c.setRGB(fv,fv,fv);EDGE.setColorAt(en,_c);en++}}
   for(const q of patches){const rx=wd(q.x-cam.fx),rz=wd(q.z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2*.75||!seenAt(q.x,q.z))continue;const g=Math.min(1,(gt-q.born)/10)*(q.die?Math.max(0,1-(gt-q.die)/6):1);if(g<=.05)continue;
     const fv=fogOn?Math.max(.42,vis[cidx(q.x,q.z)]):1,sp=patchSpots(q),cnt=Math.ceil(sp.length*g);for(let k=0;k<cnt;k++){const f=sp[k];flw(rx+f.x,rz+f.z,q.x+f.x,q.z+f.z,f.y,f.s,f.c,fv)}}
   let pn=0;for(const q of tombBeds){const rx=wd(q.x-cam.fx),rz=wd(q.z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2*.75||!seenAt(q.x,q.z))continue;const fv=fogOn?Math.max(.42,vis[cidx(q.x,q.z)]):1;
@@ -2262,7 +2270,7 @@ function drawEntities(){
     for(let k=0;k<14;k++){const ring=k<5?.38:.68,a=k<5?k/5*TAU:(k-5)/9*TAU+.2,fx=Math.cos(a)*ring,fz=Math.sin(a)*ring;flw(rx+fx,rz+fz,q.x+fx,q.z+fz,a,1.5+hsh(q.id*31+k)*.4,FLOWER_C[(q.id+(k<5?0:1+(k&1)))%3],fv)}}
   // ---- dressing of the meaningful places, and memorials of what was given there ----
   let kn=0,sn2=0,rn2=0,bn2=0,dn=0,mn=0,hn=0;const vf=(x,z)=>fogOn?Math.max(.42,vis[cidx(x,z)]):1;
-  const at=(b,lx,lz)=>{const x=wd(b.x-cam.fx)+lx,z=wd(b.z-cam.fz)+lz;return [x,z,b.x+lx,b.z+lz,hAt(b.x+lx,b.z+lz)-(x*x+z*z)*K]};
+  const at=(b,lx,lz)=>{[lx,lz]=byaw(b,lx,lz);const x=wd(b.x-cam.fx)+lx,z=wd(b.z-cam.fz)+lz;return [x,z,b.x+lx,b.z+lz,hAt(b.x+lx,b.z+lz)-(x*x+z*z)*K]};
   const pebble=(b,lx,lz,sc,yaw)=>{if(mn>=500)return;const [x,z,,,y]=at(b,lx,lz);place(PEBBLE,mn,x,y,z,yaw,sc);_c.setRGB(1,1,1).multiplyScalar(vf(b.x,b.z));PEBBLE.setColorAt(mn,_c);mn++};
   const settledT=new Set();for(const b of blds)if(b.alive&&b.flT)settledT.add(b.tribe);
   const oldest={};for(const b of blds)if(b.alive&&b.done&&b.bt==='hut'&&b.flT&&(!oldest[b.tribe]||b.id<oldest[b.tribe].id))oldest[b.tribe]=b;
