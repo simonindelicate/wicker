@@ -599,8 +599,8 @@ const SCEN=[
  {title:'Surrounded',seed:16111,style:'hub',enemies:3,diff:'hard',fog:true,bounty:true,goal:{type:'conquer'},all:true,ai:{balCap:2,freeBridge:true},
   me:{mana:300,wood:200,huts:2},news:['Two full thrall folds and a Wicker God, ready from the start'],
   intro:'We have settled in the middle of everything. Three narrow causeways run from the rival islands to ours, and every army will march along one of them. But we did not come empty-handed: our folds are full of the wild folk, and the Wicker God already stands in its grove, waiting to be fed.'},
- {title:'Late to the Feast',seed:17203,style:'continent',enemies:3,diff:'hard',fog:true,goal:{type:'conquer'},all:true,
-  me:{mana:100,wood:40,huts:1},them:{mana:500,huts:3,warriors:4},
+ {title:'Late to the Feast',seed:17203,style:'continent',enemies:3,diff:'hard',fog:false,goal:{type:'conquer'},all:true,raids:[{t:100,n:3},{t:240,n:5},{t:360,n:7}],routDread:20,
+  me:{mana:100,wood:40,huts:1},them:{mana:500,huts:3,warriors:4},ai:{first:480},
   intro:'We arrive with little, and the others have been here for years. Their halls are built and their warriors drilled. We must be cleverer than them, because we cannot be stronger.'},
  {title:'Blood Moon',seed:18301,style:'highlands',enemies:3,diff:'hard',fog:true,goal:{type:'conquer'},all:true,
   me:{mana:300,wood:200,huts:2},ai:{war:1.45,first:200},
@@ -1404,7 +1404,13 @@ function updProjs(dt){for(let i=projs.length-1;i>=0;i--){const p=projs[i];p.t+=d
 // ---------------- AI ----------------
 function mkAI(i,s){const D=DIFF[settings.diff],P=TRIBES[i].pers||{},SA=(scen()&&scen().ai)||{},war=(P.war||1)*(SA.war||1);return {base:{x:s.x,z:s.z},nextBuild:4+i,nextAtk:SA.first!=null?SA.first+(SA.only0?(i-1)*20:R()*40):(D.first+R()*60)/war,need:SA.need??Math.max(3,Math.round(D.need/war)),needInc:SA.needInc??D.needInc,only0:!!SA.only0,airRaid:!!SA.airRaid,hangRaid:!!SA.hangRaid,balCap:SA.balCap,freeBridge:!!SA.freeBridge,D,int:SA.int??D.int/war,res:D.res,gap:D.gap*(P.castGap||1)*(SA.gap||1),castT:0,milR:SA.mil??(D.milR+(P.mil||0)),bridge:null,calm:0,siege:0}}
 function findSpot(T,type){const b=T.ai.base,S=T.stats,f=field(b.x,b.z);for(let t=0;t<90;t++){const a=R()*TAU,r=4.5+R()*Math.min(24,7+S.blds*1.6),v=validSpot(T.id,type,b.x+Math.cos(a)*r,b.z+Math.sin(a)*r);if(v.err)continue;const sz=type==='hedge'?1:BT[type].s;let ok=false;for(let dz=-1;dz<=sz&&!ok;dz++)for(let dx=-1;dx<=sz;dx++){if(f[wi(v.cz0+dz)*N+wi(v.cx0+dx)]>=0){ok=true;break}}if(ok)return v}return null}
-function aiThink(T){const ai=T.ai,S=T.stats,base=ai.base,sh=T.shaman;if(T.broken&&!armageddon){if(sh&&sh.st==='idle'&&d2(sh.x,sh.z,base.x,base.z)>10*10)orderUnit(sh,base.x,base.z+2,true);return}
+// Scripted raids (Late to the Feast): each rival in turn sends one raid on the player at a set time, topped up to its size.
+function forceRaid(T,n){const ai=T.ai,base=ai.base;if(!tribes[0].alive||armageddon)return;const army=[];for(const u of units)if(u.alive&&u.tribe===T.id&&!u.inV&&!u.post&&(u.type==='warrior'||u.type==='archer')&&army.length<n)army.push(u);
+  while(army.length<n){const a=R()*TAU,u=spawnUnit('warrior',T.id,base.x+Math.cos(a)*3,base.z+Math.sin(a)*3);army.push(u)}
+  let tgt=null,bd=1e18;for(const b of blds)if(b.alive&&b.tribe===0&&!BT[b.bt].inv&&b.bt!=='hedge'){const d=d2(base.x,base.z,b.x,b.z);if(d<bd){bd=d;tgt=b}}if(!tgt)return;
+  for(const u of army){const a=R()*TAU,r=R()*3;orderUnit(u,tgt.x+Math.cos(a)*r,tgt.z+Math.sin(a)*r,true,tgt.x,tgt.z);u.raidT=gt+150}
+  ai.wave={ids:army.map(u=>u.id),n0:army.length,tgt:0,t:gt};if(!watching){toast(`A horn sounds from the ${T.name} lands: ${army.length} of their fighters are marching on you. Watch the map.`);sfx('horn',1)}}
+function aiThink(T){const ai=T.ai,S=T.stats,base=ai.base,sh=T.shaman;{const SC=scen(),r=SC&&SC.raids&&SC.raids[T.id-1];if(r&&!T.raided&&gt>=r.t&&!T.broken){T.raided=true;if(!ai.wave)forceRaid(T,r.n)}}if(T.broken&&!armageddon){if(sh&&sh.st==='idle'&&d2(sh.x,sh.z,base.x,base.z)>10*10)orderUnit(sh,base.x,base.z+2,true);return}
   let threat=null;for(const b of blds)if(b.alive&&b.tribe===T.id){const e=enemyNear(b.x,b.z,T.id,11);if(e){threat=e;break}}
   const army=[];for(const u of units)if(u.alive&&u.tribe===T.id&&!u.inV&&MIL[u.type])army.push(u);
   if(threat){for(const u of army)if((u.st==='idle'||u.st==='move')&&d2(u.x,u.z,threat.x,threat.z)<40*40)orderUnit(u,threat.x,threat.z,true);
@@ -1426,7 +1432,9 @@ function aiThink(T){const ai=T.ai,S=T.stats,base=ai.base,sh=T.shaman;if(T.broken
         const tk=harvestBroken(T,alive,ai.wave.tgt);for(const u of alive)if(u.alive){orderUnit(u,base.x+(R()-.5)*6,base.z+(R()-.5)*6,false);u.raidT=0}
         const ni=ai.needInc??ai.D.needInc;ai.need0=ai.need0||Math.max(3,Math.round(ai.D.need));ai.need=Math.max(ai.need0,ai.need-2*ni);ai.nextAtk=Math.max(ai.nextAtk,gt+ai.int*1.5);
         if(ai.wave.tgt===0&&!watching)toast(`The ${T.name} attack breaks.${!tk.n?'':tk.where==='ground'?` ${tk.n} of their fighters are cut off and put to death where they stand; their blood goes into the earth.`:` ${tk.n} of their fighters are cut off and dragged to your ${tk.where}.`} The rest run for home, shamed; it will be a while before they come again.`)}
-      else for(const u of alive)u.raidT=0;ai.wave=null}}
+      else{for(const u of alive)u.raidT=0;if(!alive.length&&gt-ai.wave.t<=200){const ni=ai.needInc??ai.D.needInc;ai.need0=ai.need0||Math.max(3,Math.round(ai.D.need));ai.need=Math.max(ai.need0,ai.need-2*ni);ai.nextAtk=Math.max(ai.nextAtk,gt+ai.int*1.5)}}
+      if(ai.wave.tgt===0&&(!alive.length||alive.length<ai.wave.n0*TUNE.breakAt)&&gt-ai.wave.t<=200){const SC=scen();if(SC&&SC.routDread)T.dread=Math.max(T.dread||0,TUNE.desertAt)+SC.routDread}
+      ai.wave=null}}
   if(ai.hangRaid&&!watching)aiHangRaid(T,army);
   if(ai.bridge)aiBridge(T);
   else if(!threat&&gt>ai.nextAtk){const home=army.filter(u=>u.st==='idle'||u.st==='move');if(home.length>=ai.need)aiAttack(T,home);else ai.nextAtk=gt+10}}
