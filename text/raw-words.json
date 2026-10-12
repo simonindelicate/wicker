@@ -1,0 +1,11042 @@
+{
+ "html": [
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 196,
+   "text": "Mana",
+   "spans": [
+    [
+     17489,
+     17493
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 197,
+   "text": "Dread",
+   "spans": [
+    [
+     17617,
+     17622
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 198,
+   "text": "Captives",
+   "spans": [
+    [
+     17725,
+     17733
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 199,
+   "text": "Wood",
+   "spans": [
+    [
+     17804,
+     17808
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 200,
+   "text": "Followers",
+   "spans": [
+    [
+     17880,
+     17889
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "title",
+   "line": 203,
+   "text": "Game speed",
+   "spans": [
+    [
+     18034,
+     18044
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 203,
+   "text": "Pause",
+   "spans": [
+    [
+     18089,
+     18094
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "title",
+   "line": 203,
+   "text": "Sound",
+   "spans": [
+    [
+     18162,
+     18167
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 203,
+   "text": "Sound",
+   "spans": [
+    [
+     18169,
+     18174
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "title",
+   "line": 203,
+   "text": "Full screen (F)",
+   "spans": [
+    [
+     18221,
+     18236
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 203,
+   "text": "Full screen",
+   "spans": [
+    [
+     18238,
+     18249
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 203,
+   "text": "Menu",
+   "spans": [
+    [
+     18289,
+     18293
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "title",
+   "line": 207,
+   "text": "Drag to select a group",
+   "spans": [
+    [
+     18470,
+     18492
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 207,
+   "text": "Box",
+   "spans": [
+    [
+     18494,
+     18497
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "title",
+   "line": 208,
+   "text": "Find your Cunning Woman (Space)",
+   "spans": [
+    [
+     18550,
+     18581
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 208,
+   "text": "Cunning Woman",
+   "spans": [
+    [
+     18583,
+     18596
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 210,
+   "text": "Invoke",
+   "spans": [
+    [
+     18705,
+     18711
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 210,
+   "text": "Cancel",
+   "spans": [
+    [
+     18751,
+     18757
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 212,
+   "text": "Rejoice!",
+   "spans": [
+    [
+     18830,
+     18838
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "aria-label",
+   "line": 214,
+   "text": "Model",
+   "spans": [
+    [
+     18953,
+     18958
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 214,
+   "text": "Undo",
+   "spans": [
+    [
+     19001,
+     19005
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 214,
+   "text": "Done",
+   "spans": [
+    [
+     19047,
+     19051
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 215,
+   "text": "Preview in",
+   "spans": [
+    [
+     19104,
+     19114
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 215,
+   "text": "Villager for scale",
+   "spans": [
+    [
+     19227,
+     19245
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 217,
+   "text": "Add",
+   "spans": [
+    [
+     19356,
+     19359
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 217,
+   "text": "Box",
+   "spans": [
+    [
+     19399,
+     19402
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 217,
+   "text": "Cylinder",
+   "spans": [
+    [
+     19444,
+     19452
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 217,
+   "text": "Cone",
+   "spans": [
+    [
+     19495,
+     19499
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 217,
+   "text": "Ball",
+   "spans": [
+    [
+     19544,
+     19548
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 217,
+   "text": "Ring",
+   "spans": [
+    [
+     19591,
+     19595
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 218,
+   "text": "Part",
+   "spans": [
+    [
+     19648,
+     19652
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 218,
+   "text": "Copy",
+   "spans": [
+    [
+     19690,
+     19694
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "title",
+   "line": 218,
+   "text": "Copy to the other side, mirrored",
+   "spans": [
+    [
+     19744,
+     19776
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 218,
+   "text": "Mirror",
+   "spans": [
+    [
+     19778,
+     19784
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 218,
+   "text": "Delete",
+   "spans": [
+    [
+     19824,
+     19830
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 219,
+   "text": "Several",
+   "spans": [
+    [
+     19883,
+     19890
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "title",
+   "line": 219,
+   "text": "While on, taps add to the selection (same as shift-click)",
+   "spans": [
+    [
+     19959,
+     20016
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 219,
+   "text": "Add",
+   "spans": [
+    [
+     20018,
+     20021
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "title",
+   "line": 219,
+   "text": "Keep the selected parts together",
+   "spans": [
+    [
+     20070,
+     20102
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 219,
+   "text": "Group",
+   "spans": [
+    [
+     20104,
+     20109
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 219,
+   "text": "Ungroup",
+   "spans": [
+    [
+     20153,
+     20160
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 221,
+   "text": "Back to original",
+   "spans": [
+    [
+     20276,
+     20292
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 221,
+   "text": "Export",
+   "spans": [
+    [
+     20335,
+     20341
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 221,
+   "text": "Import",
+   "spans": [
+    [
+     20384,
+     20390
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 223,
+   "text": "Copy",
+   "spans": [
+    [
+     20618,
+     20622
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 223,
+   "text": "Use these models",
+   "spans": [
+    [
+     20666,
+     20682
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 223,
+   "text": "Close",
+   "spans": [
+    [
+     20726,
+     20731
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 226,
+   "text": "Nothing selected",
+   "spans": [
+    [
+     20828,
+     20844
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "title",
+   "line": 226,
+   "text": "Post the selected warriors and archers to hold a spot",
+   "spans": [
+    [
+     20898,
+     20951
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 226,
+   "text": "Post",
+   "spans": [
+    [
+     20953,
+     20957
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 226,
+   "text": "Clear",
+   "spans": [
+    [
+     21003,
+     21008
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 228,
+   "text": "Spells",
+   "spans": [
+    [
+     21113,
+     21119
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 229,
+   "text": "Build",
+   "spans": [
+    [
+     21171,
+     21176
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 230,
+   "text": "Tribe",
+   "spans": [
+    [
+     21228,
+     21233
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 239,
+   "text": "Wicker",
+   "spans": [
+    [
+     21468,
+     21474
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 240,
+   "text": "‘Tis time o’ the cunning, and thou art swollen wi’ it. There's power here, in the land, in the forests - but Nature shalbe not mocked - to wield her weapons ye must pay her a toll. What toll? Why nought but th’toll o’blood. Drag them to the table, let them hang, see their flesh burn in th’shapes o’wicker - from their bones new life shall grow; thy belly shall grow wi’ it. Ah, what sights ye’ll birth, O Cunning Woman. Send the Oss and drag them home, feed the land and go garlanded, love, for all shall bless thy dominion on the earth.",
+   "spans": [
+    [
+     21501,
+     22039
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 243,
+   "text": "Rival villages",
+   "spans": [
+    [
+     22111,
+     22125
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 243,
+   "text": "One",
+   "spans": [
+    [
+     22179,
+     22182
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 243,
+   "text": "Two",
+   "spans": [
+    [
+     22221,
+     22224
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 243,
+   "text": "Three",
+   "spans": [
+    [
+     22252,
+     22257
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 244,
+   "text": "World",
+   "spans": [
+    [
+     22312,
+     22317
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 244,
+   "text": "Archipelago",
+   "spans": [
+    [
+     22388,
+     22399
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 244,
+   "text": "Continent",
+   "spans": [
+    [
+     22435,
+     22444
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 244,
+   "text": "Highlands",
+   "spans": [
+    [
+     22480,
+     22489
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 245,
+   "text": "Rival skill",
+   "spans": [
+    [
+     22544,
+     22555
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 245,
+   "text": "Easy",
+   "spans": [
+    [
+     22612,
+     22616
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 245,
+   "text": "Normal",
+   "spans": [
+    [
+     22660,
+     22666
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 245,
+   "text": "Hard",
+   "spans": [
+    [
+     22697,
+     22701
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 246,
+   "text": "Fog of war",
+   "spans": [
+    [
+     22756,
+     22766
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 246,
+   "text": "On",
+   "spans": [
+    [
+     22832,
+     22834
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 246,
+   "text": "Off",
+   "spans": [
+    [
+     22862,
+     22865
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 247,
+   "text": "World seed",
+   "spans": [
+    [
+     22920,
+     22930
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "aria-label",
+   "line": 247,
+   "text": "World seed",
+   "spans": [
+    [
+     23010,
+     23020
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 247,
+   "text": "New world",
+   "spans": [
+    [
+     23055,
+     23064
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 248,
+   "text": "Film",
+   "spans": [
+    [
+     23135,
+     23139
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 248,
+   "text": "Off",
+   "spans": [
+    [
+     23185,
+     23188
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 248,
+   "text": "35mm",
+   "spans": [
+    [
+     23217,
+     23221
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 248,
+   "text": "Grain",
+   "spans": [
+    [
+     23279,
+     23284
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 248,
+   "text": "Dust and scratches",
+   "spans": [
+    [
+     23387,
+     23405
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 248,
+   "text": "Advanced film grade settings",
+   "spans": [
+    [
+     23521,
+     23549
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 250,
+   "text": "Your village is ochre.",
+   "spans": [
+    [
+     23697,
+     23719
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 252,
+   "text": "Continue",
+   "spans": [
+    [
+     23803,
+     23811
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 253,
+   "text": "Begin",
+   "spans": [
+    [
+     23863,
+     23868
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 254,
+   "text": "Campaign",
+   "spans": [
+    [
+     23925,
+     23933
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 255,
+   "text": "Watch the villages fight among themselves",
+   "spans": [
+    [
+     23987,
+     24028
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 256,
+   "text": "Tokens",
+   "spans": [
+    [
+     24083,
+     24089
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 257,
+   "text": "Model workshop",
+   "spans": [
+    [
+     24145,
+     24159
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 259,
+   "text": "How to play",
+   "spans": [
+    [
+     24215,
+     24226
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 260,
+   "text": "Touch",
+   "spans": [
+    [
+     24249,
+     24254
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 262,
+   "text": "Tap your people to select them. Tap the ground to move them, or an enemy to attack.",
+   "spans": [
+    [
+     24287,
+     24370
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 263,
+   "text": "Drag with one finger to pan. Pinch to zoom, and twist two fingers to turn the world.",
+   "spans": [
+    [
+     24390,
+     24474
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 264,
+   "text": "Turn on Box, then drag to select a group. Double-tap a unit to select all of that kind nearby.",
+   "spans": [
+    [
+     24494,
+     24588
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 265,
+   "text": "To clear your selection, tap with two fingers at once, press and hold on empty ground, or tap the selection line above the tabs.",
+   "spans": [
+    [
+     24608,
+     24736
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 267,
+   "text": "Mouse and keyboard",
+   "spans": [
+    [
+     24768,
+     24786
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 269,
+   "text": "Left-click selects your people, or tells the selected ones what to do; drag to box-select. Right-click on empty ground clears the selection; right-click on something still commands.",
+   "spans": [
+    [
+     24819,
+     25000
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 270,
+   "text": "Right-drag turns the view, middle-drag or WASD pans, the wheel zooms. Space finds your Cunning Woman, keys 1–0 pick spells, F toggles full screen, Esc cancels.",
+   "spans": [
+    [
+     25020,
+     25179
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 272,
+   "text": "Your tribe",
+   "spans": [
+    [
+     25211,
+     25221
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 274,
+   "text": "Villagers chop wood, build, and go into huts to breed. From the men, a grave; and from the grace, a seed; and from that seed: the trees!",
+   "spans": [
+    [
+     25254,
+     25390
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 275,
+   "text": "The forest altar takes one offering at a time and is stronger the more trees stand around it. The wicker man takes five and burns, giving mana and a frenzy of speed. The Wicker God takes twelve and burns for an enormous offering, terrifying any enemy who sees it. Both wicker figures burn down on use and must be rebuilt.",
+   "spans": [
+    [
+     25410,
+     25731
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 276,
+   "text": "Burning your own people fills the dread meter. Past the mark, frightened villagers start slipping away into the wilds. Dread fades with time, and faster with more huts.",
+   "spans": [
+    [
+     25751,
+     25919
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 277,
+   "text": "Osses, from the Oss House, roam the ground around where you last sent them and seize anyone they can catch, wildmen or enemy, carrying them home to your thrall fold at a run. Once an Oss has a captive it will not take orders until it is home. Captives are worth far more than your own people and cause no dread; kill an Oss on its way home and its captive goes free. You start with one thrall fold, which holds fifteen. Two or more captives left together in a fold will breed, slowly at first and then faster, so a fold left alone fills itself.",
+   "spans": [
+    [
+     25939,
+     26483
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 278,
+   "text": "Herne's Oak is a vast dead tree raised in deep woodland. Hang your Cunning Woman from it for two minutes, during which she can do nothing, and the Wild Hunt rides for you: antlered horsemen who roam the whole world killing anyone they find outside the reach of an enemy Cunning Woman. Every death they cause feeds you as richly as a captive, and lost riders return.",
+   "spans": [
+    [
+     26503,
+     26868
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 279,
+   "text": "Build a Maypole and idle villagers will dance around it, easing your people's dread. After enough merriment a May Queen is crowned. The longer she lives, the more her offering is worth, up to a vast sum with no dread and a long frenzy. Select fighters and tap her to swear them as her guards; you can do the same for your Cunning Woman. Rival Osses will hunt her, and a captured Queen can be offered by her captors for her full worth.",
+   "spans": [
+    [
+     26888,
+     27322
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 280,
+   "text": "Blackthorn hedges are cheap thorny barriers. Choose the hedge, tap where it starts and where it ends, and villagers plant it a length at a time. Nothing walks through a finished hedge, your own people included, so leave gaps; enemies must go round or hack through, which turns open ground into chokepoints.",
+   "spans": [
+    [
+     27342,
+     27648
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 281,
+   "text": "Your Bog is a hidden trap: your own people cross it safely, but enemies cannot see it and march straight in. It lasts until it has drowned ten of them. Fighters near their own buildings also take slightly less damage.",
+   "spans": [
+    [
+     27668,
+     27885
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 282,
+   "text": "When a rival army sets out for you, a horn sounds and the marching column shows on your map through the fog. An attack that loses half its strength breaks and runs home.",
+   "spans": [
+    [
+     27905,
+     28074
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 283,
+   "text": "The Rook Tree is a lookout in a dead tree. It sees a long way and hurls fire-pots at any enemy balloon in range, bringing one down in three hits. It ignores everything on the ground.",
+   "spans": [
+    [
+     28094,
+     28276
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 284,
+   "text": "To hold ground, select warriors or archers (the +5 buttons on the Tribe tab add the five nearest of a kind) and press Post on the selection line, then tap a spot. They form up round a banner, fight whatever comes near without chasing far, and take less harm while they stand at their post. Sending fighters to your oak, your tomb or a hollow hill posts them there the same way. Guards are left out when you select your army; give them any other order to take them off their post.",
+   "spans": [
+    [
+     28296,
+     28775
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 285,
+   "text": "A tribe that loses every building, trained unit and its Cunning Woman is finished: its last villagers are dragged off as captives by whoever broke it. A tribe whose people are all dead hands its empty buildings to the conqueror, with an offering of mana.",
+   "spans": [
+    [
+     28795,
+     29049
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 286,
+   "text": "Ground where a building has been razed is salted earth: for three minutes its old owner cannot build there. A rival that falls to a fifth of its greatest size is broken. Its people gather at their stone circle where everyone can see them, its buildings fall to disrepair and its Cunning Woman does not return; destroy her last fighters and the rest are yours for your pyres.",
+   "spans": [
+    [
+     29069,
+     29443
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 287,
+   "text": "Tap a rival's marker at the top of the screen to look at where her people are. Tap again to move on to the next group.",
+   "spans": [
+    [
+     29463,
+     29581
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 288,
+   "text": "Training buildings turn a villager into a warrior, archer, Oss or balloonist.",
+   "spans": [
+    [
+     29601,
+     29678
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 289,
+   "text": "To cross water, have your Cunning Woman raise a Land Bridge from the shore towards the land you want. Anyone can walk it, your enemies included. Or, if you have balloons, simply order your people across: idle balloons fly to them, carry them over and come back until everyone is across.",
+   "spans": [
+    [
+     29698,
+     29984
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 290,
+   "text": "Balloonists drift above the fighting and drop charges. Only other balloonists can reach them.",
+   "spans": [
+    [
+     30004,
+     30097
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 291,
+   "text": "Wildmen wander the wilds. They make easy captives.",
+   "spans": [
+    [
+     30117,
+     30167
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 292,
+   "text": "Hollow hills are ancient barrows that await discovery in wild country. Send your Cunning Woman with twenty sacrifices and at least 1,500 mana to perform the ritual of attaining and seal her inside. The hill becomes a wicker fortress: from it she sees everything and casts anywhere at half the mana. If enemies tear it down she is lost for a minute, then rises at your stone circle, and half your mana goes with her.",
+   "spans": [
+    [
+     30187,
+     30602
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 293,
+   "text": "All-against-all needs an unlit wicker man, ten followers to burn and a full bar of mana. All shall leave their dwellings where they stand and make way to the Moot at the world's end, there to fight to the death.",
+   "spans": [
+    [
+     30622,
+     30833
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 294,
+   "text": "Pick a spell and tap a target. Your Cunning Woman walks into range and casts. If she dies she returns at your stone circle after forty-five seconds while your tribe survives.",
+   "spans": [
+    [
+     30853,
+     31027
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 295,
+   "text": "The Scrying Torch spell conjures a burning beacon where the Cunning Woman aims it. The land around it stays in sight for as long as it stands, which makes it a lookout over a pass, a rival's door or a hollow hill. Enemies can tear it down.",
+   "spans": [
+    [
+     31047,
+     31286
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 296,
+   "text": "Ättestupa: when fewer than three villagers are left, your Cunning Woman can raise a crag at the edge of the village, climb it while your people watch, and go over the edge. Six villagers step out of the stone circle, no rival attacks you for thirty seconds, and she is reborn as usual. The crag stays, and she climbs the same one if it ever comes to that again.",
+   "spans": [
+    [
+     31306,
+     31667
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 297,
+   "text": "You win when every rival tribe has no followers or buildings left.",
+   "spans": [
+    [
+     31687,
+     31753
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 305,
+   "text": "Campaign",
+   "spans": [
+    [
+     31888,
+     31896
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 306,
+   "text": "History is a wheel that rises and ebbs with the seasons, dying and renewing in the endless wheel of nature. These are hard times, O Cunning Woman, can't thou lead thy village deliciously?",
+   "spans": [
+    [
+     31936,
+     32123
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 308,
+   "text": "Test mode: open every level (wins in test mode are not recorded)",
+   "spans": [
+    [
+     32238,
+     32302
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 309,
+   "text": "Back",
+   "spans": [
+    [
+     32357,
+     32361
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 315,
+   "text": "Tokens",
+   "spans": [
+    [
+     32467,
+     32473
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 318,
+   "text": "Keepsake",
+   "spans": [
+    [
+     32571,
+     32579
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 319,
+   "text": "Your campaign progress and tokens live in this browser. Copy the keepsake to keep them safe or carry them to another browser, and paste one here to bring them back.",
+   "spans": [
+    [
+     32606,
+     32770
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "placeholder",
+   "line": 320,
+   "text": "Paste a keepsake here",
+   "spans": [
+    [
+     32834,
+     32855
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 321,
+   "text": "Copy keepsake",
+   "spans": [
+    [
+     32935,
+     32948
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 321,
+   "text": "Use pasted keepsake",
+   "spans": [
+    [
+     32995,
+     33014
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 322,
+   "text": "Back",
+   "spans": [
+    [
+     33075,
+     33079
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 333,
+   "text": "Begin",
+   "spans": [
+    [
+     33440,
+     33445
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 334,
+   "text": "Back to the campaign",
+   "spans": [
+    [
+     33499,
+     33519
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 339,
+   "text": "Film grade",
+   "spans": [
+    [
+     33583,
+     33593
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 340,
+   "text": "Every number in the grade. Changes show at once and are kept in this browser.",
+   "spans": [
+    [
+     33606,
+     33683
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 343,
+   "text": "Copy the numbers",
+   "spans": [
+    [
+     33836,
+     33852
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 343,
+   "text": "Back to defaults",
+   "spans": [
+    [
+     33902,
+     33918
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 343,
+   "text": "Done",
+   "spans": [
+    [
+     33966,
+     33970
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 348,
+   "text": "Paused",
+   "spans": [
+    [
+     34100,
+     34106
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 350,
+   "text": "Film",
+   "spans": [
+    [
+     34193,
+     34197
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 350,
+   "text": "Off",
+   "spans": [
+    [
+     34243,
+     34246
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 350,
+   "text": "35mm",
+   "spans": [
+    [
+     34275,
+     34279
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 350,
+   "text": "Grain",
+   "spans": [
+    [
+     34337,
+     34342
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 350,
+   "text": "Dust and scratches",
+   "spans": [
+    [
+     34445,
+     34463
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 350,
+   "text": "Advanced film grade settings",
+   "spans": [
+    [
+     34579,
+     34607
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 351,
+   "text": "Resume",
+   "spans": [
+    [
+     34677,
+     34683
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 352,
+   "text": "Abandon and choose a new world",
+   "spans": [
+    [
+     34739,
+     34769
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 358,
+   "text": "Victory",
+   "spans": [
+    [
+     34912,
+     34919
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 361,
+   "text": "Play this world again",
+   "spans": [
+    [
+     35049,
+     35070
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 362,
+   "text": "Onward",
+   "spans": [
+    [
+     35128,
+     35134
+    ]
+   ]
+  },
+  {
+   "ctx": "HTML",
+   "key": "",
+   "line": 363,
+   "text": "Choose a new world",
+   "spans": [
+    [
+     35186,
+     35204
+    ]
+   ]
+  }
+ ],
+ "js": [
+  {
+   "ctx": "use",
+   "key": "",
+   "line": 370,
+   "text": "use strict",
+   "spans": [
+    [
+     35341,
+     35353
+    ]
+   ]
+  },
+  {
+   "ctx": "TRIBES",
+   "key": "name",
+   "line": 440,
+   "text": "Ochre",
+   "spans": [
+    [
+     40301,
+     40308
+    ]
+   ]
+  },
+  {
+   "ctx": "TRIBES",
+   "key": "name",
+   "line": 441,
+   "text": "Blood",
+   "spans": [
+    [
+     40354,
+     40361
+    ]
+   ]
+  },
+  {
+   "ctx": "TRIBES",
+   "key": "name",
+   "line": 442,
+   "text": "Forest",
+   "spans": [
+    [
+     40486,
+     40494
+    ]
+   ]
+  },
+  {
+   "ctx": "TRIBES",
+   "key": "name",
+   "line": 443,
+   "text": "Ash",
+   "spans": [
+    [
+     40629,
+     40634
+    ]
+   ]
+  },
+  {
+   "ctx": "UT",
+   "key": "label",
+   "line": 447,
+   "text": "Villager",
+   "spans": [
+    [
+     41090,
+     41100
+    ]
+   ]
+  },
+  {
+   "ctx": "UT",
+   "key": "pl",
+   "line": 447,
+   "text": "villagers",
+   "spans": [
+    [
+     41104,
+     41115
+    ]
+   ]
+  },
+  {
+   "ctx": "UT",
+   "key": "label",
+   "line": 448,
+   "text": "Warrior",
+   "spans": [
+    [
+     41177,
+     41186
+    ]
+   ]
+  },
+  {
+   "ctx": "UT",
+   "key": "pl",
+   "line": 448,
+   "text": "warriors",
+   "spans": [
+    [
+     41190,
+     41200
+    ]
+   ]
+  },
+  {
+   "ctx": "UT",
+   "key": "label",
+   "line": 449,
+   "text": "Oss",
+   "spans": [
+    [
+     41259,
+     41264
+    ]
+   ]
+  },
+  {
+   "ctx": "UT",
+   "key": "pl",
+   "line": 449,
+   "text": "osses",
+   "spans": [
+    [
+     41268,
+     41275
+    ]
+   ]
+  },
+  {
+   "ctx": "UT",
+   "key": "label",
+   "line": 450,
+   "text": "Rider of the Hunt",
+   "spans": [
+    [
+     41338,
+     41357
+    ]
+   ]
+  },
+  {
+   "ctx": "UT",
+   "key": "pl",
+   "line": 450,
+   "text": "riders",
+   "spans": [
+    [
+     41361,
+     41369
+    ]
+   ]
+  },
+  {
+   "ctx": "UT",
+   "key": "label",
+   "line": 451,
+   "text": "May Queen",
+   "spans": [
+    [
+     41427,
+     41438
+    ]
+   ]
+  },
+  {
+   "ctx": "UT",
+   "key": "pl",
+   "line": 451,
+   "text": "May Queens",
+   "spans": [
+    [
+     41442,
+     41454
+    ]
+   ]
+  },
+  {
+   "ctx": "UT",
+   "key": "label",
+   "line": 452,
+   "text": "Captive",
+   "spans": [
+    [
+     41514,
+     41523
+    ]
+   ]
+  },
+  {
+   "ctx": "UT",
+   "key": "pl",
+   "line": 452,
+   "text": "captives",
+   "spans": [
+    [
+     41527,
+     41537
+    ]
+   ]
+  },
+  {
+   "ctx": "UT",
+   "key": "label",
+   "line": 453,
+   "text": "Archer",
+   "spans": [
+    [
+     41600,
+     41608
+    ]
+   ]
+  },
+  {
+   "ctx": "UT",
+   "key": "pl",
+   "line": 453,
+   "text": "archers",
+   "spans": [
+    [
+     41612,
+     41621
+    ]
+   ]
+  },
+  {
+   "ctx": "UT",
+   "key": "label",
+   "line": 454,
+   "text": "Cunning Woman",
+   "spans": [
+    [
+     41695,
+     41710
+    ]
+   ]
+  },
+  {
+   "ctx": "UT",
+   "key": "pl",
+   "line": 454,
+   "text": "Cunning Women",
+   "spans": [
+    [
+     41714,
+     41729
+    ]
+   ]
+  },
+  {
+   "ctx": "UT",
+   "key": "label",
+   "line": 455,
+   "text": "Ghost",
+   "spans": [
+    [
+     41786,
+     41793
+    ]
+   ]
+  },
+  {
+   "ctx": "UT",
+   "key": "pl",
+   "line": 455,
+   "text": "ghosts",
+   "spans": [
+    [
+     41797,
+     41805
+    ]
+   ]
+  },
+  {
+   "ctx": "UT",
+   "key": "label",
+   "line": 456,
+   "text": "Balloonist",
+   "spans": [
+    [
+     41876,
+     41888
+    ]
+   ]
+  },
+  {
+   "ctx": "UT",
+   "key": "pl",
+   "line": 456,
+   "text": "balloonists",
+   "spans": [
+    [
+     41892,
+     41905
+    ]
+   ]
+  },
+  {
+   "ctx": "UT",
+   "key": "label",
+   "line": 457,
+   "text": "Wildman",
+   "spans": [
+    [
+     41990,
+     41999
+    ]
+   ]
+  },
+  {
+   "ctx": "UT",
+   "key": "pl",
+   "line": 457,
+   "text": "wildmen",
+   "spans": [
+    [
+     42003,
+     42012
+    ]
+   ]
+  },
+  {
+   "ctx": "BT",
+   "key": "label",
+   "line": 461,
+   "text": "Hut",
+   "spans": [
+    [
+     42149,
+     42154
+    ]
+   ]
+  },
+  {
+   "ctx": "BT",
+   "key": "info",
+   "line": 461,
+   "text": "Villagers breed here",
+   "spans": [
+    [
+     42160,
+     42182
+    ]
+   ]
+  },
+  {
+   "ctx": "BT",
+   "key": "label",
+   "line": 462,
+   "text": "Warrior Camp",
+   "spans": [
+    [
+     42226,
+     42240
+    ]
+   ]
+  },
+  {
+   "ctx": "BT",
+   "key": "info",
+   "line": 462,
+   "text": "Trains warriors",
+   "spans": [
+    [
+     42275,
+     42292
+    ]
+   ]
+  },
+  {
+   "ctx": "BT",
+   "key": "label",
+   "line": 463,
+   "text": "Archery Range",
+   "spans": [
+    [
+     42337,
+     42352
+    ]
+   ]
+  },
+  {
+   "ctx": "BT",
+   "key": "info",
+   "line": 463,
+   "text": "Trains archers",
+   "spans": [
+    [
+     42387,
+     42403
+    ]
+   ]
+  },
+  {
+   "ctx": "BT",
+   "key": "label",
+   "line": 464,
+   "text": "Oss House",
+   "spans": [
+    [
+     42451,
+     42462
+    ]
+   ]
+  },
+  {
+   "ctx": "BT",
+   "key": "info",
+   "line": 464,
+   "text": "Trains osses, who roam and carry off captives",
+   "spans": [
+    [
+     42494,
+     42541
+    ]
+   ]
+  },
+  {
+   "ctx": "BT",
+   "key": "label",
+   "line": 465,
+   "text": "Blackthorn Hedge",
+   "spans": [
+    [
+     42584,
+     42602
+    ]
+   ]
+  },
+  {
+   "ctx": "BT",
+   "key": "info",
+   "line": 465,
+   "text": "A thorny barrier. Tap where it starts and where it ends; nothing walks through until it is hacked down",
+   "spans": [
+    [
+     42608,
+     42712
+    ]
+   ]
+  },
+  {
+   "ctx": "BT",
+   "key": "label",
+   "line": 466,
+   "text": "Maypole",
+   "spans": [
+    [
+     42759,
+     42768
+    ]
+   ]
+  },
+  {
+   "ctx": "BT",
+   "key": "info",
+   "line": 466,
+   "text": "Villagers dance here, easing dread, until a May Queen is crowned",
+   "spans": [
+    [
+     42774,
+     42840
+    ]
+   ]
+  },
+  {
+   "ctx": "BT",
+   "key": "label",
+   "line": 467,
+   "text": "Rook Tree",
+   "spans": [
+    [
+     42884,
+     42895
+    ]
+   ]
+  },
+  {
+   "ctx": "BT",
+   "key": "info",
+   "line": 467,
+   "text": "A lookout high in a dead tree; sees far and hurls fire-pots at balloons",
+   "spans": [
+    [
+     42901,
+     42974
+    ]
+   ]
+  },
+  {
+   "ctx": "BT",
+   "key": "label",
+   "line": 468,
+   "text": "Thrall Fold",
+   "spans": [
+    [
+     43018,
+     43031
+    ]
+   ]
+  },
+  {
+   "ctx": "BT",
+   "key": "info",
+   "line": 468,
+   "text": "Pens up to fifteen captives your osses bring home",
+   "spans": [
+    [
+     43045,
+     43096
+    ]
+   ]
+  },
+  {
+   "ctx": "BT",
+   "key": "label",
+   "line": 469,
+   "text": "Forest Altar",
+   "spans": [
+    [
+     43141,
+     43155
+    ]
+   ]
+  },
+  {
+   "ctx": "BT",
+   "key": "info",
+   "line": 469,
+   "text": "Takes one offering at a time; stronger among trees",
+   "spans": [
+    [
+     43174,
+     43226
+    ]
+   ]
+  },
+  {
+   "ctx": "BT",
+   "key": "label",
+   "line": 470,
+   "text": "Wicker God",
+   "spans": [
+    [
+     43270,
+     43282
+    ]
+   ]
+  },
+  {
+   "ctx": "BT",
+   "key": "info",
+   "line": 470,
+   "text": "Holds twelve; burns for an enormous offering",
+   "spans": [
+    [
+     43317,
+     43363
+    ]
+   ]
+  },
+  {
+   "ctx": "BT",
+   "key": "label",
+   "line": 471,
+   "text": "Scrying Torch",
+   "spans": [
+    [
+     43407,
+     43422
+    ]
+   ]
+  },
+  {
+   "ctx": "BT",
+   "key": "info",
+   "line": 471,
+   "text": "A burning beacon; the land around it stays in sight while it stands",
+   "spans": [
+    [
+     43428,
+     43497
+    ]
+   ]
+  },
+  {
+   "ctx": "BT",
+   "key": "label",
+   "line": 472,
+   "text": "Tomb Fortress",
+   "spans": [
+    [
+     43540,
+     43555
+    ]
+   ]
+  },
+  {
+   "ctx": "BT",
+   "key": "info",
+   "line": 472,
+   "text": "Your Cunning Woman lies sealed here",
+   "spans": [
+    [
+     43561,
+     43598
+    ]
+   ]
+  },
+  {
+   "ctx": "BT",
+   "key": "label",
+   "line": 473,
+   "text": "Herne's Oak",
+   "spans": [
+    [
+     43643,
+     43656
+    ]
+   ]
+  },
+  {
+   "ctx": "BT",
+   "key": "info",
+   "line": 473,
+   "text": "Hang your Cunning Woman from it for two minutes and the Wild Hunt rides",
+   "spans": [
+    [
+     43662,
+     43735
+    ]
+   ]
+  },
+  {
+   "ctx": "BT",
+   "key": "label",
+   "line": 474,
+   "text": "Balloon Works",
+   "spans": [
+    [
+     43782,
+     43797
+    ]
+   ]
+  },
+  {
+   "ctx": "BT",
+   "key": "info",
+   "line": 474,
+   "text": "Builds balloons",
+   "spans": [
+    [
+     43833,
+     43850
+    ]
+   ]
+  },
+  {
+   "ctx": "BT",
+   "key": "label",
+   "line": 475,
+   "text": "Wicker Man",
+   "spans": [
+    [
+     43896,
+     43908
+    ]
+   ]
+  },
+  {
+   "ctx": "BT",
+   "key": "info",
+   "line": 475,
+   "text": "Holds five; burns for mana and a frenzy",
+   "spans": [
+    [
+     43944,
+     43985
+    ]
+   ]
+  },
+  {
+   "ctx": "BT",
+   "key": "label",
+   "line": 476,
+   "text": "Stone Circle",
+   "spans": [
+    [
+     44028,
+     44042
+    ]
+   ]
+  },
+  {
+   "ctx": "BT",
+   "key": "info",
+   "line": 476,
+   "text": "Your Cunning Woman is reborn here",
+   "spans": [
+    [
+     44048,
+     44083
+    ]
+   ]
+  },
+  {
+   "ctx": "BT",
+   "key": "label",
+   "line": 477,
+   "text": "Hollow Hill",
+   "spans": [
+    [
+     44136,
+     44149
+    ]
+   ]
+  },
+  {
+   "ctx": "BT",
+   "key": "info",
+   "line": 477,
+   "text": "Seal your Cunning Woman inside with twenty followers and 1,500 mana",
+   "spans": [
+    [
+     44155,
+     44224
+    ]
+   ]
+  },
+  {
+   "ctx": "BT",
+   "key": "label",
+   "line": 478,
+   "text": "The Moot",
+   "spans": [
+    [
+     44275,
+     44285
+    ]
+   ]
+  },
+  {
+   "ctx": "BT",
+   "key": "info",
+   "line": 478,
+   "text": "Where every people gathers at the end",
+   "spans": [
+    [
+     44291,
+     44330
+    ]
+   ]
+  },
+  {
+   "ctx": "SP",
+   "key": "n",
+   "line": 482,
+   "text": "Blast",
+   "spans": [
+    [
+     44492,
+     44499
+    ]
+   ]
+  },
+  {
+   "ctx": "SP",
+   "key": "n",
+   "line": 483,
+   "text": "Lightning",
+   "spans": [
+    [
+     44550,
+     44561
+    ]
+   ]
+  },
+  {
+   "ctx": "SP",
+   "key": "n",
+   "line": 484,
+   "text": "Plague of Flies",
+   "spans": [
+    [
+     44606,
+     44623
+    ]
+   ]
+  },
+  {
+   "ctx": "SP",
+   "key": "n",
+   "line": 485,
+   "text": "Shield",
+   "spans": [
+    [
+     44670,
+     44678
+    ]
+   ]
+  },
+  {
+   "ctx": "SP",
+   "key": "n",
+   "line": 486,
+   "text": "Ghost Army",
+   "spans": [
+    [
+     44723,
+     44735
+    ]
+   ]
+  },
+  {
+   "ctx": "SP",
+   "key": "n",
+   "line": 487,
+   "text": "Land Bridge",
+   "spans": [
+    [
+     44781,
+     44794
+    ]
+   ]
+  },
+  {
+   "ctx": "SP",
+   "key": "n",
+   "line": 488,
+   "text": "Flatten",
+   "spans": [
+    [
+     44842,
+     44851
+    ]
+   ]
+  },
+  {
+   "ctx": "SP",
+   "key": "n",
+   "line": 489,
+   "text": "Hypnotise",
+   "spans": [
+    [
+     44895,
+     44906
+    ]
+   ]
+  },
+  {
+   "ctx": "SP",
+   "key": "n",
+   "line": 490,
+   "text": "Whirlwind",
+   "spans": [
+    [
+     44951,
+     44962
+    ]
+   ]
+  },
+  {
+   "ctx": "SP",
+   "key": "n",
+   "line": 491,
+   "text": "Scrying Torch",
+   "spans": [
+    [
+     45007,
+     45022
+    ]
+   ]
+  },
+  {
+   "ctx": "SP",
+   "key": "n",
+   "line": 492,
+   "text": "Bog",
+   "spans": [
+    [
+     45067,
+     45072
+    ]
+   ]
+  },
+  {
+   "ctx": "SP",
+   "key": "n",
+   "line": 493,
+   "text": "Erode",
+   "spans": [
+    [
+     45117,
+     45124
+    ]
+   ]
+  },
+  {
+   "ctx": "SP",
+   "key": "n",
+   "line": 494,
+   "text": "Earthquake",
+   "spans": [
+    [
+     45171,
+     45183
+    ]
+   ]
+  },
+  {
+   "ctx": "SP",
+   "key": "n",
+   "line": 495,
+   "text": "Day o'the Stones",
+   "spans": [
+    [
+     45227,
+     45245
+    ]
+   ]
+  },
+  {
+   "ctx": "SP",
+   "key": "n",
+   "line": 496,
+   "text": "St. Anthony's Fire",
+   "spans": [
+    [
+     45292,
+     45312
+    ]
+   ]
+  },
+  {
+   "ctx": "SP",
+   "key": "n",
+   "line": 497,
+   "text": "Volcano",
+   "spans": [
+    [
+     45359,
+     45368
+    ]
+   ]
+  },
+  {
+   "ctx": "SP",
+   "key": "n",
+   "line": 498,
+   "text": "All-against-all",
+   "spans": [
+    [
+     45413,
+     45430
+    ]
+   ]
+  },
+  {
+   "ctx": "SPDESC",
+   "key": "torch",
+   "line": 501,
+   "text": "Scry where e're the beacon burns. For it shalbe thine eyes.",
+   "spans": [
+    [
+     45530,
+     45592
+    ]
+   ]
+  },
+  {
+   "ctx": "SPDESC",
+   "key": "blast",
+   "line": 501,
+   "text": "Thy will readily done upon thine enemies.",
+   "spans": [
+    [
+     45599,
+     45642
+    ]
+   ]
+  },
+  {
+   "ctx": "SPDESC",
+   "key": "lightning",
+   "line": 501,
+   "text": "The strike of thunder is a blow no man or woman can survive.",
+   "spans": [
+    [
+     45653,
+     45715
+    ]
+   ]
+  },
+  {
+   "ctx": "SPDESC",
+   "key": "swarm",
+   "line": 501,
+   "text": "Calls forth a cloud o’ wicked horseflies to bite and sting and scatter thy assailants for ten seconds.",
+   "spans": [
+    [
+     45722,
+     45826
+    ]
+   ]
+  },
+  {
+   "ctx": "SPDESC",
+   "key": "convert",
+   "line": 501,
+   "text": "Turns wandering wildmen within the circle into your villagers.",
+   "spans": [
+    [
+     45835,
+     45899
+    ]
+   ]
+  },
+  {
+   "ctx": "SPDESC",
+   "key": "shield",
+   "line": 501,
+   "text": "A ward against harm for those within its ‘fluence.",
+   "spans": [
+    [
+     45907,
+     45959
+    ]
+   ]
+  },
+  {
+   "ctx": "SPDESC",
+   "key": "ghost",
+   "line": 501,
+   "text": "Raise the shades of dead men. Brief candles who make war, draw the eye and melt away come striking.",
+   "spans": [
+    [
+     45966,
+     46067
+    ]
+   ]
+  },
+  {
+   "ctx": "SPDESC",
+   "key": "bridge",
+   "line": 501,
+   "text": "Raise up a causeway towards heights and across water.",
+   "spans": [
+    [
+     46075,
+     46130
+    ]
+   ]
+  },
+  {
+   "ctx": "SPDESC",
+   "key": "flatten",
+   "line": 501,
+   "text": "From crags and cliffsides spring forth green and level fields. Cannot be cast upon the water.",
+   "spans": [
+    [
+     46139,
+     46234
+    ]
+   ]
+  },
+  {
+   "ctx": "SPDESC",
+   "key": "hypno",
+   "line": 501,
+   "text": "Witch them to thy cause - they’ll fight for you for twenty-five seconds.",
+   "spans": [
+    [
+     46241,
+     46315
+    ]
+   ]
+  },
+  {
+   "ctx": "SPDESC",
+   "key": "whirl",
+   "line": 501,
+   "text": "A twisting wind that tears walls from their foundations afore wand’ring in search of new victims.",
+   "spans": [
+    [
+     46322,
+     46421
+    ]
+   ]
+  },
+  {
+   "ctx": "SPDESC",
+   "key": "swamp",
+   "line": 501,
+   "text": "A sucking mire that offers safe passage to those who know the way - and clammy death to those who do not. Will remain until ten are claimed.",
+   "spans": [
+    [
+     46428,
+     46570
+    ]
+   ]
+  },
+  {
+   "ctx": "SPDESC",
+   "key": "erode",
+   "line": 501,
+   "text": "Creates a dyke within the downs to drown thy foes and their works.",
+   "spans": [
+    [
+     46577,
+     46645
+    ]
+   ]
+  },
+  {
+   "ctx": "SPDESC",
+   "key": "quake",
+   "line": 501,
+   "text": "Behold, the very earth shall shake and rupture.",
+   "spans": [
+    [
+     46652,
+     46701
+    ]
+   ]
+  },
+  {
+   "ctx": "SPDESC",
+   "key": "fire",
+   "line": 501,
+   "text": "A bitter rain of stoney death. Watch as they flee their collapsing homes.",
+   "spans": [
+    [
+     46707,
+     46782
+    ]
+   ]
+  },
+  {
+   "ctx": "SPDESC",
+   "key": "angel",
+   "line": 501,
+   "text": "Engender a plague of paroxysms, contagion and a bloody demise.",
+   "spans": [
+    [
+     46789,
+     46853
+    ]
+   ]
+  },
+  {
+   "ctx": "SPDESC",
+   "key": "volcano",
+   "line": 501,
+   "text": "Nature’s cruellest vengeance at the command.",
+   "spans": [
+    [
+     46862,
+     46908
+    ]
+   ]
+  },
+  {
+   "ctx": "SPDESC",
+   "key": "arma",
+   "line": 501,
+   "text": "There shalbe a moot at the world’s end and every living souls shalbe a soldier in the battle of all against all. So hath it been and so mote it be.",
+   "spans": [
+    [
+     46914,
+     47063
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 1 — The Strait",
+   "key": "title",
+   "line": 556,
+   "text": "The Strait",
+   "spans": [
+    [
+     52397,
+     52409
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 1 — The Strait",
+   "key": "news",
+   "line": 557,
+   "text": "Forest Altar",
+   "spans": [
+    [
+     52548,
+     52562
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 1 — The Strait",
+   "key": "news",
+   "line": 557,
+   "text": "Warrior Camp",
+   "spans": [
+    [
+     52563,
+     52577
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 1 — The Strait",
+   "key": "news",
+   "line": 557,
+   "text": "Blast",
+   "spans": [
+    [
+     52578,
+     52585
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 1 — The Strait",
+   "key": "news",
+   "line": 557,
+   "text": "Land Bridge",
+   "spans": [
+    [
+     52586,
+     52599
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 1 — The Strait",
+   "key": "intro",
+   "line": 559,
+   "text": "Across the water a people keeps its own fires and will not answer when we call. Our Cunning Woman has no power of her own: everything she does must be paid for with a life. Build a forest altar among the trees and give it villagers, one at a time. With what it gives back, raise warriors, lift the sea floor into a road, and cross.",
+   "spans": [
+    [
+     52711,
+     53044
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 2 — The Grove",
+   "key": "title",
+   "line": 560,
+   "text": "The Grove",
+   "spans": [
+    [
+     53055,
+     53066
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 2 — The Grove",
+   "key": "news",
+   "line": 561,
+   "text": "Wicker Man",
+   "spans": [
+    [
+     53188,
+     53200
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 2 — The Grove",
+   "key": "news",
+   "line": 561,
+   "text": "Lightning",
+   "spans": [
+    [
+     53201,
+     53212
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 2 — The Grove",
+   "key": "intro",
+   "line": 563,
+   "text": "The grove gives a little for each life. The wicker man gives far more, but it takes five at once, and it must burn to give anything at all. Feed it, and the Cunning Woman will have what she needs.",
+   "spans": [
+    [
+     53314,
+     53512
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 3 — Hobby Horse",
+   "key": "title",
+   "line": 564,
+   "text": "Hobby Horse",
+   "spans": [
+    [
+     53523,
+     53536
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 3 — Hobby Horse",
+   "key": "news",
+   "line": 565,
+   "text": "Oss House",
+   "spans": [
+    [
+     53681,
+     53692
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 3 — Hobby Horse",
+   "key": "news",
+   "line": 565,
+   "text": "Thrall Fold",
+   "spans": [
+    [
+     53693,
+     53706
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 3 — Hobby Horse",
+   "key": "news",
+   "line": 565,
+   "text": "Plague of Flies",
+   "spans": [
+    [
+     53707,
+     53724
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 3 — Hobby Horse",
+   "key": "news",
+   "line": 565,
+   "text": "Scrying Torch",
+   "spans": [
+    [
+     53725,
+     53740
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 3 — Hobby Horse",
+   "key": "intro",
+   "line": 567,
+   "text": "The wild folk wander the woods with no hearth and no name. The Oss will bring them in. Fill the fold with ten of them and the people will know we can feed the fires for a long winter.",
+   "spans": [
+    [
+     53815,
+     54000
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 4 — Bowmen",
+   "key": "title",
+   "line": 568,
+   "text": "Bowmen",
+   "spans": [
+    [
+     54011,
+     54019
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 4 — Bowmen",
+   "key": "news",
+   "line": 569,
+   "text": "Archery Range",
+   "spans": [
+    [
+     54143,
+     54158
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 4 — Bowmen",
+   "key": "news",
+   "line": 569,
+   "text": "Shield",
+   "spans": [
+    [
+     54159,
+     54167
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 4 — Bowmen",
+   "key": "intro",
+   "line": 571,
+   "text": "This neighbour is not idle. Their warriors will come. Archers behind a line of spears will meet them, and the Cunning Woman can turn a blow aside.",
+   "spans": [
+    [
+     54211,
+     54359
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 5 — The Long Watch",
+   "key": "title",
+   "line": 572,
+   "text": "The Long Watch",
+   "spans": [
+    [
+     54370,
+     54386
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 5 — The Long Watch",
+   "key": "news",
+   "line": 573,
+   "text": "Blackthorn Hedge",
+   "spans": [
+    [
+     54555,
+     54573
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 5 — The Long Watch",
+   "key": "news",
+   "line": 573,
+   "text": "Rook Tree",
+   "spans": [
+    [
+     54574,
+     54585
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 5 — The Long Watch",
+   "key": "news",
+   "line": 573,
+   "text": "Bog",
+   "spans": [
+    [
+     54586,
+     54591
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 5 — The Long Watch",
+   "key": "news",
+   "line": 573,
+   "text": "Erode",
+   "spans": [
+    [
+     54592,
+     54599
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 5 — The Long Watch",
+   "key": "intro",
+   "line": 575,
+   "text": "Two peoples have smelt our smoke, and both are coming for us. We cannot beat them and we have no camp to raise more warriors. But our valley is ringed with crags, and there are only three ways in. Plant blackthorn across the gaps, wake the bog beyond them, sink the ground under anyone who forces a way through, and hold the village for ten minutes until they tire of us. The altar gives twice what it usually does here; feed it.",
+   "spans": [
+    [
+     54758,
+     55189
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 6 — The High Places",
+   "key": "title",
+   "line": 576,
+   "text": "The High Places",
+   "spans": [
+    [
+     55200,
+     55217
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 6 — The High Places",
+   "key": "news",
+   "line": 577,
+   "text": "Ghost Army",
+   "spans": [
+    [
+     55331,
+     55343
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 6 — The High Places",
+   "key": "news",
+   "line": 577,
+   "text": "Flatten",
+   "spans": [
+    [
+     55344,
+     55353
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 6 — The High Places",
+   "key": "intro",
+   "line": 579,
+   "text": "Up here the land is broken into crags and there is barely room for two huts. Nobody can grow until they make level ground. Feed the altar, flatten the rock around the village, and build on what you make. Across the rocks one other people is just as cramped, and the first to spread out will win.",
+   "spans": [
+    [
+     55412,
+     55709
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 7 — Fire from the Sky",
+   "key": "title",
+   "line": 580,
+   "text": "Fire from the Sky",
+   "spans": [
+    [
+     55720,
+     55739
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 7 — Fire from the Sky",
+   "key": "news",
+   "line": 581,
+   "text": "Balloon Works",
+   "spans": [
+    [
+     55902,
+     55917
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 7 — Fire from the Sky",
+   "key": "news",
+   "line": 581,
+   "text": "Whirlwind",
+   "spans": [
+    [
+     55918,
+     55929
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 7 — Fire from the Sky",
+   "key": "intro",
+   "line": 583,
+   "text": "Every people here keeps its own island, and the sea is too deep and too wide for any bridge. Our enemies have learned to fly. Their balloonists drop fire on the huts and carry fighters over the water. Here a Cunning Woman does not come back: if ours dies we are finished, and if theirs dies so are they. Keep fighters sworn to her side, keep the Rook Trees watching, and when you are ready, put her in a balloon.",
+   "spans": [
+    [
+     56024,
+     56438
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 8 — May Morning",
+   "key": "title",
+   "line": 584,
+   "text": "May Morning",
+   "spans": [
+    [
+     56449,
+     56462
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 8 — May Morning",
+   "key": "news",
+   "line": 585,
+   "text": "Maypole",
+   "spans": [
+    [
+     56613,
+     56622
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 8 — May Morning",
+   "key": "news",
+   "line": 585,
+   "text": "Hypnotise",
+   "spans": [
+    [
+     56623,
+     56634
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 8 — May Morning",
+   "key": "intro",
+   "line": 587,
+   "text": "Wicker is in short supply this season - if we are to survive, we shall need to do things in the oldest way. Crown the May Queen and exalt her for a season. Nature is a lustful mistress. Only the fairest of our daughters shall fit her for a bride. Crown her. Guard her. Attend her prime. Why then she shall dance her bloody nuptials and bring all favour upon us.",
+   "spans": [
+    [
+     56716,
+     57079
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 9 — The Wicker God",
+   "key": "title",
+   "line": 588,
+   "text": "The Wicker God",
+   "spans": [
+    [
+     57090,
+     57106
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 9 — The Wicker God",
+   "key": "news",
+   "line": 589,
+   "text": "Wicker God",
+   "spans": [
+    [
+     57225,
+     57237
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 9 — The Wicker God",
+   "key": "news",
+   "line": 589,
+   "text": "Earthquake",
+   "spans": [
+    [
+     57238,
+     57250
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 9 — The Wicker God",
+   "key": "intro",
+   "line": 591,
+   "text": "Twelve go into the belly of the ram and the whole world sees it burn. Fill it with strangers and the Cunning Woman will shake the earth beneath our enemies.",
+   "spans": [
+    [
+     57294,
+     57452
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 10 — Hollow Hills",
+   "key": "title",
+   "line": 592,
+   "text": "Hollow Hills",
+   "spans": [
+    [
+     57463,
+     57477
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 10 — Hollow Hills",
+   "key": "news",
+   "line": 593,
+   "text": "Entombment",
+   "spans": [
+    [
+     57595,
+     57607
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 10 — Hollow Hills",
+   "key": "news",
+   "line": 593,
+   "text": "Day o'the Stones",
+   "spans": [
+    [
+     57608,
+     57626
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 10 — Hollow Hills",
+   "key": "intro",
+   "line": 595,
+   "text": "Out in the wilds the old hills are hollow. Walk the Cunning Woman there with twenty of the faithful and fifteen hundred mana and she will never walk again; but she will see everything, and reach everywhere.",
+   "spans": [
+    [
+     57670,
+     57878
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 11 — Herne's Oak",
+   "key": "title",
+   "line": 596,
+   "text": "Herne's Oak",
+   "spans": [
+    [
+     57889,
+     57902
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 11 — Herne's Oak",
+   "key": "news",
+   "line": 597,
+   "text": "Herne's Oak",
+   "spans": [
+    [
+     58024,
+     58037
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 11 — Herne's Oak",
+   "key": "news",
+   "line": 597,
+   "text": "St. Anthony's Fire",
+   "spans": [
+    [
+     58038,
+     58058
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 11 — Herne's Oak",
+   "key": "intro",
+   "line": 599,
+   "text": "In the deep wood stands the dead oak. Hang the Cunning Woman from it for two minutes and the Hunt will ride for us, and every life they take will be ours. No wicker will burn in this wood, and our rivals know what the oak means: the moment she hangs, they will come for her. Guard the tree.",
+   "spans": [
+    [
+     58142,
+     58434
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 12 — Three Fires",
+   "key": "title",
+   "line": 600,
+   "text": "Three Fires",
+   "spans": [
+    [
+     58445,
+     58458
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 12 — Three Fires",
+   "key": "news",
+   "line": 601,
+   "text": "Volcano",
+   "spans": [
+    [
+     58569,
+     58578
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 12 — Three Fires",
+   "key": "news",
+   "line": 601,
+   "text": "Three rivals",
+   "spans": [
+    [
+     58579,
+     58593
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 12 — Three Fires",
+   "key": "intro",
+   "line": 603,
+   "text": "Three peoples share these hills with us, and none of them will share for long. The mountains themselves can be made to burn.",
+   "spans": [
+    [
+     58637,
+     58763
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 13 — The Moot",
+   "key": "title",
+   "line": 604,
+   "text": "The Moot",
+   "spans": [
+    [
+     58774,
+     58784
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 13 — The Moot",
+   "key": "news",
+   "line": 605,
+   "text": "All-against-all",
+   "spans": [
+    [
+     58928,
+     58945
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 13 — The Moot",
+   "key": "intro",
+   "line": 607,
+   "text": "Four peoples on four islands, and no road, wing or spell will carry anyone across. There is only one way this ends. Grow, fill the wicker man, gather a full bar of mana, and call every soul to the stones at the heart of the world to settle it there.",
+   "spans": [
+    [
+     58989,
+     59240
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 14 — Highland Winter",
+   "key": "title",
+   "line": 608,
+   "text": "Highland Winter",
+   "spans": [
+    [
+     59251,
+     59268
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 14 — Highland Winter",
+   "key": "intro",
+   "line": 610,
+   "text": "The year turns cold and the rivals are hungry. Everything you have learned is yours to use.",
+   "spans": [
+    [
+     59427,
+     59520
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 15 — The Turning Year",
+   "key": "title",
+   "line": 611,
+   "text": "The Turning Year",
+   "spans": [
+    [
+     59531,
+     59549
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 15 — The Turning Year",
+   "key": "intro",
+   "line": 613,
+   "text": "From here the land is not kind. Three peoples, each as cunning as we are. Nothing is held back from us, and nothing from them.",
+   "spans": [
+    [
+     59681,
+     59809
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 16 — Surrounded",
+   "key": "title",
+   "line": 614,
+   "text": "Surrounded",
+   "spans": [
+    [
+     59820,
+     59832
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 16 — Surrounded",
+   "key": "news",
+   "line": 615,
+   "text": "Two full thrall folds and a Wicker God, ready from the start",
+   "spans": [
+    [
+     59999,
+     60061
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 16 — Surrounded",
+   "key": "intro",
+   "line": 616,
+   "text": "We have settled in the middle of everything. Three narrow causeways run from the rival islands to ours, and every army will march along one of them. But we did not come empty-handed: our folds are full of the wild folk, and the Wicker God already stands in its grove, waiting to be fed.",
+   "spans": [
+    [
+     60072,
+     60360
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 17 — Late to the Feast",
+   "key": "title",
+   "line": 617,
+   "text": "Late to the Feast",
+   "spans": [
+    [
+     60371,
+     60390
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 17 — Late to the Feast",
+   "key": "tier",
+   "line": 618,
+   "text": "Stern",
+   "spans": [
+    [
+     60678,
+     60685
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 17 — Late to the Feast",
+   "key": "intro",
+   "line": 619,
+   "text": "We arrive with little, and the others have been here for years. Their halls are built and their warriors drilled. We must be cleverer than them, because we cannot be stronger.",
+   "spans": [
+    [
+     60695,
+     60872
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 18 — Blood Moon",
+   "key": "title",
+   "line": 620,
+   "text": "Blood Moon",
+   "spans": [
+    [
+     60883,
+     60895
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 18 — Blood Moon",
+   "key": "tier",
+   "line": 621,
+   "text": "Stern",
+   "spans": [
+    [
+     61093,
+     61100
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 18 — Blood Moon",
+   "key": "intro",
+   "line": 622,
+   "text": "Something has stirred the neighbours to fury. They will come early and often. Make them pay for every step.",
+   "spans": [
+    [
+     61110,
+     61219
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 19 — The Drowned Lands",
+   "key": "title",
+   "line": 623,
+   "text": "The Drowned Lands",
+   "spans": [
+    [
+     61230,
+     61249
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 19 — The Drowned Lands",
+   "key": "tier",
+   "line": 624,
+   "text": "Stern",
+   "spans": [
+    [
+     61434,
+     61441
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 19 — The Drowned Lands",
+   "key": "intro",
+   "line": 625,
+   "text": "The sea has taken most of the world. What land is left is small and fought over, and the others are richer in offerings than we are.",
+   "spans": [
+    [
+     61451,
+     61585
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 20 — The Last Harvest",
+   "key": "title",
+   "line": 626,
+   "text": "The Last Harvest",
+   "spans": [
+    [
+     61596,
+     61614
+    ]
+   ]
+  },
+  {
+   "ctx": "Level 20 — The Last Harvest",
+   "key": "intro",
+   "line": 628,
+   "text": "This is the end of the year, and perhaps the end of us. Three strong peoples surround us and they have already begun. Only the bog, the thorn, the hollow hill and the Hunt can turn this. Rejoice, if we live.",
+   "spans": [
+    [
+     61848,
+     62057
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 643,
+   "text": "Campaign",
+   "spans": [
+    [
+     63136,
+     63146
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 643,
+   "text": "Win the first level of the campaign",
+   "spans": [
+    [
+     63154,
+     63191
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 643,
+   "text": "Win campaign level 5",
+   "spans": [
+    [
+     63199,
+     63221
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 643,
+   "text": "Win campaign level 10",
+   "spans": [
+    [
+     63230,
+     63253
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 643,
+   "text": "Win campaign level 15",
+   "spans": [
+    [
+     63262,
+     63285
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 643,
+   "text": "Win the whole campaign",
+   "spans": [
+    [
+     63294,
+     63318
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 644,
+   "text": "Spells",
+   "spans": [
+    [
+     63325,
+     63333
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 644,
+   "text": "Cast Lightning",
+   "spans": [
+    [
+     63351,
+     63367
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 644,
+   "text": "Raise a Ghost Army",
+   "spans": [
+    [
+     63381,
+     63401
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 644,
+   "text": "Cast Hypnotise",
+   "spans": [
+    [
+     63415,
+     63431
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 644,
+   "text": "Call up a Whirlwind",
+   "spans": [
+    [
+     63445,
+     63466
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 644,
+   "text": "Lay a Bog",
+   "spans": [
+    [
+     63480,
+     63491
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 644,
+   "text": "Cast Erode",
+   "spans": [
+    [
+     63505,
+     63517
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 644,
+   "text": "Cast Earthquake",
+   "spans": [
+    [
+     63531,
+     63548
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 644,
+   "text": "Bring on Day o'the Stones",
+   "spans": [
+    [
+     63561,
+     63588
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 644,
+   "text": "Loose St. Anthony's Fire",
+   "spans": [
+    [
+     63602,
+     63628
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 644,
+   "text": "Raise a Volcano",
+   "spans": [
+    [
+     63644,
+     63661
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 645,
+   "text": "Buildings",
+   "spans": [
+    [
+     63668,
+     63679
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 645,
+   "text": "Build a Wicker Man",
+   "spans": [
+    [
+     63693,
+     63713
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 645,
+   "text": "Build a Wicker God",
+   "spans": [
+    [
+     63724,
+     63744
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 645,
+   "text": "Raise Herne's Oak",
+   "spans": [
+    [
+     63755,
+     63774
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 645,
+   "text": "Raise a Maypole",
+   "spans": [
+    [
+     63789,
+     63806
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 645,
+   "text": "Build a Balloon Works",
+   "spans": [
+    [
+     63821,
+     63844
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 645,
+   "text": "Build a Rook Tree",
+   "spans": [
+    [
+     63856,
+     63875
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 645,
+   "text": "Build an Oss House",
+   "spans": [
+    [
+     63891,
+     63911
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 646,
+   "text": "Rites",
+   "spans": [
+    [
+     63918,
+     63925
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 646,
+   "text": "Burn a wicker man",
+   "spans": [
+    [
+     63940,
+     63959
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 646,
+   "text": "Burn a Wicker God",
+   "spans": [
+    [
+     63974,
+     63993
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 646,
+   "text": "Crown a May Queen",
+   "spans": [
+    [
+     64006,
+     64025
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 646,
+   "text": "Give a May Queen to the fire",
+   "spans": [
+    [
+     64043,
+     64073
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 646,
+   "text": "Wake the Wild Hunt",
+   "spans": [
+    [
+     64085,
+     64105
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 646,
+   "text": "Seal your Cunning Woman in a hollow hill",
+   "spans": [
+    [
+     64119,
+     64161
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 646,
+   "text": "Call down the battle of all-against-all",
+   "spans": [
+    [
+     64196,
+     64237
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 646,
+   "text": "Walk away from the Moot",
+   "spans": [
+    [
+     64249,
+     64274
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 647,
+   "text": "Growth",
+   "spans": [
+    [
+     64281,
+     64289
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 647,
+   "text": "Lead 25 followers",
+   "spans": [
+    [
+     64300,
+     64319
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 647,
+   "text": "Lead 50 followers",
+   "spans": [
+    [
+     64330,
+     64349
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 647,
+   "text": "Lead 100 followers",
+   "spans": [
+    [
+     64361,
+     64381
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 647,
+   "text": "Lead 150 followers",
+   "spans": [
+    [
+     64393,
+     64413
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 648,
+   "text": "Endurance",
+   "spans": [
+    [
+     64420,
+     64431
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 648,
+   "text": "Last half an hour in one game",
+   "spans": [
+    [
+     64440,
+     64471
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 648,
+   "text": "Last an hour in one game",
+   "spans": [
+    [
+     64480,
+     64506
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 648,
+   "text": "Last two hours in one game",
+   "spans": [
+    [
+     64516,
+     64544
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 649,
+   "text": "Victories",
+   "spans": [
+    [
+     64551,
+     64562
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 649,
+   "text": "Win on Easy",
+   "spans": [
+    [
+     64574,
+     64587
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 649,
+   "text": "Win on Normal",
+   "spans": [
+    [
+     64601,
+     64616
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 649,
+   "text": "Win on Hard",
+   "spans": [
+    [
+     64628,
+     64641
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 649,
+   "text": "Win on an archipelago",
+   "spans": [
+    [
+     64653,
+     64676
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 649,
+   "text": "Win on a continent",
+   "spans": [
+    [
+     64688,
+     64708
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 649,
+   "text": "Win in the highlands",
+   "spans": [
+    [
+     64720,
+     64742
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 650,
+   "text": "Deeds",
+   "spans": [
+    [
+     64749,
+     64756
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 650,
+   "text": "Burn a Wicker God filled entirely with captives",
+   "spans": [
+    [
+     64771,
+     64820
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 650,
+   "text": "Offer a May Queen at her richest",
+   "spans": [
+    [
+     64837,
+     64871
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 650,
+   "text": "Drag twenty broken raiders to your altar in one game",
+   "spans": [
+    [
+     64888,
+     64942
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 650,
+   "text": "Have the whirlwind carry off a building",
+   "spans": [
+    [
+     64957,
+     64998
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 650,
+   "text": "Have one St. Anthony's Fire take eight people",
+   "spans": [
+    [
+     65012,
+     65059
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 650,
+   "text": "Go over the edge twice in one game",
+   "spans": [
+    [
+     65072,
+     65108
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 650,
+   "text": "Survive The Long Watch without losing a building",
+   "spans": [
+    [
+     65125,
+     65175
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 650,
+   "text": "Win without your dread ever passing the mark",
+   "spans": [
+    [
+     65189,
+     65235
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 650,
+   "text": "Win without training a warrior",
+   "spans": [
+    [
+     65250,
+     65282
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 650,
+   "text": "Win Fire from the Sky from inside a hollow hill",
+   "spans": [
+    [
+     65297,
+     65346
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 650,
+   "text": "Have three Thrall Folds full at once",
+   "spans": [
+    [
+     65364,
+     65402
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 650,
+   "text": "Have three wicker men burning close together at once",
+   "spans": [
+    [
+     65420,
+     65474
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 651,
+   "text": "Curiosities",
+   "spans": [
+    [
+     65481,
+     65494
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 652,
+   "text": "Strike down someone in the fits of St. Anthony's Fire with Lightning",
+   "spans": [
+    [
+     65514,
+     65584
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 652,
+   "text": "The burning man does not need the sky as well. Give it to him anyway.",
+   "spans": [
+    [
+     65585,
+     65656
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 653,
+   "text": "Sink ground raised by a Land Bridge with Erode, twice in one game",
+   "spans": [
+    [
+     65675,
+     65742
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 653,
+   "text": "What the woman raises, the woman may drown. Twice.",
+   "spans": [
+    [
+     65743,
+     65795
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 654,
+   "text": "Be in a fight between three Cunning Women",
+   "spans": [
+    [
+     65814,
+     65857
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 654,
+   "text": "Three wise women, one argument.",
+   "spans": [
+    [
+     65858,
+     65891
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 655,
+   "text": "Give thirty balloonists one order",
+   "spans": [
+    [
+     65912,
+     65947
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 655,
+   "text": "A sky so full of wicker you could walk on it.",
+   "spans": [
+    [
+     65948,
+     65995
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 656,
+   "text": "Have a Volcano, your Bog, Day o'the Stones and St. Anthony's Fire all at work at once",
+   "spans": [
+    [
+     66014,
+     66101
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 656,
+   "text": "Fire, mire, stone and fever, all at once.",
+   "spans": [
+    [
+     66102,
+     66145
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 657,
+   "text": "Drown a rival Cunning Woman in your Bog",
+   "spans": [
+    [
+     66166,
+     66207
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 657,
+   "text": "Not every wise woman can swim.",
+   "spans": [
+    [
+     66208,
+     66240
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 658,
+   "text": "Lure five rival fighters into your Bog with a Ghost Army in one game",
+   "spans": [
+    [
+     66260,
+     66330
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 658,
+   "text": "They followed the dead into the mire.",
+   "spans": [
+    [
+     66331,
+     66370
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 659,
+   "text": "Have the Wild Hunt kill a rival's May Queen",
+   "spans": [
+    [
+     66390,
+     66435
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 659,
+   "text": "The Hunt takes what it likes.",
+   "spans": [
+    [
+     66436,
+     66467
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 660,
+   "text": "Kill ten with a single Blast",
+   "spans": [
+    [
+     66485,
+     66515
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 660,
+   "text": "One spark, many funerals.",
+   "spans": [
+    [
+     66516,
+     66543
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 661,
+   "text": "Sink the ground under a rival's Wicker God while it burns",
+   "spans": [
+    [
+     66562,
+     66621
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 661,
+   "text": "Let the burning ram go down into the water.",
+   "spans": [
+    [
+     66622,
+     66667
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 662,
+   "text": "Catch again a captive that slipped out of your fold",
+   "spans": [
+    [
+     66687,
+     66740
+    ]
+   ]
+  },
+  {
+   "ctx": "TOKS",
+   "key": "",
+   "line": 662,
+   "text": "The same face twice in the pen.",
+   "spans": [
+    [
+     66741,
+     66774
+    ]
+   ]
+  },
+  {
+   "ctx": "earn",
+   "key": "",
+   "line": 667,
+   "text": "A token: {t.d}",
+   "spans": [
+    [
+     67298,
+     67309
+    ]
+   ]
+  },
+  {
+   "ctx": "swampKill",
+   "key": "",
+   "line": 779,
+   "text": "Your bog has drowned {TUNE.swampLives} and drains away, sated.",
+   "spans": [
+    [
+     79880,
+     79901
+    ],
+    [
+     79919,
+     79943
+    ]
+   ]
+  },
+  {
+   "ctx": "killUnit",
+   "key": "",
+   "line": 902,
+   "text": "Your Cunning Woman has fallen. She returns to the stone circle in {TUNE.shamanRespawn} seconds.",
+   "spans": [
+    [
+     94161,
+     94227
+    ],
+    [
+     94248,
+     94257
+    ]
+   ]
+  },
+  {
+   "ctx": "validSpot",
+   "key": "err",
+   "line": 910,
+   "text": "Something is already there",
+   "spans": [
+    [
+     95043,
+     95071
+    ]
+   ]
+  },
+  {
+   "ctx": "validSpot",
+   "key": "err",
+   "line": 910,
+   "text": "A hedge needs firm, level ground",
+   "spans": [
+    [
+     95107,
+     95141
+    ]
+   ]
+  },
+  {
+   "ctx": "validSpot",
+   "key": "err",
+   "line": 910,
+   "text": "The ground there is cursed",
+   "spans": [
+    [
+     95169,
+     95197
+    ]
+   ]
+  },
+  {
+   "ctx": "validSpot",
+   "key": "err",
+   "line": 912,
+   "text": "Too close to another building",
+   "spans": [
+    [
+     95471,
+     95502
+    ]
+   ]
+  },
+  {
+   "ctx": "validSpot",
+   "key": "err",
+   "line": 913,
+   "text": "Cannot build on water",
+   "spans": [
+    [
+     95562,
+     95585
+    ]
+   ]
+  },
+  {
+   "ctx": "validSpot",
+   "key": "err",
+   "line": 913,
+   "text": "The ground there is cursed",
+   "spans": [
+    [
+     95613,
+     95641
+    ]
+   ]
+  },
+  {
+   "ctx": "validSpot",
+   "key": "err",
+   "line": 913,
+   "text": "This ground has been salted. Nothing of yours will stand here for a while",
+   "spans": [
+    [
+     95689,
+     95764
+    ]
+   ]
+  },
+  {
+   "ctx": "validSpot",
+   "key": "err",
+   "line": 915,
+   "text": "The ground is too broken to build on. Flatten it first",
+   "spans": [
+    [
+     95962,
+     96018
+    ]
+   ]
+  },
+  {
+   "ctx": "validSpot",
+   "key": "err",
+   "line": 915,
+   "text": "Too steep to build on",
+   "spans": [
+    [
+     96019,
+     96042
+    ]
+   ]
+  },
+  {
+   "ctx": "validSpot",
+   "key": "err",
+   "line": 915,
+   "text": "Too close to the waterline",
+   "spans": [
+    [
+     96066,
+     96094
+    ]
+   ]
+  },
+  {
+   "ctx": "validSpot",
+   "key": "err",
+   "line": 916,
+   "text": "Herne's Oak must stand in deep woodland",
+   "spans": [
+    [
+     96229,
+     96270
+    ]
+   ]
+  },
+  {
+   "ctx": "validSpot",
+   "key": "err",
+   "line": 917,
+   "text": "A forest altar must stand among trees",
+   "spans": [
+    [
+     96407,
+     96446
+    ]
+   ]
+  },
+  {
+   "ctx": "startLeap",
+   "key": "",
+   "line": 947,
+   "text": "There is no ground for it at the edge of the village",
+   "spans": [
+    [
+     100266,
+     100320
+    ]
+   ]
+  },
+  {
+   "ctx": "startLeap",
+   "key": "",
+   "line": 951,
+   "text": "Your Cunning Woman walks to the edge of the village. Your people gather below to watch.",
+   "spans": [
+    [
+     100804,
+     100893
+    ]
+   ]
+  },
+  {
+   "ctx": "leapDone",
+   "key": "",
+   "line": 968,
+   "text": "She is gone over the edge. {LEAP_N} of your people step out from among the stones, and for a while even your enemies are still.",
+   "spans": [
+    [
+     103247,
+     103274
+    ],
+    [
+     103283,
+     103375
+    ]
+   ]
+  },
+  {
+   "ctx": "destroyBld",
+   "key": "",
+   "line": 984,
+   "text": "Your tomb has fallen, and your Cunning Woman with it. Here she does not come back.",
+   "spans": [
+    [
+     105411,
+     105495
+    ]
+   ]
+  },
+  {
+   "ctx": "destroyBld",
+   "key": "",
+   "line": 985,
+   "text": "Your tomb has fallen and your Cunning Woman with it. She will rise again at the stone circle in a minute, and half your mana is lost.",
+   "spans": [
+    [
+     105671,
+     105806
+    ]
+   ]
+  },
+  {
+   "ctx": "destroyBld",
+   "key": "",
+   "line": 985,
+   "text": "The {T.name} tomb has fallen",
+   "spans": [
+    [
+     105808,
+     105812
+    ],
+    [
+     105821,
+     105837
+    ]
+   ]
+  },
+  {
+   "ctx": "sacrifice",
+   "key": "",
+   "line": 999,
+   "text": "{cap?'A captive':'A villager'} is given to the grove. +{v} mana",
+   "spans": [
+    [
+     107477,
+     107477
+    ],
+    [
+     107508,
+     107533
+    ],
+    [
+     107537,
+     107542
+    ]
+   ]
+  },
+  {
+   "ctx": "sacrifice",
+   "key": "",
+   "line": 999,
+   "text": "A captive",
+   "spans": [
+    [
+     107483,
+     107494
+    ]
+   ]
+  },
+  {
+   "ctx": "sacrifice",
+   "key": "",
+   "line": 999,
+   "text": "A villager",
+   "spans": [
+    [
+     107495,
+     107507
+    ]
+   ]
+  },
+  {
+   "ctx": "light",
+   "key": "",
+   "line": 1011,
+   "text": "The {D.label.toLowerCase()} burns. +{v} mana{…}.",
+   "spans": [
+    [
+     109166,
+     109170
+    ],
+    [
+     109194,
+     109203
+    ],
+    [
+     109207,
+     109212
+    ],
+    [
+     109269,
+     109270
+    ]
+   ]
+  },
+  {
+   "ctx": "light",
+   "key": "",
+   "line": 1011,
+   "text": ", and your people are in a frenzy",
+   "spans": [
+    [
+     109230,
+     109265
+    ]
+   ]
+  },
+  {
+   "ctx": "light",
+   "key": "",
+   "line": 1011,
+   "text": "The Wicker God of the {T.name} folk is burning",
+   "spans": [
+    [
+     109301,
+     109323
+    ],
+    [
+     109332,
+     109348
+    ]
+   ]
+  },
+  {
+   "ctx": "crown",
+   "key": "",
+   "line": 1052,
+   "text": "A May Queen is crowned. Keep her alive and her offering grows richer; guard her well.",
+   "spans": [
+    [
+     116204,
+     116291
+    ]
+   ]
+  },
+  {
+   "ctx": "crown",
+   "key": "",
+   "line": 1052,
+   "text": "The {T.name} folk have crowned a May Queen",
+   "spans": [
+    [
+     116293,
+     116297
+    ],
+    [
+     116306,
+     116336
+    ]
+   ]
+  },
+  {
+   "ctx": "offerQueen",
+   "key": "",
+   "line": 1054,
+   "text": "{stats.queenOffered} of {SC.goal.n} May Queens given to the fire",
+   "spans": [
+    [
+     116713,
+     116713
+    ],
+    [
+     116734,
+     116738
+    ],
+    [
+     116750,
+     116779
+    ]
+   ]
+  },
+  {
+   "ctx": "offerQueen",
+   "key": "",
+   "line": 1056,
+   "text": "The May Queen goes willingly. +{v} mana, and your people are in a frenzy.",
+   "spans": [
+    [
+     117253,
+     117284
+    ],
+    [
+     117288,
+     117327
+    ]
+   ]
+  },
+  {
+   "ctx": "offerQueen",
+   "key": "",
+   "line": 1056,
+   "text": "The {T.name} folk have given a May Queen to the fire",
+   "spans": [
+    [
+     117330,
+     117334
+    ],
+    [
+     117343,
+     117383
+    ]
+   ]
+  },
+  {
+   "ctx": "desert",
+   "key": "",
+   "line": 1061,
+   "text": "A villager has fled into the wilds. Your people are afraid.",
+   "spans": [
+    [
+     118010,
+     118071
+    ]
+   ]
+  },
+  {
+   "ctx": "startRitual",
+   "key": "",
+   "line": 1066,
+   "text": "The hills are silent in this land",
+   "spans": [
+    [
+     118742,
+     118777
+    ]
+   ]
+  },
+  {
+   "ctx": "startRitual",
+   "key": "",
+   "line": 1067,
+   "text": "Your Cunning Woman already lies in a hill",
+   "spans": [
+    [
+     118828,
+     118871
+    ]
+   ]
+  },
+  {
+   "ctx": "startRitual",
+   "key": "",
+   "line": 1068,
+   "text": "Another Cunning Woman is already at this hill",
+   "spans": [
+    [
+     118947,
+     118994
+    ]
+   ]
+  },
+  {
+   "ctx": "startRitual",
+   "key": "",
+   "line": 1069,
+   "text": "The hill demands twenty followers. You have too few.",
+   "spans": [
+    [
+     119073,
+     119127
+    ]
+   ]
+  },
+  {
+   "ctx": "startRitual",
+   "key": "",
+   "line": 1070,
+   "text": "The hill will not open for less than {TUNE.entombMana} mana.",
+   "spans": [
+    [
+     119195,
+     119232
+    ],
+    [
+     119250,
+     119256
+    ]
+   ]
+  },
+  {
+   "ctx": "startRitual",
+   "key": "",
+   "line": 1078,
+   "text": "The hollow hill lies over the water. Your balloons will carry {…}{nf?nf+' followers':''} across.",
+   "spans": [
+    [
+     120503,
+     120565
+    ],
+    [
+     120624,
+     120624
+    ],
+    [
+     120648,
+     120656
+    ]
+   ]
+  },
+  {
+   "ctx": "startRitual",
+   "key": "",
+   "line": 1078,
+   "text": "your Cunning Woman{nf?' and ':''}",
+   "spans": [
+    [
+     120584,
+     120604
+    ]
+   ]
+  },
+  {
+   "ctx": "startRitual",
+   "key": "",
+   "line": 1078,
+   "text": "{nf} followers",
+   "spans": [
+    [
+     120632,
+     120644
+    ]
+   ]
+  },
+  {
+   "ctx": "startRitual",
+   "key": "",
+   "line": 1080,
+   "text": "The hollow hill lies over the water. Raise a Land Bridge, or build balloons to carry your people there.",
+   "spans": [
+    [
+     120835,
+     120940
+    ]
+   ]
+  },
+  {
+   "ctx": "startRitual",
+   "key": "",
+   "line": 1081,
+   "text": "Your Cunning Woman walks to the hollow hill, and twenty followers go with her.",
+   "spans": [
+    [
+     120981,
+     121061
+    ]
+   ]
+  },
+  {
+   "ctx": "entomb",
+   "key": "",
+   "line": 1087,
+   "text": "Your Cunning Woman is sealed in the hill. From the tomb she sees everything and casts anywhere at half the mana. Guard it: if it falls, so does she.",
+   "spans": [
+    [
+     121695,
+     121845
+    ]
+   ]
+  },
+  {
+   "ctx": "entomb",
+   "key": "",
+   "line": 1087,
+   "text": "The {T.name} Cunning Woman has been sealed in a hollow hill",
+   "spans": [
+    [
+     121847,
+     121851
+    ],
+    [
+     121860,
+     121907
+    ]
+   ]
+  },
+  {
+   "ctx": "unload",
+   "key": "",
+   "line": 1100,
+   "text": "No dry land close enough to unload",
+   "spans": [
+    [
+     123314,
+     123350
+    ]
+   ]
+  },
+  {
+   "ctx": "riteOrFerry",
+   "key": "",
+   "line": 1116,
+   "text": "Your balloons will carry her over",
+   "spans": [
+    [
+     125042,
+     125077
+    ]
+   ]
+  },
+  {
+   "ctx": "ferryTick",
+   "key": "",
+   "line": 1131,
+   "text": "The balloons are lost. {waiting.length} of your people are left on this side.",
+   "spans": [
+    [
+     126383,
+     126406
+    ],
+    [
+     126423,
+     126461
+    ]
+   ]
+  },
+  {
+   "ctx": "updUnit",
+   "key": "",
+   "line": 1202,
+   "text": "The captured May Queen is home. Offer her at any altar or wicker figure for her full worth.",
+   "spans": [
+    [
+     133420,
+     133513
+    ]
+   ]
+  },
+  {
+   "ctx": "updUnit",
+   "key": "",
+   "line": 1225,
+   "text": "Your May Queen has been seized by the {tribes[u.tribe].name} folk. Kill the Oss before it gets her home.",
+   "spans": [
+    [
+     136148,
+     136186
+    ],
+    [
+     136209,
+     136253
+    ]
+   ]
+  },
+  {
+   "ctx": "updUnit",
+   "key": "",
+   "line": 1225,
+   "text": "Your Oss has seized the {ot.name} May Queen.",
+   "spans": [
+    [
+     136294,
+     136318
+    ],
+    [
+     136328,
+     136339
+    ]
+   ]
+  },
+  {
+   "ctx": "updUnit",
+   "key": "",
+   "line": 1229,
+   "text": "Your Cunning Woman cannot reach the oak",
+   "spans": [
+    [
+     136840,
+     136881
+    ]
+   ]
+  },
+  {
+   "ctx": "updUnit",
+   "key": "",
+   "line": 1231,
+   "text": "Your Cunning Woman hangs from the oak. In two minutes the Wild Hunt will ride.",
+   "spans": [
+    [
+     137068,
+     137148
+    ]
+   ]
+  },
+  {
+   "ctx": "updUnit",
+   "key": "",
+   "line": 1231,
+   "text": "The {T.name} Cunning Woman hangs from Herne's Oak",
+   "spans": [
+    [
+     137150,
+     137154
+    ],
+    [
+     137163,
+     137200
+    ]
+   ]
+  },
+  {
+   "ctx": "updUnit",
+   "key": "",
+   "line": 1237,
+   "text": "Your Cunning Woman cannot reach the hill",
+   "spans": [
+    [
+     138024,
+     138066
+    ]
+   ]
+  },
+  {
+   "ctx": "updUnit",
+   "key": "",
+   "line": 1245,
+   "text": "Too few followers reached the hill. The rite is abandoned.",
+   "spans": [
+    [
+     139481,
+     139541
+    ]
+   ]
+  },
+  {
+   "ctx": "updUnit",
+   "key": "",
+   "line": 1252,
+   "text": "Your Cunning Woman cannot get within range",
+   "spans": [
+    [
+     140328,
+     140372
+    ]
+   ]
+  },
+  {
+   "ctx": "updBld",
+   "key": "",
+   "line": 1332,
+   "text": "{D.label} finished",
+   "spans": [
+    [
+     150068,
+     150079
+    ]
+   ]
+  },
+  {
+   "ctx": "updBld",
+   "key": "",
+   "line": 1346,
+   "text": "The oak wakes. The Wild Hunt rides for you.",
+   "spans": [
+    [
+     152178,
+     152223
+    ]
+   ]
+  },
+  {
+   "ctx": "updBld",
+   "key": "",
+   "line": 1346,
+   "text": "The Wild Hunt rides for the {T.name} folk",
+   "spans": [
+    [
+     152225,
+     152253
+    ],
+    [
+     152262,
+     152267
+    ]
+   ]
+  },
+  {
+   "ctx": "tryCast",
+   "key": "",
+   "line": 1373,
+   "text": "{s.n} is still gathering power",
+   "spans": [
+    [
+     155801,
+     155828
+    ]
+   ]
+  },
+  {
+   "ctx": "tryCast",
+   "key": "",
+   "line": 1375,
+   "text": "Not enough mana for {s.n}",
+   "spans": [
+    [
+     156015,
+     156037
+    ]
+   ]
+  },
+  {
+   "ctx": "castSpell",
+   "key": "up",
+   "line": 1408,
+   "text": "The shield turned the lightning",
+   "spans": [
+    [
+     160239,
+     160272
+    ]
+   ]
+  },
+  {
+   "ctx": "castSpell",
+   "key": "",
+   "line": 1414,
+   "text": "There were no wildmen in the circle",
+   "spans": [
+    [
+     161328,
+     161365
+    ]
+   ]
+  },
+  {
+   "ctx": "castSpell",
+   "key": "",
+   "line": 1418,
+   "text": "The torch needs a scrap of level, open ground",
+   "spans": [
+    [
+     161988,
+     162035
+    ]
+   ]
+  },
+  {
+   "ctx": "castSpell",
+   "key": "",
+   "line": 1419,
+   "text": "A scrying torch burns. The land around it will stay in sight while it stands.",
+   "spans": [
+    [
+     162221,
+     162300
+    ]
+   ]
+  },
+  {
+   "ctx": "forceRaid",
+   "key": "",
+   "line": 1495,
+   "text": "A horn sounds from the {T.name} lands: {army.length} of their fighters are marching on you. Watch the map.",
+   "spans": [
+    [
+     173714,
+     173737
+    ],
+    [
+     173746,
+     173754
+    ],
+    [
+     173768,
+     173822
+    ]
+   ]
+  },
+  {
+   "ctx": "aiThink",
+   "key": "",
+   "line": 1517,
+   "text": "The {T.name} attack breaks.{…} The rest run for home, shamed; it will be a while before they come again.",
+   "spans": [
+    [
+     177145,
+     177149
+    ],
+    [
+     177158,
+     177173
+    ],
+    [
+     177387,
+     177461
+    ]
+   ]
+  },
+  {
+   "ctx": "aiThink",
+   "key": "",
+   "line": 1517,
+   "text": " {tk.n} of their fighters are cut off and put to death where they stand; their blood goes into the earth.",
+   "spans": [
+    [
+     177205,
+     177206
+    ],
+    [
+     177213,
+     177311
+    ]
+   ]
+  },
+  {
+   "ctx": "aiThink",
+   "key": "",
+   "line": 1517,
+   "text": " {tk.n} of their fighters are cut off and dragged to your {tk.where}.",
+   "spans": [
+    [
+     177314,
+     177315
+    ],
+    [
+     177322,
+     177373
+    ],
+    [
+     177384,
+     177385
+    ]
+   ]
+  },
+  {
+   "ctx": "aiAttack",
+   "key": "",
+   "line": 1576,
+   "text": "A horn sounds from the {T.name} lands: {army.length} of their fighters are marching on you. Watch the map.",
+   "spans": [
+    [
+     186814,
+     186837
+    ],
+    [
+     186846,
+     186854
+    ],
+    [
+     186868,
+     186922
+    ]
+   ]
+  },
+  {
+   "ctx": "aiAttack",
+   "key": "",
+   "line": 1580,
+   "text": "Balloons rise over the {T.name} island: {bal.length} of them, carrying {ids.length-bal.length} fighters, are coming for you.",
+   "spans": [
+    [
+     187639,
+     187662
+    ],
+    [
+     187671,
+     187680
+    ],
+    [
+     187693,
+     187712
+    ],
+    [
+     187736,
+     187766
+    ]
+   ]
+  },
+  {
+   "ctx": "aiHangRaid",
+   "key": "",
+   "line": 1588,
+   "text": "The {T.name} folk have seen your Cunning Woman hanging. {home.length} of their fighters are running for the oak.",
+   "spans": [
+    [
+     188728,
+     188732
+    ],
+    [
+     188741,
+     188785
+    ],
+    [
+     188799,
+     188842
+    ]
+   ]
+  },
+  {
+   "ctx": "aiQueens",
+   "key": "",
+   "line": 1606,
+   "text": "The {T.name} osses are coming for your May Queen{…}.",
+   "spans": [
+    [
+     191792,
+     191796
+    ],
+    [
+     191805,
+     191841
+    ],
+    [
+     191890,
+     191891
+    ]
+   ]
+  },
+  {
+   "ctx": "aiQueens",
+   "key": "",
+   "line": 1606,
+   "text": ", with fighters at their backs",
+   "spans": [
+    [
+     191854,
+     191886
+    ]
+   ]
+  },
+  {
+   "ctx": "tribeUpkeep",
+   "key": "",
+   "line": 1649,
+   "text": "A captive has slipped out of the fold",
+   "spans": [
+    [
+     197794,
+     197833
+    ]
+   ]
+  },
+  {
+   "ctx": "tribeUpkeep",
+   "key": "",
+   "line": 1650,
+   "text": "Your Cunning Woman is reborn",
+   "spans": [
+    [
+     198142,
+     198172
+    ]
+   ]
+  },
+  {
+   "ctx": "tribeUpkeep",
+   "key": "",
+   "line": 1654,
+   "text": "Your settlement is under attack",
+   "spans": [
+    [
+     198613,
+     198646
+    ]
+   ]
+  },
+  {
+   "ctx": "breakTribe",
+   "key": "",
+   "line": 1666,
+   "text": "The {T.name} folk are broken. Their last people are gathering at their stone circle, and their halls are falling in. Their Cunning Woman will not return.",
+   "spans": [
+    [
+     199918,
+     199922
+    ],
+    [
+     199931,
+     200072
+    ]
+   ]
+  },
+  {
+   "ctx": "breakTribe",
+   "key": "",
+   "line": 1666,
+   "text": "The {T.name} folk are broken",
+   "spans": [
+    [
+     200087,
+     200091
+    ],
+    [
+     200100,
+     200116
+    ]
+   ]
+  },
+  {
+   "ctx": "finishTribe",
+   "key": "",
+   "line": 1673,
+   "text": "The {T.name} tribe is gone. Its {n} empty buildings are yours, and nature yields {v} mana from its hearths.",
+   "spans": [
+    [
+     201038,
+     201042
+    ],
+    [
+     201051,
+     201071
+    ],
+    [
+     201075,
+     201121
+    ],
+    [
+     201125,
+     201148
+    ]
+   ]
+  },
+  {
+   "ctx": "finishTribe",
+   "key": "",
+   "line": 1673,
+   "text": "Your people are all dead. The {C2.name} folk take what is left.",
+   "spans": [
+    [
+     201157,
+     201187
+    ],
+    [
+     201197,
+     201221
+    ]
+   ]
+  },
+  {
+   "ctx": "finishTribe",
+   "key": "",
+   "line": 1673,
+   "text": "The {T.name} tribe is gone. The {C2.name} folk take its empty halls.",
+   "spans": [
+    [
+     201224,
+     201228
+    ],
+    [
+     201237,
+     201257
+    ],
+    [
+     201267,
+     201294
+    ]
+   ]
+  },
+  {
+   "ctx": "finishTribe",
+   "key": "",
+   "line": 1677,
+   "text": "The {T.name} tribe is broken. Your osses drag its last {n} villagers to your folds.",
+   "spans": [
+    [
+     201759,
+     201763
+    ],
+    [
+     201772,
+     201815
+    ],
+    [
+     201819,
+     201844
+    ]
+   ]
+  },
+  {
+   "ctx": "finishTribe",
+   "key": "",
+   "line": 1677,
+   "text": "Your tribe is broken. The {C2.name} folk drag your last villagers away.",
+   "spans": [
+    [
+     201853,
+     201879
+    ],
+    [
+     201889,
+     201925
+    ]
+   ]
+  },
+  {
+   "ctx": "finishTribe",
+   "key": "",
+   "line": 1677,
+   "text": "The {T.name} tribe is broken; the {C2.name} folk drag its last villagers away.",
+   "spans": [
+    [
+     201928,
+     201932
+    ],
+    [
+     201941,
+     201963
+    ],
+    [
+     201973,
+     202008
+    ]
+   ]
+  },
+  {
+   "ctx": "finishTribe",
+   "key": "",
+   "line": 1678,
+   "text": "The {T.name} tribe has been wiped out",
+   "spans": [
+    [
+     202200,
+     202204
+    ],
+    [
+     202213,
+     202238
+    ]
+   ]
+  },
+  {
+   "ctx": "finishTribe",
+   "key": "",
+   "line": 1680,
+   "text": "The {T.name} Cunning Woman is dead, and her people scatter.{…}",
+   "spans": [
+    [
+     202355,
+     202359
+    ],
+    [
+     202368,
+     202415
+    ],
+    [
+     202453,
+     202453
+    ]
+   ]
+  },
+  {
+   "ctx": "finishTribe",
+   "key": "",
+   "line": 1680,
+   "text": " Their halls are yours.",
+   "spans": [
+    [
+     202424,
+     202449
+    ]
+   ]
+  },
+  {
+   "ctx": "invokeArma",
+   "key": "",
+   "line": 1725,
+   "text": "The battle of all-against-all has already begun",
+   "spans": [
+    [
+     208212,
+     208261
+    ]
+   ]
+  },
+  {
+   "ctx": "invokeArma",
+   "key": "",
+   "line": 1726,
+   "text": "All-against-all needs a finished, unlit wicker man",
+   "spans": [
+    [
+     208381,
+     208433
+    ]
+   ]
+  },
+  {
+   "ctx": "invokeArma",
+   "key": "",
+   "line": 1727,
+   "text": "All-against-all needs a full bar of mana",
+   "spans": [
+    [
+     208490,
+     208532
+    ]
+   ]
+  },
+  {
+   "ctx": "invokeArma",
+   "key": "",
+   "line": 1729,
+   "text": "All-against-all needs ten followers to burn",
+   "spans": [
+    [
+     208778,
+     208823
+    ]
+   ]
+  },
+  {
+   "ctx": "invokeArma",
+   "key": "",
+   "line": 1731,
+   "text": "Ten souls burn in the wicker. The end is coming.",
+   "spans": [
+    [
+     209154,
+     209204
+    ]
+   ]
+  },
+  {
+   "ctx": "invokeArma",
+   "key": "",
+   "line": 1731,
+   "text": "The {T.name} tribe has called down the battle of all-against-all",
+   "spans": [
+    [
+     209206,
+     209210
+    ],
+    [
+     209219,
+     209271
+    ]
+   ]
+  },
+  {
+   "ctx": "startArma",
+   "key": "",
+   "line": 1743,
+   "text": "The battle of all-against-all. The huts are burning, and every soul walks to the Moot.",
+   "spans": [
+    [
+     210463,
+     210551
+    ]
+   ]
+  },
+  {
+   "ctx": "SHAPES",
+   "key": "n",
+   "line": 2644,
+   "text": "Box",
+   "spans": [
+    [
+     311921,
+     311926
+    ]
+   ]
+  },
+  {
+   "ctx": "SHAPES",
+   "key": "args",
+   "line": 2644,
+   "text": "Width",
+   "spans": [
+    [
+     311976,
+     311983
+    ]
+   ]
+  },
+  {
+   "ctx": "SHAPES",
+   "key": "args",
+   "line": 2644,
+   "text": "Height",
+   "spans": [
+    [
+     311992,
+     312000
+    ]
+   ]
+  },
+  {
+   "ctx": "SHAPES",
+   "key": "args",
+   "line": 2644,
+   "text": "Depth",
+   "spans": [
+    [
+     312009,
+     312016
+    ]
+   ]
+  },
+  {
+   "ctx": "SHAPES",
+   "key": "n",
+   "line": 2645,
+   "text": "Cylinder",
+   "spans": [
+    [
+     312051,
+     312061
+    ]
+   ]
+  },
+  {
+   "ctx": "SHAPES",
+   "key": "args",
+   "line": 2645,
+   "text": "Top radius",
+   "spans": [
+    [
+     312145,
+     312157
+    ]
+   ]
+  },
+  {
+   "ctx": "SHAPES",
+   "key": "args",
+   "line": 2645,
+   "text": "Bottom radius",
+   "spans": [
+    [
+     312164,
+     312179
+    ]
+   ]
+  },
+  {
+   "ctx": "SHAPES",
+   "key": "args",
+   "line": 2645,
+   "text": "Height",
+   "spans": [
+    [
+     312186,
+     312194
+    ]
+   ]
+  },
+  {
+   "ctx": "SHAPES",
+   "key": "args",
+   "line": 2645,
+   "text": "Sides",
+   "spans": [
+    [
+     312203,
+     312210
+    ]
+   ]
+  },
+  {
+   "ctx": "SHAPES",
+   "key": "n",
+   "line": 2646,
+   "text": "Cone",
+   "spans": [
+    [
+     312251,
+     312257
+    ]
+   ]
+  },
+  {
+   "ctx": "SHAPES",
+   "key": "args",
+   "line": 2646,
+   "text": "Radius",
+   "spans": [
+    [
+     312332,
+     312340
+    ]
+   ]
+  },
+  {
+   "ctx": "SHAPES",
+   "key": "args",
+   "line": 2646,
+   "text": "Height",
+   "spans": [
+    [
+     312349,
+     312357
+    ]
+   ]
+  },
+  {
+   "ctx": "SHAPES",
+   "key": "args",
+   "line": 2646,
+   "text": "Sides",
+   "spans": [
+    [
+     312366,
+     312373
+    ]
+   ]
+  },
+  {
+   "ctx": "SHAPES",
+   "key": "n",
+   "line": 2647,
+   "text": "Ball",
+   "spans": [
+    [
+     312412,
+     312418
+    ]
+   ]
+  },
+  {
+   "ctx": "SHAPES",
+   "key": "args",
+   "line": 2647,
+   "text": "Radius",
+   "spans": [
+    [
+     312561,
+     312569
+    ]
+   ]
+  },
+  {
+   "ctx": "SHAPES",
+   "key": "args",
+   "line": 2647,
+   "text": "Smoothness around",
+   "spans": [
+    [
+     312578,
+     312597
+    ]
+   ]
+  },
+  {
+   "ctx": "SHAPES",
+   "key": "args",
+   "line": 2647,
+   "text": "Smoothness up",
+   "spans": [
+    [
+     312607,
+     312622
+    ]
+   ]
+  },
+  {
+   "ctx": "SHAPES",
+   "key": "args",
+   "line": 2647,
+   "text": "How much of the ball",
+   "spans": [
+    [
+     312632,
+     312654
+    ]
+   ]
+  },
+  {
+   "ctx": "SHAPES",
+   "key": "n",
+   "line": 2648,
+   "text": "Ring",
+   "spans": [
+    [
+     312717,
+     312723
+    ]
+   ]
+  },
+  {
+   "ctx": "SHAPES",
+   "key": "args",
+   "line": 2648,
+   "text": "Radius",
+   "spans": [
+    [
+     312838,
+     312846
+    ]
+   ]
+  },
+  {
+   "ctx": "SHAPES",
+   "key": "args",
+   "line": 2648,
+   "text": "Thickness",
+   "spans": [
+    [
+     312855,
+     312866
+    ]
+   ]
+  },
+  {
+   "ctx": "SHAPES",
+   "key": "args",
+   "line": 2648,
+   "text": "Tube sides",
+   "spans": [
+    [
+     312877,
+     312889
+    ]
+   ]
+  },
+  {
+   "ctx": "SHAPES",
+   "key": "args",
+   "line": 2648,
+   "text": "Segments",
+   "spans": [
+    [
+     312899,
+     312909
+    ]
+   ]
+  },
+  {
+   "ctx": "SHAPES",
+   "key": "args",
+   "line": 2648,
+   "text": "How much of the ring",
+   "spans": [
+    [
+     312919,
+     312941
+    ]
+   ]
+  },
+  {
+   "ctx": "drawOverlay",
+   "key": "",
+   "line": 2887,
+   "text": "Captive · ",
+   "spans": [
+    [
+     345925,
+     345937
+    ]
+   ]
+  },
+  {
+   "ctx": "drawOverlay",
+   "key": "",
+   "line": 2892,
+   "text": "{b.sq+b.cq} to come",
+   "spans": [
+    [
+     347050,
+     347060
+    ]
+   ]
+  },
+  {
+   "ctx": "postAt",
+   "key": "",
+   "line": 2963,
+   "text": "Only warriors and archers can stand guard",
+   "spans": [
+    [
+     357216,
+     357259
+    ]
+   ]
+  },
+  {
+   "ctx": "postAt",
+   "key": "",
+   "line": 2963,
+   "text": "They cannot stand guard there",
+   "spans": [
+    [
+     357324,
+     357355
+    ]
+   ]
+  },
+  {
+   "ctx": "postAt",
+   "key": "",
+   "line": 2966,
+   "text": "{f.length} posted here. They will hold this ground and fight whatever comes near.",
+   "spans": [
+    [
+     357736,
+     357736
+    ],
+    [
+     357747,
+     357818
+    ]
+   ]
+  },
+  {
+   "ctx": "onTap",
+   "key": "",
+   "line": 2970,
+   "text": "Your Cunning Woman is waiting to be reborn",
+   "spans": [
+    [
+     358240,
+     358284
+    ]
+   ]
+  },
+  {
+   "ctx": "onTap",
+   "key": "",
+   "line": 2970,
+   "text": "Your Cunning Woman is hanging from the oak",
+   "spans": [
+    [
+     358318,
+     358362
+    ]
+   ]
+  },
+  {
+   "ctx": "onTap",
+   "key": "",
+   "line": 2973,
+   "text": "Not enough mana for {s.n}",
+   "spans": [
+    [
+     358588,
+     358610
+    ]
+   ]
+  },
+  {
+   "ctx": "onTap",
+   "key": "",
+   "line": 2973,
+   "text": "{s.n} is still gathering power",
+   "spans": [
+    [
+     358657,
+     358684
+    ]
+   ]
+  },
+  {
+   "ctx": "onTap",
+   "key": "",
+   "line": 2975,
+   "text": "You cannot build on land you have not explored",
+   "spans": [
+    [
+     358889,
+     358937
+    ]
+   ]
+  },
+  {
+   "ctx": "onTap",
+   "key": "",
+   "line": 2976,
+   "text": "Now tap where the hedge ends",
+   "spans": [
+    [
+     359087,
+     359117
+    ]
+   ]
+  },
+  {
+   "ctx": "onTap",
+   "key": "",
+   "line": 2979,
+   "text": "{made} lengths of hedge laid out. Villagers will plant them.{…}",
+   "spans": [
+    [
+     359553,
+     359553
+    ],
+    [
+     359560,
+     359614
+    ],
+    [
+     359685,
+     359685
+    ]
+   ]
+  },
+  {
+   "ctx": "onTap",
+   "key": "",
+   "line": 2979,
+   "text": " (A hedge is at most {TUNE.hedgeMax} long.)",
+   "spans": [
+    [
+     359634,
+     359657
+    ],
+    [
+     359672,
+     359681
+    ]
+   ]
+  },
+  {
+   "ctx": "onTap",
+   "key": "",
+   "line": 2979,
+   "text": "No hedge could be laid there",
+   "spans": [
+    [
+     359687,
+     359717
+    ]
+   ]
+  },
+  {
+   "ctx": "onTap",
+   "key": "",
+   "line": 2980,
+   "text": "You cannot build on land you have not explored",
+   "spans": [
+    [
+     359851,
+     359899
+    ]
+   ]
+  },
+  {
+   "ctx": "onTap",
+   "key": "",
+   "line": 2980,
+   "text": "Not enough wood",
+   "spans": [
+    [
+     360009,
+     360026
+    ]
+   ]
+  },
+  {
+   "ctx": "command",
+   "key": "",
+   "line": 2996,
+   "text": "The osses will not listen until their captives are home",
+   "spans": [
+    [
+     361770,
+     361827
+    ]
+   ]
+  },
+  {
+   "ctx": "command",
+   "key": "",
+   "line": 3002,
+   "text": "{fighters.length} posted to guard the {…}",
+   "spans": [
+    [
+     362623,
+     362623
+    ],
+    [
+     362641,
+     362662
+    ],
+    [
+     362714,
+     362714
+    ]
+   ]
+  },
+  {
+   "ctx": "command",
+   "key": "",
+   "line": 3005,
+   "text": "Only balloonists can reach a balloon",
+   "spans": [
+    [
+     363183,
+     363221
+    ]
+   ]
+  },
+  {
+   "ctx": "command",
+   "key": "",
+   "line": 3006,
+   "text": "One follower walks to the {…}",
+   "spans": [
+    [
+     363484,
+     363510
+    ],
+    [
+     363542,
+     363542
+    ]
+   ]
+  },
+  {
+   "ctx": "command",
+   "key": "",
+   "line": 3006,
+   "text": "{n} followers walk to the {…}",
+   "spans": [
+    [
+     363545,
+     363545
+    ],
+    [
+     363549,
+     363572
+    ],
+    [
+     363604,
+     363604
+    ]
+   ]
+  },
+  {
+   "ctx": "command",
+   "key": "",
+   "line": 3008,
+   "text": "the May Queen",
+   "spans": [
+    [
+     363972,
+     363987
+    ]
+   ]
+  },
+  {
+   "ctx": "command",
+   "key": "",
+   "line": 3008,
+   "text": "your Cunning Woman",
+   "spans": [
+    [
+     363988,
+     364008
+    ]
+   ]
+  },
+  {
+   "ctx": "command",
+   "key": "",
+   "line": 3008,
+   "text": "{f.length} sworn to guard {who}",
+   "spans": [
+    [
+     364156,
+     364156
+    ],
+    [
+     364167,
+     364183
+    ],
+    [
+     364189,
+     364189
+    ]
+   ]
+  },
+  {
+   "ctx": "command",
+   "key": "",
+   "line": 3008,
+   "text": "Only warriors and archers can stand guard",
+   "spans": [
+    [
+     364203,
+     364246
+    ]
+   ]
+  },
+  {
+   "ctx": "command",
+   "key": "",
+   "line": 3015,
+   "text": "Your balloons will carry them over",
+   "spans": [
+    [
+     365223,
+     365259
+    ]
+   ]
+  },
+  {
+   "ctx": "command",
+   "key": "",
+   "line": 3016,
+   "text": "There is no way across. Your Cunning Woman can raise a Land Bridge, or a balloon can carry them.",
+   "spans": [
+    [
+     365373,
+     365471
+    ]
+   ]
+  },
+  {
+   "ctx": "command",
+   "key": "",
+   "line": 3016,
+   "text": "There is no way across. Your Cunning Woman can raise a Land Bridge, or balloons from a Balloon Works can carry them.",
+   "spans": [
+    [
+     365472,
+     365590
+    ]
+   ]
+  },
+  {
+   "ctx": "orderMove",
+   "key": "",
+   "line": 3020,
+   "text": "The balloon cannot set down there",
+   "spans": [
+    [
+     365952,
+     365987
+    ]
+   ]
+  },
+  {
+   "ctx": "const",
+   "key": "",
+   "line": 3040,
+   "text": "Full + 10",
+   "spans": [
+    [
+     368238,
+     368249
+    ]
+   ]
+  },
+  {
+   "ctx": "const",
+   "key": "",
+   "line": 3041,
+   "text": "{BT[k].wood} wood",
+   "spans": [
+    [
+     368342,
+     368374
+    ],
+    [
+     368378,
+     368387
+    ],
+    [
+     368401,
+     368404
+    ],
+    [
+     368417,
+     368419
+    ],
+    [
+     368459,
+     368476
+    ],
+    [
+     368490,
+     368521
+    ],
+    [
+     368534,
+     368555
+    ]
+   ]
+  },
+  {
+   "ctx": "const",
+   "key": "",
+   "line": 3044,
+   "text": "Nothing can be built while the world ends",
+   "spans": [
+    [
+     369156,
+     369199
+    ]
+   ]
+  },
+  {
+   "ctx": "const",
+   "key": "",
+   "line": 3044,
+   "text": "Your villagers will gather wood for it. {BT[k].label} needs {BT[k].wood} wood",
+   "spans": [
+    [
+     369307,
+     369347
+    ],
+    [
+     369361,
+     369368
+    ],
+    [
+     369381,
+     369386
+    ]
+   ]
+  },
+  {
+   "ctx": "const",
+   "key": "",
+   "line": 3044,
+   "text": "Tap where the hedge begins. Each length costs {BT.hedge.wood} wood.",
+   "spans": [
+    [
+     369451,
+     369497
+    ],
+    [
+     369513,
+     369519
+    ]
+   ]
+  },
+  {
+   "ctx": "const",
+   "key": "",
+   "line": 3044,
+   "text": "Tap where to build the {BT[k].label}",
+   "spans": [
+    [
+     369522,
+     369545
+    ],
+    [
+     369559,
+     369559
+    ]
+   ]
+  },
+  {
+   "ctx": "arm",
+   "key": "",
+   "line": 3045,
+   "text": "{SPK[k].n}: tap anywhere. {SPDESC[k]}",
+   "spans": [
+    [
+     369679,
+     369679
+    ],
+    [
+     369690,
+     369706
+    ],
+    [
+     369718,
+     369718
+    ]
+   ]
+  },
+  {
+   "ctx": "arm",
+   "key": "",
+   "line": 3046,
+   "text": "All-against-all: ten followers burn in your wicker man and your mana is spent. Every hut falls and the last tribe standing wins. This cannot be undone.",
+   "spans": [
+    [
+     369783,
+     369936
+    ]
+   ]
+  },
+  {
+   "ctx": "arm",
+   "key": "",
+   "line": 3047,
+   "text": "Your Cunning Woman is waiting to be reborn",
+   "spans": [
+    [
+     369992,
+     370036
+    ]
+   ]
+  },
+  {
+   "ctx": "arm",
+   "key": "",
+   "line": 3047,
+   "text": "{s.n}: tap a target. {SPDESC[k]}",
+   "spans": [
+    [
+     370087,
+     370087
+    ],
+    [
+     370093,
+     370109
+    ],
+    [
+     370121,
+     370121
+    ]
+   ]
+  },
+  {
+   "ctx": "selSummary",
+   "key": "",
+   "line": 3060,
+   "text": "Nothing selected",
+   "spans": [
+    [
+     371585,
+     371603
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3064,
+   "text": "She becomes a god, for good",
+   "spans": [
+    [
+     372260,
+     372281
+    ],
+    [
+     372291,
+     372301
+    ],
+    [
+     372434,
+     372485
+    ],
+    [
+     372514,
+     372591
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3064,
+   "text": "Begin the entombment",
+   "spans": [
+    [
+     372260,
+     372281
+    ],
+    [
+     372291,
+     372301
+    ],
+    [
+     372434,
+     372485
+    ],
+    [
+     372514,
+     372591
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3064,
+   "text": "Another Cunning Woman is at the hill",
+   "spans": [
+    [
+     372308,
+     372346
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3064,
+   "text": "Your rite is under way",
+   "spans": [
+    [
+     372354,
+     372378
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3064,
+   "text": "Seal your Cunning Woman inside with twenty followers",
+   "spans": [
+    [
+     372379,
+     372433
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3066,
+   "text": "{b.occ} of 5 villagers inside",
+   "spans": [
+    [
+     372803,
+     372803
+    ],
+    [
+     372811,
+     372833
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3066,
+   "text": "Being built · {Math.floor(b.prog*100)}%",
+   "spans": [
+    [
+     372844,
+     372858
+    ],
+    [
+     372883,
+     372884
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3067,
+   "text": "Training {…} · {Math.ceil(b.tt)}s · {b.q} queued",
+   "spans": [
+    [
+     372931,
+     372940
+    ],
+    [
+     372974,
+     372977
+    ],
+    [
+     372995,
+     372999
+    ],
+    [
+     373005,
+     373012
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3067,
+   "text": "Waiting · your last {TRAIN_KEEP} villagers will not be trained · {b.q} queued",
+   "spans": [
+    [
+     373023,
+     373043
+    ],
+    [
+     373056,
+     373089
+    ],
+    [
+     373095,
+     373102
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3067,
+   "text": "Waiting for a villager · {b.q} queued",
+   "spans": [
+    [
+     373105,
+     373130
+    ],
+    [
+     373136,
+     373143
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3069,
+   "text": "{D.mana} mana",
+   "spans": [
+    [
+     373244,
+     373283
+    ],
+    [
+     373313,
+     373320
+    ],
+    [
+     373329,
+     373350
+    ],
+    [
+     373384,
+     373434
+    ],
+    [
+     373473,
+     373524
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3069,
+   "text": "Train {…}",
+   "spans": [
+    [
+     373244,
+     373283
+    ],
+    [
+     373313,
+     373320
+    ],
+    [
+     373329,
+     373350
+    ],
+    [
+     373384,
+     373434
+    ],
+    [
+     373473,
+     373524
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3069,
+   "text": "Refund mana",
+   "spans": [
+    [
+     373244,
+     373283
+    ],
+    [
+     373313,
+     373320
+    ],
+    [
+     373329,
+     373350
+    ],
+    [
+     373384,
+     373434
+    ],
+    [
+     373473,
+     373524
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3069,
+   "text": "Cancel one",
+   "spans": [
+    [
+     373244,
+     373283
+    ],
+    [
+     373313,
+     373320
+    ],
+    [
+     373329,
+     373350
+    ],
+    [
+     373384,
+     373434
+    ],
+    [
+     373473,
+     373524
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3072,
+   "text": "Burning",
+   "spans": [
+    [
+     373630,
+     373639
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3072,
+   "text": "Grove strength ×{grove(b).toFixed(2)} · a villager gives {…}, a captive {…}",
+   "spans": [
+    [
+     373668,
+     373684
+    ],
+    [
+     373706,
+     373726
+    ],
+    [
+     373765,
+     373777
+    ],
+    [
+     373816,
+     373816
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3073,
+   "text": "{b.inside.length} of {D.holdN} inside{…} · {y[0]} a villager, {y[1]} a captive",
+   "spans": [
+    [
+     373835,
+     373835
+    ],
+    [
+     373853,
+     373857
+    ],
+    [
+     373867,
+     373874
+    ],
+    [
+     373923,
+     373926
+    ],
+    [
+     373933,
+     373946
+    ],
+    [
+     373953,
+     373963
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3073,
+   "text": " · {b.sq+b.cq} on their way",
+   "spans": [
+    [
+     373886,
+     373891
+    ],
+    [
+     373904,
+     373919
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3076,
+   "text": "{caps} held · no dread",
+   "spans": [
+    [
+     374144,
+     374181
+    ],
+    [
+     374215,
+     374222
+    ],
+    [
+     374229,
+     374317
+    ],
+    [
+     374340,
+     374398
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3076,
+   "text": "Offer a captive",
+   "spans": [
+    [
+     374144,
+     374181
+    ],
+    [
+     374215,
+     374222
+    ],
+    [
+     374229,
+     374317
+    ],
+    [
+     374340,
+     374398
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3076,
+   "text": "Raises dread",
+   "spans": [
+    [
+     374144,
+     374181
+    ],
+    [
+     374215,
+     374222
+    ],
+    [
+     374229,
+     374317
+    ],
+    [
+     374340,
+     374398
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3076,
+   "text": "Offer a villager",
+   "spans": [
+    [
+     374144,
+     374181
+    ],
+    [
+     374215,
+     374222
+    ],
+    [
+     374229,
+     374317
+    ],
+    [
+     374340,
+     374398
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3077,
+   "text": "Captives first",
+   "spans": [
+    [
+     374431,
+     374467
+    ],
+    [
+     374501,
+     374552
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3077,
+   "text": "Fill it",
+   "spans": [
+    [
+     374431,
+     374467
+    ],
+    [
+     374501,
+     374552
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3078,
+   "text": "Captives",
+   "spans": [
+    [
+     374585,
+     374624
+    ],
+    [
+     374640,
+     374644
+    ],
+    [
+     374653,
+     374676
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3078,
+   "text": "{b.capt.length} of {D.hold} held here",
+   "spans": [
+    [
+     374585,
+     374624
+    ],
+    [
+     374640,
+     374644
+    ],
+    [
+     374653,
+     374676
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3079,
+   "text": "The Hunt rides · {riders} abroad · each death they cause feeds you like a captive",
+   "spans": [
+    [
+     374840,
+     374857
+    ],
+    [
+     374866,
+     374922
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3079,
+   "text": "Your Cunning Woman hangs here · {Math.ceil(b.hangUntil-gt)}s",
+   "spans": [
+    [
+     374937,
+     374969
+    ],
+    [
+     374997,
+     374998
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3079,
+   "text": "Dormant. Hang your Cunning Woman here for two minutes to wake the Wild Hunt",
+   "spans": [
+    [
+     375000,
+     375077
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3079,
+   "text": "She is gone for two minutes",
+   "spans": [
+    [
+     375123,
+     375161
+    ],
+    [
+     375205,
+     375285
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3079,
+   "text": "Hang your Cunning Woman",
+   "spans": [
+    [
+     375123,
+     375161
+    ],
+    [
+     375205,
+     375285
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3080,
+   "text": "Your Cunning Woman lies here · {Math.ceil(b.hp)} of {b.mhp}",
+   "spans": [
+    [
+     375312,
+     375333
+    ],
+    [
+     375343,
+     375384
+    ],
+    [
+     375402,
+     375406
+    ],
+    [
+     375414,
+     375427
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3081,
+   "text": "Send them to work",
+   "spans": [
+    [
+     375462,
+     375500
+    ],
+    [
+     375522,
+     375587
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3081,
+   "text": "Call villagers out",
+   "spans": [
+    [
+     375462,
+     375500
+    ],
+    [
+     375522,
+     375587
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3083,
+   "text": "{…}Worth {queenValue(q)} mana{…} · {g} guard(s)",
+   "spans": [
+    [
+     375774,
+     375795
+    ],
+    [
+     375839,
+     375849
+    ],
+    [
+     375932,
+     375938
+    ],
+    [
+     375954,
+     375959
+    ],
+    [
+     376014,
+     376017
+    ],
+    [
+     376021,
+     376027
+    ],
+    [
+     376042,
+     376141
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3083,
+   "text": "No dread",
+   "spans": [
+    [
+     375774,
+     375795
+    ],
+    [
+     375839,
+     375849
+    ],
+    [
+     375932,
+     375938
+    ],
+    [
+     375954,
+     375959
+    ],
+    [
+     376014,
+     376017
+    ],
+    [
+     376021,
+     376027
+    ],
+    [
+     376042,
+     376141
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3083,
+   "text": "Offer her",
+   "spans": [
+    [
+     375774,
+     375795
+    ],
+    [
+     375839,
+     375849
+    ],
+    [
+     375932,
+     375938
+    ],
+    [
+     375954,
+     375959
+    ],
+    [
+     376014,
+     376017
+    ],
+    [
+     376021,
+     376027
+    ],
+    [
+     376042,
+     376141
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3083,
+   "text": "Captured May Queen",
+   "spans": [
+    [
+     375806,
+     375826
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3083,
+   "text": "May Queen",
+   "spans": [
+    [
+     375827,
+     375838
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3083,
+   "text": "Taken from the {…} folk · ",
+   "spans": [
+    [
+     375860,
+     375877
+    ],
+    [
+     375918,
+     375928
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3083,
+   "text": ", at her richest",
+   "spans": [
+    [
+     375966,
+     375984
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3083,
+   "text": ", rising to {TUNE.queenMax}",
+   "spans": [
+    [
+     375985,
+     375999
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3085,
+   "text": "{…} aboard",
+   "spans": [
+    [
+     376245,
+     376291
+    ],
+    [
+     376330,
+     376366
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3085,
+   "text": "Unload",
+   "spans": [
+    [
+     376245,
+     376291
+    ],
+    [
+     376330,
+     376366
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3087,
+   "text": "Tomb",
+   "spans": [
+    [
+     376535,
+     376541
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3087,
+   "text": "Find the fortress",
+   "spans": [
+    [
+     376544,
+     376563
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3087,
+   "text": "Cunning Woman",
+   "spans": [
+    [
+     376576,
+     376591
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3087,
+   "text": "Select and find",
+   "spans": [
+    [
+     376614,
+     376631
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3087,
+   "text": "Reborn in {…}s",
+   "spans": [
+    [
+     376632,
+     376644
+    ],
+    [
+     376680,
+     376683
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3088,
+   "text": "{LEAP_N} villagers rise from the stones; no attacks for {LEAP_TRUCE}s{…}",
+   "spans": [
+    [
+     376731,
+     376775
+    ],
+    [
+     376784,
+     376832
+    ],
+    [
+     376845,
+     376846
+    ],
+    [
+     376941,
+     376973
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3088,
+   "text": "Ättestupa",
+   "spans": [
+    [
+     376731,
+     376775
+    ],
+    [
+     376784,
+     376832
+    ],
+    [
+     376845,
+     376846
+    ],
+    [
+     376941,
+     376973
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3088,
+   "text": "; with {LS.n} fighters standing, the terror is weaker and she is gone {LS.rb}s",
+   "spans": [
+    [
+     376856,
+     376863
+    ],
+    [
+     376870,
+     376927
+    ],
+    [
+     376935,
+     376936
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3090,
+   "text": "nearest",
+   "spans": [
+    [
+     377155,
+     377189
+    ],
+    [
+     377193,
+     377195
+    ],
+    [
+     377213,
+     377252
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3091,
+   "text": "Army",
+   "spans": [
+    [
+     377323,
+     377329
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3091,
+   "text": "{army} fighters",
+   "spans": [
+    [
+     377340,
+     377351
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3091,
+   "text": "Warriors",
+   "spans": [
+    [
+     377365,
+     377375
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3091,
+   "text": "{fr('warrior')} ready",
+   "spans": [
+    [
+     377404,
+     377412
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3091,
+   "text": "Archers",
+   "spans": [
+    [
+     377439,
+     377448
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3091,
+   "text": "{fr('archer')} ready",
+   "spans": [
+    [
+     377475,
+     377483
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3091,
+   "text": "Osses",
+   "spans": [
+    [
+     377506,
+     377513
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3091,
+   "text": "{fr('oss')} ready",
+   "spans": [
+    [
+     377534,
+     377542
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3091,
+   "text": "Guards",
+   "spans": [
+    [
+     377564,
+     377572
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3091,
+   "text": "{guards} posted",
+   "spans": [
+    [
+     377587,
+     377596
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3092,
+   "text": "Villagers",
+   "spans": [
+    [
+     377641,
+     377652
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3092,
+   "text": "{br} outside, {T.stats.housed||0} in huts",
+   "spans": [
+    [
+     377659,
+     377671
+    ],
+    [
+     377692,
+     377702
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3093,
+   "text": "Balloons",
+   "spans": [
+    [
+     377742,
+     377752
+    ]
+   ]
+  },
+  {
+   "ctx": "renderTribe",
+   "key": "",
+   "line": 3093,
+   "text": "{vn} balloons",
+   "spans": [
+    [
+     377759,
+     377770
+    ]
+   ]
+  },
+  {
+   "ctx": "const",
+   "key": "",
+   "line": 3098,
+   "text": "Not enough mana",
+   "spans": [
+    [
+     378494,
+     378511
+    ]
+   ]
+  },
+  {
+   "ctx": "const",
+   "key": "",
+   "line": 3098,
+   "text": "{UT[D.train].label} queued. {b.q} in line; a villager will walk in to be trained.",
+   "spans": [
+    [
+     378548,
+     378548
+    ],
+    [
+     378568,
+     378577
+    ],
+    [
+     378583,
+     378631
+    ]
+   ]
+  },
+  {
+   "ctx": "const",
+   "key": "",
+   "line": 3099,
+   "text": "One cancelled. {BT[b.bt].mana} mana returned.",
+   "spans": [
+    [
+     378720,
+     378735
+    ],
+    [
+     378751,
+     378766
+    ]
+   ]
+  },
+  {
+   "ctx": "const",
+   "key": "",
+   "line": 3100,
+   "text": "A villager will walk to the {nm}. {b.sq+b.cq} offering(s) on the way.",
+   "spans": [
+    [
+     378806,
+     378834
+    ],
+    [
+     378839,
+     378841
+    ],
+    [
+     378853,
+     378862
+    ],
+    [
+     378885,
+     378897
+    ]
+   ]
+  },
+  {
+   "ctx": "const",
+   "key": "",
+   "line": 3101,
+   "text": "A captive will be led from the fold to the {nm}.",
+   "spans": [
+    [
+     378959,
+     379002
+    ],
+    [
+     379007,
+     379008
+    ]
+   ]
+  },
+  {
+   "ctx": "const",
+   "key": "",
+   "line": 3102,
+   "text": "Filling the {nm}: {Math.max(0,c)} captive(s) and {…} villager(s) on the way.",
+   "spans": [
+    [
+     379188,
+     379200
+    ],
+    [
+     379205,
+     379207
+    ],
+    [
+     379223,
+     379231
+    ],
+    [
+     379246,
+     379251
+    ],
+    [
+     379284,
+     379293
+    ],
+    [
+     379313,
+     379325
+    ]
+   ]
+  },
+  {
+   "ctx": "const",
+   "key": "",
+   "line": 3103,
+   "text": "You need an altar or a wicker figure to offer her at",
+   "spans": [
+    [
+     379532,
+     379586
+    ]
+   ]
+  },
+  {
+   "ctx": "const",
+   "key": "",
+   "line": 3103,
+   "text": "The May Queen walks to the {…}",
+   "spans": [
+    [
+     379682,
+     379709
+    ],
+    [
+     379743,
+     379743
+    ]
+   ]
+  },
+  {
+   "ctx": "const",
+   "key": "",
+   "line": 3104,
+   "text": "Your Cunning Woman walks to the oak",
+   "spans": [
+    [
+     379951,
+     379988
+    ]
+   ]
+  },
+  {
+   "ctx": "const",
+   "key": "",
+   "line": 3106,
+   "text": "{n} villager(s) come out to work.",
+   "spans": [
+    [
+     380186,
+     380186
+    ],
+    [
+     380190,
+     380199
+    ],
+    [
+     380214,
+     380232
+    ]
+   ]
+  },
+  {
+   "ctx": "focusShaman",
+   "key": "",
+   "line": 3115,
+   "text": "Your Cunning Woman is waiting to be reborn",
+   "spans": [
+    [
+     381279,
+     381323
+    ]
+   ]
+  },
+  {
+   "ctx": "const",
+   "key": "",
+   "line": 3118,
+   "text": "Tap where they should stand guard. They will form up round a banner, hold that ground and fight whatever comes near.",
+   "spans": [
+    [
+     381708,
+     381826
+    ]
+   ]
+  },
+  {
+   "ctx": "toggleFull",
+   "key": "",
+   "line": 3123,
+   "text": "Full screen is not available here",
+   "spans": [
+    [
+     382497,
+     382532
+    ]
+   ]
+  },
+  {
+   "ctx": "toggleFull",
+   "key": "",
+   "line": 3123,
+   "text": "Full screen is not available here",
+   "spans": [
+    [
+     382551,
+     382586
+    ]
+   ]
+  },
+  {
+   "ctx": "fsChange",
+   "key": "",
+   "line": 3125,
+   "text": "Exit full screen",
+   "spans": [
+    [
+     382689,
+     382707
+    ]
+   ]
+  },
+  {
+   "ctx": "fsChange",
+   "key": "",
+   "line": 3125,
+   "text": "Full screen",
+   "spans": [
+    [
+     382708,
+     382721
+    ]
+   ]
+  },
+  {
+   "ctx": "togglePause",
+   "key": "",
+   "line": 3127,
+   "text": "Resume",
+   "spans": [
+    [
+     382947,
+     382955
+    ]
+   ]
+  },
+  {
+   "ctx": "togglePause",
+   "key": "",
+   "line": 3127,
+   "text": "Pause",
+   "spans": [
+    [
+     382956,
+     382963
+    ]
+   ]
+  },
+  {
+   "ctx": "const",
+   "key": "",
+   "line": 3128,
+   "text": "Resume",
+   "spans": [
+    [
+     383068,
+     383076
+    ]
+   ]
+  },
+  {
+   "ctx": "const",
+   "key": "",
+   "line": 3128,
+   "text": "{m} min {String(s).padStart(2,'0')} s into the {…} of seed {settings.seed}.",
+   "spans": [
+    [
+     383151,
+     383151
+    ],
+    [
+     383155,
+     383160
+    ],
+    [
+     383188,
+     383200
+    ],
+    [
+     383258,
+     383267
+    ],
+    [
+     383283,
+     383284
+    ]
+   ]
+  },
+  {
+   "ctx": "const",
+   "key": "",
+   "line": 3129,
+   "text": "Pause",
+   "spans": [
+    [
+     383416,
+     383423
+    ]
+   ]
+  },
+  {
+   "ctx": "const",
+   "key": "",
+   "line": 3130,
+   "text": "Tap again to abandon. Your game stays saved.",
+   "spans": [
+    [
+     383588,
+     383634
+    ]
+   ]
+  },
+  {
+   "ctx": "const",
+   "key": "",
+   "line": 3130,
+   "text": "Abandon and choose a new world",
+   "spans": [
+    [
+     383679,
+     383711
+    ]
+   ]
+  },
+  {
+   "ctx": "updHUD",
+   "key": "",
+   "line": 3136,
+   "text": "Level {settings.campaign+1}",
+   "spans": [
+    [
+     384445,
+     384451
+    ],
+    [
+     384473,
+     384473
+    ]
+   ]
+  },
+  {
+   "ctx": "updHUD",
+   "key": "",
+   "line": 3136,
+   "text": " · Hold on {Math.floor(left/60)}:{…}",
+   "spans": [
+    [
+     384532,
+     384543
+    ],
+    [
+     384565,
+     384566
+    ],
+    [
+     384612,
+     384612
+    ]
+   ]
+  },
+  {
+   "ctx": "updHUD",
+   "key": "",
+   "line": 3136,
+   "text": " · Captives {T.stats.caps||0}/{g.n}",
+   "spans": [
+    [
+     384646,
+     384658
+    ],
+    [
+     384676,
+     384677
+    ],
+    [
+     384683,
+     384683
+    ]
+   ]
+  },
+  {
+   "ctx": "updHUD",
+   "key": "",
+   "line": 3136,
+   "text": " · Offer a May Queen",
+   "spans": [
+    [
+     384713,
+     384735
+    ]
+   ]
+  },
+  {
+   "ctx": "updHUD",
+   "key": "",
+   "line": 3136,
+   "text": " · Mana {Math.floor(T.mana)}/{g.n}",
+   "spans": [
+    [
+     384764,
+     384772
+    ],
+    [
+     384793,
+     384794
+    ],
+    [
+     384800,
+     384800
+    ]
+   ]
+  },
+  {
+   "ctx": "updHUD",
+   "key": "",
+   "line": 3136,
+   "text": " · Conquer",
+   "spans": [
+    [
+     384810,
+     384822
+    ]
+   ]
+  },
+  {
+   "ctx": "updHUD",
+   "key": "",
+   "line": 3136,
+   "text": "Entombed",
+   "spans": [
+    [
+     384875,
+     384915
+    ]
+   ]
+  },
+  {
+   "ctx": "updHUD",
+   "key": "",
+   "line": 3136,
+   "text": "Your people are fleeing",
+   "spans": [
+    [
+     384939,
+     384993
+    ]
+   ]
+  },
+  {
+   "ctx": "updHUD",
+   "key": "",
+   "line": 3136,
+   "text": "Frenzy {Math.ceil(T.frenzyUntil-gt)}s",
+   "spans": [
+    [
+     385040,
+     385069
+    ],
+    [
+     385099,
+     385107
+    ]
+   ]
+  },
+  {
+   "ctx": "updHUD",
+   "key": "",
+   "line": 3136,
+   "text": "All-against-all",
+   "spans": [
+    [
+     385127,
+     385173
+    ]
+   ]
+  },
+  {
+   "ctx": "updHUD",
+   "key": "",
+   "line": 3137,
+   "text": "{o.stats.pop} · {Math.floor(o.mana)} mana{o.tomb?' · entombed':''}",
+   "spans": [
+    [
+     385532,
+     385537
+    ],
+    [
+     385557,
+     385564
+    ]
+   ]
+  },
+  {
+   "ctx": "updHUD",
+   "key": "",
+   "line": 3137,
+   "text": " · entombed",
+   "spans": [
+    [
+     385573,
+     385586
+    ]
+   ]
+  },
+  {
+   "ctx": "const",
+   "key": "",
+   "line": 3150,
+   "text": "None of the {T.name} folk are in sight. Explore, or wait for them to show themselves.",
+   "spans": [
+    [
+     387308,
+     387320
+    ],
+    [
+     387329,
+     387394
+    ]
+   ]
+  },
+  {
+   "ctx": "const",
+   "key": "",
+   "line": 3152,
+   "text": "their last known place",
+   "spans": [
+    [
+     387692,
+     387716
+    ]
+   ]
+  },
+  {
+   "ctx": "const",
+   "key": "",
+   "line": 3152,
+   "text": "group {T.findI+1} of {groups.length}, {g.n} here",
+   "spans": [
+    [
+     387717,
+     387725
+    ],
+    [
+     387738,
+     387744
+    ],
+    [
+     387759,
+     387763
+    ],
+    [
+     387768,
+     387775
+    ]
+   ]
+  },
+  {
+   "ctx": "drawPreview",
+   "key": "",
+   "line": 3158,
+   "text": "Your village is ochre. {land}% land, {settings.enemies} rival(s). Pale marks are the Moot and the hollow hills.",
+   "spans": [
+    [
+     388630,
+     388653
+    ],
+    [
+     388660,
+     388668
+    ],
+    [
+     388687,
+     388693
+    ],
+    [
+     388721,
+     388768
+    ]
+   ]
+  },
+  {
+   "ctx": "buildWorld",
+   "key": "name",
+   "line": 3179,
+   "text": "Wild",
+   "spans": [
+    [
+     392739,
+     392745
+    ]
+   ]
+  },
+  {
+   "ctx": "beginGame",
+   "key": "",
+   "line": 3189,
+   "text": "Pause",
+   "spans": [
+    [
+     394540,
+     394547
+    ]
+   ]
+  },
+  {
+   "ctx": "beginGame",
+   "key": "",
+   "line": 3191,
+   "text": "Grow your tribe while you can. Rivals usually first attack after about {fm} minutes.",
+   "spans": [
+    [
+     394843,
+     394914
+    ],
+    [
+     394919,
+     394928
+    ]
+   ]
+  },
+  {
+   "ctx": "goalText",
+   "key": "",
+   "line": 3193,
+   "text": "Gather {g.n} mana.",
+   "spans": [
+    [
+     395124,
+     395131
+    ],
+    [
+     395137,
+     395143
+    ]
+   ]
+  },
+  {
+   "ctx": "goalText",
+   "key": "",
+   "line": 3193,
+   "text": "Hold fast for {Math.round(g.n/60)} minutes.",
+   "spans": [
+    [
+     395165,
+     395179
+    ],
+    [
+     395200,
+     395209
+    ]
+   ]
+  },
+  {
+   "ctx": "goalText",
+   "key": "",
+   "line": 3193,
+   "text": "Hold {g.n} captives in your folds at once.",
+   "spans": [
+    [
+     395232,
+     395237
+    ],
+    [
+     395243,
+     395275
+    ]
+   ]
+  },
+  {
+   "ctx": "goalText",
+   "key": "",
+   "line": 3193,
+   "text": "Crown {g.n} May Queens and offer each to the fire.",
+   "spans": [
+    [
+     395307,
+     395313
+    ],
+    [
+     395319,
+     395358
+    ]
+   ]
+  },
+  {
+   "ctx": "goalText",
+   "key": "",
+   "line": 3193,
+   "text": "Crown a May Queen and offer her to the fire.",
+   "spans": [
+    [
+     395360,
+     395406
+    ]
+   ]
+  },
+  {
+   "ctx": "goalText",
+   "key": "",
+   "line": 3193,
+   "text": "Break every rival people.",
+   "spans": [
+    [
+     395408,
+     395435
+    ]
+   ]
+  },
+  {
+   "ctx": "beginWatch",
+   "key": "",
+   "line": 3194,
+   "text": "Pause",
+   "spans": [
+    [
+     395769,
+     395776
+    ]
+   ]
+  },
+  {
+   "ctx": "beginWatch",
+   "key": "",
+   "line": 3196,
+   "text": "Tap a tribe at the top to find it. The speed button goes up to four times.",
+   "spans": [
+    [
+     396008,
+     396084
+    ]
+   ]
+  },
+  {
+   "ctx": "endWatch",
+   "key": "",
+   "line": 3197,
+   "text": "The {T.name} folk endure",
+   "spans": [
+    [
+     396170,
+     396174
+    ],
+    [
+     396183,
+     396195
+    ]
+   ]
+  },
+  {
+   "ctx": "endWatch",
+   "key": "",
+   "line": 3197,
+   "text": "No one endures",
+   "spans": [
+    [
+     396197,
+     396213
+    ]
+   ]
+  },
+  {
+   "ctx": "endWatch",
+   "key": "",
+   "line": 3198,
+   "text": "Every other people has been burned, captured or driven into the wilds. The {T.name} folk have the world to themselves.",
+   "spans": [
+    [
+     396242,
+     396317
+    ],
+    [
+     396326,
+     396361
+    ]
+   ]
+  },
+  {
+   "ctx": "endWatch",
+   "key": "",
+   "line": 3198,
+   "text": "The last tribes fell together. The wildmen inherit the world.",
+   "spans": [
+    [
+     396363,
+     396426
+    ]
+   ]
+  },
+  {
+   "ctx": "endWatch",
+   "key": "",
+   "line": 3199,
+   "text": "time",
+   "spans": [
+    [
+     396501,
+     396509
+    ],
+    [
+     396513,
+     396514
+    ],
+    [
+     396542,
+     396556
+    ]
+   ]
+  },
+  {
+   "ctx": "endWatch",
+   "key": "",
+   "line": 3199,
+   "text": "Watch this world again",
+   "spans": [
+    [
+     396582,
+     396606
+    ]
+   ]
+  },
+  {
+   "ctx": "REJOICE",
+   "key": "",
+   "line": 3201,
+   "text": "There is no first or last!",
+   "spans": [
+    [
+     396670,
+     396698
+    ]
+   ]
+  },
+  {
+   "ctx": "REJOICE",
+   "key": "",
+   "line": 3201,
+   "text": "The harvest shall be fruitful this year.",
+   "spans": [
+    [
+     396699,
+     396741
+    ]
+   ]
+  },
+  {
+   "ctx": "REJOICE",
+   "key": "",
+   "line": 3201,
+   "text": "Come now, rise now, from the forest, from the furrows, from the fields, and live!",
+   "spans": [
+    [
+     396742,
+     396825
+    ]
+   ]
+  },
+  {
+   "ctx": "REJOICE",
+   "key": "",
+   "line": 3201,
+   "text": "Happy day!",
+   "spans": [
+    [
+     396826,
+     396838
+    ]
+   ]
+  },
+  {
+   "ctx": "REJOICE",
+   "key": "",
+   "line": 3201,
+   "text": "Thou livest deliciously!",
+   "spans": [
+    [
+     396839,
+     396865
+    ]
+   ]
+  },
+  {
+   "ctx": "REJOICE",
+   "key": "",
+   "line": 3202,
+   "text": "Sumer is icumen in, lhude sing cuccu!",
+   "spans": [
+    [
+     396869,
+     396908
+    ]
+   ]
+  },
+  {
+   "ctx": "REJOICE",
+   "key": "",
+   "line": 3202,
+   "text": "The barns will be full and the hearths warm.",
+   "spans": [
+    [
+     396909,
+     396955
+    ]
+   ]
+  },
+  {
+   "ctx": "REJOICE",
+   "key": "",
+   "line": 3202,
+   "text": "The old fires are lit on every hill.",
+   "spans": [
+    [
+     396956,
+     396994
+    ]
+   ]
+  },
+  {
+   "ctx": "REJOICE",
+   "key": "",
+   "line": 3202,
+   "text": "The earth is fed, and the earth is grateful.",
+   "spans": [
+    [
+     396995,
+     397041
+    ]
+   ]
+  },
+  {
+   "ctx": "REJOICE",
+   "key": "",
+   "line": 3202,
+   "text": "Dance, for none are left to mourn.",
+   "spans": [
+    [
+     397042,
+     397078
+    ]
+   ]
+  },
+  {
+   "ctx": "REJOICE",
+   "key": "",
+   "line": 3202,
+   "text": "Every furrow sings tonight.",
+   "spans": [
+    [
+     397079,
+     397108
+    ]
+   ]
+  },
+  {
+   "ctx": "openCampaign",
+   "key": "",
+   "line": 3204,
+   "text": "Won in {Math.floor(pr.best[i]/60)} min",
+   "spans": [
+    [
+     397332,
+     397339
+    ],
+    [
+     397367,
+     397371
+    ]
+   ]
+  },
+  {
+   "ctx": "openCampaign",
+   "key": "",
+   "line": 3204,
+   "text": "Locked",
+   "spans": [
+    [
+     397378,
+     397386
+    ]
+   ]
+  },
+  {
+   "ctx": "openCampaign",
+   "key": "",
+   "line": 3204,
+   "text": "Not yet won",
+   "spans": [
+    [
+     397387,
+     397400
+    ]
+   ]
+  },
+  {
+   "ctx": "openCampaign",
+   "key": "",
+   "line": 3206,
+   "text": "The wheel has turned. Every level is yours to play again.",
+   "spans": [
+    [
+     397631,
+     397690
+    ]
+   ]
+  },
+  {
+   "ctx": "openCampaign",
+   "key": "",
+   "line": 3206,
+   "text": "History is a wheel that rises and ebbs with the seasons, dying and renewing in the endless wheel of nature. These are hard times, O Cunning Woman, can't thou lead thy village deliciously? {pr.unlocked+1} of 20 open.",
+   "spans": [
+    [
+     397692,
+     397880
+    ],
+    [
+     397896,
+     397908
+    ]
+   ]
+  },
+  {
+   "ctx": "showLevel",
+   "key": "",
+   "line": 3209,
+   "text": "Level {i+1} of {SCEN.length} · {sc.tier||DIFFNAME[sc.diff]} · {sc.enemies} rival(s)",
+   "spans": [
+    [
+     398247,
+     398253
+    ],
+    [
+     398259,
+     398263
+    ],
+    [
+     398277,
+     398280
+    ],
+    [
+     398309,
+     398312
+    ],
+    [
+     398325,
+     398331
+    ],
+    [
+     398353,
+     398353
+    ]
+   ]
+  },
+  {
+   "ctx": "showLevel",
+   "key": "",
+   "line": 3210,
+   "text": "New: {sc.news.join(', ')}.",
+   "spans": [
+    [
+     398510,
+     398517
+    ],
+    [
+     398537,
+     398540
+    ]
+   ]
+  },
+  {
+   "ctx": "showLevel",
+   "key": "",
+   "line": 3210,
+   "text": "Everything is open to you.",
+   "spans": [
+    [
+     398548,
+     398576
+    ]
+   ]
+  },
+  {
+   "ctx": "DIFFNAME",
+   "key": "easy",
+   "line": 3224,
+   "text": "Easy",
+   "spans": [
+    [
+     400162,
+     400168
+    ]
+   ]
+  },
+  {
+   "ctx": "DIFFNAME",
+   "key": "normal",
+   "line": 3224,
+   "text": "Normal",
+   "spans": [
+    [
+     400176,
+     400184
+    ]
+   ]
+  },
+  {
+   "ctx": "DIFFNAME",
+   "key": "hard",
+   "line": 3224,
+   "text": "Hard",
+   "spans": [
+    [
+     400190,
+     400196
+    ]
+   ]
+  },
+  {
+   "ctx": "endGame",
+   "key": "",
+   "line": 3228,
+   "text": "Play this world again",
+   "spans": [
+    [
+     400907,
+     400930
+    ]
+   ]
+  },
+  {
+   "ctx": "endGame",
+   "key": "",
+   "line": 3228,
+   "text": "Choose a new world",
+   "spans": [
+    [
+     400953,
+     400973
+    ]
+   ]
+  },
+  {
+   "ctx": "endGame",
+   "key": "",
+   "line": 3229,
+   "text": "Play this level again",
+   "spans": [
+    [
+     401078,
+     401101
+    ]
+   ]
+  },
+  {
+   "ctx": "endGame",
+   "key": "",
+   "line": 3229,
+   "text": "Try again",
+   "spans": [
+    [
+     401102,
+     401113
+    ]
+   ]
+  },
+  {
+   "ctx": "endGame",
+   "key": "",
+   "line": 3229,
+   "text": "Back to the campaign",
+   "spans": [
+    [
+     401136,
+     401158
+    ]
+   ]
+  },
+  {
+   "ctx": "endGame",
+   "key": "",
+   "line": 3230,
+   "text": "Onward: {i+2}. {SCEN[i+1].title}",
+   "spans": [
+    [
+     401444,
+     401452
+    ],
+    [
+     401458,
+     401460
+    ],
+    [
+     401478,
+     401478
+    ]
+   ]
+  },
+  {
+   "ctx": "endGame",
+   "key": "",
+   "line": 3230,
+   "text": "Victory",
+   "spans": [
+    [
+     401571,
+     401580
+    ]
+   ]
+  },
+  {
+   "ctx": "endGame",
+   "key": "",
+   "line": 3230,
+   "text": "Defeat",
+   "spans": [
+    [
+     401581,
+     401589
+    ]
+   ]
+  },
+  {
+   "ctx": "endGame",
+   "key": "",
+   "line": 3231,
+   "text": "The Moot is quiet. Of all the peoples who walked there, only yours walked away.",
+   "spans": [
+    [
+     401631,
+     401712
+    ]
+   ]
+  },
+  {
+   "ctx": "endGame",
+   "key": "",
+   "line": 3231,
+   "text": "Every rival Cunning Woman has been cast out. The world is yours to shape.",
+   "spans": [
+    [
+     401713,
+     401788
+    ]
+   ]
+  },
+  {
+   "ctx": "endGame",
+   "key": "",
+   "line": 3231,
+   "text": "Your people fell at the Moot. The world goes on without them.",
+   "spans": [
+    [
+     401802,
+     401865
+    ]
+   ]
+  },
+  {
+   "ctx": "endGame",
+   "key": "",
+   "line": 3231,
+   "text": "Your tribe has been wiped from the world. The fields grow over the huts.",
+   "spans": [
+    [
+     401866,
+     401940
+    ]
+   ]
+  },
+  {
+   "ctx": "endGame",
+   "key": "",
+   "line": 3232,
+   "text": "most followers",
+   "spans": [
+    [
+     402173,
+     402189
+    ]
+   ]
+  },
+  {
+   "ctx": "endGame",
+   "key": "",
+   "line": 3232,
+   "text": "spells cast",
+   "spans": [
+    [
+     402208,
+     402221
+    ]
+   ]
+  },
+  {
+   "ctx": "endGame",
+   "key": "",
+   "line": 3232,
+   "text": "enemies slain",
+   "spans": [
+    [
+     402241,
+     402256
+    ]
+   ]
+  },
+  {
+   "ctx": "endGame",
+   "key": "",
+   "line": 3232,
+   "text": "of your own lost",
+   "spans": [
+    [
+     402277,
+     402295
+    ]
+   ]
+  },
+  {
+   "ctx": "endGame",
+   "key": "",
+   "line": 3232,
+   "text": "buildings razed",
+   "spans": [
+    [
+     402314,
+     402331
+    ]
+   ]
+  },
+  {
+   "ctx": "endGame",
+   "key": "",
+   "line": 3232,
+   "text": "given to the fire",
+   "spans": [
+    [
+     402351,
+     402370
+    ]
+   ]
+  },
+  {
+   "ctx": "endGame",
+   "key": "",
+   "line": 3233,
+   "text": "captives carried home",
+   "spans": [
+    [
+     402401,
+     402424
+    ]
+   ]
+  },
+  {
+   "ctx": "endGame",
+   "key": "",
+   "line": 3233,
+   "text": "raiders dragged to the altar",
+   "spans": [
+    [
+     402437,
+     402467
+    ]
+   ]
+  },
+  {
+   "ctx": "endGame",
+   "key": "",
+   "line": 3233,
+   "text": "taken by the Hunt",
+   "spans": [
+    [
+     402483,
+     402502
+    ]
+   ]
+  },
+  {
+   "ctx": "endGame",
+   "key": "",
+   "line": 3233,
+   "text": "May Queens offered",
+   "spans": [
+    [
+     402524,
+     402544
+    ]
+   ]
+  },
+  {
+   "ctx": "endGame",
+   "key": "",
+   "line": 3233,
+   "text": "leap from the crag",
+   "spans": [
+    [
+     402567,
+     402587
+    ]
+   ]
+  },
+  {
+   "ctx": "endGame",
+   "key": "",
+   "line": 3233,
+   "text": "leaps from the crag",
+   "spans": [
+    [
+     402588,
+     402609
+    ]
+   ]
+  },
+  {
+   "ctx": "endGame",
+   "key": "",
+   "line": 3233,
+   "text": "tokens earned",
+   "spans": [
+    [
+     402639,
+     402654
+    ]
+   ]
+  },
+  {
+   "ctx": "endGame",
+   "key": "",
+   "line": 3235,
+   "text": "Victory",
+   "spans": [
+    [
+     402758,
+     402767
+    ]
+   ]
+  },
+  {
+   "ctx": "endGame",
+   "key": "",
+   "line": 3235,
+   "text": "Defeat",
+   "spans": [
+    [
+     402768,
+     402776
+    ]
+   ]
+  },
+  {
+   "ctx": "const",
+   "key": "",
+   "line": 3249,
+   "text": "Sound",
+   "spans": [
+    [
+     405046,
+     405053
+    ]
+   ]
+  },
+  {
+   "ctx": "const",
+   "key": "",
+   "line": 3249,
+   "text": "Muted",
+   "spans": [
+    [
+     405054,
+     405061
+    ]
+   ]
+  },
+  {
+   "ctx": "loadGame",
+   "key": "",
+   "line": 3314,
+   "text": "Pause",
+   "spans": [
+    [
+     413151,
+     413158
+    ]
+   ]
+  },
+  {
+   "ctx": "loadGame",
+   "key": "",
+   "line": 3316,
+   "text": "Your game is restored, {m} minute(s) in.",
+   "spans": [
+    [
+     413333,
+     413356
+    ],
+    [
+     413360,
+     413367
+    ],
+    [
+     413382,
+     413386
+    ]
+   ]
+  },
+  {
+   "ctx": "showContinue",
+   "key": "",
+   "line": 3318,
+   "text": "Continue your game · {m} min, {st}, seed {d.settings.seed}",
+   "spans": [
+    [
+     413640,
+     413661
+    ],
+    [
+     413665,
+     413671
+    ],
+    [
+     413676,
+     413683
+    ],
+    [
+     413701,
+     413701
+    ]
+   ]
+  },
+  {
+   "ctx": "const",
+   "key": "",
+   "line": 3319,
+   "text": "The saved game could not be read",
+   "spans": [
+    [
+     413774,
+     413808
+    ]
+   ]
+  },
+  {
+   "ctx": "wsLabel",
+   "key": "",
+   "line": 3327,
+   "text": "Blackthorn Hedge (join)",
+   "spans": [
+    [
+     414614,
+     414639
+    ]
+   ]
+  },
+  {
+   "ctx": "wsSaveCurrent",
+   "key": "",
+   "line": 3332,
+   "text": "This browser would not keep the change",
+   "spans": [
+    [
+     415319,
+     415359
+    ]
+   ]
+  },
+  {
+   "ctx": "wsStatus",
+   "key": "",
+   "line": 3334,
+   "text": "Changes are kept automatically. {n} model(s) edited.",
+   "spans": [
+    [
+     415487,
+     415519
+    ],
+    [
+     415523,
+     415529
+    ],
+    [
+     415544,
+     415552
+    ]
+   ]
+  },
+  {
+   "ctx": "wsStatus",
+   "key": "",
+   "line": 3334,
+   "text": "Changes are kept automatically.",
+   "spans": [
+    [
+     415554,
+     415587
+    ]
+   ]
+  },
+  {
+   "ctx": "wsPanel",
+   "key": "",
+   "line": 3369,
+   "text": " · tribe",
+   "spans": [
+    [
+     421553,
+     421563
+    ]
+   ]
+  },
+  {
+   "ctx": "wsPanel",
+   "key": "",
+   "line": 3369,
+   "text": "group {p.g%100}",
+   "spans": [
+    [
+     421573,
+     421586
+    ],
+    [
+     421595,
+     421602
+    ]
+   ]
+  },
+  {
+   "ctx": "wsPanel",
+   "key": "",
+   "line": 3369,
+   "text": "No parts. Add a shape below.",
+   "spans": [
+    [
+     421628,
+     421686
+    ]
+   ]
+  },
+  {
+   "ctx": "wsPanel",
+   "key": "",
+   "line": 3370,
+   "text": "Tap a part in the picture or the list to change it. Shift-click (or turn on Add) to pick several at once. Drag a selected part to move it; drag anywhere else to turn the view.",
+   "spans": [
+    [
+     421749,
+     421948
+    ]
+   ]
+  },
+  {
+   "ctx": "wsPanel",
+   "key": "",
+   "line": 3371,
+   "text": "{ids.length} parts",
+   "spans": [
+    [
+     422042,
+     422064
+    ],
+    [
+     422077,
+     422126
+    ],
+    [
+     422132,
+     422213
+    ],
+    [
+     422257,
+     422307
+    ]
+   ]
+  },
+  {
+   "ctx": "wsPanel",
+   "key": "",
+   "line": 3371,
+   "text": "Tribe colour",
+   "spans": [
+    [
+     422042,
+     422064
+    ],
+    [
+     422077,
+     422126
+    ],
+    [
+     422132,
+     422213
+    ],
+    [
+     422257,
+     422307
+    ]
+   ]
+  },
+  {
+   "ctx": "wsPanel",
+   "key": "",
+   "line": 3371,
+   "text": "Move together",
+   "spans": [
+    [
+     422042,
+     422064
+    ],
+    [
+     422077,
+     422126
+    ],
+    [
+     422132,
+     422213
+    ],
+    [
+     422257,
+     422307
+    ]
+   ]
+  },
+  {
+   "ctx": "wsPanel",
+   "key": "",
+   "line": 3373,
+   "text": "Left – right",
+   "spans": [
+    [
+     422441,
+     422455
+    ]
+   ]
+  },
+  {
+   "ctx": "wsPanel",
+   "key": "",
+   "line": 3373,
+   "text": "Down – up",
+   "spans": [
+    [
+     422460,
+     422471
+    ]
+   ]
+  },
+  {
+   "ctx": "wsPanel",
+   "key": "",
+   "line": 3373,
+   "text": "Back – front",
+   "spans": [
+    [
+     422476,
+     422490
+    ]
+   ]
+  },
+  {
+   "ctx": "wsPanel",
+   "key": "",
+   "line": 3374,
+   "text": "Turn together",
+   "spans": [
+    [
+     422705,
+     422729
+    ]
+   ]
+  },
+  {
+   "ctx": "wsPanel",
+   "key": "",
+   "line": 3374,
+   "text": "Tip forward",
+   "spans": [
+    [
+     422732,
+     422745
+    ]
+   ]
+  },
+  {
+   "ctx": "wsPanel",
+   "key": "",
+   "line": 3374,
+   "text": "Spin",
+   "spans": [
+    [
+     422750,
+     422756
+    ]
+   ]
+  },
+  {
+   "ctx": "wsPanel",
+   "key": "",
+   "line": 3374,
+   "text": "Lean sideways",
+   "spans": [
+    [
+     422761,
+     422776
+    ]
+   ]
+  },
+  {
+   "ctx": "wsPanel",
+   "key": "",
+   "line": 3375,
+   "text": "Size together",
+   "spans": [
+    [
+     422920,
+     422944
+    ]
+   ]
+  },
+  {
+   "ctx": "wsPanel",
+   "key": "",
+   "line": 3375,
+   "text": "Scale",
+   "spans": [
+    [
+     422975,
+     422982
+    ]
+   ]
+  },
+  {
+   "ctx": "wsPanel",
+   "key": "",
+   "line": 3376,
+   "text": "Turning and scaling work around the middle of the selection. The sliders start from zero each time you pick the group.",
+   "spans": [
+    [
+     423066,
+     423208
+    ]
+   ]
+  },
+  {
+   "ctx": "wsPanel",
+   "key": "",
+   "line": 3380,
+   "text": "Tribe colour",
+   "spans": [
+    [
+     423568,
+     423590
+    ],
+    [
+     423601,
+     423628
+    ],
+    [
+     423739,
+     423791
+    ],
+    [
+     423797,
+     423869
+    ],
+    [
+     423889,
+     423930
+    ]
+   ]
+  },
+  {
+   "ctx": "wsPanel",
+   "key": "",
+   "line": 3380,
+   "text": "Size",
+   "spans": [
+    [
+     423568,
+     423590
+    ],
+    [
+     423601,
+     423628
+    ],
+    [
+     423739,
+     423791
+    ],
+    [
+     423797,
+     423869
+    ],
+    [
+     423889,
+     423930
+    ]
+   ]
+  },
+  {
+   "ctx": "wsPanel",
+   "key": "",
+   "line": 3384,
+   "text": "Position",
+   "spans": [
+    [
+     424466,
+     424485
+    ]
+   ]
+  },
+  {
+   "ctx": "wsPanel",
+   "key": "",
+   "line": 3385,
+   "text": "Left – right",
+   "spans": [
+    [
+     424491,
+     424505
+    ]
+   ]
+  },
+  {
+   "ctx": "wsPanel",
+   "key": "",
+   "line": 3385,
+   "text": "Down – up",
+   "spans": [
+    [
+     424510,
+     424521
+    ]
+   ]
+  },
+  {
+   "ctx": "wsPanel",
+   "key": "",
+   "line": 3385,
+   "text": "Back – front",
+   "spans": [
+    [
+     424526,
+     424540
+    ]
+   ]
+  },
+  {
+   "ctx": "wsPanel",
+   "key": "",
+   "line": 3386,
+   "text": "Turn",
+   "spans": [
+    [
+     424700,
+     424715
+    ]
+   ]
+  },
+  {
+   "ctx": "wsPanel",
+   "key": "",
+   "line": 3386,
+   "text": "Tip forward",
+   "spans": [
+    [
+     424718,
+     424731
+    ]
+   ]
+  },
+  {
+   "ctx": "wsPanel",
+   "key": "",
+   "line": 3386,
+   "text": "Spin",
+   "spans": [
+    [
+     424736,
+     424742
+    ]
+   ]
+  },
+  {
+   "ctx": "wsPanel",
+   "key": "",
+   "line": 3386,
+   "text": "Lean sideways",
+   "spans": [
+    [
+     424747,
+     424762
+    ]
+   ]
+  },
+  {
+   "ctx": "wsPanel",
+   "key": "",
+   "line": 3387,
+   "text": "Stretch",
+   "spans": [
+    [
+     424890,
+     424927
+    ]
+   ]
+  },
+  {
+   "ctx": "wsPanel",
+   "key": "",
+   "line": 3387,
+   "text": "Wide",
+   "spans": [
+    [
+     424957,
+     424963
+    ]
+   ]
+  },
+  {
+   "ctx": "wsPanel",
+   "key": "",
+   "line": 3387,
+   "text": "Tall",
+   "spans": [
+    [
+     424968,
+     424974
+    ]
+   ]
+  },
+  {
+   "ctx": "wsPanel",
+   "key": "",
+   "line": 3387,
+   "text": "Deep",
+   "spans": [
+    [
+     424979,
+     424985
+    ]
+   ]
+  },
+  {
+   "ctx": "wsCopySel",
+   "key": "",
+   "line": 3419,
+   "text": "Select a part first",
+   "spans": [
+    [
+     429681,
+     429702
+    ]
+   ]
+  },
+  {
+   "ctx": "const",
+   "key": "",
+   "line": 3424,
+   "text": "Select a part first",
+   "spans": [
+    [
+     430347,
+     430368
+    ]
+   ]
+  },
+  {
+   "ctx": "const",
+   "key": "",
+   "line": 3425,
+   "text": "Shift-click (or turn on Add) to pick two or more parts first",
+   "spans": [
+    [
+     430580,
+     430642
+    ]
+   ]
+  },
+  {
+   "ctx": "const",
+   "key": "",
+   "line": 3425,
+   "text": "{ids.length} parts grouped. Tapping any of them in the picture now picks up the whole group.",
+   "spans": [
+    [
+     430764,
+     430764
+    ],
+    [
+     430777,
+     430857
+    ]
+   ]
+  },
+  {
+   "ctx": "const",
+   "key": "",
+   "line": 3426,
+   "text": "Nothing selected is grouped",
+   "spans": [
+    [
+     430973,
+     431002
+    ]
+   ]
+  },
+  {
+   "ctx": "const",
+   "key": "",
+   "line": 3428,
+   "text": "Nothing to undo",
+   "spans": [
+    [
+     431334,
+     431351
+    ]
+   ]
+  },
+  {
+   "ctx": "const",
+   "key": "",
+   "line": 3429,
+   "text": "{wsLabel(WS.key)} is back as it was. Undo brings your version back.",
+   "spans": [
+    [
+     431645,
+     431645
+    ],
+    [
+     431663,
+     431713
+    ]
+   ]
+  },
+  {
+   "ctx": "const",
+   "key": "",
+   "line": 3431,
+   "text": "No models have been edited yet",
+   "spans": [
+    [
+     431887,
+     431919
+    ]
+   ]
+  },
+  {
+   "ctx": "const",
+   "key": "",
+   "line": 3433,
+   "text": "{keys.length} edited model(s). Copy this and send it on; it can be baked into the game so everyone gets these models.",
+   "spans": [
+    [
+     432089,
+     432089
+    ],
+    [
+     432103,
+     432116
+    ],
+    [
+     432141,
+     432229
+    ]
+   ]
+  },
+  {
+   "ctx": "const",
+   "key": "",
+   "line": 3434,
+   "text": "Paste exported model text here, then press Use these models.",
+   "spans": [
+    [
+     432398,
+     432460
+    ]
+   ]
+  },
+  {
+   "ctx": "const",
+   "key": "",
+   "line": 3435,
+   "text": "Copied",
+   "spans": [
+    [
+     432774,
+     432782
+    ]
+   ]
+  },
+  {
+   "ctx": "const",
+   "key": "",
+   "line": 3435,
+   "text": "Select the text and copy it by hand",
+   "spans": [
+    [
+     432783,
+     432820
+    ]
+   ]
+  },
+  {
+   "ctx": "const",
+   "key": "",
+   "line": 3436,
+   "text": "That text is not readable model data",
+   "spans": [
+    [
+     432933,
+     432971
+    ]
+   ]
+  },
+  {
+   "ctx": "const",
+   "key": "",
+   "line": 3438,
+   "text": "{n} model(s) taken in",
+   "spans": [
+    [
+     433339,
+     433339
+    ],
+    [
+     433343,
+     433349
+    ],
+    [
+     433364,
+     433373
+    ]
+   ]
+  },
+  {
+   "ctx": "const",
+   "key": "",
+   "line": 3438,
+   "text": "Nothing in that text matched a model",
+   "spans": [
+    [
+     433375,
+     433413
+    ]
+   ]
+  },
+  {
+   "ctx": "openTokens",
+   "key": "",
+   "line": 3443,
+   "text": "{got} of {n} earned.{…}",
+   "spans": [
+    [
+     433906,
+     433906
+    ],
+    [
+     433912,
+     433916
+    ],
+    [
+     433920,
+     433928
+    ],
+    [
+     433998,
+     433998
+    ]
+   ]
+  },
+  {
+   "ctx": "openTokens",
+   "key": "",
+   "line": 3443,
+   "text": " Test mode is on: tokens are not earned while it is.",
+   "spans": [
+    [
+     433940,
+     433994
+    ]
+   ]
+  },
+  {
+   "ctx": "keepsake",
+   "key": "",
+   "line": 3444,
+   "text": "WICKER1:{…}",
+   "spans": [
+    [
+     434157,
+     434167
+    ]
+   ]
+  },
+  {
+   "ctx": "useKeepsake",
+   "key": "",
+   "line": 3448,
+   "text": "Keepsake taken in: {nt} new token(s), campaign open to level {pr.unlocked+1}.",
+   "spans": [
+    [
+     434815,
+     434834
+    ],
+    [
+     434839,
+     434849
+    ],
+    [
+     434865,
+     434890
+    ],
+    [
+     434906,
+     434907
+    ]
+   ]
+  },
+  {
+   "ctx": "useKeepsake",
+   "key": "",
+   "line": 3448,
+   "text": "That is not a Wicker keepsake",
+   "spans": [
+    [
+     434925,
+     434956
+    ]
+   ]
+  },
+  {
+   "ctx": "const",
+   "key": "",
+   "line": 3451,
+   "text": "Keepsake copied",
+   "spans": [
+    [
+     435338,
+     435355
+    ]
+   ]
+  },
+  {
+   "ctx": "const",
+   "key": "",
+   "line": 3451,
+   "text": "Keepsake copied",
+   "spans": [
+    [
+     435379,
+     435396
+    ]
+   ]
+  },
+  {
+   "ctx": "const",
+   "key": "",
+   "line": 3451,
+   "text": "Select the text and copy it by hand",
+   "spans": [
+    [
+     435397,
+     435434
+    ]
+   ]
+  },
+  {
+   "ctx": "frame",
+   "key": "",
+   "line": 3463,
+   "text": "Something went wrong: {err.message}{fr?' ['+fr+']':''}",
+   "spans": [
+    [
+     436693,
+     436717
+    ]
+   ]
+  },
+  {
+   "ctx": "FILM_P",
+   "key": "n",
+   "line": 3472,
+   "text": "Exposure",
+   "spans": [
+    [
+     437398,
+     437408
+    ]
+   ]
+  },
+  {
+   "ctx": "FILM_P",
+   "key": "n",
+   "line": 3472,
+   "text": "Mid-tone lift",
+   "spans": [
+    [
+     437440,
+     437455
+    ]
+   ]
+  },
+  {
+   "ctx": "FILM_P",
+   "key": "n",
+   "line": 3472,
+   "text": "Contrast",
+   "spans": [
+    [
+     437494,
+     437504
+    ]
+   ]
+  },
+  {
+   "ctx": "FILM_P",
+   "key": "n",
+   "line": 3473,
+   "text": "Black lift",
+   "spans": [
+    [
+     437538,
+     437550
+    ]
+   ]
+  },
+  {
+   "ctx": "FILM_P",
+   "key": "n",
+   "line": 3473,
+   "text": "Land colour",
+   "spans": [
+    [
+     437586,
+     437599
+    ]
+   ]
+  },
+  {
+   "ctx": "FILM_P",
+   "key": "n",
+   "line": 3473,
+   "text": "Strong colour",
+   "spans": [
+    [
+     437638,
+     437653
+    ]
+   ]
+  },
+  {
+   "ctx": "FILM_P",
+   "key": "n",
+   "line": 3474,
+   "text": "Red depth",
+   "spans": [
+    [
+     437688,
+     437699
+    ]
+   ]
+  },
+  {
+   "ctx": "FILM_P",
+   "key": "n",
+   "line": 3474,
+   "text": "Fire held orange",
+   "spans": [
+    [
+     437733,
+     437751
+    ]
+   ]
+  },
+  {
+   "ctx": "FILM_P",
+   "key": "n",
+   "line": 3474,
+   "text": "Cool shadows",
+   "spans": [
+    [
+     437782,
+     437796
+    ]
+   ]
+  },
+  {
+   "ctx": "FILM_P",
+   "key": "n",
+   "line": 3475,
+   "text": "Warm highlights",
+   "spans": [
+    [
+     437831,
+     437848
+    ]
+   ]
+  },
+  {
+   "ctx": "FILM_P",
+   "key": "n",
+   "line": 3475,
+   "text": "Vignette",
+   "spans": [
+    [
+     437880,
+     437890
+    ]
+   ]
+  },
+  {
+   "ctx": "FILM_P",
+   "key": "n",
+   "line": 3475,
+   "text": "Halation",
+   "spans": [
+    [
+     437923,
+     437933
+    ]
+   ]
+  },
+  {
+   "ctx": "FILM_P",
+   "key": "n",
+   "line": 3476,
+   "text": "Halation threshold",
+   "spans": [
+    [
+     437966,
+     437986
+    ]
+   ]
+  },
+  {
+   "ctx": "FILM_P",
+   "key": "n",
+   "line": 3476,
+   "text": "Green to olive",
+   "spans": [
+    [
+     438020,
+     438036
+    ]
+   ]
+  },
+  {
+   "ctx": "FILM_P",
+   "key": "n",
+   "line": 3477,
+   "text": "Tribe brightness",
+   "spans": [
+    [
+     438071,
+     438089
+    ]
+   ]
+  },
+  {
+   "ctx": "FILM_P",
+   "key": "n",
+   "line": 3477,
+   "text": "Tribe colour strength",
+   "spans": [
+    [
+     438125,
+     438148
+    ]
+   ]
+  },
+  {
+   "ctx": "FILM_P",
+   "key": "n",
+   "line": 3477,
+   "text": "Red range",
+   "spans": [
+    [
+     438183,
+     438194
+    ]
+   ]
+  },
+  {
+   "ctx": "filmInit",
+   "key": "fragmentShader",
+   "line": 3488,
+   "text": "uniform sampler2D tD;uniform vec2 uRes;uniform float uSeed,uGrain,uP[17];uniform vec3 uS0,uS1,uS2,uS3;uniform vec4 uSp[8];uniform vec4 uSc[3];varying vec2 vUv; float h(vec2 p){return fract(sin(dot(p,vec2(12.9898,78.233)))*43758.5453);} vec3 sky(float y){float t=1.-y;return t",
+   "spans": [
+    [
+     439406,
+     442301
+    ]
+   ]
+  },
+  {
+   "ctx": "tuneBuild",
+   "key": "n",
+   "line": 3544,
+   "text": "Grain",
+   "spans": [
+    [
+     444789,
+     444796
+    ]
+   ]
+  },
+  {
+   "ctx": "tuneBuild",
+   "key": "n",
+   "line": 3544,
+   "text": "Dust and scratches",
+   "spans": [
+    [
+     444826,
+     444846
+    ]
+   ]
+  },
+  {
+   "ctx": "done",
+   "key": "",
+   "line": 3548,
+   "text": "The numbers are copied. Paste them to Claude.",
+   "spans": [
+    [
+     445606,
+     445653
+    ]
+   ]
+  }
+ ]
+}

@@ -1,0 +1,1475 @@
+{
+"commit": "fd23dc7",
+"entries": {
+"001": {
+"text": "‘Tis time o’ the cunning, and thou art swollen wi’ it. There's power here, in the land, in the forests - but Nature shalbe not mocked - to wield her weapons ye must pay her a toll. What toll? Why nought but th’toll o’blood. Drag them to the table, let them hang, see their flesh burn in th’shapes o’wicker - from their bones new life shall grow; thy belly shall grow wi’ it. Ah, what sights ye’ll birth, O Cunning Woman. Send the Oss and drag them home, feed the land and go garlanded, love, for all shall bless thy dominion on the earth.",
+"shown": "‘Tis time o’ the cunning, and thou art swollen wi’ it. There's power here, in the land, in the forests - but Nature shalbe not mocked - to wield her weapons ye must pay her a toll. What toll? Why nought but th’toll o’blood. Drag them to the table, let them hang, see their flesh burn in th’shapes o’wicker - from their bones new life shall grow; thy belly shall grow wi’ it. Ah, what sights ye’ll birth, O Cunning Woman. Send the Oss and drag them home, feed the land and go garlanded, love, for all shall bless thy dominion on the earth.",
+"ctx": "HTML",
+"key": "",
+"line": 240
+},
+"002": {
+"text": "Watch the villages fight among themselves",
+"shown": "Watch the villages fight among themselves",
+"ctx": "HTML",
+"key": "",
+"line": 255
+},
+"003": {
+"text": "Your village is ochre. {land}% land, {settings.enemies} rival(s). Pale marks are the Moot and the hollow hills.",
+"shown": "Your village is ochre. {number}% land, {number} rival(s). Pale marks are the Moot and the hollow hills.",
+"ctx": "drawPreview",
+"key": "",
+"line": 3158
+},
+"004": {
+"text": "Tap your people to select them. Tap the ground to move them, or an enemy to attack.",
+"shown": "Tap your people to select them. Tap the ground to move them, or an enemy to attack.",
+"ctx": "HTML",
+"key": "",
+"line": 262
+},
+"005": {
+"text": "Drag with one finger to pan. Pinch to zoom, and twist two fingers to turn the world.",
+"shown": "Drag with one finger to pan. Pinch to zoom, and twist two fingers to turn the world.",
+"ctx": "HTML",
+"key": "",
+"line": 263
+},
+"006": {
+"text": "Turn on Box, then drag to select a group. Double-tap a unit to select all of that kind nearby.",
+"shown": "Turn on Box, then drag to select a group. Double-tap a unit to select all of that kind nearby.",
+"ctx": "HTML",
+"key": "",
+"line": 264
+},
+"007": {
+"text": "To clear your selection, tap with two fingers at once, press and hold on empty ground, or tap the selection line above the tabs.",
+"shown": "To clear your selection, tap with two fingers at once, press and hold on empty ground, or tap the selection line above the tabs.",
+"ctx": "HTML",
+"key": "",
+"line": 265
+},
+"008": {
+"text": "Left-click selects your people, or tells the selected ones what to do; drag to box-select. Right-click on empty ground clears the selection; right-click on something still commands.",
+"shown": "Left-click selects your people, or tells the selected ones what to do; drag to box-select. Right-click on empty ground clears the selection; right-click on something still commands.",
+"ctx": "HTML",
+"key": "",
+"line": 269
+},
+"009": {
+"text": "Right-drag turns the view, middle-drag or WASD pans, the wheel zooms. Space finds your Cunning Woman, keys 1–0 pick spells, F toggles full screen, Esc cancels.",
+"shown": "Right-drag turns the view, middle-drag or WASD pans, the wheel zooms. Space finds your Cunning Woman, keys 1–0 pick spells, F toggles full screen, Esc cancels.",
+"ctx": "HTML",
+"key": "",
+"line": 270
+},
+"010": {
+"text": "Villagers chop wood, build, and go into huts to breed. From the men, a grave; and from the grace, a seed; and from that seed: the trees!",
+"shown": "Villagers chop wood, build, and go into huts to breed. From the men, a grave; and from the grace, a seed; and from that seed: the trees!",
+"ctx": "HTML",
+"key": "",
+"line": 274
+},
+"011": {
+"text": "The forest altar takes one offering at a time and is stronger the more trees stand around it. The wicker man takes five and burns, giving mana and a frenzy of speed. The Wicker God takes twelve and burns for an enormous offering, terrifying any enemy who sees it. Both wicker figures burn down on use and must be rebuilt.",
+"shown": "The forest altar takes one offering at a time and is stronger the more trees stand around it. The wicker man takes five and burns, giving mana and a frenzy of speed. The Wicker God takes twelve and burns for an enormous offering, terrifying any enemy who sees it. Both wicker figures burn down on use and must be rebuilt.",
+"ctx": "HTML",
+"key": "",
+"line": 275
+},
+"012": {
+"text": "Burning your own people fills the dread meter. Past the mark, frightened villagers start slipping away into the wilds. Dread fades with time, and faster with more huts.",
+"shown": "Burning your own people fills the dread meter. Past the mark, frightened villagers start slipping away into the wilds. Dread fades with time, and faster with more huts.",
+"ctx": "HTML",
+"key": "",
+"line": 276
+},
+"013": {
+"text": "Osses, from the Oss House, roam the ground around where you last sent them and seize anyone they can catch, wildmen or enemy, carrying them home to your thrall fold at a run. Once an Oss has a captive it will not take orders until it is home. Captives are worth far more than your own people and cause no dread; kill an Oss on its way home and its captive goes free. You start with one thrall fold, which holds fifteen. Two or more captives left together in a fold will breed, slowly at first and then faster, so a fold left alone fills itself.",
+"shown": "Osses, from the Oss House, roam the ground around where you last sent them and seize anyone they can catch, wildmen or enemy, carrying them home to your thrall fold at a run. Once an Oss has a captive it will not take orders until it is home. Captives are worth far more than your own people and cause no dread; kill an Oss on its way home and its captive goes free. You start with one thrall fold, which holds fifteen. Two or more captives left together in a fold will breed, slowly at first and then faster, so a fold left alone fills itself.",
+"ctx": "HTML",
+"key": "",
+"line": 277
+},
+"014": {
+"text": "Herne's Oak is a vast dead tree raised in deep woodland. Hang your Cunning Woman from it for two minutes, during which she can do nothing, and the Wild Hunt rides for you: antlered horsemen who roam the whole world killing anyone they find outside the reach of an enemy Cunning Woman. Every death they cause feeds you as richly as a captive, and lost riders return.",
+"shown": "Herne's Oak is a vast dead tree raised in deep woodland. Hang your Cunning Woman from it for two minutes, during which she can do nothing, and the Wild Hunt rides for you: antlered horsemen who roam the whole world killing anyone they find outside the reach of an enemy Cunning Woman. Every death they cause feeds you as richly as a captive, and lost riders return.",
+"ctx": "HTML",
+"key": "",
+"line": 278
+},
+"015": {
+"text": "Build a Maypole and idle villagers will dance around it, easing your people's dread. After enough merriment a May Queen is crowned. The longer she lives, the more her offering is worth, up to a vast sum with no dread and a long frenzy. Select fighters and tap her to swear them as her guards; you can do the same for your Cunning Woman. Rival Osses will hunt her, and a captured Queen can be offered by her captors for her full worth.",
+"shown": "Build a Maypole and idle villagers will dance around it, easing your people's dread. After enough merriment a May Queen is crowned. The longer she lives, the more her offering is worth, up to a vast sum with no dread and a long frenzy. Select fighters and tap her to swear them as her guards; you can do the same for your Cunning Woman. Rival Osses will hunt her, and a captured Queen can be offered by her captors for her full worth.",
+"ctx": "HTML",
+"key": "",
+"line": 279
+},
+"016": {
+"text": "Blackthorn hedges are cheap thorny barriers. Choose the hedge, tap where it starts and where it ends, and villagers plant it a length at a time. Nothing walks through a finished hedge, your own people included, so leave gaps; enemies must go round or hack through, which turns open ground into chokepoints.",
+"shown": "Blackthorn hedges are cheap thorny barriers. Choose the hedge, tap where it starts and where it ends, and villagers plant it a length at a time. Nothing walks through a finished hedge, your own people included, so leave gaps; enemies must go round or hack through, which turns open ground into chokepoints.",
+"ctx": "HTML",
+"key": "",
+"line": 280
+},
+"017": {
+"text": "Your Bog is a hidden trap: your own people cross it safely, but enemies cannot see it and march straight in. It lasts until it has drowned ten of them. Fighters near their own buildings also take slightly less damage.",
+"shown": "Your Bog is a hidden trap: your own people cross it safely, but enemies cannot see it and march straight in. It lasts until it has drowned ten of them. Fighters near their own buildings also take slightly less damage.",
+"ctx": "HTML",
+"key": "",
+"line": 281
+},
+"018": {
+"text": "When a rival army sets out for you, a horn sounds and the marching column shows on your map through the fog. An attack that loses half its strength breaks and runs home.",
+"shown": "When a rival army sets out for you, a horn sounds and the marching column shows on your map through the fog. An attack that loses half its strength breaks and runs home.",
+"ctx": "HTML",
+"key": "",
+"line": 282
+},
+"019": {
+"text": "The Rook Tree is a lookout in a dead tree. It sees a long way and hurls fire-pots at any enemy balloon in range, bringing one down in three hits. It ignores everything on the ground.",
+"shown": "The Rook Tree is a lookout in a dead tree. It sees a long way and hurls fire-pots at any enemy balloon in range, bringing one down in three hits. It ignores everything on the ground.",
+"ctx": "HTML",
+"key": "",
+"line": 283
+},
+"020": {
+"text": "To hold ground, select warriors or archers (the +5 buttons on the Tribe tab add the five nearest of a kind) and press Post on the selection line, then tap a spot. They form up round a banner, fight whatever comes near without chasing far, and take less harm while they stand at their post. Sending fighters to your oak, your tomb or a hollow hill posts them there the same way. Guards are left out when you select your army; give them any other order to take them off their post.",
+"shown": "To hold ground, select warriors or archers (the +5 buttons on the Tribe tab add the five nearest of a kind) and press Post on the selection line, then tap a spot. They form up round a banner, fight whatever comes near without chasing far, and take less harm while they stand at their post. Sending fighters to your oak, your tomb or a hollow hill posts them there the same way. Guards are left out when you select your army; give them any other order to take them off their post.",
+"ctx": "HTML",
+"key": "",
+"line": 284
+},
+"021": {
+"text": "A tribe that loses every building, trained unit and its Cunning Woman is finished: its last villagers are dragged off as captives by whoever broke it. A tribe whose people are all dead hands its empty buildings to the conqueror, with an offering of mana.",
+"shown": "A tribe that loses every building, trained unit and its Cunning Woman is finished: its last villagers are dragged off as captives by whoever broke it. A tribe whose people are all dead hands its empty buildings to the conqueror, with an offering of mana.",
+"ctx": "HTML",
+"key": "",
+"line": 285
+},
+"022": {
+"text": "Ground where a building has been razed is salted earth: for three minutes its old owner cannot build there. A rival that falls to a fifth of its greatest size is broken. Its people gather at their stone circle where everyone can see them, its buildings fall to disrepair and its Cunning Woman does not return; destroy her last fighters and the rest are yours for your pyres.",
+"shown": "Ground where a building has been razed is salted earth: for three minutes its old owner cannot build there. A rival that falls to a fifth of its greatest size is broken. Its people gather at their stone circle where everyone can see them, its buildings fall to disrepair and its Cunning Woman does not return; destroy her last fighters and the rest are yours for your pyres.",
+"ctx": "HTML",
+"key": "",
+"line": 286
+},
+"023": {
+"text": "Tap a rival's marker at the top of the screen to look at where her people are. Tap again to move on to the next group.",
+"shown": "Tap a rival's marker at the top of the screen to look at where her people are. Tap again to move on to the next group.",
+"ctx": "HTML",
+"key": "",
+"line": 287
+},
+"024": {
+"text": "Training buildings turn a villager into a warrior, archer, Oss or balloonist.",
+"shown": "Training buildings turn a villager into a warrior, archer, Oss or balloonist.",
+"ctx": "HTML",
+"key": "",
+"line": 288
+},
+"025": {
+"text": "To cross water, have your Cunning Woman raise a Land Bridge from the shore towards the land you want. Anyone can walk it, your enemies included. Or, if you have balloons, simply order your people across: idle balloons fly to them, carry them over and come back until everyone is across.",
+"shown": "To cross water, have your Cunning Woman raise a Land Bridge from the shore towards the land you want. Anyone can walk it, your enemies included. Or, if you have balloons, simply order your people across: idle balloons fly to them, carry them over and come back until everyone is across.",
+"ctx": "HTML",
+"key": "",
+"line": 289
+},
+"026": {
+"text": "Balloonists drift above the fighting and drop charges. Only other balloonists can reach them.",
+"shown": "Balloonists drift above the fighting and drop charges. Only other balloonists can reach them.",
+"ctx": "HTML",
+"key": "",
+"line": 290
+},
+"027": {
+"text": "Wildmen wander the wilds. They make easy captives.",
+"shown": "Wildmen wander the wilds. They make easy captives.",
+"ctx": "HTML",
+"key": "",
+"line": 291
+},
+"028": {
+"text": "Hollow hills are ancient barrows that await discovery in wild country. Send your Cunning Woman with twenty sacrifices and at least 1,500 mana to perform the ritual of attaining and seal her inside. The hill becomes a wicker fortress: from it she sees everything and casts anywhere at half the mana. If enemies tear it down she is lost for a minute, then rises at your stone circle, and half your mana goes with her.",
+"shown": "Hollow hills are ancient barrows that await discovery in wild country. Send your Cunning Woman with twenty sacrifices and at least 1,500 mana to perform the ritual of attaining and seal her inside. The hill becomes a wicker fortress: from it she sees everything and casts anywhere at half the mana. If enemies tear it down she is lost for a minute, then rises at your stone circle, and half your mana goes with her.",
+"ctx": "HTML",
+"key": "",
+"line": 292
+},
+"029": {
+"text": "All-against-all needs an unlit wicker man, ten followers to burn and a full bar of mana. All shall leave their dwellings where they stand and make way to the Moot at the world's end, there to fight to the death.",
+"shown": "All-against-all needs an unlit wicker man, ten followers to burn and a full bar of mana. All shall leave their dwellings where they stand and make way to the Moot at the world's end, there to fight to the death.",
+"ctx": "HTML",
+"key": "",
+"line": 293
+},
+"030": {
+"text": "Pick a spell and tap a target. Your Cunning Woman walks into range and casts. If she dies she returns at your stone circle after forty-five seconds while your tribe survives.",
+"shown": "Pick a spell and tap a target. Your Cunning Woman walks into range and casts. If she dies she returns at your stone circle after forty-five seconds while your tribe survives.",
+"ctx": "HTML",
+"key": "",
+"line": 294
+},
+"031": {
+"text": "The Scrying Torch spell conjures a burning beacon where the Cunning Woman aims it. The land around it stays in sight for as long as it stands, which makes it a lookout over a pass, a rival's door or a hollow hill. Enemies can tear it down.",
+"shown": "The Scrying Torch spell conjures a burning beacon where the Cunning Woman aims it. The land around it stays in sight for as long as it stands, which makes it a lookout over a pass, a rival's door or a hollow hill. Enemies can tear it down.",
+"ctx": "HTML",
+"key": "",
+"line": 295
+},
+"032": {
+"text": "Ättestupa: when fewer than three villagers are left, your Cunning Woman can raise a crag at the edge of the village, climb it while your people watch, and go over the edge. Six villagers step out of the stone circle, no rival attacks you for thirty seconds, and she is reborn as usual. The crag stays, and she climbs the same one if it ever comes to that again.",
+"shown": "Ättestupa: when fewer than three villagers are left, your Cunning Woman can raise a crag at the edge of the village, climb it while your people watch, and go over the edge. Six villagers step out of the stone circle, no rival attacks you for thirty seconds, and she is reborn as usual. The crag stays, and she climbs the same one if it ever comes to that again.",
+"ctx": "HTML",
+"key": "",
+"line": 296
+},
+"033": {
+"text": "You win when every rival tribe has no followers or buildings left.",
+"shown": "You win when every rival tribe has no followers or buildings left.",
+"ctx": "HTML",
+"key": "",
+"line": 297
+},
+"034": {
+"text": "The Strait",
+"shown": "The Strait",
+"ctx": "Level 1 — The Strait",
+"key": "title",
+"line": 556
+},
+"035": {
+"text": "Across the water a people keeps its own fires and will not answer when we call. Our Cunning Woman has no power of her own: everything she does must be paid for with a life. Build a forest altar among the trees and give it villagers, one at a time. With what it gives back, raise warriors, lift the sea floor into a road, and cross.",
+"shown": "Across the water a people keeps its own fires and will not answer when we call. Our Cunning Woman has no power of her own: everything she does must be paid for with a life. Build a forest altar among the trees and give it villagers, one at a time. With what it gives back, raise warriors, lift the sea floor into a road, and cross.",
+"ctx": "Level 1 — The Strait",
+"key": "intro",
+"line": 559
+},
+"036": {
+"text": "The Grove",
+"shown": "The Grove",
+"ctx": "Level 2 — The Grove",
+"key": "title",
+"line": 560
+},
+"037": {
+"text": "The grove gives a little for each life. The wicker man gives far more, but it takes five at once, and it must burn to give anything at all. Feed it, and the Cunning Woman will have what she needs.",
+"shown": "The grove gives a little for each life. The wicker man gives far more, but it takes five at once, and it must burn to give anything at all. Feed it, and the Cunning Woman will have what she needs.",
+"ctx": "Level 2 — The Grove",
+"key": "intro",
+"line": 563
+},
+"038": {
+"text": "Hobby Horse",
+"shown": "Hobby Horse",
+"ctx": "Level 3 — Hobby Horse",
+"key": "title",
+"line": 564
+},
+"039": {
+"text": "The wild folk wander the woods with no hearth and no name. The Oss will bring them in. Fill the fold with ten of them and the people will know we can feed the fires for a long winter.",
+"shown": "The wild folk wander the woods with no hearth and no name. The Oss will bring them in. Fill the fold with ten of them and the people will know we can feed the fires for a long winter.",
+"ctx": "Level 3 — Hobby Horse",
+"key": "intro",
+"line": 567
+},
+"040": {
+"text": "Bowmen",
+"shown": "Bowmen",
+"ctx": "Level 4 — Bowmen",
+"key": "title",
+"line": 568
+},
+"041": {
+"text": "This neighbour is not idle. Their warriors will come. Archers behind a line of spears will meet them, and the Cunning Woman can turn a blow aside.",
+"shown": "This neighbour is not idle. Their warriors will come. Archers behind a line of spears will meet them, and the Cunning Woman can turn a blow aside.",
+"ctx": "Level 4 — Bowmen",
+"key": "intro",
+"line": 571
+},
+"042": {
+"text": "The Long Watch",
+"shown": "The Long Watch",
+"ctx": "Level 5 — The Long Watch",
+"key": "title",
+"line": 572
+},
+"043": {
+"text": "Two peoples have smelt our smoke, and both are coming for us. We cannot beat them and we have no camp to raise more warriors. But our valley is ringed with crags, and there are only three ways in. Plant blackthorn across the gaps, wake the bog beyond them, sink the ground under anyone who forces a way through, and hold the village for ten minutes until they tire of us. The altar gives twice what it usually does here; feed it.",
+"shown": "Two peoples have smelt our smoke, and both are coming for us. We cannot beat them and we have no camp to raise more warriors. But our valley is ringed with crags, and there are only three ways in. Plant blackthorn across the gaps, wake the bog beyond them, sink the ground under anyone who forces a way through, and hold the village for ten minutes until they tire of us. The altar gives twice what it usually does here; feed it.",
+"ctx": "Level 5 — The Long Watch",
+"key": "intro",
+"line": 575
+},
+"044": {
+"text": "The High Places",
+"shown": "The High Places",
+"ctx": "Level 6 — The High Places",
+"key": "title",
+"line": 576
+},
+"045": {
+"text": "Up here the land is broken into crags and there is barely room for two huts. Nobody can grow until they make level ground. Feed the altar, flatten the rock around the village, and build on what you make. Across the rocks one other people is just as cramped, and the first to spread out will win.",
+"shown": "Up here the land is broken into crags and there is barely room for two huts. Nobody can grow until they make level ground. Feed the altar, flatten the rock around the village, and build on what you make. Across the rocks one other people is just as cramped, and the first to spread out will win.",
+"ctx": "Level 6 — The High Places",
+"key": "intro",
+"line": 579
+},
+"046": {
+"text": "Fire from the Sky",
+"shown": "Fire from the Sky",
+"ctx": "Level 7 — Fire from the Sky",
+"key": "title",
+"line": 580
+},
+"047": {
+"text": "Every people here keeps its own island, and the sea is too deep and too wide for any bridge. Our enemies have learned to fly. Their balloonists drop fire on the huts and carry fighters over the water. Here a Cunning Woman does not come back: if ours dies we are finished, and if theirs dies so are they. Keep fighters sworn to her side, keep the Rook Trees watching, and when you are ready, put her in a balloon.",
+"shown": "Every people here keeps its own island, and the sea is too deep and too wide for any bridge. Our enemies have learned to fly. Their balloonists drop fire on the huts and carry fighters over the water. Here a Cunning Woman does not come back: if ours dies we are finished, and if theirs dies so are they. Keep fighters sworn to her side, keep the Rook Trees watching, and when you are ready, put her in a balloon.",
+"ctx": "Level 7 — Fire from the Sky",
+"key": "intro",
+"line": 583
+},
+"048": {
+"text": "May Morning",
+"shown": "May Morning",
+"ctx": "Level 8 — May Morning",
+"key": "title",
+"line": 584
+},
+"049": {
+"text": "Wicker is in short supply this season - if we are to survive, we shall need to do things in the oldest way. Crown the May Queen and exalt her for a season. Nature is a lustful mistress. Only the fairest of our daughters shall fit her for a bride. Crown her. Guard her. Attend her prime. Why then she shall dance her bloody nuptials and bring all favour upon us.",
+"shown": "Wicker is in short supply this season - if we are to survive, we shall need to do things in the oldest way. Crown the May Queen and exalt her for a season. Nature is a lustful mistress. Only the fairest of our daughters shall fit her for a bride. Crown her. Guard her. Attend her prime. Why then she shall dance her bloody nuptials and bring all favour upon us.",
+"ctx": "Level 8 — May Morning",
+"key": "intro",
+"line": 587
+},
+"050": {
+"text": "The Wicker God",
+"shown": "The Wicker God",
+"ctx": "Level 9 — The Wicker God",
+"key": "title",
+"line": 588
+},
+"051": {
+"text": "Twelve go into the belly of the ram and the whole world sees it burn. Fill it with strangers and the Cunning Woman will shake the earth beneath our enemies.",
+"shown": "Twelve go into the belly of the ram and the whole world sees it burn. Fill it with strangers and the Cunning Woman will shake the earth beneath our enemies.",
+"ctx": "Level 9 — The Wicker God",
+"key": "intro",
+"line": 591
+},
+"052": {
+"text": "Hollow Hills",
+"shown": "Hollow Hills",
+"ctx": "Level 10 — Hollow Hills",
+"key": "title",
+"line": 592
+},
+"053": {
+"text": "Out in the wilds the old hills are hollow. Walk the Cunning Woman there with twenty of the faithful and fifteen hundred mana and she will never walk again; but she will see everything, and reach everywhere.",
+"shown": "Out in the wilds the old hills are hollow. Walk the Cunning Woman there with twenty of the faithful and fifteen hundred mana and she will never walk again; but she will see everything, and reach everywhere.",
+"ctx": "Level 10 — Hollow Hills",
+"key": "intro",
+"line": 595
+},
+"054": {
+"text": "Herne's Oak",
+"shown": "Herne's Oak",
+"ctx": "Level 11 — Herne's Oak",
+"key": "title",
+"line": 596
+},
+"055": {
+"text": "In the deep wood stands the dead oak. Hang the Cunning Woman from it for two minutes and the Hunt will ride for us, and every life they take will be ours. No wicker will burn in this wood, and our rivals know what the oak means: the moment she hangs, they will come for her. Guard the tree.",
+"shown": "In the deep wood stands the dead oak. Hang the Cunning Woman from it for two minutes and the Hunt will ride for us, and every life they take will be ours. No wicker will burn in this wood, and our rivals know what the oak means: the moment she hangs, they will come for her. Guard the tree.",
+"ctx": "Level 11 — Herne's Oak",
+"key": "intro",
+"line": 599
+},
+"056": {
+"text": "Three Fires",
+"shown": "Three Fires",
+"ctx": "Level 12 — Three Fires",
+"key": "title",
+"line": 600
+},
+"057": {
+"text": "Three peoples share these hills with us, and none of them will share for long. The mountains themselves can be made to burn.",
+"shown": "Three peoples share these hills with us, and none of them will share for long. The mountains themselves can be made to burn.",
+"ctx": "Level 12 — Three Fires",
+"key": "intro",
+"line": 603
+},
+"058": {
+"text": "The Moot",
+"shown": "The Moot",
+"ctx": "Level 13 — The Moot",
+"key": "title",
+"line": 604
+},
+"059": {
+"text": "Four peoples on four islands, and no road, wing or spell will carry anyone across. There is only one way this ends. Grow, fill the wicker man, gather a full bar of mana, and call every soul to the stones at the heart of the world to settle it there.",
+"shown": "Four peoples on four islands, and no road, wing or spell will carry anyone across. There is only one way this ends. Grow, fill the wicker man, gather a full bar of mana, and call every soul to the stones at the heart of the world to settle it there.",
+"ctx": "Level 13 — The Moot",
+"key": "intro",
+"line": 607
+},
+"060": {
+"text": "Highland Winter",
+"shown": "Highland Winter",
+"ctx": "Level 14 — Highland Winter",
+"key": "title",
+"line": 608
+},
+"061": {
+"text": "The year turns cold and the rivals are hungry. Everything you have learned is yours to use.",
+"shown": "The year turns cold and the rivals are hungry. Everything you have learned is yours to use.",
+"ctx": "Level 14 — Highland Winter",
+"key": "intro",
+"line": 610
+},
+"062": {
+"text": "The Turning Year",
+"shown": "The Turning Year",
+"ctx": "Level 15 — The Turning Year",
+"key": "title",
+"line": 611
+},
+"063": {
+"text": "From here the land is not kind. Three peoples, each as cunning as we are. Nothing is held back from us, and nothing from them.",
+"shown": "From here the land is not kind. Three peoples, each as cunning as we are. Nothing is held back from us, and nothing from them.",
+"ctx": "Level 15 — The Turning Year",
+"key": "intro",
+"line": 613
+},
+"064": {
+"text": "Surrounded",
+"shown": "Surrounded",
+"ctx": "Level 16 — Surrounded",
+"key": "title",
+"line": 614
+},
+"065": {
+"text": "We have settled in the middle of everything. Three narrow causeways run from the rival islands to ours, and every army will march along one of them. But we did not come empty-handed: our folds are full of the wild folk, and the Wicker God already stands in its grove, waiting to be fed.",
+"shown": "We have settled in the middle of everything. Three narrow causeways run from the rival islands to ours, and every army will march along one of them. But we did not come empty-handed: our folds are full of the wild folk, and the Wicker God already stands in its grove, waiting to be fed.",
+"ctx": "Level 16 — Surrounded",
+"key": "intro",
+"line": 616
+},
+"066": {
+"text": "Late to the Feast",
+"shown": "Late to the Feast",
+"ctx": "Level 17 — Late to the Feast",
+"key": "title",
+"line": 617
+},
+"067": {
+"text": "We arrive with little, and the others have been here for years. Their halls are built and their warriors drilled. We must be cleverer than them, because we cannot be stronger.",
+"shown": "We arrive with little, and the others have been here for years. Their halls are built and their warriors drilled. We must be cleverer than them, because we cannot be stronger.",
+"ctx": "Level 17 — Late to the Feast",
+"key": "intro",
+"line": 619
+},
+"068": {
+"text": "Blood Moon",
+"shown": "Blood Moon",
+"ctx": "Level 18 — Blood Moon",
+"key": "title",
+"line": 620
+},
+"069": {
+"text": "Something has stirred the neighbours to fury. They will come early and often. Make them pay for every step.",
+"shown": "Something has stirred the neighbours to fury. They will come early and often. Make them pay for every step.",
+"ctx": "Level 18 — Blood Moon",
+"key": "intro",
+"line": 622
+},
+"070": {
+"text": "The Drowned Lands",
+"shown": "The Drowned Lands",
+"ctx": "Level 19 — The Drowned Lands",
+"key": "title",
+"line": 623
+},
+"071": {
+"text": "The sea has taken most of the world. What land is left is small and fought over, and the others are richer in offerings than we are.",
+"shown": "The sea has taken most of the world. What land is left is small and fought over, and the others are richer in offerings than we are.",
+"ctx": "Level 19 — The Drowned Lands",
+"key": "intro",
+"line": 625
+},
+"072": {
+"text": "The Last Harvest",
+"shown": "The Last Harvest",
+"ctx": "Level 20 — The Last Harvest",
+"key": "title",
+"line": 626
+},
+"073": {
+"text": "This is the end of the year, and perhaps the end of us. Three strong peoples surround us and they have already begun. Only the bog, the thorn, the hollow hill and the Hunt can turn this. Rejoice, if we live.",
+"shown": "This is the end of the year, and perhaps the end of us. Three strong peoples surround us and they have already begun. Only the bog, the thorn, the hollow hill and the Hunt can turn this. Rejoice, if we live.",
+"ctx": "Level 20 — The Last Harvest",
+"key": "intro",
+"line": 628
+},
+"074": {
+"text": "Scry where e're the beacon burns. For it shalbe thine eyes.",
+"shown": "Scry where e're the beacon burns. For it shalbe thine eyes.",
+"ctx": "SPDESC",
+"key": "torch",
+"line": 501
+},
+"075": {
+"text": "Thy will readily done upon thine enemies.",
+"shown": "Thy will readily done upon thine enemies.",
+"ctx": "SPDESC",
+"key": "blast",
+"line": 501
+},
+"076": {
+"text": "The strike of thunder is a blow no man or woman can survive.",
+"shown": "The strike of thunder is a blow no man or woman can survive.",
+"ctx": "SPDESC",
+"key": "lightning",
+"line": 501
+},
+"077": {
+"text": "Calls forth a cloud o’ wicked horseflies to bite and sting and scatter thy assailants for ten seconds.",
+"shown": "Calls forth a cloud o’ wicked horseflies to bite and sting and scatter thy assailants for ten seconds.",
+"ctx": "SPDESC",
+"key": "swarm",
+"line": 501
+},
+"078": {
+"text": "Turns wandering wildmen within the circle into your villagers.",
+"shown": "Turns wandering wildmen within the circle into your villagers.",
+"ctx": "SPDESC",
+"key": "convert",
+"line": 501
+},
+"079": {
+"text": "A ward against harm for those within its ‘fluence.",
+"shown": "A ward against harm for those within its ‘fluence.",
+"ctx": "SPDESC",
+"key": "shield",
+"line": 501
+},
+"080": {
+"text": "Raise the shades of dead men. Brief candles who make war, draw the eye and melt away come striking.",
+"shown": "Raise the shades of dead men. Brief candles who make war, draw the eye and melt away come striking.",
+"ctx": "SPDESC",
+"key": "ghost",
+"line": 501
+},
+"081": {
+"text": "Raise up a causeway towards heights and across water.",
+"shown": "Raise up a causeway towards heights and across water.",
+"ctx": "SPDESC",
+"key": "bridge",
+"line": 501
+},
+"082": {
+"text": "From crags and cliffsides spring forth green and level fields. Cannot be cast upon the water.",
+"shown": "From crags and cliffsides spring forth green and level fields. Cannot be cast upon the water.",
+"ctx": "SPDESC",
+"key": "flatten",
+"line": 501
+},
+"083": {
+"text": "Witch them to thy cause - they’ll fight for you for twenty-five seconds.",
+"shown": "Witch them to thy cause - they’ll fight for you for twenty-five seconds.",
+"ctx": "SPDESC",
+"key": "hypno",
+"line": 501
+},
+"084": {
+"text": "A twisting wind that tears walls from their foundations afore wand’ring in search of new victims.",
+"shown": "A twisting wind that tears walls from their foundations afore wand’ring in search of new victims.",
+"ctx": "SPDESC",
+"key": "whirl",
+"line": 501
+},
+"085": {
+"text": "A sucking mire that offers safe passage to those who know the way - and clammy death to those who do not. Will remain until ten are claimed.",
+"shown": "A sucking mire that offers safe passage to those who know the way - and clammy death to those who do not. Will remain until ten are claimed.",
+"ctx": "SPDESC",
+"key": "swamp",
+"line": 501
+},
+"086": {
+"text": "Creates a dyke within the downs to drown thy foes and their works.",
+"shown": "Creates a dyke within the downs to drown thy foes and their works.",
+"ctx": "SPDESC",
+"key": "erode",
+"line": 501
+},
+"087": {
+"text": "Behold, the very earth shall shake and rupture.",
+"shown": "Behold, the very earth shall shake and rupture.",
+"ctx": "SPDESC",
+"key": "quake",
+"line": 501
+},
+"088": {
+"text": "A bitter rain of stoney death. Watch as they flee their collapsing homes.",
+"shown": "A bitter rain of stoney death. Watch as they flee their collapsing homes.",
+"ctx": "SPDESC",
+"key": "fire",
+"line": 501
+},
+"089": {
+"text": "Engender a plague of paroxysms, contagion and a bloody demise.",
+"shown": "Engender a plague of paroxysms, contagion and a bloody demise.",
+"ctx": "SPDESC",
+"key": "angel",
+"line": 501
+},
+"090": {
+"text": "Nature’s cruellest vengeance at the command.",
+"shown": "Nature’s cruellest vengeance at the command.",
+"ctx": "SPDESC",
+"key": "volcano",
+"line": 501
+},
+"091": {
+"text": "There shalbe a moot at the world’s end and every living souls shalbe a soldier in the battle of all against all. So hath it been and so mote it be.",
+"shown": "There shalbe a moot at the world’s end and every living souls shalbe a soldier in the battle of all against all. So hath it been and so mote it be.",
+"ctx": "SPDESC",
+"key": "arma",
+"line": 501
+},
+"092": {
+"text": "Trains osses, who roam and carry off captives",
+"shown": "Trains osses, who roam and carry off captives",
+"ctx": "BT",
+"key": "info",
+"line": 464
+},
+"093": {
+"text": "A thorny barrier. Tap where it starts and where it ends; nothing walks through until it is hacked down",
+"shown": "A thorny barrier. Tap where it starts and where it ends; nothing walks through until it is hacked down",
+"ctx": "BT",
+"key": "info",
+"line": 465
+},
+"094": {
+"text": "Villagers dance here, easing dread, until a May Queen is crowned",
+"shown": "Villagers dance here, easing dread, until a May Queen is crowned",
+"ctx": "BT",
+"key": "info",
+"line": 466
+},
+"095": {
+"text": "A lookout high in a dead tree; sees far and hurls fire-pots at balloons",
+"shown": "A lookout high in a dead tree; sees far and hurls fire-pots at balloons",
+"ctx": "BT",
+"key": "info",
+"line": 467
+},
+"096": {
+"text": "Pens up to fifteen captives your osses bring home",
+"shown": "Pens up to fifteen captives your osses bring home",
+"ctx": "BT",
+"key": "info",
+"line": 468
+},
+"097": {
+"text": "Takes one offering at a time; stronger among trees",
+"shown": "Takes one offering at a time; stronger among trees",
+"ctx": "BT",
+"key": "info",
+"line": 469
+},
+"098": {
+"text": "Holds twelve; burns for an enormous offering",
+"shown": "Holds twelve; burns for an enormous offering",
+"ctx": "BT",
+"key": "info",
+"line": 470
+},
+"099": {
+"text": "A burning beacon; the land around it stays in sight while it stands",
+"shown": "A burning beacon; the land around it stays in sight while it stands",
+"ctx": "BT",
+"key": "info",
+"line": 471
+},
+"100": {
+"text": "Your Cunning Woman lies sealed here",
+"shown": "Your Cunning Woman lies sealed here",
+"ctx": "BT",
+"key": "info",
+"line": 472
+},
+"101": {
+"text": "Hang your Cunning Woman from it for two minutes and the Wild Hunt rides",
+"shown": "Hang your Cunning Woman from it for two minutes and the Wild Hunt rides",
+"ctx": "BT",
+"key": "info",
+"line": 473
+},
+"102": {
+"text": "Holds five; burns for mana and a frenzy",
+"shown": "Holds five; burns for mana and a frenzy",
+"ctx": "BT",
+"key": "info",
+"line": 475
+},
+"103": {
+"text": "Your Cunning Woman is reborn here",
+"shown": "Your Cunning Woman is reborn here",
+"ctx": "BT",
+"key": "info",
+"line": 476
+},
+"104": {
+"text": "Seal your Cunning Woman inside with twenty followers and 1,500 mana",
+"shown": "Seal your Cunning Woman inside with twenty followers and 1,500 mana",
+"ctx": "BT",
+"key": "info",
+"line": 477
+},
+"105": {
+"text": "Where every people gathers at the end",
+"shown": "Where every people gathers at the end",
+"ctx": "BT",
+"key": "info",
+"line": 478
+},
+"106": {
+"text": "Your bog has drowned {TUNE.swampLives} and drains away, sated.",
+"shown": "Your bog has drowned {number} and drains away, sated.",
+"ctx": "swampKill",
+"key": "",
+"line": 779
+},
+"107": {
+"text": "Your Cunning Woman has fallen. She returns to the stone circle in {TUNE.shamanRespawn} seconds.",
+"shown": "Your Cunning Woman has fallen. She returns to the stone circle in {number} seconds.",
+"ctx": "killUnit",
+"key": "",
+"line": 902
+},
+"108": {
+"text": "The ground there is cursed",
+"shown": "The ground there is cursed",
+"ctx": "validSpot",
+"key": "err",
+"line": 910
+},
+"109": {
+"text": "This ground has been salted. Nothing of yours will stand here for a while",
+"shown": "This ground has been salted. Nothing of yours will stand here for a while",
+"ctx": "validSpot",
+"key": "err",
+"line": 913
+},
+"110": {
+"text": "Herne's Oak must stand in deep woodland",
+"shown": "Herne's Oak must stand in deep woodland",
+"ctx": "validSpot",
+"key": "err",
+"line": 916
+},
+"111": {
+"text": "A forest altar must stand among trees",
+"shown": "A forest altar must stand among trees",
+"ctx": "validSpot",
+"key": "err",
+"line": 917
+},
+"112": {
+"text": "There is no ground for it at the edge of the village",
+"shown": "There is no ground for it at the edge of the village",
+"ctx": "startLeap",
+"key": "",
+"line": 947
+},
+"113": {
+"text": "Your Cunning Woman walks to the edge of the village. Your people gather below to watch.",
+"shown": "Your Cunning Woman walks to the edge of the village. Your people gather below to watch.",
+"ctx": "startLeap",
+"key": "",
+"line": 951
+},
+"114": {
+"text": "She is gone over the edge. {LEAP_N} of your people step out from among the stones, and for a while even your enemies are still.",
+"shown": "She is gone over the edge. {number} of your people step out from among the stones, and for a while even your enemies are still.",
+"ctx": "leapDone",
+"key": "",
+"line": 968
+},
+"115": {
+"text": "Your tomb has fallen, and your Cunning Woman with it. Here she does not come back.",
+"shown": "Your tomb has fallen, and your Cunning Woman with it. Here she does not come back.",
+"ctx": "destroyBld",
+"key": "",
+"line": 984
+},
+"116": {
+"text": "Your tomb has fallen and your Cunning Woman with it. She will rise again at the stone circle in a minute, and half your mana is lost.",
+"shown": "Your tomb has fallen and your Cunning Woman with it. She will rise again at the stone circle in a minute, and half your mana is lost.",
+"ctx": "destroyBld",
+"key": "",
+"line": 985
+},
+"117": {
+"text": "{cap?'A captive':'A villager'} is given to the grove. +{v} mana",
+"shown": "{…} is given to the grove. +{number} mana",
+"ctx": "sacrifice",
+"key": "",
+"line": 999
+},
+"118": {
+"text": ", and your people are in a frenzy",
+"shown": ", and your people are in a frenzy",
+"ctx": "light",
+"key": "",
+"line": 1011
+},
+"119": {
+"text": "The Wicker God of the {T.name} folk is burning",
+"shown": "The Wicker God of the {tribe} folk is burning",
+"ctx": "light",
+"key": "",
+"line": 1011
+},
+"120": {
+"text": "A May Queen is crowned. Keep her alive and her offering grows richer; guard her well.",
+"shown": "A May Queen is crowned. Keep her alive and her offering grows richer; guard her well.",
+"ctx": "crown",
+"key": "",
+"line": 1052
+},
+"121": {
+"text": "The {T.name} folk have crowned a May Queen",
+"shown": "The {tribe} folk have crowned a May Queen",
+"ctx": "crown",
+"key": "",
+"line": 1052
+},
+"122": {
+"text": "{stats.queenOffered} of {SC.goal.n} May Queens given to the fire",
+"shown": "{number} of {number} May Queens given to the fire",
+"ctx": "offerQueen",
+"key": "",
+"line": 1054
+},
+"123": {
+"text": "The May Queen goes willingly. +{v} mana, and your people are in a frenzy.",
+"shown": "The May Queen goes willingly. +{number} mana, and your people are in a frenzy.",
+"ctx": "offerQueen",
+"key": "",
+"line": 1056
+},
+"124": {
+"text": "The {T.name} folk have given a May Queen to the fire",
+"shown": "The {tribe} folk have given a May Queen to the fire",
+"ctx": "offerQueen",
+"key": "",
+"line": 1056
+},
+"125": {
+"text": "A villager has fled into the wilds. Your people are afraid.",
+"shown": "A villager has fled into the wilds. Your people are afraid.",
+"ctx": "desert",
+"key": "",
+"line": 1061
+},
+"126": {
+"text": "The hills are silent in this land",
+"shown": "The hills are silent in this land",
+"ctx": "startRitual",
+"key": "",
+"line": 1066
+},
+"127": {
+"text": "Your Cunning Woman already lies in a hill",
+"shown": "Your Cunning Woman already lies in a hill",
+"ctx": "startRitual",
+"key": "",
+"line": 1067
+},
+"128": {
+"text": "Another Cunning Woman is already at this hill",
+"shown": "Another Cunning Woman is already at this hill",
+"ctx": "startRitual",
+"key": "",
+"line": 1068
+},
+"129": {
+"text": "The hill demands twenty followers. You have too few.",
+"shown": "The hill demands twenty followers. You have too few.",
+"ctx": "startRitual",
+"key": "",
+"line": 1069
+},
+"130": {
+"text": "The hill will not open for less than {TUNE.entombMana} mana.",
+"shown": "The hill will not open for less than {number} mana.",
+"ctx": "startRitual",
+"key": "",
+"line": 1070
+},
+"131": {
+"text": "The hollow hill lies over the water. Your balloons will carry {…}{nf?nf+' followers':''} across.",
+"shown": "The hollow hill lies over the water. Your balloons will carry {…}{…} across.",
+"ctx": "startRitual",
+"key": "",
+"line": 1078
+},
+"132": {
+"text": "The hollow hill lies over the water. Raise a Land Bridge, or build balloons to carry your people there.",
+"shown": "The hollow hill lies over the water. Raise a Land Bridge, or build balloons to carry your people there.",
+"ctx": "startRitual",
+"key": "",
+"line": 1080
+},
+"133": {
+"text": "Your Cunning Woman walks to the hollow hill, and twenty followers go with her.",
+"shown": "Your Cunning Woman walks to the hollow hill, and twenty followers go with her.",
+"ctx": "startRitual",
+"key": "",
+"line": 1081
+},
+"134": {
+"text": "Your Cunning Woman is sealed in the hill. From the tomb she sees everything and casts anywhere at half the mana. Guard it: if it falls, so does she.",
+"shown": "Your Cunning Woman is sealed in the hill. From the tomb she sees everything and casts anywhere at half the mana. Guard it: if it falls, so does she.",
+"ctx": "entomb",
+"key": "",
+"line": 1087
+},
+"135": {
+"text": "The {T.name} Cunning Woman has been sealed in a hollow hill",
+"shown": "The {tribe} Cunning Woman has been sealed in a hollow hill",
+"ctx": "entomb",
+"key": "",
+"line": 1087
+},
+"136": {
+"text": "Your balloons will carry her over",
+"shown": "Your balloons will carry her over",
+"ctx": "riteOrFerry",
+"key": "",
+"line": 1116
+},
+"137": {
+"text": "The balloons are lost. {waiting.length} of your people are left on this side.",
+"shown": "The balloons are lost. {number} of your people are left on this side.",
+"ctx": "ferryTick",
+"key": "",
+"line": 1131
+},
+"138": {
+"text": "The captured May Queen is home. Offer her at any altar or wicker figure for her full worth.",
+"shown": "The captured May Queen is home. Offer her at any altar or wicker figure for her full worth.",
+"ctx": "updUnit",
+"key": "",
+"line": 1202
+},
+"139": {
+"text": "Your May Queen has been seized by the {tribes[u.tribe].name} folk. Kill the Oss before it gets her home.",
+"shown": "Your May Queen has been seized by the {tribe} folk. Kill the Oss before it gets her home.",
+"ctx": "updUnit",
+"key": "",
+"line": 1225
+},
+"140": {
+"text": "Your Oss has seized the {ot.name} May Queen.",
+"shown": "Your Oss has seized the {tribe} May Queen.",
+"ctx": "updUnit",
+"key": "",
+"line": 1225
+},
+"141": {
+"text": "Your Cunning Woman cannot reach the oak",
+"shown": "Your Cunning Woman cannot reach the oak",
+"ctx": "updUnit",
+"key": "",
+"line": 1229
+},
+"142": {
+"text": "Your Cunning Woman hangs from the oak. In two minutes the Wild Hunt will ride.",
+"shown": "Your Cunning Woman hangs from the oak. In two minutes the Wild Hunt will ride.",
+"ctx": "updUnit",
+"key": "",
+"line": 1231
+},
+"143": {
+"text": "The {T.name} Cunning Woman hangs from Herne's Oak",
+"shown": "The {tribe} Cunning Woman hangs from Herne's Oak",
+"ctx": "updUnit",
+"key": "",
+"line": 1231
+},
+"144": {
+"text": "Your Cunning Woman cannot reach the hill",
+"shown": "Your Cunning Woman cannot reach the hill",
+"ctx": "updUnit",
+"key": "",
+"line": 1237
+},
+"145": {
+"text": "Too few followers reached the hill. The rite is abandoned.",
+"shown": "Too few followers reached the hill. The rite is abandoned.",
+"ctx": "updUnit",
+"key": "",
+"line": 1245
+},
+"146": {
+"text": "Your Cunning Woman cannot get within range",
+"shown": "Your Cunning Woman cannot get within range",
+"ctx": "updUnit",
+"key": "",
+"line": 1252
+},
+"147": {
+"text": "The oak wakes. The Wild Hunt rides for you.",
+"shown": "The oak wakes. The Wild Hunt rides for you.",
+"ctx": "updBld",
+"key": "",
+"line": 1346
+},
+"148": {
+"text": "The Wild Hunt rides for the {T.name} folk",
+"shown": "The Wild Hunt rides for the {tribe} folk",
+"ctx": "updBld",
+"key": "",
+"line": 1346
+},
+"149": {
+"text": "The shield turned the lightning",
+"shown": "The shield turned the lightning",
+"ctx": "castSpell",
+"key": "up",
+"line": 1408
+},
+"150": {
+"text": "There were no wildmen in the circle",
+"shown": "There were no wildmen in the circle",
+"ctx": "castSpell",
+"key": "",
+"line": 1414
+},
+"151": {
+"text": "The torch needs a scrap of level, open ground",
+"shown": "The torch needs a scrap of level, open ground",
+"ctx": "castSpell",
+"key": "",
+"line": 1418
+},
+"152": {
+"text": "A scrying torch burns. The land around it will stay in sight while it stands.",
+"shown": "A scrying torch burns. The land around it will stay in sight while it stands.",
+"ctx": "castSpell",
+"key": "",
+"line": 1419
+},
+"153": {
+"text": "A horn sounds from the {T.name} lands: {army.length} of their fighters are marching on you. Watch the map.",
+"shown": "A horn sounds from the {tribe} lands: {number} of their fighters are marching on you. Watch the map.",
+"ctx": "forceRaid",
+"key": "",
+"line": 1495
+},
+"154": {
+"text": "The {T.name} attack breaks.{…} The rest run for home, shamed; it will be a while before they come again.",
+"shown": "The {tribe} attack breaks.{…} The rest run for home, shamed; it will be a while before they come again.",
+"ctx": "aiThink",
+"key": "",
+"line": 1517
+},
+"155": {
+"text": " {tk.n} of their fighters are cut off and put to death where they stand; their blood goes into the earth.",
+"shown": " {number} of their fighters are cut off and put to death where they stand; their blood goes into the earth.",
+"ctx": "aiThink",
+"key": "",
+"line": 1517
+},
+"156": {
+"text": " {tk.n} of their fighters are cut off and dragged to your {tk.where}.",
+"shown": " {number} of their fighters are cut off and dragged to your {place}.",
+"ctx": "aiThink",
+"key": "",
+"line": 1517
+},
+"157": {
+"text": "Balloons rise over the {T.name} island: {bal.length} of them, carrying {ids.length-bal.length} fighters, are coming for you.",
+"shown": "Balloons rise over the {tribe} island: {number} of them, carrying {number} fighters, are coming for you.",
+"ctx": "aiAttack",
+"key": "",
+"line": 1580
+},
+"158": {
+"text": "The {T.name} folk have seen your Cunning Woman hanging. {home.length} of their fighters are running for the oak.",
+"shown": "The {tribe} folk have seen your Cunning Woman hanging. {number} of their fighters are running for the oak.",
+"ctx": "aiHangRaid",
+"key": "",
+"line": 1588
+},
+"159": {
+"text": "The {T.name} osses are coming for your May Queen{…}.",
+"shown": "The {tribe} osses are coming for your May Queen{…}.",
+"ctx": "aiQueens",
+"key": "",
+"line": 1606
+},
+"160": {
+"text": ", with fighters at their backs",
+"shown": ", with fighters at their backs",
+"ctx": "aiQueens",
+"key": "",
+"line": 1606
+},
+"161": {
+"text": "A captive has slipped out of the fold",
+"shown": "A captive has slipped out of the fold",
+"ctx": "tribeUpkeep",
+"key": "",
+"line": 1649
+},
+"162": {
+"text": "Your Cunning Woman is reborn",
+"shown": "Your Cunning Woman is reborn",
+"ctx": "tribeUpkeep",
+"key": "",
+"line": 1650
+},
+"163": {
+"text": "Your settlement is under attack",
+"shown": "Your settlement is under attack",
+"ctx": "tribeUpkeep",
+"key": "",
+"line": 1654
+},
+"164": {
+"text": "The {T.name} folk are broken. Their last people are gathering at their stone circle, and their halls are falling in. Their Cunning Woman will not return.",
+"shown": "The {tribe} folk are broken. Their last people are gathering at their stone circle, and their halls are falling in. Their Cunning Woman will not return.",
+"ctx": "breakTribe",
+"key": "",
+"line": 1666
+},
+"165": {
+"text": "The {T.name} tribe is gone. Its {n} empty buildings are yours, and nature yields {v} mana from its hearths.",
+"shown": "The {tribe} tribe is gone. Its {number} empty buildings are yours, and nature yields {number} mana from its hearths.",
+"ctx": "finishTribe",
+"key": "",
+"line": 1673
+},
+"166": {
+"text": "Your people are all dead. The {C2.name} folk take what is left.",
+"shown": "Your people are all dead. The {tribe} folk take what is left.",
+"ctx": "finishTribe",
+"key": "",
+"line": 1673
+},
+"167": {
+"text": "The {T.name} tribe is gone. The {C2.name} folk take its empty halls.",
+"shown": "The {tribe} tribe is gone. The {tribe} folk take its empty halls.",
+"ctx": "finishTribe",
+"key": "",
+"line": 1673
+},
+"168": {
+"text": "The {T.name} tribe is broken. Your osses drag its last {n} villagers to your folds.",
+"shown": "The {tribe} tribe is broken. Your osses drag its last {number} villagers to your folds.",
+"ctx": "finishTribe",
+"key": "",
+"line": 1677
+},
+"169": {
+"text": "Your tribe is broken. The {C2.name} folk drag your last villagers away.",
+"shown": "Your tribe is broken. The {tribe} folk drag your last villagers away.",
+"ctx": "finishTribe",
+"key": "",
+"line": 1677
+},
+"170": {
+"text": "The {T.name} tribe is broken; the {C2.name} folk drag its last villagers away.",
+"shown": "The {tribe} tribe is broken; the {tribe} folk drag its last villagers away.",
+"ctx": "finishTribe",
+"key": "",
+"line": 1677
+},
+"171": {
+"text": "The {T.name} tribe has been wiped out",
+"shown": "The {tribe} tribe has been wiped out",
+"ctx": "finishTribe",
+"key": "",
+"line": 1678
+},
+"172": {
+"text": "The {T.name} Cunning Woman is dead, and her people scatter.{…}",
+"shown": "The {tribe} Cunning Woman is dead, and her people scatter.{…}",
+"ctx": "finishTribe",
+"key": "",
+"line": 1680
+},
+"173": {
+"text": "The battle of all-against-all has already begun",
+"shown": "The battle of all-against-all has already begun",
+"ctx": "invokeArma",
+"key": "",
+"line": 1725
+},
+"174": {
+"text": "All-against-all needs a finished, unlit wicker man",
+"shown": "All-against-all needs a finished, unlit wicker man",
+"ctx": "invokeArma",
+"key": "",
+"line": 1726
+},
+"175": {
+"text": "All-against-all needs a full bar of mana",
+"shown": "All-against-all needs a full bar of mana",
+"ctx": "invokeArma",
+"key": "",
+"line": 1727
+},
+"176": {
+"text": "All-against-all needs ten followers to burn",
+"shown": "All-against-all needs ten followers to burn",
+"ctx": "invokeArma",
+"key": "",
+"line": 1729
+},
+"177": {
+"text": "Ten souls burn in the wicker. The end is coming.",
+"shown": "Ten souls burn in the wicker. The end is coming.",
+"ctx": "invokeArma",
+"key": "",
+"line": 1731
+},
+"178": {
+"text": "The {T.name} tribe has called down the battle of all-against-all",
+"shown": "The {tribe} tribe has called down the battle of all-against-all",
+"ctx": "invokeArma",
+"key": "",
+"line": 1731
+},
+"179": {
+"text": "The battle of all-against-all. The huts are burning, and every soul walks to the Moot.",
+"shown": "The battle of all-against-all. The huts are burning, and every soul walks to the Moot.",
+"ctx": "startArma",
+"key": "",
+"line": 1743
+},
+"180": {
+"text": "{f.length} posted here. They will hold this ground and fight whatever comes near.",
+"shown": "{number} posted here. They will hold this ground and fight whatever comes near.",
+"ctx": "postAt",
+"key": "",
+"line": 2966
+},
+"181": {
+"text": "Your Cunning Woman is waiting to be reborn",
+"shown": "Your Cunning Woman is waiting to be reborn",
+"ctx": "onTap",
+"key": "",
+"line": 2970
+},
+"182": {
+"text": "Your Cunning Woman is hanging from the oak",
+"shown": "Your Cunning Woman is hanging from the oak",
+"ctx": "onTap",
+"key": "",
+"line": 2970
+},
+"183": {
+"text": "One follower walks to the {…}",
+"shown": "One follower walks to the {…}",
+"ctx": "command",
+"key": "",
+"line": 3006
+},
+"184": {
+"text": "Your balloons will carry them over",
+"shown": "Your balloons will carry them over",
+"ctx": "command",
+"key": "",
+"line": 3015
+},
+"185": {
+"text": "There is no way across. Your Cunning Woman can raise a Land Bridge, or a balloon can carry them.",
+"shown": "There is no way across. Your Cunning Woman can raise a Land Bridge, or a balloon can carry them.",
+"ctx": "command",
+"key": "",
+"line": 3016
+},
+"186": {
+"text": "There is no way across. Your Cunning Woman can raise a Land Bridge, or balloons from a Balloon Works can carry them.",
+"shown": "There is no way across. Your Cunning Woman can raise a Land Bridge, or balloons from a Balloon Works can carry them.",
+"ctx": "command",
+"key": "",
+"line": 3016
+},
+"187": {
+"text": "All-against-all: ten followers burn in your wicker man and your mana is spent. Every hut falls and the last tribe standing wins. This cannot be undone.",
+"shown": "All-against-all: ten followers burn in your wicker man and your mana is spent. Every hut falls and the last tribe standing wins. This cannot be undone.",
+"ctx": "arm",
+"key": "",
+"line": 3046
+},
+"188": {
+"text": "Grow your tribe while you can. Rivals usually first attack after about {fm} minutes.",
+"shown": "Grow your tribe while you can. Rivals usually first attack after about {number} minutes.",
+"ctx": "beginGame",
+"key": "",
+"line": 3191
+},
+"189": {
+"text": "Every other people has been burned, captured or driven into the wilds. The {T.name} folk have the world to themselves.",
+"shown": "Every other people has been burned, captured or driven into the wilds. The {tribe} folk have the world to themselves.",
+"ctx": "endWatch",
+"key": "",
+"line": 3198
+},
+"190": {
+"text": "The last tribes fell together. The wildmen inherit the world.",
+"shown": "The last tribes fell together. The wildmen inherit the world.",
+"ctx": "endWatch",
+"key": "",
+"line": 3198
+},
+"191": {
+"text": "There is no first or last!",
+"shown": "There is no first or last!",
+"ctx": "REJOICE",
+"key": "",
+"line": 3201
+},
+"192": {
+"text": "The harvest shall be fruitful this year.",
+"shown": "The harvest shall be fruitful this year.",
+"ctx": "REJOICE",
+"key": "",
+"line": 3201
+},
+"193": {
+"text": "Come now, rise now, from the forest, from the furrows, from the fields, and live!",
+"shown": "Come now, rise now, from the forest, from the furrows, from the fields, and live!",
+"ctx": "REJOICE",
+"key": "",
+"line": 3201
+},
+"194": {
+"text": "Happy day!",
+"shown": "Happy day!",
+"ctx": "REJOICE",
+"key": "",
+"line": 3201
+},
+"195": {
+"text": "Thou livest deliciously!",
+"shown": "Thou livest deliciously!",
+"ctx": "REJOICE",
+"key": "",
+"line": 3201
+},
+"196": {
+"text": "Sumer is icumen in, lhude sing cuccu!",
+"shown": "Sumer is icumen in, lhude sing cuccu!",
+"ctx": "REJOICE",
+"key": "",
+"line": 3202
+},
+"197": {
+"text": "The barns will be full and the hearths warm.",
+"shown": "The barns will be full and the hearths warm.",
+"ctx": "REJOICE",
+"key": "",
+"line": 3202
+},
+"198": {
+"text": "The old fires are lit on every hill.",
+"shown": "The old fires are lit on every hill.",
+"ctx": "REJOICE",
+"key": "",
+"line": 3202
+},
+"199": {
+"text": "The earth is fed, and the earth is grateful.",
+"shown": "The earth is fed, and the earth is grateful.",
+"ctx": "REJOICE",
+"key": "",
+"line": 3202
+},
+"200": {
+"text": "Dance, for none are left to mourn.",
+"shown": "Dance, for none are left to mourn.",
+"ctx": "REJOICE",
+"key": "",
+"line": 3202
+},
+"201": {
+"text": "Every furrow sings tonight.",
+"shown": "Every furrow sings tonight.",
+"ctx": "REJOICE",
+"key": "",
+"line": 3202
+},
+"202": {
+"text": "The Moot is quiet. Of all the peoples who walked there, only yours walked away.",
+"shown": "The Moot is quiet. Of all the peoples who walked there, only yours walked away.",
+"ctx": "endGame",
+"key": "",
+"line": 3231
+},
+"203": {
+"text": "Every rival Cunning Woman has been cast out. The world is yours to shape.",
+"shown": "Every rival Cunning Woman has been cast out. The world is yours to shape.",
+"ctx": "endGame",
+"key": "",
+"line": 3231
+},
+"204": {
+"text": "Your people fell at the Moot. The world goes on without them.",
+"shown": "Your people fell at the Moot. The world goes on without them.",
+"ctx": "endGame",
+"key": "",
+"line": 3231
+},
+"205": {
+"text": "Your tribe has been wiped from the world. The fields grow over the huts.",
+"shown": "Your tribe has been wiped from the world. The fields grow over the huts.",
+"ctx": "endGame",
+"key": "",
+"line": 3231
+},
+"206": {
+"text": "History is a wheel that rises and ebbs with the seasons, dying and renewing in the endless wheel of nature. These are hard times, O Cunning Woman, can't thou lead thy village deliciously?",
+"shown": "History is a wheel that rises and ebbs with the seasons, dying and renewing in the endless wheel of nature. These are hard times, O Cunning Woman, can't thou lead thy village deliciously?",
+"ctx": "HTML",
+"key": "",
+"line": 306
+},
+"207": {
+"text": "Hold {g.n} captives in your folds at once.",
+"shown": "Hold {number} captives in your folds at once.",
+"ctx": "goalText",
+"key": "",
+"line": 3193
+},
+"208": {
+"text": "Crown {g.n} May Queens and offer each to the fire.",
+"shown": "Crown {number} May Queens and offer each to the fire.",
+"ctx": "goalText",
+"key": "",
+"line": 3193
+},
+"209": {
+"text": "Crown a May Queen and offer her to the fire.",
+"shown": "Crown a May Queen and offer her to the fire.",
+"ctx": "goalText",
+"key": "",
+"line": 3193
+},
+"210": {
+"text": "The wheel has turned. Every level is yours to play again.",
+"shown": "The wheel has turned. Every level is yours to play again.",
+"ctx": "openCampaign",
+"key": "",
+"line": 3206
+}
+}
+}
