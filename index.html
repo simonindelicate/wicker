@@ -138,6 +138,17 @@ details.help summary{cursor:pointer;color:var(--text);font:14px var(--f-display)
 .lvl.done{border-color:rgba(211,155,60,.5)}
 .lvl.next{border-color:var(--ochre);background:rgba(211,155,60,.12)}
 .lvl:disabled{opacity:.35}
+.tokCat{font:14px var(--f-display);letter-spacing:.06em;color:var(--muted);margin:14px 0 6px;text-transform:uppercase}
+.tokGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:6px}
+.tok{display:flex;gap:8px;align-items:flex-start;background:rgba(255,255,255,.035);border:1px solid var(--line);border-radius:8px;padding:7px 9px;min-width:0}
+.tok i{flex:0 0 22px;height:22px;border-radius:50%;border:1px solid var(--line);background:rgba(255,255,255,.04)}
+.tok.got{border-color:rgba(211,155,60,.55);background:rgba(211,155,60,.1)}
+.tok.got i{background:radial-gradient(circle at 40% 35%,#f0c878,#a8742a);border-color:#d39b3c}
+.tok span{font-size:13px;line-height:1.3}
+.tok:not(.got) span{color:var(--muted);font-style:italic}
+.tokH{margin-top:18px}
+#tokIO{width:100%;min-height:70px;box-sizing:border-box;font:12px ui-monospace,monospace;background:rgba(0,0,0,.25);color:inherit;border:1px solid var(--line);border-radius:6px;padding:6px}
+.tokBtns{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 12px}
 #ws{position:absolute;right:0;top:0;bottom:0;width:340px;overflow-y:auto;background:var(--panel);border-left:1px solid var(--line);padding:10px 12px calc(12px + env(safe-area-inset-bottom,0px));z-index:30;color:var(--text);font-size:13px;-webkit-overflow-scrolling:touch}
 #ws[hidden]{display:none}
 #ws h4{font:13px var(--f-display);letter-spacing:.06em;color:var(--ochre);margin:10px 0 4px;font-weight:400}
@@ -237,6 +248,7 @@ details.help summary{cursor:pointer;color:var(--text);font:14px var(--f-display)
       <button class="primary" id="bStart">Begin</button>
       <button class="secondary" id="bCampaign">Campaign</button>
       <button class="secondary" id="bWatch">Watch the tribes fight among themselves</button>
+      <button class="secondary" id="bTokens">Tokens</button>
       <button class="secondary" id="bGallery">Model workshop</button>
       <details class="help">
         <summary>How to play</summary>
@@ -290,6 +302,19 @@ details.help summary{cursor:pointer;color:var(--text);font:14px var(--f-display)
       <div class="levels" id="levels"></div>
       <label class="devTog"><input type="checkbox" id="devMode"> Test mode: open every level (wins in test mode are not recorded)</label>
       <button class="secondary" id="campBack">Back</button>
+    </div>
+  </div>
+
+  <div id="tokens" class="scrim" hidden>
+    <div class="sheet">
+      <h2>Tokens</h2>
+      <p class="sub" id="tokSub"></p>
+      <div id="tokList"></div>
+      <h3 class="tokH">Keepsake</h3>
+      <p class="sub">Your campaign progress and tokens live in this browser. Copy the keepsake to keep them safe or carry them to another browser, and paste one here to bring them back.</p>
+      <textarea id="tokIO" spellcheck="false" placeholder="Paste a keepsake here"></textarea>
+      <div class="tokBtns"><button class="secondary" id="tokCopy">Copy keepsake</button><button class="secondary" id="tokUse">Use pasted keepsake</button></div>
+      <button class="secondary" id="tokBack">Back</button>
     </div>
   </div>
 
@@ -594,6 +619,39 @@ const allowB=t=>!allowSets||(t==='tomb'?allowSets.tomb:allowSets.b.has(t));
 const allowS=k=>!allowSets||allowSets.s.has(k);
 const allowPB=t=>allowB(t)&&!((scen()||{}).lockB||[]).includes(t);
 const CAMP_KEY='wicker-campaign-v1',DEV_KEY='wicker-dev';
+
+// ---------------- Tokens (achievements) ----------------
+// Names are working descriptions until the real ones are written. Each can later carry an unlock (u).
+// Only live play counts: not "Watch the tribes fight", not test mode.
+const TOK_KEY='wicker-tokens-v1';
+const TOKS=[
+ ['Campaign',[['c1','Win the first level of the campaign'],['c5','Win campaign level 5'],['c10','Win campaign level 10'],['c15','Win campaign level 15'],['c20','Win the whole campaign']]],
+ ['Spells',[['sp_lightning','Cast Lightning'],['sp_ghost','Raise a Ghost Army'],['sp_hypno','Cast Hypnotise'],['sp_whirl','Call up a Whirlwind'],['sp_swamp','Lay a Bog'],['sp_erode','Cast Erode'],['sp_quake','Cast Earthquake'],['sp_fire',"Bring on Day o'the Stones"],['sp_angel',"Loose St. Anthony's Fire"],['sp_volcano','Raise a Volcano']]],
+ ['Buildings',[['b_wicker','Build a Wicker Man'],['b_god','Build a Wicker God'],['b_oak',"Raise Herne's Oak"],['b_maypole','Raise a Maypole'],['b_balloon','Build a Balloon Works'],['b_nest','Build a Rook Tree'],['b_osshouse','Build an Oss House']]],
+ ['Rites',[['r_burnman','Burn a wicker man'],['r_burngod','Burn a Wicker God'],['r_queen','Crown a May Queen'],['r_offerqueen','Give a May Queen to the fire'],['r_hunt','Wake the Wild Hunt'],['r_entomb','Seal your Cunning Woman in a hollow hill'],['r_leap','Ättestupa'],['r_arma','Call down the battle of all-against-all'],['r_moot','Walk away from the Moot']]],
+ ['Growth',[['pop25','Lead 25 followers'],['pop50','Lead 50 followers'],['pop100','Lead 100 followers'],['pop150','Lead 150 followers']]],
+ ['Endurance',[['t30','Last half an hour in one game'],['t60','Last an hour in one game'],['t120','Last two hours in one game']]],
+ ['Victories',[['w_easy','Win on Easy'],['w_normal','Win on Normal'],['w_hard','Win on Hard'],['w_arch','Win on an archipelago'],['w_cont','Win on a continent'],['w_high','Win in the highlands']]],
+ ['Deeds',[['d_godcaps','Burn a Wicker God filled entirely with captives'],['d_richqueen','Offer a May Queen at her richest'],['d_harvest20','Drag twenty broken raiders to your altar in one game'],['d_carried','Have the whirlwind carry off a building'],['d_fever8',"Have one St. Anthony's Fire take eight people"],['d_leap2','Go over the edge twice in one game'],['d_thornwall','Survive The Long Watch without losing a building'],['d_nofear','Win without your dread ever passing the mark'],['d_noblade','Win without training a warrior']]],
+ ['Curiosities',[
+  ['x_lightfits',"Strike down someone in the fits of St. Anthony's Fire with Lightning",'The burning man does not need the sky as well. Give it to him anyway.'],
+  ['x_erodebr2','Sink ground raised by a Land Bridge with Erode, twice in one game','What the woman raises, the woman may drown. Twice.'],
+  ['x_threeway','Be in a fight between three Cunning Women','Three wise women, one argument.'],
+  ['x_balloons30','Give thirty balloonists one order','A sky so full of wicker you could walk on it.'],
+  ['x_fourfold',"Have a Volcano, your Bog, Day o'the Stones and St. Anthony's Fire all at work at once",'Fire, mire, stone and fever, all at once.'],
+  ['x_drownwoman','Drown a rival Cunning Woman in your Bog','Not every wise woman can swim.'],
+  ['x_ghostlure','Lure five rival fighters into your Bog with a Ghost Army in one game','They followed the dead into the mire.'],
+  ['x_huntqueen',"Have the Wild Hunt kill a rival's May Queen",'The Hunt takes what it likes.'],
+  ['x_blast10','Kill ten with a single Blast','One spark, many funerals.'],
+  ['x_erodegod',"Sink the ground under a rival's Wicker God while it burns",'Let the burning ram go down into the water.'],
+  ['x_recapture','Catch again a captive that slipped out of your fold','The same face twice in the pen.']]]];
+const TOKMAP={};for(const [cat,list] of TOKS)for(const t of list)TOKMAP[t[0]]={id:t[0],d:t[1],h:t[2]||t[1],cat,u:null};
+function tokGet(){try{return JSON.parse(localStorage.getItem(TOK_KEY))||{}}catch(e){return {}}}
+function tokLive(){return running&&!watching&&!devMode()}
+function earn(id){const t=TOKMAP[id];if(!t||!tokLive())return;const g=tokGet();if(g[id])return;g[id]=Date.now();try{localStorage.setItem(TOK_KEY,JSON.stringify(g))}catch(e){}
+  setTimeout(()=>{toast('A token: '+t.d);sfx('built',.5)},400)}
+function A(){return stats.ach||(stats.ach={})}
+let killCount=0;
 function devMode(){try{return localStorage.getItem(DEV_KEY)==='1'}catch(e){return false}}
 function campProg(){try{const d=JSON.parse(localStorage.getItem(CAMP_KEY));if(d&&typeof d.unlocked==='number')return d}catch(e){}return {unlocked:0,best:{}}}
 function campSave(p){try{localStorage.setItem(CAMP_KEY,JSON.stringify(p))}catch(e){}}
@@ -819,7 +877,7 @@ function dmgUnit(t,dmg,src){if(!t.alive)return;if(src&&src.tribe!==undefined)atk
   if(src&&src.alive&&!src.bt&&(!UT[t.type].veh||UT[t.type].bomb)&&t.type!=='brave'&&t.type!=='wild'&&t.type!=='queen'&&t.type!=='captive'&&(t.st==='idle'||(t.st==='move'&&t.tribe!==0))&&canHit(t,src)&&!(t.type==='hunter'&&src.type==='shaman'))attack(t,src)}
 function dmgBld(b,dmg){if(!b.alive||BT[b.bt].inv)return;noteHit(b.tribe);b.hp-=dmg;b.hitT=gt;if(b.hp<=0)destroyBld(b)}
 function hit(t,dmg,src){if(src)atk=src.tribe;if(t.bt)dmgBld(t,dmg,src);else dmgUnit(t,dmg,src)}
-function killUnit(u,src){if(!u.alive)return;u.alive=false;u.hp=0;const y=unitY(u);if(u.carry)releaseCarry(u);
+function killUnit(u,src){if(!u.alive)return;killCount++;if(src&&src.type==='hunter'&&src.tribe===0&&u.type==='queen'&&u.tribe!==0)earn('x_huntqueen');u.alive=false;u.hp=0;const y=unitY(u);if(u.carry)releaseCarry(u);
   if(src&&src.type==='hunter'&&u.tribe!==src.tribe&&u.type!=='ghost'){const T=tribes[src.tribe];if(T){const v=Math.round(HUNT_V*T.manaMult);T.mana=Math.min(MANA_MAX,T.mana+v);if(src.tribe===0)stats.hunted=(stats.hunted||0)+1;for(let i=0;i<10;i++)PA.emit(u.x,y+.5,u.z,(R()-.5)*.8,1.5+R()*2,(R()-.5)*.8,.9,.75,.85,.7,1,.35,-1)}}
   if(u.type!=='ghost'){for(let i=0;i<10;i++)PN.emit(u.x,y+.4,u.z,(R()-.5)*2,R()*2,(R()-.5)*2,.7,.55,.1,.08,.9,.35,9)}
   else for(let i=0;i<14;i++)PA.emit(u.x,y+.5,u.z,(R()-.5)*1.5,R()*2,(R()-.5)*1.5,.6,.5,.7,1,.8,.4,-1);
@@ -880,7 +938,7 @@ function leapTick(u,dt){const L=u.leap,T=tribes[u.tribe];L.t+=dt;
     if(L.t>2){L.st='fall';u.ay=hAt(u.x,u.z)+.05;u.air=true;u.avx=L.ox*3.4;u.avz=L.oz*3.4;u.avy=3.5;sfx('cast',.6,u.x,u.z)}return true}
   if(L.st==='fall'){if(u.air)return false;leapDone(u,T);return true}
   return true}
-function leapDone(u,T){u.leapt=true;u.leap=null;killUnit(u,null);const rc=blds.find(b=>b.alive&&b.bt==='reinc'&&b.tribe===T.id);
+function leapDone(u,T){if(T.id===0){const a=A();a.leaps=(a.leaps||0)+1;earn('r_leap');if(a.leaps>=2)earn('d_leap2')}u.leapt=true;u.leap=null;killUnit(u,null);const rc=blds.find(b=>b.alive&&b.bt==='reinc'&&b.tribe===T.id);
   if(rc){const y=hAt(rc.x,rc.z);for(let i=0;i<LEAP_N;i++){const a=i/LEAP_N*TAU+.3,v=spawnUnit('brave',T.id,rc.x+Math.cos(a)*1.7,rc.z+Math.sin(a)*1.7);v.think=1.5+R();for(let k=0;k<10;k++)PA.emit(v.x,y+.3+R(),v.z,(R()-.5)*.6,.8+R(),(R()-.5)*.6,1,1,.95,.8,.9,.35,-.2)}}
   T.truceUntil=gt+LEAP_TRUCE;for(const o of tribes)if(o.ai&&o.id!==T.id){const ai=o.ai;ai.nextAtk=Math.max(ai.nextAtk,gt+LEAP_TRUCE);
     if(ai.wave&&ai.wave.tgt===T.id){const set=new Set(ai.wave.ids);for(const w of units)if(w.alive&&set.has(w.id)){orderUnit(w,ai.base.x+(R()-.5)*6,ai.base.z+(R()-.5)*6,false);w.raidT=0}ai.wave=null}}
@@ -896,7 +954,7 @@ function placeBuilding(ti,type,spot,instant){const D=BT[type],s=D.s,{cx0,cz0}=sp
   blds.push(b);bById.set(b.id,b);
   if(!instant){tribes[ti].wood-=D.wood;for(let k=0;k<(type==='hedge'?1:3);k++){const br=getFreeBrave(tribes[ti],b.x,b.z);if(!br)break;assignBuild(br,b)}}
   return b}
-function destroyBld(b){if(!b.alive||BT[b.bt].inv)return;b.alive=false;const s=BT[b.bt].s;if(b.bt!=='hedge'&&b.bt!=='torch'&&!armageddon&&!b.burnt&&atk>=0&&atk!==b.tribe&&tribes[atk]&&!tribes[atk].wild&&tribes[b.tribe]&&!tribes[b.tribe].wild)saltGround(b,b.tribe);if(b.bt==='hedge'){if(b.done)setHedge(b,0)}
+function destroyBld(b){if(!b.alive||BT[b.bt].inv)return;if(b.tribe===0&&b.bt!=='hedge'&&b.bt!=='torch'&&!b.burnt)A().lostBld=true;b.alive=false;const s=BT[b.bt].s;if(b.bt!=='hedge'&&b.bt!=='torch'&&!armageddon&&!b.burnt&&atk>=0&&atk!==b.tribe&&tribes[atk]&&!tribes[atk].wild&&tribes[b.tribe]&&!tribes[b.tribe].wild)saltGround(b,b.tribe);if(b.bt==='hedge'){if(b.done)setHedge(b,0)}
   for(let dz=0;dz<s;dz++)for(let dx=0;dx<s;dx++){const c=wi(b.cz0+dz)*N+wi(b.cx0+dx);if(bOcc[c]===b.id)bOcc[c]=0}
   for(let i=0;i<b.occ;i++){const a=R()*TAU,u=spawnUnit('brave',b.tribe,b.x+Math.cos(a)*s*.6,b.z+Math.sin(a)*s*.6);if(water[cidx(u.x,u.z)]){killUnit(u);continue}u.st='flee';u.ft=4+R()*2;setTarget(u,b.x+Math.cos(a)*(9+R()*4),b.z+Math.sin(a)*(9+R()*4));u.think=2}
   for(const ct of b.capt)spawnWild(b.x+(R()-.5)*s,b.z+(R()-.5)*s);b.capt.length=0;
@@ -920,7 +978,7 @@ function sacrifice(u,b){const T=tribes[u.tribe];if(b.claim===u)b.claim=null;cons
 function memorial(kind,x,z,tribe){const M=stats.mem||(stats.mem=[]);if(M.length>=60)return;
   if(kind==='doll'){const near=M.filter(m=>m.k==='doll'&&d2(m.cx,m.cz,x,z)<5*5);const c=near[0]||{cx:x,cz:z};const i=near.length,a=i*2.39996+.5,r=2.4+(i>=8?.7:0);M.push({k:'doll',cx:c.cx,cz:c.cz,x:wrap(c.cx+Math.cos(a)*r),z:wrap(c.cz+Math.sin(a)*r),tribe,t:gt})}
   else M.push({k:kind,x,z,tribe,t:gt})}
-function light(b){const T=tribes[b.tribe],D=BT[b.bt];if(b.lit)return;b.lit=true;if(!armageddon)memorial('doll',b.x,b.z,b.tribe);b.litT=gt;b.burnEnd=gt+D.burnT;if(b.bt==='god')b.burnEnd+=3;let v=0,own=0;
+function light(b){const T=tribes[b.tribe],D=BT[b.bt];if(b.lit)return;b.lit=true;if(b.tribe===0){earn(b.bt==='god'?'r_burngod':'r_burnman');if(b.bt==='god'&&b.inside.length>=12&&b.inside.every(o=>o.cap))earn('d_godcaps')}if(!armageddon)memorial('doll',b.x,b.z,b.tribe);b.litT=gt;b.burnEnd=gt+D.burnT;if(b.bt==='god')b.burnEnd+=3;let v=0,own=0;
   for(const o of b.inside){v+=offerValue(b,o.cap,o.wild);if(!o.cap)own++}
   v=Math.round(v*T.manaMult);T.mana=Math.min(MANA_MAX,T.mana+v);T.dread=Math.min(100,T.dread+own*DREAD[D.site]);
   if(b.bt==='wicker')T.frenzyUntil=Math.min(gt+TUNE.frenzyMax,Math.max(gt,T.frenzyUntil||0)+TUNE.frenzyPerHead*b.inside.length);
@@ -963,11 +1021,11 @@ function releaseCarry(o){const c=o.carry;o.carry=null;if(!c)return;const T=tribe
   if(c.tribe===wildId||!T||!T.alive)spawnWild(o.x,o.z);else spawnUnit(c.type==='wild'?'brave':c.type,c.tribe,o.x,o.z)}
 function queenValue(u){return Math.round(lerp(TUNE.queenMin,TUNE.queenMax,clamp((gt-u.born)/TUNE.queenRipen,0,1)))}
 function queenOf(ti){return units.find(u=>u.alive&&u.type==='queen'&&u.tribe===ti&&!u.thrall)}
-function crown(T,mp){const ds=units.filter(u=>u.alive&&u.tribe===T.id&&u.st==='dance'&&u.bld===mp);const c=ds.length?ds[(R()*ds.length)|0]:getFreeBrave(T,mp.x,mp.z);if(!c)return;
+function crown(T,mp){const ds=units.filter(u=>u.alive&&u.tribe===T.id&&u.st==='dance'&&u.bld===mp);const c=ds.length?ds[(R()*ds.length)|0]:getFreeBrave(T,mp.x,mp.z);if(!c)return;if(T.id===0)earn('r_queen');
   const q=spawnUnit('queen',T.id,c.x,c.z);q.born=gt;q.hx=mp.x+2;q.hz=mp.z+2;q.mp=mp.id;removeUnit(c);mp.merry=0;
   const y=hAt(mp.x,mp.z);for(let i=0;i<60;i++){const a=R()*TAU,r=R()*2.5;PA.emit(mp.x+Math.cos(a)*r,y+.5+R()*4,mp.z+Math.sin(a)*r,Math.cos(a)*1.5,1+R()*2.5,Math.sin(a)*1.5,1.6,i%3?.95:.92,i%3?.45:.85,i%3?.6:.3,1,.4,1.2)}
   sfx('built',1,mp.x,mp.z);toast(T.id===0&&!watching?'A May Queen is crowned. Keep her alive and her offering grows richer; guard her well.':`The ${T.name} folk have crowned a May Queen`)}
-function offerQueen(T,b,u){if(T.id===0){stats.queenOffered=(stats.queenOffered||0)+1;const SC=scen();if(SC&&SC.goal.type==='queen'&&(SC.goal.n||1)>1&&stats.queenOffered<SC.goal.n)setTimeout(()=>toast(`${stats.queenOffered} of ${SC.goal.n} May Queens given to the fire`),2500)}const v=Math.round(queenValue(u)*T.manaMult);T.mana=Math.min(MANA_MAX,T.mana+v);T.frenzyUntil=Math.min(gt+TUNE.frenzyMax,Math.max(gt,T.frenzyUntil||0)+TUNE.queenFrenzy);
+function offerQueen(T,b,u){if(T.id===0){earn('r_offerqueen');if(queenValue(u)>=TUNE.queenMax)earn('d_richqueen');stats.queenOffered=(stats.queenOffered||0)+1;const SC=scen();if(SC&&SC.goal.type==='queen'&&(SC.goal.n||1)>1&&stats.queenOffered<SC.goal.n)setTimeout(()=>toast(`${stats.queenOffered} of ${SC.goal.n} May Queens given to the fire`),2500)}const v=Math.round(queenValue(u)*T.manaMult);T.mana=Math.min(MANA_MAX,T.mana+v);T.frenzyUntil=Math.min(gt+TUNE.frenzyMax,Math.max(gt,T.frenzyUntil||0)+TUNE.queenFrenzy);
   {let a=hsh(((b.x*31+b.z*17)*10)|0)*TAU,qx=0,qz=0;for(let t=0;t<12;t++,a+=.6){qx=wrap(b.x+Math.cos(a)*(BT[b.bt].s*.5+2.4));qz=wrap(b.z+Math.sin(a)*(BT[b.bt].s*.5+2.4));if(!bOcc[cidx(qx,qz)]&&!water[cidx(qx,qz)])break}memorial('queen',qx,qz,T.id)}
   queenSpectacle(b);toast(T.id===0&&!watching?`The May Queen goes willingly. +${v} mana, and your people are in a frenzy.`:`The ${T.name} folk have given a May Queen to the fire`)}
 function desert(T){const c=units.filter(u=>u.alive&&u.tribe===T.id&&u.type==='brave'&&!u.inV&&!u.air&&u.st!=='enter'&&u.st!=='wait');let u=c.length?c[(R()*c.length)|0]:null;
@@ -989,7 +1047,7 @@ function startRitual(sh,b){const T=tribes[sh.tribe];if(!b||b.bt!=='barrow')retur
   let n=0;for(const u of cands){if(n>=TUNE.entombFollowers)break;sendToRite(u,b);n++}
   while(n<TUNE.entombFollowers){const br=getFreeBrave(T,b.x,b.z);if(!br)break;sendToRite(br,b);n++}
   if(sh.tribe===0)toast('Your Cunning Woman walks to the hollow hill, and twenty followers go with her.');return true}
-function entomb(sh,b,ps){const T=tribes[sh.tribe];
+function entomb(sh,b,ps){const T=tribes[sh.tribe];if(sh.tribe===0)earn('r_entomb');
   for(const p of ps){const y=unitY(p);for(let i=0;i<6;i++)PN.emit(p.x,y+.3,p.z,(R()-.5)*.6,.6+R(),(R()-.5)*.6,1.5,.3,.25,.2,.7,.6,-.3);removeUnit(p)}
   for(const o of units)if(o.alive&&o.st==='wait'&&o.riteB===b){o.st='idle';o.riteB=null}
   removeUnit(sh);T.shaman=null;b.rite=null;b.bt='tomb';b.tribe=T.id;b.hp=b.mhp=BT.tomb.hp;b.done=true;T.tomb=b;b.dx=b.x;b.dz=wrap(b.z+BT.tomb.s/2+.6);
@@ -1002,7 +1060,7 @@ function getFreeBrave(T,x,z){let best=null,bd=1e9;
   if(best)return best;let hb=null;
   for(const b of blds)if(b.alive&&b.tribe===T.id&&b.bt==='hut'&&b.occ>0){const d=d2(x,z,b.x,b.z);if(d<bd){bd=d;hb=b}}
   if(hb){hb.occ--;return spawnUnit('brave',T.id,hb.dx,hb.dz)}return null}
-function produce(b){const type=BT[b.bt].train,T=tribes[b.tribe];
+function produce(b){const type=BT[b.bt].train,T=tribes[b.tribe];if(b.tribe===0&&type==='warrior')A().trainedWar=true;
   const u=spawnUnit(type,b.tribe,b.dx,b.dz);const gx=b.dx+(R()-.5)*3,gz=b.dz+1+R()*2;u.st='move';setTarget(u,gx,gz);u.gx=wrap(gx);u.gz=wrap(gz);
   for(let i=0;i<8;i++)PA.emit(u.x,hAt(u.x,u.z)+.5,u.z,(R()-.5),1+R()*1.5,(R()-.5),.6,.9,.8,.4,1,.3,-1)}
 function unload(v){if(!v.pass||!v.pass.length)return;const dest=v.dest;const lf=dest?field(dest.x,dest.z,false):null;
@@ -1033,7 +1091,7 @@ function updUnit(u,dt){const D=UT[u.type],T=tribes[u.tribe];
   if(u.listen>gt)return;
   const c=cidx(u.x,u.z);
   if(!D.fly){
-    if(hazU[c]>gt&&(hazType[c]===2||(hazOwner[c]!==u.tribe&&u.tribe!==wildId))){if(hazType[c]===1){for(let i=0;i<8;i++)PN.emit(u.x,hAt(u.x,u.z)+.1,u.z,(R()-.5)*.6,.5+R(),(R()-.5)*.6,1.2,.18,.22,.1,.8,.5,-.1);swampKill(c)}if(hazType[c]===2)for(let i=0;i<6;i++)PA.emit(u.x,hAt(u.x,u.z)+.3,u.z,(R()-.5),1+R()*2,(R()-.5),.5,1,.5,.1,1,.5,-1);killUnit(u,null);return}
+    if(hazU[c]>gt&&(hazType[c]===2||(hazOwner[c]!==u.tribe&&u.tribe!==wildId))){if(hazType[c]===1){for(let i=0;i<8;i++)PN.emit(u.x,hAt(u.x,u.z)+.1,u.z,(R()-.5)*.6,.5+R(),(R()-.5)*.6,1.2,.18,.22,.1,.8,.5,-.1);if(hazOwner[c]===0&&u.tribe!==0){if(u.type==='shaman')earn('x_drownwoman');if(u.tgt&&u.tgt.type==='ghost'&&u.tgt.tribe===0&&MIL[u.type]){const a=A();a.lure=(a.lure||0)+1;if(a.lure>=5)earn('x_ghostlure')}}swampKill(c)}if(hazType[c]===2)for(let i=0;i<6;i++)PA.emit(u.x,hAt(u.x,u.z)+.3,u.z,(R()-.5),1+R()*2,(R()-.5),.5,1,.5,.1,1,.5,-1);killUnit(u,null);return}
     if(hAt(u.x,u.z)<-.25){killUnit(u,null);return}}
   if(u.type==='shaman'&&u.hp<u.mhp)u.hp=Math.min(u.mhp,u.hp+3*dt);
   if(T.frenzyUntil>gt&&!D.veh&&R()<dt*.6)PA.emit(u.x,unitY(u)+.6,u.z,(R()-.5)*.3,1,(R()-.5)*.3,.6,1,.35,.1,1,.22,-1);
@@ -1088,7 +1146,7 @@ function updUnit(u,dt){const D=UT[u.type],T=tribes[u.tribe];
     else{u.face=Math.atan2(wd(t.x-u.x),wd(t.z-u.z));t.listen=gt+.3;t.takenBy=u.tribe;u.pt=(u.pt||0)+dt;u.chop=true;
       if(R()<dt*10)PN.emit(t.x,unitY(t)+.5,t.z,(R()-.5)*.6,.5,(R()-.5)*.6,.5,.05,.04,.04,.9,.35,0);
       const need=TUNE.captureTime[t.type==='wild'?'wild':t.type==='brave'?'brave':'other'];
-      if(u.pt>=need){if(t.carry)releaseCarry(t);atk=u.tribe;noteHit(t.tribe);u.carry={tribe:t.tribe,type:t.type,born:t.born,orig:t.thrall?t.orig:t.tribe};if(t.type==='queen'){const ot=tribes[t.tribe];if(t.tribe===0&&!watching)toast(`Your May Queen has been seized by the ${tribes[u.tribe].name} folk. Kill the Oss before it gets her home.`);else if(u.tribe===0&&!watching)toast(`Your Oss has seized the ${ot.name} May Queen.`)}if(t.sel)deselect(t);t.alive=false;t.removed=true;u.chop=false;u.st='home';u.bld=null;sfx('hit',.5,u.x,u.z)}}
+      if(u.pt>=need){if(u.tribe===0&&t.escapedFrom===0)earn('x_recapture');if(t.carry)releaseCarry(t);atk=u.tribe;noteHit(t.tribe);u.carry={tribe:t.tribe,type:t.type,born:t.born,orig:t.thrall?t.orig:t.tribe};if(t.type==='queen'){const ot=tribes[t.tribe];if(t.tribe===0&&!watching)toast(`Your May Queen has been seized by the ${tribes[u.tribe].name} folk. Kill the Oss before it gets her home.`);else if(u.tribe===0&&!watching)toast(`Your Oss has seized the ${ot.name} May Queen.`)}if(t.sel)deselect(t);t.alive=false;t.removed=true;u.chop=false;u.st='home';u.bld=null;sfx('hit',.5,u.x,u.z)}}
     break}
   case 'roam':{u.scan=(u.scan||0)-dt;if(u.scan<=0){u.scan=.4;const e=findPrey(u);if(e){u.st='preach';u.tgt=e;u.pt=0;u.cmdCap=false;break}}if(moveStep(u,dt))u.st='idle';break}
   case 'hang':{const b=u.bld;if(!b||!b.alive||b.tribe!==u.tribe||b.awake||!b.done){u.st='idle';break}
@@ -1188,7 +1246,7 @@ function fireArrow(u,t){const ty=t.bt?hAt(t.x,t.z)+1:unitY(t)+.4;const dd=Math.s
 
 // ---------------- buildings behaviour ----------------
 function updBld(b,dt){const D=BT[b.bt],T=tribes[b.tribe];if(D.inv)return;
-  if(!b.done){if(b.prog>=1){b.done=true;b.prog=1;b.hp=b.mhp;if(b.bt==='hedge')setHedge(b,1);else if(b.tribe===0){toast(D.label+' finished');sfx('built',.7)}}return}
+  if(!b.done){if(b.prog>=1){b.done=true;b.prog=1;b.hp=b.mhp;if(b.bt==='hedge')setHedge(b,1);else if(b.tribe===0){toast(D.label+' finished');sfx('built',.7);earn('b_'+b.bt)}}return}
   if(b.bt==='hedge')return;
   if(b.bt==='torch'){if(R()<dt*14){const y=hAt(b.x,b.z)+2.75;PA.emit(b.x+(R()-.5)*.2,y,b.z+(R()-.5)*.2,(R()-.5)*.3,.9+R()*.8,(R()-.5)*.3,.6,1,.55+R()*.3,.12,1,.3,-.4)}return}
   if(b.bt==='nest'){b.cd=(b.cd||0)-dt;if(b.cd>0)return;let tg=null,bd=TUNE.nestRange*TUNE.nestRange;
@@ -1201,7 +1259,7 @@ function updBld(b,dt){const D=BT[b.bt],T=tribes[b.tribe];if(D.inv)return;
   if(D.train&&!armageddon){if(b.trainee){b.tt-=dt;if(b.tt<=0){b.trainee=false;b.q--;produce(b);dockDirty=true}}
     else if(b.q>0){const cl=b.claim;if(!cl||!cl.alive||cl.st!=='enter'||cl.bld!==b){const br=getFreeBrave(T,b.x,b.z);if(br){if(T.id===0)mark(br.x,br.z,.6,.85,1);br.st='enter';br.bld=b;br.purpose='train';setTarget(br,b.dx,b.dz);b.claim=br}}}}
   if(b.bt==='oak'){
-    if(b.hangUntil&&!b.awake&&gt>=b.hangUntil){b.awake=true;b.hangUntil=0;const sh=units.find(u=>u.alive&&u.hanging===b);if(sh){sh.hanging=null;sh.inV=null;sh.x=b.dx;sh.z=b.dz;sh.st='idle';sh.gx=sh.x;sh.gz=sh.z}
+    if(b.hangUntil&&!b.awake&&gt>=b.hangUntil){b.awake=true;if(b.tribe===0)earn('r_hunt');b.hangUntil=0;const sh=units.find(u=>u.alive&&u.hanging===b);if(sh){sh.hanging=null;sh.inV=null;sh.x=b.dx;sh.z=b.dz;sh.st='idle';sh.gx=sh.x;sh.gz=sh.z}
       flash(.35);sfx('thunder',.9,b.x,b.z);toast(b.tribe===0&&!watching?'The oak wakes. The Wild Hunt rides for you.':`The Wild Hunt rides for the ${T.name} folk`);b.hT=0}
     if(b.awake){const y=hAt(b.x,b.z);if(R()<dt*4)PA.emit(b.x+(R()-.5)*2.5,y+2+R()*3,b.z+(R()-.5)*2.5,(R()-.5)*.3,.4,(R()-.5)*.3,1.5,.65,.8,.7,.8,.5,0);
       b.hT=(b.hT||0)-dt;if(b.hT<=0){b.hT=TUNE.huntRespawn;let n=0;for(const u of units)if(u.alive&&u.type==='hunter'&&u.tribe===b.tribe)n++;
@@ -1232,7 +1290,7 @@ function tryCast(ti,k,px,pz,cu){const T=tribes[ti],s=SPK[k],cost=spellCost(T,k);
   if((T.cd[k]||0)>gt){if(ti===0)toast(s.n+' is still gathering power');return false}
   const gift=k==='bridge'&&T.ai&&T.ai.freeBridge&&T.ai.bridge&&T.mana<cost; // Surrounded: an attacking rival is given its bridge
   if(T.mana<cost&&!gift){if(ti===0)toast('Not enough mana for '+s.n);return false}
-  if(!gift)T.mana-=cost;T.cd[k]=gt+s.cd;if(ti===0)stats.casts++;
+  if(!gift)T.mana-=cost;T.cd[k]=gt+s.cd;if(ti===0){stats.casts++;earn('sp_'+k)}
   if(cu){cu.face=Math.atan2(wd(px-cu.x),wd(pz-cu.z));cu.swing=gt;const y=unitY(cu);for(let i=0;i<14;i++){const a=R()*TAU;PA.emit(cu.x+Math.cos(a)*.4,y+.3+R()*.8,cu.z+Math.sin(a)*.4,Math.cos(a)*.3,1.5+R(),Math.sin(a)*.3,.6,.9,.7,1,1,.3,0)}}
   castSpell(ti,k,px,pz,cu);sfx('cast',.6,px,pz);return true}
 function boom(x,z,r,dmg,ti,bdmg,tv,tu){atk=ti;
@@ -1241,7 +1299,7 @@ function boom(x,z,r,dmg,ti,bdmg,tv,tu){atk=ti;
   const y=Math.max(0,hAt(x,z));for(let i=0;i<Math.min(60,10+r*12);i++){const a=R()*TAU,sp=R()*r*2;PA.emit(x,y+.3,z,Math.cos(a)*sp,1+R()*3,Math.sin(a)*sp,.35+R()*.4,1,.45+R()*.4,.12,1,.6+R()*.6,3)}
   for(let i=0;i<8;i++)PN.emit(x+(R()-.5)*r,y+.2,z+(R()-.5)*r,(R()-.5),.8+R(),(R()-.5),1.5,.3,.27,.24,.6,1.2,-.3)}
 // The whirlwind tears the building it was aimed at clean out of the ground: it goes up in pieces and is gone.
-function whirlTake(b,ti){atk=ti;const s=BT[b.bt].s,y=hAt(b.x,b.z),col=b.bt==='hut'?0x8a6a3c:0x7a5a38;dmgBld(b,b.hp+1);if(b.alive)destroyBld(b);
+function whirlTake(b,ti){atk=ti;if(ti===0)earn('d_carried');const s=BT[b.bt].s,y=hAt(b.x,b.z),col=b.bt==='hut'?0x8a6a3c:0x7a5a38;dmgBld(b,b.hp+1);if(b.alive)destroyBld(b);
   for(let i=0;i<Math.min(16,6+s*3);i++){const a=R()*TAU,r=R()*s*.5,sp=3+R()*3;spawnDebris(i%3?STICK_G:HEAD_G,i%4?col:0x5b4632,b.x+Math.cos(a)*r,y+.5+R()*1.5,b.z+Math.sin(a)*r,-Math.sin(a)*sp+Math.cos(a)*1.5,10+R()*9,Math.cos(a)*sp+Math.sin(a)*1.5,3+R()*1.5,9)}
   for(let i=0;i<30;i++){const a=R()*TAU,h=R()*5;PN.emit(b.x+Math.cos(a)*.8,y+h,b.z+Math.sin(a)*.8,-Math.sin(a)*4,2+R()*2,Math.cos(a)*4,1.2+R(),.42,.38,.33,.7,.9+R()*.6,-.2)}
   cam.shake=Math.max(cam.shake,.4)}
@@ -1260,11 +1318,11 @@ function castSpell(ti,k,px,pz,cu){atk=ti;let sx=cu?cu.x:px,sz=cu?cu.z:pz,sy=cu?u
   switch(k){
   case 'blast':{const dd=Math.sqrt(d2(sx,sz,px,pz));const bt=spellTgt&&spellTgt.alive&&spellTgt.type==='balloon'?spellTgt:null;
     if(bt){const ty=unitY(bt)+1.4;proj({kind:'blast',sx,sz,sy,tx:bt.x,tz:bt.z,ty,dur:Math.max(.2,dd/18),arc:.4,ti,onHit:(x,z)=>{if(bt.alive&&d2(x,z,bt.x,bt.z)<3*3)dmgUnit(bt,55,null);for(let i=0;i<30;i++)PA.emit(x,ty,z,(R()-.5)*4,(R()-.5)*4,(R()-.5)*4,.4,1,.5,.12,1,.7,2);sfx('blast',.6,x,z)}});break}
-    proj({kind:'blast',sx,sz,sy,tx:px,tz:pz,ty:Math.max(0,hAt(px,pz)),dur:Math.max(.2,dd/18),arc:1,ti,onHit:(x,z)=>{boom(x,z,1.8,40,ti,30,6,6);sfx('blast',.6,x,z)}});break}
+    proj({kind:'blast',sx,sz,sy,tx:px,tz:pz,ty:Math.max(0,hAt(px,pz)),dur:Math.max(.2,dd/18),arc:1,ti,onHit:(x,z)=>{const k0=killCount;boom(x,z,1.8,40,ti,30,6,6);if(ti===0&&killCount-k0>=10)earn('x_blast10');sfx('blast',.6,x,z)}});break}
   case 'lightning':effects.push({t:.25,up(e,dt){e.t-=dt;if(e.t>0)return true;
       let best=null,bd=1.6*1.6;query(grid,px,pz,2,u=>{if(u.tribe===ti||!u.alive)return;const dd=d2(px,pz,u.x,u.z);if(dd<bd){bd=dd;best=u}});
       const tx=best?best.x:px,tz=best?best.z:pz,ty=best?unitY(best)+.5:Math.max(0,hAt(px,pz));bolt(tx,ty,tz);
-      if(best){if(best.shield>gt){ring(best.x,best.z,1.2,.6,.9,1);if(best.tribe===0&&!watching)toast('The shield turned the lightning')}else dmgUnit(best,300,null)}boom(tx,tz,1.5,30,ti,150,0);flash(.45);sfx('thunder',1,tx,tz);return false}});break;
+      if(best){if(best.shield>gt){ring(best.x,best.z,1.2,.6,.9,1);if(best.tribe===0&&!watching)toast('The shield turned the lightning')}else{const fit=best.fits;dmgUnit(best,300,null);if(ti===0&&fit&&!best.alive)earn('x_lightfits')}}boom(tx,tz,1.5,30,ti,150,0);flash(.45);sfx('thunder',1,tx,tz);return false}});break;
   case 'swarm':effects.push({x:px,z:pz,t:10,tick:0,up(e,dt){e.t-=dt;e.x=wrap(e.x+(R()-.5)*dt*3);e.z=wrap(e.z+(R()-.5)*dt*3);const y=Math.max(0,hAt(e.x,e.z));
       for(let i=0;i<5;i++){const a=R()*TAU,r=R()*2.4;PN.emit(e.x+Math.cos(a)*r,y+.3+R()*1.6,e.z+Math.sin(a)*r,(R()-.5)*3,(R()-.5)*2,(R()-.5)*3,.3,.06,.05,.04,1,.16,0)}
       e.tick-=dt;if(e.tick<=0){e.tick=.5;sfx('swarm',.25,e.x,e.z);query(grid,e.x,e.z,3,u=>{if(u.tribe===ti||!u.alive||UT[u.type].veh||u.air)return;if(d2(e.x,e.z,u.x,u.z)>2.5*2.5)return;dmgUnit(u,4,null);
@@ -1279,7 +1337,7 @@ function castSpell(ti,k,px,pz,cu){atk=ti;let sx=cu?cu.x:px,sz=cu?cu.z:pz,sy=cu?u
   case 'bridge':{const ex=wd(px-sx),ez=wd(pz-sz),L2=ex*ex+ez*ez||1,h0=Math.max(hAt(sx,sz),.9),h1=Math.max(hAt(px,pz),.9);
     const x0=Math.floor(sx+Math.min(0,ex))-3,x1=Math.ceil(sx+Math.max(0,ex))+3,z0=Math.floor(sz+Math.min(0,ez))-3,z1=Math.ceil(sz+Math.max(0,ez))+3;
     for(let vz=z0;vz<=z1;vz++)for(let vx=x0;vx<=x1;vx++){const qx=vx-sx,qz=vz-sz,t=clamp((qx*ex+qz*ez)/L2,0,1),ox=qx-ex*t,oz=qz-ez*t,d=Math.hypot(ox,oz);if(d>3)continue;
-      const w=d<1.4?1:1-sstep(1.4,3,d),c=wi(vz)*N+wi(vx),tg=lerp(H[c],lerp(h0,h1,t),w);if(tg>H[c])H[c]=tg}
+      const w=d<1.4?1:1-sstep(1.4,3,d),c=wi(vz)*N+wi(vx),tg=lerp(H[c],lerp(h0,h1,t),w);if(tg>H[c]){H[c]=tg;if(d<1.6){const a=A();(a.br||(a.br=[])).push(c)}}}
     postTerrain(x0,z0,x1,z1);for(let i=0;i<30;i++){const t=R();dust(sx+ex*t,sz+ez*t)}cam.shake=Math.max(cam.shake,.15);break}
   case 'flatten':{let s=0,n=0;forVerts(px,pz,7,c=>{if(H[c]>-1.2){s+=H[c];n++}});let tg=n?s/n:.8;if(tg<.4)tg=.8;const bb=forVerts(px,pz,7,(c,d)=>{if(H[c]>-1.2)H[c]=lerp(H[c],tg,1-sstep(5,7,d))});postTerrain(...bb);for(let i=0;i<34;i++)dust(px+(R()-.5)*12,pz+(R()-.5)*12);break}
   case 'hypno':query(grid,px,pz,3.5,u=>{if(u.tribe!==ti&&u.alive&&u.type!=='shaman'&&!UT[u.type].veh&&u.type!=='ghost'&&d2(px,pz,u.x,u.z)<9){const o=u.hyp?u.hyp.orig:u.tribe;convertUnit(u,ti);u.hyp={orig:o,until:gt+25}}});ring(px,pz,3,.85,.5,1);break;
@@ -1292,7 +1350,9 @@ function castSpell(ti,k,px,pz,cu){atk=ti;let sx=cu?cu.x:px,sz=cu?cu.z:pz,sy=cu?u
       const t=nearestTree(e.x,e.z,1.3);if(t)killTree(t);if(R()<dt*3)sfx('swarm',.3,e.x,e.z);return e.t>0}});break;
   case 'swamp':{const cx=Math.floor(px),cz=Math.floor(pz),gid=swampSeq++,cells=[];for(let dz=-3;dz<=3;dz++)for(let dx=-3;dx<=3;dx++){if(dx*dx+dz*dz>9.5)continue;const c=wi(cz+dz)*N+wi(cx+dx);if(!water[c]){if(hazGrp[c]&&swamps[hazGrp[c]])continue;setHaz(c,1e9,1,ti);hazGrp[c]=gid;cells.push(c)}}swamps[gid]={owner:ti,kills:0,cells};recompute(cx-3,cz-3,cx+3,cz+3);
     for(let i=0;i<30;i++)PN.emit(px+(R()-.5)*6,hAt(px,pz)+.2,pz+(R()-.5)*6,0,.6,0,1.5,.25,.3,.15,.7,.7,-.2);break}
-  case 'erode':{const bb=forVerts(px,pz,4.5,(c,d)=>{H[c]-=3.6*(1-sstep(2.5,4.5,d))});for(const b of blds)if(b.alive&&b.tribe!==ti&&Math.sqrt(d2(px,pz,b.x,b.z))<4.5+BT[b.bt].s*.3)dmgBld(b,600);postTerrain(...bb);for(let i=0;i<30;i++)dust(px+(R()-.5)*8,pz+(R()-.5)*8);cam.shake=Math.max(cam.shake,.3);sfx('boom',.5,px,pz);break}
+  case 'erode':{if(ti===0){const a=A();if(a.br&&a.br.length){const S=new Set(a.br);let hit=false;forVerts(px,pz,2.5,c=>{if(S.has(c))hit=true});if(hit){a.erodeBr=(a.erodeBr||0)+1;if(a.erodeBr>=2)earn('x_erodebr2')}}
+    if(blds.some(b=>b.alive&&b.bt==='god'&&b.lit&&b.tribe!==0&&Math.sqrt(d2(px,pz,b.x,b.z))<4.5+BT.god.s*.3))earn('x_erodegod')}
+    const bb=forVerts(px,pz,4.5,(c,d)=>{H[c]-=3.6*(1-sstep(2.5,4.5,d))});for(const b of blds)if(b.alive&&b.tribe!==ti&&Math.sqrt(d2(px,pz,b.x,b.z))<4.5+BT[b.bt].s*.3)dmgBld(b,600);postTerrain(...bb);for(let i=0;i<30;i++)dust(px+(R()-.5)*8,pz+(R()-.5)*8);cam.shake=Math.max(cam.shake,.3);sfx('boom',.5,px,pz);break}
   case 'quake':{const a=R()*TAU,ca=Math.cos(a),sa=Math.sin(a);let bx0=1e9,bz0=1e9,bx1=-1e9,bz1=-1e9;const pts=[];
     for(let t=-6;t<=6;t+=.5){const ox=px+ca*t-sa*Math.sin(t*1.1)*1.2,oz=pz+sa*t+ca*Math.sin(t*1.1)*1.2;pts.push([ox,oz]);const bb=forVerts(ox,oz,2.3,(c,d)=>{H[c]+=(R()-.55)*1.5*(1-d/2.3)-(d<.8?.35:0)});bx0=Math.min(bx0,bb[0]);bz0=Math.min(bz0,bb[1]);bx1=Math.max(bx1,bb[2]);bz1=Math.max(bz1,bb[3]);dust(ox,oz);dust(ox,oz)}
     const near=(x,z,r)=>pts.some(p=>d2(x,z,p[0],p[1])<r*r);
@@ -1301,17 +1361,17 @@ function castSpell(ti,k,px,pz,cu){atk=ti;let sx=cu?cu.x:px,sz=cu?cu.z:pz,sy=cu?u
     for(const t of trees)if(t.alive&&near(t.x,t.z,2)&&R()<.7)killTree(t);
     postTerrain(bx0,bz0,bx1,bz1);cam.shake=Math.max(cam.shake,.9);sfx('quake',1,px,pz);break}
   // Day o'the Stones: a hail of small boulders. Any villager struck dies outright; other people are bruised and knocked down; buildings are badly broken.
-  case 'fire':effects.push({x:px,z:pz,t:10,tick:0,up(e,dt){e.t-=dt;e.tick-=dt;while(e.tick<=0){e.tick+=.13;const a=R()*TAU,r=Math.sqrt(R())*4.5,x=e.x+Math.cos(a)*r,z=e.z+Math.sin(a)*r;
+  case 'fire':effects.push({k:'fire',ti,x:px,z:pz,t:10,tick:0,up(e,dt){e.t-=dt;e.tick-=dt;while(e.tick<=0){e.tick+=.13;const a=R()*TAU,r=Math.sqrt(R())*4.5,x=e.x+Math.cos(a)*r,z=e.z+Math.sin(a)*r;
       proj({kind:'boulder',sx:x+2.5,sz:z-1.5,sy:hAt(x,z)+18,tx:x,tz:z,ty:Math.max(0,hAt(x,z))+.2,dur:.8,arc:0,ti,sc:.7+R()*.6,onHit:(x,z)=>stoneFall(x,z,ti)})}
       return e.t>0}});break;
   // St. Anthony's Fire: a slow green blight. Whoever it touches falls into fits and dies three seconds later; it can reach anyone near someone already in fits.
-  case 'angel':effects.push({x:sx,z:sz,y:(cu?unitY(cu):hAt(px,pz))+3,t:25,tgt:null,rest:0,inf:[],up(e,dt){e.t-=dt;e.rest-=dt;
+  case 'angel':effects.push({k:'angel',ti,x:sx,z:sz,y:(cu?unitY(cu):hAt(px,pz))+3,t:25,tgt:null,rest:0,inf:[],up(e,dt){e.t-=dt;e.rest-=dt;
       const ok=u=>u.tribe!==ti&&u.alive&&!u.inV&&u.type!=='ghost'&&!u.fits;
       if((!e.tgt||!ok(e.tgt))&&e.rest<=0){let best=null,bd=1e18;const look=(x,z,r)=>query(grid,x,z,r,u=>{if(!ok(u)||d2(x,z,u.x,u.z)>r*r)return;const dd=d2(e.x,e.z,u.x,u.z);if(dd<bd){bd=dd;best=u}});
         look(e.x,e.z,14);e.inf=e.inf.filter(v=>v.alive&&v.fits);for(const v of e.inf)look(v.x,v.z,5);e.tgt=best}
       let ty=Math.max(0,hAt(e.x,e.z))+4;if(e.tgt){const t=e.tgt,dx=wd(t.x-e.x),dz=wd(t.z-e.z),dd=Math.hypot(dx,dz);ty=unitY(t)+.6;
         const st=Math.min(dd,4*dt);e.x=wrap(e.x+dx/(dd||1)*st);e.z=wrap(e.z+dz/(dd||1)*st);
-        if(dd<.6&&Math.abs(e.y-ty)<.9){t.fits=gt+3;t.fitsBy=ti;e.inf.push(t);if(t.sel)deselect(t);e.tgt=null;e.rest=.3;for(let i=0;i<14;i++)PA.emit(e.x,e.y,e.z,(R()-.5)*3,R()*2,(R()-.5)*3,.6,.6,.95,.3,1,.4,0)}}
+        if(dd<.6&&Math.abs(e.y-ty)<.9){t.fits=gt+3;t.fitsBy=ti;e.inf.push(t);e.total=(e.total||0)+1;if(ti===0&&e.total>=8)earn('d_fever8');if(t.sel)deselect(t);e.tgt=null;e.rest=.3;for(let i=0;i<14;i++)PA.emit(e.x,e.y,e.z,(R()-.5)*3,R()*2,(R()-.5)*3,.6,.6,.95,.3,1,.4,0)}}
       e.y+=(ty-e.y)*Math.min(1,dt*3);
       for(let i=0;i<4;i++)PA.emit(e.x+(R()-.5)*.7,e.y+(R()-.5)*.7,e.z+(R()-.5)*.7,(R()-.5)*.4,.25,(R()-.5)*.4,.8,.55,.9,.25,.9,.5,0);
       if(R()<dt*12)PN.emit(e.x+(R()-.5)*.6,e.y-.3,e.z+(R()-.5)*.6,(R()-.5)*.3,-.2,(R()-.5)*.3,1.6,.32,.45,.12,.55,.9,0);
@@ -1385,6 +1445,7 @@ function harvestBroken(T,alive,di){const Dt=tribes[di],out={n:0,where:'altar'};i
     const c=spawnUnit('captive',di,x,z);c.capt={tribe:T.id};c.harvest=true;c.st='enter';c.bld=dest;c.purpose='sac';setTarget(c,dest.dx,dest.dz);
     let br=null,bb=18*18;for(const v of units)if(v.alive&&v.tribe===di&&v.type==='brave'&&!v.inV&&!used.has(v)&&(v.st==='idle'||v.st==='gather')){const d=d2(x,z,v.x,v.z);if(d<bb){bb=d;br=v}}
     if(br){used.add(br);orderUnit(br,dest.dx+(R()-.5)*2,dest.dz+(R()-.5)*2,false);br.cmd=false}}
+  if(di===0&&out.n){const a=A();a.harvest=(a.harvest||0)+out.n;if(a.harvest>=20)earn('d_harvest20')}
   return out}
 function enemyBalloonNear(T){const b=T.ai.base;for(const u of units)if(u.alive&&u.type==='balloon'&&u.tribe!==T.id&&u.tribe!==wildId&&d2(b.x,b.z,u.x,u.z)<30*30)return true;return false}
 function aiBuild(T){const S=T.stats,ai=T.ai;if(S.sites>=2)return;let want=null;const realB=S.b;if(allowSets){S.b=Object.assign({},realB);for(const t of BUILDABLE)if(!allowB(t))S.b[t]=99}
@@ -1479,7 +1540,7 @@ function tribeUpkeep(T){const S=T.stats;
     if(!queenOf(T.id)){b.merry=(b.merry||0)+n;if(b.merry>=TUNE.mayCrown)crown(T,b)}}
   T.dread=Math.max(0,(T.dread||0)-(TUNE.dreadDecay+TUNE.dreadDecayPerHut*S.huts));if(T.dread>TUNE.desertAt&&!armageddon&&R()<(T.dread-TUNE.desertAt)/TUNE.desertSpread)desert(T);
   for(const b of blds)if(b.alive&&b.done&&b.tribe===T.id&&b.bt==='fold'){if(b.capt.length>=2&&b.capt.length<BT.fold.hold&&R()<TUNE.foldBreed*b.capt.length){b.capt.push(b.capt[(R()*b.capt.length)|0]);dockDirty=true}}
-  for(const b of blds)if(b.alive&&b.tribe===T.id&&isHold(b)&&b.capt.length&&R()<TUNE.foldEscapeBase+b.capt.length*TUNE.foldEscapePerCaptive){b.capt.pop();spawnWild(b.dx,b.dz);if(T.id===0&&gt-escToastT>20){escToastT=gt;toast('A captive has slipped out of the fold')}}
+  for(const b of blds)if(b.alive&&b.tribe===T.id&&isHold(b)&&b.capt.length&&R()<TUNE.foldEscapeBase+b.capt.length*TUNE.foldEscapePerCaptive){b.capt.pop();spawnWild(b.dx,b.dz).escapedFrom=T.id;if(T.id===0&&gt-escToastT>20){escToastT=gt;toast('A captive has slipped out of the fold')}}
   if(!T.shaman&&T.alive&&!armageddon&&!T.tomb&&!T.broken){if(!T.reincT)T.reincT=gt+TUNE.shamanRespawn;if(gt>=T.reincT&&S.pop>0){const r=blds.find(b=>b.alive&&b.bt==='reinc'&&b.tribe===T.id);if(r){const u=spawnUnit('shaman',T.id,r.x,r.z+2);T.shaman=u;T.reincT=0;ring(r.x,r.z,2,1,.85,.4);if(T.id===0){toast('Your Cunning Woman is reborn');sfx('built',.8)}}}}
   if(!T.broken)for(const b of blds)if(b.alive&&!b.done&&b.tribe===T.id&&b.nb<2&&S.outB<3){const br=getFreeBrave(T,b.x,b.z);if(br)assignBuild(br,b);break}
   if(T.wood<T.woodGoal&&S.outB<3&&S.housed>0&&!T.broken)getFreeBrave(T,0,0);
@@ -1537,7 +1598,12 @@ function regrow(){let alive=0;for(const t of trees)if(t.alive)alive++;if(alive>=
   for(let k=0;k<2;k++){const t=trees[(R()*trees.length)|0];if(!t||!t.alive)continue;const a=R()*TAU,r=1.2+R()*2,x=wrap(t.x+Math.cos(a)*r),z=wrap(t.z+Math.sin(a)*r),c=cidx(x,z),h=hAt(x,z);
     if(h>.8&&h<9.5&&walk[c]&&!bOcc[c]&&!(hazU[c]>gt)){trees.push({x,z,wood:TUNE.woodPerTree,alive:true,sc:.8+R()*.45,tint:.85+R()*.25,born:gt});tGridDirty=true}}}
 let leapLast=false;
-function checkEnd(){if(over)return;if(tribes[0]&&!watching){const v=canLeap(tribes[0]);if(v!==leapLast){leapLast=v;dockDirty=true}}{const SC=scen();if(SC&&tribes[0].alive){const g=SC.goal,T=tribes[0];if((g.type==='survive'&&gt>=g.n)||(g.type==='captives'&&(T.stats.caps||0)>=g.n)||(g.type==='queen'&&(stats.queenOffered||0)>=(g.n||1))){endGame(true);return}}}if(watching){const left=tribes.filter(T=>!T.wild&&T.alive);if(left.length<=1)endWatch(left[0]);return}if(!tribes[0].alive){endGame(false);return}if(tribes.slice(1).filter(T=>!T.wild).every(T=>!T.alive))endGame(true)}
+function tokTick(){const T=tribes[0];if(!T||!T.alive||!tokLive())return;const a=A(),p=T.stats.pop;if(p>=25)earn('pop25');if(p>=50)earn('pop50');if(p>=100)earn('pop100');if(p>=150)earn('pop150');
+  if(gt>=1800)earn('t30');if(gt>=3600)earn('t60');if(gt>=7200)earn('t120');if(T.dread>TUNE.desertAt)a.dreadOver=true;
+  const sh=T.shaman;if(sh&&sh.alive&&!sh.inV&&sh.hitT>gt-4){const near=units.filter(o=>o.alive&&o.type==='shaman'&&o.tribe!==0&&!o.inV&&o.hitT>gt-4&&d2(o.x,o.z,sh.x,sh.z)<100);
+    for(let i=0;i<near.length;i++)for(let j=i+1;j<near.length;j++)if(near[i].tribe!==near[j].tribe&&d2(near[i].x,near[i].z,near[j].x,near[j].z)<100)earn('x_threeway')}
+  if(effects.some(e=>e.k==='fire'&&e.ti===0&&e.t>0)&&effects.some(e=>e.k==='angel'&&e.ti===0&&e.t>0)&&Object.values(swamps).some(w=>w.owner===0)){let lava=false;for(const c of hazList)if(hazType[c]===2&&hazOwner[c]===0&&hazU[c]>gt){lava=true;break}if(lava)earn('x_fourfold')}}
+function checkEnd(){if(over)return;tokTick();if(tribes[0]&&!watching){const v=canLeap(tribes[0]);if(v!==leapLast){leapLast=v;dockDirty=true}}{const SC=scen();if(SC&&tribes[0].alive){const g=SC.goal,T=tribes[0];if((g.type==='survive'&&gt>=g.n)||(g.type==='captives'&&(T.stats.caps||0)>=g.n)||(g.type==='queen'&&(stats.queenOffered||0)>=(g.n||1))){endGame(true);return}}}if(watching){const left=tribes.filter(T=>!T.wild&&T.alive);if(left.length<=1)endWatch(left[0]);return}if(!tribes[0].alive){endGame(false);return}if(tribes.slice(1).filter(T=>!T.wild).every(T=>!T.alive))endGame(true)}
 function spawnWild(x,z){const u=spawnUnit('wild',wildId,x,z);u.hx=u.x;u.hz=u.z;return u}
 function wildSpot(){for(let t=0;t<60;t++){const x=R()*N,z=R()*N,c=cidx(x,z);if(!pass[c])continue;let ok=true;for(const b of blds)if(b.alive&&b.tribe!==wildId&&d2(x,z,b.x,b.z)<22*22){ok=false;break}if(ok)return {x,z}}return null}
 function wildTick(){if(armageddon||gt<wildT)return;wildT=gt+TUNE.wildEvery;let n=0;for(const u of units)if(u.alive&&u.tribe===wildId)n++;if(n>=TUNE.wildMax)return;const p=wildSpot();if(!p)return;const k=2+(R()*2|0);for(let i=0;i<k;i++)spawnWild(p.x+(R()-.5)*2,p.z+(R()-.5)*2)}
@@ -1553,7 +1619,7 @@ function invokeArma(ti){const T=tribes[ti];if(!allowS('arma'))return false;if(ar
   const vic=units.filter(u=>u.alive&&!u.inV&&!u.air&&u.tribe===ti&&!UT[u.type].veh&&u.type!=='shaman'&&u.type!=='ghost'&&u.st!=='wait').sort((a,b)=>d2(a.x,a.z,wm.x,wm.z)-d2(b.x,b.z,wm.x,wm.z));
   if(vic.length<10){if(ti===0)toast('All-against-all needs ten followers to burn');return false}
   T.mana=0;for(const u of vic.slice(0,10)){const y=unitY(u);for(let i=0;i<10;i++)PA.emit(u.x,y+.5,u.z,(R()-.5),2+R()*2,(R()-.5),.8,1,.4,.1,1,.5,-1);removeUnit(u)}
-  wm.lit=true;wm.burnt=true;wm.burnEnd=gt+12;flash(.5);cam.shake=Math.max(cam.shake,.6);sfx('quake',1);toast(ti===0&&!watching?'Ten souls burn in the wicker. The end is coming.':`The ${T.name} tribe has called down the battle of all-against-all`);
+  if(ti===0)earn('r_arma');wm.lit=true;wm.burnt=true;wm.burnEnd=gt+12;flash(.5);cam.shake=Math.max(cam.shake,.6);sfx('quake',1);toast(ti===0&&!watching?'Ten souls burn in the wicker. The end is coming.':`The ${T.name} tribe has called down the battle of all-against-all`);
   effects.push({t:3,up(e,dt){e.t-=dt;if(e.t>0)return true;startArma();return false}});return true}
 function mootPull(u){if(u.type==='balloon'||u.inV)return;const lf=field(moot.x,moot.z);if(lf[cidx(u.x,u.z)]>=0)return;const a=R()*TAU,r=5+R()*7,c=nearestCell(moot.x+Math.cos(a)*r,moot.z+Math.sin(a)*r,5,c=>pass[c]===1&&lf[c]>=0);if(c){u.x=c.x;u.z=c.z;u.air=false;for(let i=0;i<6;i++)PA.emit(u.x,hAt(u.x,u.z)+.5,u.z,(R()-.5),1+R()*2,(R()-.5),.6,1,.3,.15,1,.4,-1)}}
 function startArma(){armageddon=true;$('app').classList.add('arma');scene.fog.color.setHex(0x9a4224);droneLevel();
@@ -2608,7 +2674,7 @@ function onTap(sx,sy,right,shift){if(over||watching)return;const T=tribes[0],g=p
   if(!grp.length){if(!right&&!hu&&!hb&&sel.length)setSel([]);return}
   command(grp,g,hu,hb,ht)}
 function mark(x,z,r,g,b){const y=Math.max(0,hAt(x,z))+.2;for(let i=0;i<16;i++){const a=i/16*TAU;PA.emit(x+Math.cos(a)*.6,y,z+Math.sin(a)*.6,Math.cos(a)*.6,.6,Math.sin(a)*.6,.45,r,g,b,1,.3,0)}}
-function command(grp,g,hu,hb,ht){grp=grp.filter(u=>!u.carry);if(!grp.length){toast('The osses will not listen until their captives are home');return}
+function command(grp,g,hu,hb,ht){if(grp.filter(u=>u.type==='balloon'&&u.tribe===0).length>=30)earn('x_balloons30');grp=grp.filter(u=>!u.carry);if(!grp.length){toast('The osses will not listen until their captives are home');return}
   for(const u of grp){u.post=null;u.postSpot=false}
   const guardable=hb&&(hb.bt==='barrow'||((hb.bt==='tomb'||hb.bt==='oak')&&hb.tribe===0));
   if(guardable){const sh=grp.find(u=>u.type==='shaman');let rest=grp.filter(u=>u!==sh);
@@ -2835,7 +2901,10 @@ function celebrateFrame(){const T=tribes[0];let n=0;for(const u of units){if(!u.
   for(const b of blds)if(b.alive&&b.tribe===0&&R()<.15){const y=hAt(b.x,b.z);PA.emit(b.x+(R()-.5)*2,y+1+R()*2,b.z+(R()-.5)*2,(R()-.5),2+R()*3,(R()-.5),.8,1,.5,.15,1,.6,-1)}
   cam.yaw+=.0025}
 const DIFFNAME={easy:'Easy',normal:'Normal',hard:'Hard'};
-function endGame(win){clearSave();$('bAgain').textContent='Play this world again';$('bNew').textContent='Choose a new world';$('bNext').hidden=true;
+function tokWin(){const a=A(),d=settings.diff,st=settings.style;earn('w_'+d);earn(['islands','isles','twin','hub'].includes(st)?'w_arch':['highlands','crags'].includes(st)?'w_high':'w_cont');
+  if(armageddon)earn('r_moot');if(!a.dreadOver)earn('d_nofear');if(!a.trainedWar)earn('d_noblade');const i=settings.campaign;
+  if(i!=null){if(i===0)earn('c1');if(i===4)earn('c5');if(i===9)earn('c10');if(i===14)earn('c15');if(i===SCEN.length-1)earn('c20');if(i===4&&!a.lostBld)earn('d_thornwall')}}
+function endGame(win){if(win)tokWin();clearSave();$('bAgain').textContent='Play this world again';$('bNew').textContent='Choose a new world';$('bNext').hidden=true;
   {const SC=scen();if(SC){const i=settings.campaign;$('bAgain').textContent=win?'Play this level again':'Try again';$('bNew').textContent='Back to the campaign';
     if(win){if(!devMode()){const pr=campProg();pr.unlocked=Math.max(pr.unlocked,Math.min(SCEN.length-1,i+1));if(!pr.best[i]||gt<pr.best[i])pr.best[i]=Math.round(gt);if(i===SCEN.length-1)pr.complete=true;campSave(pr)}if(i<SCEN.length-1){$('bNext').hidden=false;$('bNext').textContent=`Onward: ${i+2}. ${SCEN[i+1].title}`}}}}over=true;running=false;droneLevel();sfx(win?'built':'die',1);$('endT').textContent=win?'Victory':'Defeat';
   $('endS').textContent=win?(armageddon?'The Moot is quiet. Of all the peoples who walked there, only yours walked away.':'Every rival Cunning Woman has been cast out. The world is yours to shape.'):(armageddon?'Your people fell at the Moot. The world goes on without them.':'Your tribe has been wiped from the world. The fields grow over the huts.');
@@ -3046,6 +3115,18 @@ $('wsIOapply').addEventListener('click',()=>{let o;try{o=JSON.parse($('wsIOt').v
   try{localStorage.setItem(MODEL_KEY,JSON.stringify(loc))}catch(e){}$('wsIO').hidden=true;wsLoad(WS.key);wsStatus();toast(n?`${n} model${n===1?'':'s'} taken in`:'Nothing in that text matched a model')});
 $('wsIOclose').addEventListener('click',()=>{$('wsIO').hidden=true});
 $('bGallery').addEventListener('click',()=>wsOpen());
+function openTokens(){const g=tokGet();let h='',n=0,got=0;for(const [cat,list] of TOKS){h+=`<div class="tokCat">${cat}</div><div class="tokGrid">`;for(const t of list){const o=TOKMAP[t[0]],have=!!g[o.id];n++;if(have)got++;
+    h+=`<div class="tok${have?' got':''}"><i></i><span>${have?o.d:o.h}</span></div>`}h+='</div>'}
+  $('tokList').innerHTML=h;$('tokSub').textContent=`${got} of ${n} earned.${devMode()?' Test mode is on: tokens are not earned while it is.':''}`;$('tokIO').value='';$('menu').hidden=true;$('tokens').hidden=false}
+function keepsake(){const json=JSON.stringify({v:1,camp:campProg(),tok:tokGet()});return 'WICKER1:'+btoa(unescape(encodeURIComponent(json)))}
+function useKeepsake(txt){try{txt=txt.trim();if(!txt.startsWith('WICKER1:'))throw 0;const d=JSON.parse(decodeURIComponent(escape(atob(txt.slice(8)))));
+  const g=tokGet();let nt=0;for(const k in d.tok||{})if(TOKMAP[k]&&!g[k]){g[k]=d.tok[k];nt++}else if(TOKMAP[k]&&d.tok[k]<g[k])g[k]=d.tok[k];try{localStorage.setItem(TOK_KEY,JSON.stringify(g))}catch(e){}
+  const pr=campProg(),c=d.camp||{};pr.unlocked=Math.max(pr.unlocked||0,c.unlocked||0);pr.best=pr.best||{};for(const i in c.best||{})if(pr.best[i]==null||c.best[i]<pr.best[i])pr.best[i]=c.best[i];if(c.complete)pr.complete=true;campSave(pr);
+  return `Keepsake taken in: ${nt} new token${nt===1?'':'s'}, campaign open to level ${pr.unlocked+1}.`}catch(e){return 'That is not a Wicker keepsake'}}
+$('bTokens').addEventListener('click',()=>{audio();openTokens()});
+$('tokBack').addEventListener('click',()=>{$('tokens').hidden=true;openMenu()});
+$('tokCopy').addEventListener('click',()=>{const t=keepsake();$('tokIO').value=t;$('tokIO').select();let ok=false;try{ok=document.execCommand('copy')}catch(e){}if(navigator.clipboard)navigator.clipboard.writeText(t).then(()=>toast('Keepsake copied'),()=>{});else toast(ok?'Keepsake copied':'Select the text and copy it by hand')});
+$('tokUse').addEventListener('click',()=>{const m=useKeepsake($('tokIO').value);toast(m);openTokens()});
 function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;fogK=Math.min(1,dt*4);
   if(wsOn){try{wsFrame(dt)}catch(e){console.error(e)}requestAnimationFrame(frame);return}
   try{
@@ -3059,6 +3140,6 @@ function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;fogK=Math.mi
   }catch(err){if(!errShown){errShown=true;console.error(err);const fr=String(err.stack||'').split('\n').filter(l=>/\bat\b/.test(l)).slice(0,2).map(l=>{const m=l.match(/at\s+(?:Object\.)?([\w$.]+)?\s*\(?.*?:(\d+):\d+\)?\s*$/);return m?(m[1]||'?')+':'+m[2]:''}).filter(Boolean).join(' < ');toast('Something went wrong: '+err.message+(fr?' ['+fr+']':''))}}
   requestAnimationFrame(frame)}
 resize();buildWorld();showContinue();requestAnimationFrame(frame);
-window.__ws={get HUT_TOP(){return HUT_TOP},walkReach,postAt,setSel,get banners(){return banners},get sel(){return sel},get world(){return world},light,memorial,get stats(){return stats},get cam(){return cam},get WS(){return WS},wsOpen,wsClose,captureDef,defFromData,merge,ORIG_UMOD,ORIG_BMOD,get UM(){return UM},get BM(){return BM},get wear(){return wear},get buntings(){return buntings},get patches(){return patches},get wells(){return wells},get units(){return units},get tribes(){return tribes},get blds(){return blds},sim,beginGame,get gt(){return gt},castSpell,tryCast,saveGame,loadGame,setSel,command,showLevel,SCEN,field,get walkA(){return walk},hAt,get water(){return water},findSpot,get allow(){return allowSets},get pass(){return pass},get swamps(){return swamps},get debris(){return debris},queenValue,invokeArma,startRitual,sendVehicle,get wildId(){return wildId},get armageddon(){return armageddon},placeBuilding,validSpot,orderMove,spawnUnit,command,get water(){return water},findSpot};
+window.__ws={get HUT_TOP(){return HUT_TOP},tokGet,keepsake,useKeepsake,walkReach,postAt,setSel,get banners(){return banners},get sel(){return sel},get world(){return world},light,memorial,get stats(){return stats},get cam(){return cam},get WS(){return WS},wsOpen,wsClose,captureDef,defFromData,merge,ORIG_UMOD,ORIG_BMOD,get UM(){return UM},get BM(){return BM},get wear(){return wear},get buntings(){return buntings},get patches(){return patches},get wells(){return wells},get units(){return units},get tribes(){return tribes},get blds(){return blds},sim,beginGame,get gt(){return gt},castSpell,tryCast,saveGame,loadGame,setSel,command,showLevel,SCEN,field,get walkA(){return walk},hAt,get water(){return water},findSpot,get allow(){return allowSets},get pass(){return pass},get swamps(){return swamps},get debris(){return debris},queenValue,invokeArma,startRitual,sendVehicle,get wildId(){return wildId},get armageddon(){return armageddon},placeBuilding,validSpot,orderMove,spawnUnit,command,get water(){return water},findSpot};
 })();
 </script>
