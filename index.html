@@ -118,6 +118,9 @@ fieldset{border:0;padding:0;margin:0 0 14px;min-width:0}
 legend{font:11px var(--f-display);letter-spacing:.14em;color:var(--muted);margin-bottom:6px;padding:0}
 .seg{display:flex;gap:4px;flex-wrap:wrap}
 .seg button{flex:1 1 auto;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:15px}
+#tune{position:absolute;top:8px;right:8px;bottom:8px;width:min(340px,calc(100% - 16px));overflow:auto;z-index:60;background:rgba(20,15,11,.88);border:1px solid var(--line);border-radius:12px;padding:12px 14px;box-sizing:border-box;font-size:13px}#tune h3{margin:0 0 4px}#tune p{margin:0 0 8px;color:var(--muted);font-size:12px}
+.tuneR{display:grid;grid-template-columns:118px 1fr 44px;gap:8px;align-items:center;margin:4px 0;color:var(--muted);font-size:12px}.tuneR input{width:100%;accent-color:var(--ochre)}.tuneR b{font-weight:400;text-align:right;font-variant-numeric:tabular-nums}
+.tuneB{display:flex;flex-direction:column;gap:6px;margin-top:10px}#tuneOut{width:100%;height:70px;margin-top:8px;font-size:11px}.filmBox .tuneBtn{margin-top:10px;width:100%}
 .fs{display:grid;grid-template-columns:130px 1fr;gap:10px;align-items:center;margin-top:8px;font-size:13px;color:var(--muted)}.fs input{width:100%;accent-color:var(--ochre)}
 .seg button.on{border-color:var(--mana);color:var(--mana);background:rgba(232,182,76,.09)}
 .seedrow{display:flex;gap:6px}
@@ -242,7 +245,7 @@ details.help summary{cursor:pointer;color:var(--text);font:14px var(--f-display)
           <fieldset><legend>Rival skill</legend><div class="seg" id="oDf"><button data-v="easy">Easy</button><button data-v="normal" class="on">Normal</button><button data-v="hard">Hard</button></div></fieldset>
           <fieldset><legend>Fog of war</legend><div class="seg" id="oFog"><button data-v="1" class="on">On</button><button data-v="0">Off</button></div></fieldset>
           <fieldset><legend>World seed</legend><div class="seedrow"><input id="oSeed" inputmode="numeric" aria-label="World seed"><button class="btn" id="oReroll">New world</button></div></fieldset>
-          <fieldset class="filmBox"><legend>Film</legend><div class="seg"><button data-fl="0">Off</button><button data-fl="1">35mm</button></div><div class="filmS"><label class="fs"><span>Grain</span><input type="range" min="0" max="1" step="0.05" data-fk="grain"></label><label class="fs"><span>Dust and scratches</span><input type="range" min="0" max="1" step="0.05" data-fk="dust"></label></div></fieldset>
+          <fieldset class="filmBox"><legend>Film</legend><div class="seg"><button data-fl="0">Off</button><button data-fl="1">35mm</button></div><div class="filmS"><label class="fs"><span>Grain</span><input type="range" min="0" max="1" step="0.05" data-fk="grain"></label><label class="fs"><span>Dust and scratches</span><input type="range" min="0" max="1" step="0.05" data-fk="dust"></label><button class="secondary tuneBtn" type="button">Tune the grade</button></div></fieldset>
         </div>
         <figure class="prev"><canvas id="prev" width="256" height="256"></canvas><figcaption id="prevCap">Your tribe is ochre.</figcaption></figure>
       </div>
@@ -332,11 +335,19 @@ details.help summary{cursor:pointer;color:var(--text);font:14px var(--f-display)
     </div>
   </div>
 
+  <div id="tune" hidden>
+    <h3>Film grade</h3>
+    <p>Every number in the grade. Changes show at once and are kept in this browser.</p>
+    <div id="tuneList"></div>
+    <textarea id="tuneOut" hidden readonly></textarea>
+    <div class="tuneB"><button class="secondary" id="tuneCopy">Copy the numbers</button><button class="secondary" id="tuneReset">Back to defaults</button><button class="primary" id="tuneClose">Done</button></div>
+  </div>
+
   <div id="pause" class="scrim" hidden>
     <div class="sheet" style="width:min(420px,100%)">
       <h2>Paused</h2>
       <p class="sub" id="pauseInfo"></p>
-      <fieldset class="filmBox"><legend>Film</legend><div class="seg"><button data-fl="0">Off</button><button data-fl="1">35mm</button></div><div class="filmS"><label class="fs"><span>Grain</span><input type="range" min="0" max="1" step="0.05" data-fk="grain"></label><label class="fs"><span>Dust and scratches</span><input type="range" min="0" max="1" step="0.05" data-fk="dust"></label></div></fieldset>
+      <fieldset class="filmBox"><legend>Film</legend><div class="seg"><button data-fl="0">Off</button><button data-fl="1">35mm</button></div><div class="filmS"><label class="fs"><span>Grain</span><input type="range" min="0" max="1" step="0.05" data-fk="grain"></label><label class="fs"><span>Dust and scratches</span><input type="range" min="0" max="1" step="0.05" data-fk="dust"></label><button class="secondary tuneBtn" type="button">Tune the grade</button></div></fieldset>
       <button class="primary" id="bResume">Resume</button>
       <button class="secondary" id="bAbandon">Abandon and choose a new world</button>
     </div>
@@ -3357,34 +3368,40 @@ function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;fogK=Math.mi
 // The world is drawn to an off-screen target, then graded onto the screen with the CSS sky composited
 // underneath; the HUD is HTML above the canvas and stays clean. Grain changes at 24 frames a second.
 const FILM_KEY='wicker-film-v1';
-const film={look:0,grain:.6,dust:.35};try{Object.assign(film,JSON.parse(localStorage.getItem(FILM_KEY))||{})}catch(e){}if(film.look>1)film.look=1;
+// Every number in the grade, in the order the shader reads them (uP[0..13]); the Tune panel edits these live.
+const FILM_P=[{k:'expo',n:'Exposure',lo:.5,hi:2,d:1.18},{k:'mids',n:'Mid-tone lift',lo:.6,hi:1.8,d:1.12},{k:'contrast',n:'Contrast',lo:0,hi:1,d:.3},
+ {k:'black',n:'Black lift',lo:0,hi:.15,d:.02},{k:'landSat',n:'Land colour',lo:0,hi:1.3,d:.65},{k:'strongSat',n:'Strong colour',lo:.5,hi:2,d:1.2},
+ {k:'redDeep',n:'Red depth',lo:0,hi:.8,d:.3},{k:'fireHold',n:'Fire held orange',lo:0,hi:1,d:.5},{k:'cool',n:'Cool shadows',lo:0,hi:.3,d:.04},
+ {k:'warm',n:'Warm highlights',lo:0,hi:.3,d:.03},{k:'vig',n:'Vignette',lo:0,hi:1.5,d:.3},{k:'hal',n:'Halation',lo:0,hi:4,d:1.4},
+ {k:'halT',n:'Halation threshold',lo:.3,hi:1,d:.68},{k:'olive',n:'Green to olive',lo:0,hi:1,d:.3}];
+const film={look:0,grain:.6,dust:.35,p:{}};try{Object.assign(film,JSON.parse(localStorage.getItem(FILM_KEY))||{})}catch(e){}if(film.look>1)film.look=1;
+for(const q of FILM_P)if(typeof film.p[q.k]!=='number')film.p[q.k]=q.d;
 let filmRT=null,filmQ=null,filmT=0,filmArma=0;const filmSc=[];
 const SKY_N=[0x080605,0x1d1410,0x473829,0x7f725b],SKY_A=[0x0f0202,0x3a0a07,0x76220f,0x9a4224];
 function filmInit(){if(filmRT)return;const w=glc.width||1,h=glc.height||1;
   filmRT=renderer.capabilities.isWebGL2&&C.WebGLMultisampleRenderTarget?new C.WebGLMultisampleRenderTarget(w,h,{samples:4}):new C.WebGLRenderTarget(w,h);
   const sp=[];for(let i=0;i<8;i++)sp.push(new C.Vector4());const sc=[];for(let i=0;i<3;i++)sc.push(new C.Vector4());
-  const mat=new C.ShaderMaterial({depthTest:false,depthWrite:false,uniforms:{tD:{value:filmRT.texture},uRes:{value:new C.Vector2(w,h)},uSeed:{value:0},uGrain:{value:0},
+  const mat=new C.ShaderMaterial({depthTest:false,depthWrite:false,uniforms:{tD:{value:filmRT.texture},uRes:{value:new C.Vector2(w,h)},uSeed:{value:0},uGrain:{value:0},uP:{value:FILM_P.map(q=>film.p[q.k])},
     uS0:{value:new C.Color()},uS1:{value:new C.Color()},uS2:{value:new C.Color()},uS3:{value:new C.Color()},uSp:{value:sp},uSc:{value:sc}},
     vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position.xy,0.,1.);}',
-    fragmentShader:`uniform sampler2D tD;uniform vec2 uRes;uniform float uSeed,uGrain;uniform vec3 uS0,uS1,uS2,uS3;uniform vec4 uSp[8];uniform vec4 uSc[3];varying vec2 vUv;
+    fragmentShader:`uniform sampler2D tD;uniform vec2 uRes;uniform float uSeed,uGrain,uP[14];uniform vec3 uS0,uS1,uS2,uS3;uniform vec4 uSp[8];uniform vec4 uSc[3];varying vec2 vUv;
 float h(vec2 p){return fract(sin(dot(p,vec2(12.9898,78.233)))*43758.5453);}
 vec3 sky(float y){float t=1.-y;return t<.3?mix(uS0,uS1,t/.3):t<.62?mix(uS1,uS2,(t-.3)/.32):mix(uS2,uS3,(t-.62)/.38);}
 vec3 px(vec2 uv){vec4 s=texture2D(tD,uv);return s.rgb+sky(uv.y)*(1.-s.a);}
 void main(){vec2 uv=vUv,d=1./uRes;vec3 c=px(uv);
- vec3 hl=vec3(0.);for(int i=0;i<8;i++){float a=float(i)*.785398;vec2 o=vec2(cos(a),sin(a))*d;hl+=max(px(uv+o*5.)-.68,0.)+max(px(uv+o*12.)-.68,0.)*.6;}
- float hv=dot(hl/16.,vec3(.5,.35,.15));c+=vec3(.9,.22,.05)*hv*1.4;
+ vec3 hl=vec3(0.);for(int i=0;i<8;i++){float a=float(i)*.785398;vec2 o=vec2(cos(a),sin(a))*d;hl+=max(px(uv+o*5.)-uP[12],0.)+max(px(uv+o*12.)-uP[12],0.)*.6;}
+ float hv=dot(hl/16.,vec3(.5,.35,.15));c+=vec3(.9,.22,.05)*hv*uP[11];
+ c*=uP[0];
  float l=dot(c,vec3(.299,.587,.114)),mx=max(c.r,max(c.g,c.b)),sat=mx-min(c.r,min(c.g,c.b));
- // the land (grass, earth, stone, sky) drains towards khaki and grey; reds, oranges, fire and deep blues keep or gain colour
  float ww=smoothstep(.04,.22,c.r-c.g),bw=smoothstep(.04,.2,c.b-max(c.r,c.g)),strong=max(ww,bw)*smoothstep(.08,.35,sat/max(mx,.04));
- vec3 g=mix(vec3(l),c,mix(.58,1.2,strong));
- // reds go deep rather than light, and fire stays orange instead of blowing out to yellow-white
- float rw=clamp((c.r-max(c.g,c.b))*2.5,0.,1.);g.gb*=1.-.3*rw;g.r*=1.-.08*rw;
- float hot=ww*smoothstep(.72,1.,l);g.g*=1.-.22*hot;g.b*=1.-.5*hot;
- // contrast: a firm S-curve, with only the faintest warm lift in the blacks
- g=clamp(g,0.,1.);g=mix(g,g*g*(3.-2.*g),.55);
- g*=mix(vec3(.94,1.,1.),vec3(1.03,1.,.95),smoothstep(.15,.8,l));
- g=vec3(.018,.014,.01)+g*.985;
- vec2 q=uv-.5;g*=1.-dot(q,q)*.7;
+ vec3 g=mix(vec3(l),c,mix(uP[4],uP[5],strong));
+ g.g-=max(g.g-max(g.r,g.b),0.)*uP[13];
+ float rw=clamp((c.r-max(c.g,c.b))*2.5,0.,1.);g.gb*=1.-uP[6]*rw;g.r*=1.-uP[6]*.25*rw;
+ float hot=ww*smoothstep(.72,1.,l);g.g*=1.-.44*uP[7]*hot;g.b*=1.-uP[7]*hot;
+ g=pow(clamp(g,0.,1.),vec3(1./uP[1]));g=mix(g,g*g*(3.-2.*g),uP[2]);
+ g*=mix(vec3(1.-uP[8],1.,1.),vec3(1.+uP[9],1.,1.-uP[9]*1.6),smoothstep(.15,.8,l));
+ g=vec3(1.,.8,.55)*uP[3]+g*(1.-uP[3]);
+ vec2 q=uv-.5;g*=1.-dot(q,q)*uP[10];
  vec2 gp=floor(gl_FragCoord.xy);float n=h(gp+uSeed)+h(gp*1.31+uSeed*1.7+3.1)-1.;
  g+=n*uGrain*.07*(1.-.75*smoothstep(.5,1.,l))*(.55+.45*smoothstep(0.,.25,l));
  float asp=uRes.x/uRes.y;
@@ -3398,7 +3415,7 @@ void main(){vec2 uv=vUv,d=1./uRes;vec3 c=px(uv);
   const m=new C.Mesh(new C.PlaneGeometry(2,2),mat);m.frustumCulled=false;filmQ.scene.add(m)}
 function filmSize(){if(!filmRT)return;const w=glc.width||1,h=glc.height||1;filmRT.setSize(w,h);filmQ.mat.uniforms.uRes.value.set(w,h)}
 function filmRender(dt){filmInit();if(filmRT.width!==glc.width||filmRT.height!==glc.height)filmSize();
-  const U=filmQ.mat.uniforms;U.uGrain.value=film.grain;
+  const U=filmQ.mat.uniforms;FILM_P.forEach((q,i)=>U.uP.value[i]=film.p[q.k]);U.uGrain.value=film.grain;
   filmArma+=Math.max(-dt/2,Math.min(dt/2,(armageddon?1:0)-filmArma));
   ['uS0','uS1','uS2','uS3'].forEach((n,i)=>{U[n].value.setHex(SKY_N[i]).lerp(_fc.setHex(SKY_A[i]),filmArma)});
   // scratches live for a second or two and drift; dust lasts a single film frame
@@ -3413,6 +3430,17 @@ const _fc=new C.Color();
 function filmSave(){try{localStorage.setItem(FILM_KEY,JSON.stringify(film))}catch(e){}}
 function filmUI(){document.querySelectorAll('.filmBox').forEach(box=>{box.querySelectorAll('[data-fl]').forEach(b=>b.classList.toggle('on',+b.dataset.fl===film.look));
   box.querySelectorAll('input[data-fk]').forEach(r=>{r.value=film[r.dataset.fk]});box.querySelector('.filmS').hidden=!film.look})}
+let tuneHid=null;
+function tuneOpen(){const P=$('tune');tuneHid=['menu','pause'].filter(id=>!$(id).hidden);tuneHid.forEach(id=>$(id).hidden=true);P.hidden=false;tuneBuild()}
+function tuneClose(){$('tune').hidden=true;(tuneHid||[]).forEach(id=>$(id).hidden=false);tuneHid=null;filmUI()}
+function tuneBuild(){const L=$('tuneList');L.innerHTML=[{k:'grain',n:'Grain',lo:0,hi:1,top:1},{k:'dust',n:'Dust and scratches',lo:0,hi:1,top:1}].concat(FILM_P).map(q=>{const v=q.top?film[q.k]:film.p[q.k];
+  return `<label class="tuneR"><span>${q.n}</span><input type="range" min="${q.lo}" max="${q.hi}" step="${(q.hi-q.lo)/200}" value="${v}" data-tk="${q.k}" data-top="${q.top?1:''}"><b>${(+v).toFixed(3)}</b></label>`}).join('')}
+$('tuneList').addEventListener('input',e=>{const r=e.target.closest('input[data-tk]');if(!r)return;const v=+r.value;if(r.dataset.top)film[r.dataset.tk]=v;else film.p[r.dataset.tk]=v;r.nextElementSibling.textContent=v.toFixed(3);filmSave()});
+$('tuneCopy').addEventListener('click',()=>{const o={grain:+film.grain.toFixed(3),dust:+film.dust.toFixed(3)};for(const q of FILM_P)o[q.k]=+film.p[q.k].toFixed(3);const t=JSON.stringify(o);
+  const done=()=>toast('The numbers are copied. Paste them to Claude.');if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(done,()=>{$('tuneOut').value=t;$('tuneOut').hidden=false;$('tuneOut').select()});else{$('tuneOut').value=t;$('tuneOut').hidden=false;$('tuneOut').select()}});
+$('tuneReset').addEventListener('click',()=>{for(const q of FILM_P)film.p[q.k]=q.d;film.grain=.6;film.dust=.35;filmSave();tuneBuild()});
+$('tuneClose').addEventListener('click',tuneClose);
+document.querySelectorAll('.filmBox .tuneBtn').forEach(b=>b.addEventListener('click',tuneOpen));
 document.querySelectorAll('.filmBox').forEach(box=>{box.addEventListener('click',e=>{const b=e.target.closest('[data-fl]');if(!b)return;film.look=+b.dataset.fl;filmSave();filmUI()});
   box.addEventListener('input',e=>{const r=e.target.closest('input[data-fk]');if(!r)return;film[r.dataset.fk]=+r.value;filmSave();filmUI()})});
 filmUI();
