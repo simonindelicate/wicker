@@ -2680,10 +2680,10 @@ const PEBBLE=inst(merge([P(new C.DodecahedronGeometry(.13,0),0xb9b3a4,0,.05,0)])
 const GBP=inst(merge([P(cyl(.035,.045,1.6,5),0x5b4632,0,.8,0),P(new C.BoxGeometry(.5,.04,.04),0x5b4632,.2,1.5,0),P(new C.SphereGeometry(.06,5,4),0xd9cfb6,0,1.62,0)]),matF,60);
 const GBC=inst(merge([P(new C.BoxGeometry(.42,.52,.02),0xffffff,.22,1.22,0)]),new C.MeshLambertMaterial({color:0xffffff,side:C.DoubleSide}),60);
 const STAKE=inst(merge([P(cyl(.03,.035,.9,4),0x6b4a2c,0,.45,0)]),matF,400);
-// sacrifice stakes: painted posts in the flower colours and the tribe's own, set along a three-armed spiral out from the stone circle
+// sacrifice stakes: painted posts in the flower colours and the tribe's own, set along a tight three-armed spiral that winds in to the post
 const SPK_CAP=1600,SPIRAL_MAX=300,SPK_C=[0xd85a7a,0xe7c84a,0xf1ece0];
 const SACK=inst(merge([P(cyl(.05,.06,.42,5),0xffffff,0,.21,0),P(new C.ConeGeometry(.06,.1,5),0xffffff,0,.47,0)]),matF,SPK_CAP);
-const SPIRAL=(()=>{const arms=3,r0=3.2,gap=5.4,step=.5,per=Math.ceil(SPIRAL_MAX*1.6/arms),A=[];
+const SPIRAL=(()=>{const arms=3,r0=.42,gap=2.7,step=.34,per=Math.ceil(SPIRAL_MAX*1.6/arms),A=[];
   for(let a=0;a<arms;a++){const th0=a/arms*TAU;let th=th0;A.push([]);for(let i=0;i<per;i++){const r=r0+gap*(th-th0)/TAU;A[a].push([Math.cos(th)*r,Math.sin(th)*r]);th+=step/r}}
   const out=[];for(let i=0;i<per;i++)for(let a=0;a<arms;a++)out.push(A[a][i]);return out})();
 const RIB=(()=>{const g=new C.BoxGeometry(.04,.32,.012);g.translate(0,-.16,0);return inst(g,new C.MeshLambertMaterial({color:0xffffff}),900)})();
@@ -2709,6 +2709,9 @@ const ghostG=new C.BoxGeometry(1,1,1);ghostG.translate(0,.5,0);
 const ghostMat=new C.MeshBasicMaterial({color:0x66ff88,transparent:true,opacity:.32,depthWrite:false});
 const placeGhost=new C.Mesh(ghostG,ghostMat);placeGhost.visible=false;placeGhost.renderOrder=4;scene.add(placeGhost);
 const _m=new C.Matrix4(),_q=new C.Quaternion(),_p=new C.Vector3(),_s=new C.Vector3(),UP=new C.Vector3(0,1,0),_v=new C.Vector3();
+const _e=new C.Euler(),_q2=new C.Quaternion();
+// like place, with a lean of 'lean' radians towards compass direction 'dir'
+function placeTilt(mesh,i,x,y,z,yaw,lean,dir,sc,sy){_p.set(x,y,z);_q2.setFromAxisAngle(UP,yaw);_e.set(Math.cos(dir)*lean,0,Math.sin(dir)*lean);_q.setFromEuler(_e).multiply(_q2);_s.set(sc,(sy||1)*sc,sc);_m.compose(_p,_q,_s);mesh.setMatrixAt(i,_m)}
 function place(mesh,i,x,y,z,yaw,sc,sy){_p.set(x,y,z);_q.setFromAxisAngle(UP,yaw);_s.set(sc,(sy||1)*sc,sc);_m.compose(_p,_q,_s);mesh.setMatrixAt(i,_m)}
 function fin(im,n){im.count=n;im.instanceMatrix.needsUpdate=true;if(im.instanceColor)im.instanceColor.needsUpdate=true}
 
@@ -2817,8 +2820,11 @@ function drawEntities(){
   for(const b of blds){if(!b.alive||!b.done)continue;const rx=wd(b.x-cam.fx),rz=wd(b.z-cam.fz);if(rx*rx+rz*rz>VR2*.75||!visB(b))continue;const fv=vf(b.x,b.z);
     // every life given (altar, wicker, May Queen, raiders put to death) raises a painted stake; they wind out from the stone circle in three arms
     if(b.bt==='reinc'){const T=tribes[b.tribe];const n=Math.min(SPIRAL_MAX,Math.max(T.sac||0,T.rib||0));let k=0;
-      for(let q=0;k<n&&q<SPIRAL.length&&sk<SPK_CAP;q++){const [lx,lz]=SPIRAL[q],[x,z,wx,wz,y]=at(b,lx,lz),c=cidx(wx,wz);if(water[c]||bOcc[c])continue;
-        place(SACK,sk,x,y,z,q*2.1,1,.8+hsh(b.id*31+q)*.45);_c.setHex(hsh(b.id*7+q*13)<.25?0:SPK_C[(q*7+b.id)%3]);if(_c.getHex()===0)_c.copy(T.c);_c.multiplyScalar(fv);SACK.setColorAt(sk,_c);sk++;k++}}
+      for(let q=0;k<n&&q<SPIRAL.length&&sk<SPK_CAP;q++){const h1=hsh(b.id*31+q),h2=hsh(b.id*57+q*3),h3=hsh(b.id*13+q*7),[sx,sz]=SPIRAL[q],rr=Math.hypot(sx,sz)||1;
+        // a little give in the spacing (along and across the arm) and a lean on some of them
+        const al=(h1-.5)*.14,ac=(h2-.5)*.12,lx=sx+(-sz/rr)*al+(sx/rr)*ac,lz=sz+(sx/rr)*al+(sz/rr)*ac;
+        if(rr>1.42&&rr<2.05)continue;const [x,z,wx,wz,y]=at(b,lx,lz),c=cidx(wx,wz);if(water[c]||(bOcc[c]&&rr>2.05))continue;
+        const lean=h3<.35?(h3/.35)*.32:h3*.06;placeTilt(SACK,sk,x,y-.03,z,q*2.1,lean,h2*TAU,1,.75+h1*.5);_c.setHex(hsh(b.id*7+q*13)<.25?0:SPK_C[(q*7+b.id)%3]);if(_c.getHex()===0)_c.copy(T.c);_c.multiplyScalar(fv);SACK.setColorAt(sk,_c);sk++;k++}}
     if(b.bt==='reinc'&&settledT.has(b.tribe)){for(let i=0;i<8;i++){const a=i/8*TAU+.393;for(let j=0;j<3;j++){const aa=a+(j-1)*.14,r=1.62+(j===1?.12:0),fx=Math.cos(aa)*r,fz=Math.sin(aa)*r;const [x,z,wx,wz]=at(b,fx,fz);flw(x,z,wx,wz,aa,1.25,FLOWER_C[(i+j)%3],fv)}}
       for(let i=0;i<9;i++){const a=i/9*TAU,fx=Math.cos(a)*.22,fz=Math.sin(a)*.22;const [x,z,wx,wz]=at(b,fx,fz);flw(x,z,wx,wz,a,1.05,FLOWER_C[i%3],fv,1.02)}}
     else if(b.bt==='maypole'){for(let i=0;i<12;i++){const a=i/12*TAU+.13,fx=Math.cos(a)*3.05,fz=Math.sin(a)*3.05;const [x,z,wx,wz]=at(b,fx,fz);flw(x,z,wx,wz,a,1.45,FLOWER_C[i%3],fv)}
