@@ -286,7 +286,7 @@ details.help summary{cursor:pointer;color:var(--text);font:14px var(--f-display)
           <li>Ground where a building has been razed is salted: for three minutes its old owner cannot build there. A rival that falls to a fifth of its greatest size is broken. Its people gather at their stone circle where everyone can see them, its halls fall in and its Cunning Woman does not return; destroy its last fighters and the rest are yours.</li>
           <li>Tap a rival's marker at the top of the screen to look at where its people are. Tap again to move on to the next group.</li>
           <li>Training buildings turn a villager into a warrior, archer, Oss or balloonist.</li>
-          <li>To cross water, have your Cunning Woman raise a Land Bridge from the shore towards the land you want. Anyone can walk it, your enemies included.</li>
+          <li>To cross water, have your Cunning Woman raise a Land Bridge from the shore towards the land you want. Anyone can walk it, your enemies included. Or, if you have balloons, simply order your people across: idle balloons fly to them, carry them over and come back until everyone is across.</li>
           <li>Balloonists drift above the fighting and drop charges. Only other balloonists can reach them.</li>
           <li>Wildmen wander the wilds. They make easy captives.</li>
           <li>Hollow hills lie out in the wilderness. Bring your Cunning Woman to one with twenty followers and at least 1,500 mana and she is sealed inside for good. The hill becomes a wicker fortress: from it she sees everything and casts anywhere at half the mana. If enemies tear it down she is lost for a minute, then rises at your stone circle, and half your mana goes with her.</li>
@@ -1088,9 +1088,46 @@ function produce(b){const type=BT[b.bt].train,T=tribes[b.tribe];if(b.tribe===0&&
 function unload(v){if(!v.pass||!v.pass.length)return;const dest=v.dest;const lf=dest?field(dest.x,dest.z,false):null;
   let c=nearestCell(v.x,v.z,4,c=>pass[c]===1&&(!lf||lf[c]>=0));if(!c)c=nearestCell(v.x,v.z,4,c=>pass[c]===1);
   if(!c){if(v.tribe===0)toast('No dry land close enough to unload');return}
-  const ps=v.pass.slice();v.pass.length=0;for(const u of ps){u.inV=null;u.x=wrap(c.x+(R()-.5)*1.2);u.z=wrap(c.z+(R()-.5)*1.2);u.st='idle';u.gx=u.x;u.gz=u.z;u.think=1.5;u.order=null}
+  const ps=v.pass.slice();v.pass.length=0;for(const u of ps){u.inV=null;u.ferryJ=0;u.x=wrap(c.x+(R()-.5)*1.2);u.z=wrap(c.z+(R()-.5)*1.2);u.st='idle';u.gx=u.x;u.gz=u.z;u.think=1.5;u.order=null}
   if(dest&&d2(c.x,c.z,dest.x,dest.z)>4){if(dest.am){for(const u of ps)orderUnit(u,dest.x+(R()-.5)*3,dest.z+(R()-.5)*3,true,dest.x,dest.z)}else orderMove(ps,dest.x,dest.z)}
   v.dest=null;dockDirty=true}
+// ---------------- ferrying by balloon ----------------
+// Order people somewhere they cannot walk and your balloons (any selected with them first, then any idle and empty)
+// fly to them, take them aboard, carry them over and set them down, then come back for the rest until all are across.
+// Balloon stages (v.fs): 'go' fly to the waiting group, 'load' hover while the nearest walk in, 'carry' fly over and unload,
+// 'rest' nobody left to fetch. A new order to any of them takes them out of the job.
+let ferries=[],ferryT=0;
+const uById=id=>units.find(u=>u.id===id);
+function inFerry(u){return !!u.ferryJ&&ferries.some(J=>J.id===u.ferryJ)}
+function startFerry(grp,x,z){const people=grp.filter(u=>u.alive&&u.tribe===0&&!UT[u.type].veh&&!u.inV);if(!people.length)return false;
+  const bal=grp.filter(u=>u.alive&&u.tribe===0&&u.type==='balloon');
+  for(const v of units)if(v.alive&&v.tribe===0&&v.type==='balloon'&&!bal.includes(v)&&!inFerry(v)&&v.st==='idle'&&!v.pass.length&&!v.post)bal.push(v);
+  if(!bal.length)return false;
+  const J={id:nextId++,dest:{x,z},people:people.map(u=>u.id),bal:bal.map(v=>v.id)};
+  for(const o of ferries){o.people=o.people.filter(id=>!J.people.includes(id));o.bal=o.bal.filter(id=>!J.bal.includes(id))}
+  for(const v of bal){v.ferryJ=J.id;v.fs=v.pass.length?'load':'go';v.fT=gt+1;v.fpx=null}
+  for(const u of people){u.ferryJ=J.id;u.st='idle';u.order=null;u.tgt=null;u.gx=u.x;u.gz=u.z;u.cmd=true}
+  ferries.push(J);return true}
+function ferryTick(dt){ferryT-=dt;if(ferryT>0)return;ferryT=.4;const cap=UT.balloon.cap;
+  for(const J of ferries){const P=J.people.map(uById).filter(u=>u&&u.alive&&u.ferryJ===J.id);
+    const B=J.bal.map(uById).filter(v=>v&&v.alive&&v.ferryJ===J.id);J.bal=B.map(v=>v.id);
+    const waiting=P.filter(u=>!u.inV);
+    if(!B.length){for(const u of waiting){u.ferryJ=0;if(u.st==='board')u.st='idle'}J.done=true;if(waiting.length)toast(`The balloons are lost. ${waiting.length} of your people are left on this side.`);continue}
+    const claimed=new Set();for(const u of waiting)if(u.st==='board'&&B.includes(u.veh))claimed.add(u);
+    for(const v of B){
+      if(v.fs==='carry'){if(!v.pass.length&&v.st==='idle'){v.fs='go';v.fpx=null}continue}
+      if(v.fs==='load'){const mine=waiting.filter(u=>u.st==='board'&&u.veh===v);
+        if(v.pass.length>=cap||!mine.length||gt>v.fT){for(const u of mine)u.st='idle';
+          if(v.pass.length){v.fs='carry';sendVehicle(v,J.dest.x,J.dest.z,false)}else{v.fs='go';v.fpx=null}}continue}
+      const free=waiting.filter(u=>!claimed.has(u));
+      if(!free.length){v.fs='rest';continue}
+      if(v.fs==='rest'){v.fs='go';v.fpx=null}
+      let cx=0,cz=0;for(const u of free){cx+=wd(u.x-free[0].x);cz+=wd(u.z-free[0].z)}cx=wrap(free[0].x+cx/free.length);cz=wrap(free[0].z+cz/free.length);
+      if(d2(v.x,v.z,cx,cz)>2.2*2.2){if(v.fpx==null||d2(v.fpx,v.fpz,cx,cz)>3*3||v.st==='idle'){v.fpx=cx;v.fpz=cz;sendVehicle(v,cx,cz,false);v.dest=null}continue}
+      v.st='idle';v.fs='load';v.fT=gt+12;free.sort((a,b)=>d2(a.x,a.z,v.x,v.z)-d2(b.x,b.z,v.x,v.z));
+      for(const u of free.slice(0,cap-v.pass.length)){u.st='board';u.veh=v;u.tgt=null;u.stuck=0;claimed.add(u)}}
+    if(!waiting.length&&B.every(v=>!v.pass.length)){J.done=true;for(const v of B){v.ferryJ=0;v.fs=null}}}
+  ferries=ferries.filter(J=>!J.done)}
 function sendVehicle(v,x,z,am){v.dest={x:wrap(x),z:wrap(z),am:!!am};
   v.st='move';setTarget(v,x,z);v.unloadArrive=!water[cidx(x,z)];return true}
 
@@ -1202,7 +1239,7 @@ function scanFight(u,D){if(u.type==='hunter'){const e=nearestEnemy(u,10,o=>!UT[o
   if(u.fireRaid){const b=nearestEnemyBld(u.x,u.z,u.tribe,9);if(b){attack(u,b);return true}}
   const e=nearestEnemy(u,D.aggro||6,o=>canHit(u,o)&&!o.inV);if(e){attack(u,e);return true}
   if(u.type==='warrior'||u.type==='ghost'||D.ranged||D.bomb){const b=nearestEnemyBld(u.x,u.z,u.tribe,D.ranged||D.bomb?7:5);if(b){attack(u,b);return true}}return false}
-function idleThink(u,D,T){if(D.veh&&!D.bomb)return;
+function idleThink(u,D,T){if(D.veh&&!D.bomb)return;if(u.ferryJ&&inFerry(u))return;
   if(T.broken&&!armageddon&&u.type!=='captive'&&!u.thrall){const r=T.home||(T.home=blds.find(b=>b.bt==='reinc'&&b.tribe===T.id));if(r){if(MIL[u.type]||u.type==='shaman'){const e=nearestEnemy(u,9);if(e){attack(u,e);return}}if(d2(u.x,u.z,r.x,r.z)>5*5){orderUnit(u,r.x+(R()-.5)*5,r.z+(R()-.5)*5,!!MIL[u.type]);return}u.think=2;return}}u.chop=false;
   if(u.type==='wild')return wildThink(u);
   if(u.type==='hunter')return hunterThink(u);
@@ -1628,6 +1665,7 @@ function sim(dt){gt+=dt;
   hazT-=dt;if(hazT<=0){hazT=.5;hazardTick()}
   decorTick(dt);
   secT-=dt;if(secT<=0){secT=1;for(const T of tribes){if(!T.alive||T.wild)continue;tribeUpkeep(T);if(T.ai)aiThink(T)}checkEnd();regrow();wildTick()}
+  ferryTick(dt);
   fogT-=dt;if(fogT<=0){fogT=.25;updFog()}
   cleanT-=dt;if(cleanT<=0){cleanT=2;units=units.filter(u=>u.alive);for(const b of blds)if(!b.alive)bById.delete(b.id);blds=blds.filter(b=>b.alive);if(trees.length>treeCap*1.6)trees=trees.filter(t=>t.alive)}}
 function separation(){for(const arr of grid){const n=Math.min(arr.length,90);if(n<2)continue;
@@ -2912,7 +2950,7 @@ function onTap(sx,sy,right,shift){if(over||watching)return;const T=tribes[0],g=p
   if(!grp.length){if(!right&&!hu&&!hb&&sel.length)setSel([]);return}
   command(grp,g,hu,hb,ht)}
 function mark(x,z,r,g,b){const y=Math.max(0,hAt(x,z))+.2;for(let i=0;i<16;i++){const a=i/16*TAU;PA.emit(x+Math.cos(a)*.6,y,z+Math.sin(a)*.6,Math.cos(a)*.6,.6,Math.sin(a)*.6,.45,r,g,b,1,.3,0)}}
-function command(grp,g,hu,hb,ht){if(grp.filter(u=>u.type==='balloon'&&u.tribe===0).length>=30)earn('x_balloons30');grp=grp.filter(u=>!u.carry);if(!grp.length){toast('The osses will not listen until their captives are home');return}
+function command(grp,g,hu,hb,ht){if(grp.filter(u=>u.type==='balloon'&&u.tribe===0).length>=30)earn('x_balloons30');grp=grp.filter(u=>!u.carry);if(!grp.length){toast('The osses will not listen until their captives are home');return}for(const u of grp)if(u.ferryJ){u.ferryJ=0;u.fs=null}
   for(const u of grp){u.post=null;u.postSpot=false}
   const guardable=hb&&(hb.bt==='barrow'||((hb.bt==='tomb'||hb.bt==='oak')&&hb.tribe===0));
   if(guardable){const sh=grp.find(u=>u.type==='shaman');let rest=grp.filter(u=>u!==sh);
@@ -2930,7 +2968,9 @@ function command(grp,g,hu,hb,ht){if(grp.filter(u=>u.type==='balloon'&&u.tribe===
     if(rest.length&&g)orderMove(rest,hb.dx,wrap(hb.dz+1.5));mark(hb.x,hb.z,.5,1,.6);return}
   if(ht&&grp.some(u=>u.type==='brave')){const rest=[];for(const u of grp){if(u.type==='brave'){assignGather(u,ht);u.cmdGather=true}else rest.push(u)}if(rest.length)orderMove(rest,ht.x,ht.z);mark(ht.x,ht.z,.5,1,.5);return}
   if(!g)return;
-  const lead=grp.find(u=>!UT[u.type].veh);if(lead&&!water[cidx(g.x,g.z)]){const lf=field(g.x,g.z,false);if(lf[cidx(lead.x,lead.z)]<0&&pass[cidx(g.x,g.z)]){toast('There is no way across. Your Cunning Woman can raise a Land Bridge.')}}
+  const lead=grp.find(u=>!UT[u.type].veh);if(lead&&!water[cidx(g.x,g.z)]){const lf=field(g.x,g.z,false);if(lf[cidx(lead.x,lead.z)]<0&&pass[cidx(g.x,g.z)]){
+    if(startFerry(grp,g.x,g.z)){toast('Your balloons will carry them over');mark(g.x,g.z,.6,.85,1);sfx('select',.35);return}
+    toast(blds.some(b=>b.alive&&b.tribe===0&&b.bt==='balloon')?'There is no way across. Your Cunning Woman can raise a Land Bridge, or a balloon can carry them.':'There is no way across. Your Cunning Woman can raise a Land Bridge, or balloons from a Balloon Works can carry them.')}}
   orderMove(grp,g.x,g.z);mark(g.x,g.z,.6,.85,1);sfx('select',.35)}
 function formation(i){if(i===0)return[0,0];let r=1,k=i-1;while(k>=r*6){k-=r*6;r++}const a=k/(r*6)*TAU+r;return[Math.cos(a)*r*.85,Math.sin(a)*r*.85]}
 function orderMove(grp,x,z){let gi=0;for(const u of grp){if(!u.alive)continue;
@@ -3078,7 +3118,7 @@ function buildWorld(){const SC=scen();const w=genWorld(settings.seed,settings.st
   walk=new Uint8Array(N*N);water=new Uint8Array(N*N);pass=new Uint8Array(N*N);hazU=new Float32Array(N*N);hazType=new Int8Array(N*N);hazOwner=new Int8Array(N*N).fill(-1);saltU=new Float32Array(N*N);saltOwner=new Int8Array(N*N);saltList.clear();wear=new Float32Array(N*N);wearShown=new Uint8Array(N*N);flowers=[];hazGrp=new Int32Array(N*N);swamps={};swampSeq=1;hedgeA=new Uint8Array(N*N);bOcc=new Int32Array(N*N);colW=new Float32Array(N*N*3);
   armageddon=false;$('app').classList.remove('arma');scene.fog.color.setHex(0x7f725b);fogOn=false;vis.fill(1);visNow.fill(0);seen.fill(0);wildT=40;
   for(const d of debris)scene.remove(d.m);debris=[];
-  units=[];blds=[];effects=[];projs=[];sel=[];banners=[];posting=false;bById.clear();fcache.clear();hazList.clear();gt=0;tver=0;PA.n=0;PN.n=0;stats={casts:0,lost:0,killed:0,razed:0,burned:0,taken:0};over=false;
+  units=[];blds=[];effects=[];projs=[];sel=[];banners=[];ferries=[];posting=false;bById.clear();fcache.clear();hazList.clear();gt=0;tver=0;PA.n=0;PN.n=0;stats={casts:0,lost:0,killed:0,razed:0,burned:0,taken:0};over=false;
   recompute(0,0,N-1,N-1);
   trees=w.trees.map(t=>({x:t.x,z:t.z,wood:TUNE.woodPerTree,alive:true,sc:.8+R()*.45,tint:.85+R()*.25}));treeCap=Math.round(trees.length*1.1);tGridDirty=true;
   tribes=[];
