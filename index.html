@@ -288,7 +288,7 @@ details.help summary{cursor:pointer;color:var(--text);font:14px var(--f-display)
           <li>All-against-all needs an unlit wicker man, ten followers to burn and a full bar of mana. Every hut falls, and every soul walks to the Moot at the world's heart to fight to the end.</li>
           <li>Pick a spell and tap a target. Your Cunning Woman walks into range and casts. If she dies she returns at your stone circle after forty-five seconds, as long as your tribe survives.</li>
           <li>The Scrying Torch plants a burning beacon where the Cunning Woman aims it. The land around it stays in sight for as long as it stands, which makes it a lookout over a pass, a rival's door or a hollow hill. Enemies can tear it down.</li>
-          <li>Ättestupa: when fewer than four villagers are left, your Cunning Woman can raise a crag at the edge of the village, climb it while your people watch, and go over the edge. Six villagers step out of the stone circle, no rival attacks you for thirty seconds, and she is reborn as usual. The crag stays, and she climbs the same one if it ever comes to that again.</li>
+          <li>Ättestupa: when fewer than three villagers are left, your Cunning Woman can raise a crag at the edge of the village, climb it while your people watch, and go over the edge. Six villagers step out of the stone circle, no rival attacks you for thirty seconds, and she is reborn as usual. The crag stays, and she climbs the same one if it ever comes to that again.</li>
           <li>You win when every rival tribe has no followers or buildings left.</li>
         </ul>
       </details>
@@ -912,9 +912,9 @@ function faceBuilding(b){const D=BT[b.bt],s=D.s;if(UNTURNED[b.bt])return;const r
 // ---------------- Ättestupa ----------------
 // When the people are almost gone, the Cunning Woman can raise a crag at the edge of the village, climb it while her people watch,
 // and go over the edge. Six villagers step out of the stone circle, and for thirty seconds no rival attacks. The crag stays.
-const LEAP_N=6,LEAP_TRUCE=30,LEAP_BELOW=4,LEAP_FLEE=.6;  // LEAP_FLEE: share of each rival's people (villagers only) who flee in terror during the truce
+const LEAP_N=6,LEAP_TRUCE=30,LEAP_BELOW=3,LEAP_FLEE=.6;  // LEAP_FLEE: share of each rival's people (villagers only) who flee in terror during the truce
 // The player's last TRAIN_KEEP villagers are never taken for training, counting those already walking in.
-const TRAIN_KEEP=2;function spareVillagers(ti){let n=villagerCount(ti);for(const u of units)if(u.alive&&u.tribe===ti&&u.type==='brave'&&u.st==='enter'&&u.purpose==='train')n--;return n}
+const TRAIN_KEEP=LEAP_BELOW;function spareVillagers(ti){let n=villagerCount(ti);for(const u of units)if(u.alive&&u.tribe===ti&&u.type==='brave'&&u.st==='enter'&&u.purpose==='train')n--;return n}
 function villagerCount(ti){let n=0;for(const u of units)if(u.alive&&u.tribe===ti&&u.type==='brave')n++;for(const b of blds)if(b.alive&&b.tribe===ti&&b.bt==='hut')n+=b.occ;return n}
 function canLeap(T){const sh=T.shaman;return !!(sh&&sh.alive&&!sh.leap&&!sh.hanging&&!sh.inV&&!sh.air&&!T.tomb&&!armageddon&&!(scen()&&scen().oneLife)&&villagerCount(T.id)<LEAP_BELOW)}
 function makeCrag(T){const rc=blds.find(b=>b.alive&&b.bt==='reinc'&&b.tribe===T.id);if(!rc)return null;
