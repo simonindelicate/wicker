@@ -3370,13 +3370,13 @@ function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;fogK=Math.mi
 // The world is drawn to an off-screen target, then graded onto the screen with the CSS sky composited
 // underneath; the HUD is HTML above the canvas and stays clean. Grain changes at 24 frames a second.
 const FILM_KEY='wicker-film-v1';
-// Every number in the grade, in the order the shader reads them (uP[0..15]); tribe colours skip the grade and use only the last two; the Tune panel edits these live.
+// Every number in the grade, in the order the shader reads them (uP[0..16]); tribe colours skip the grade and use only tribeB and tribeS; the Tune panel edits these live.
 const FILM_P=[{k:'expo',n:'Exposure',lo:.5,hi:2,d:1.18},{k:'mids',n:'Mid-tone lift',lo:.6,hi:1.8,d:1.12},{k:'contrast',n:'Contrast',lo:0,hi:1,d:.3},
  {k:'black',n:'Black lift',lo:0,hi:.15,d:.02},{k:'landSat',n:'Land colour',lo:0,hi:1.3,d:.65},{k:'strongSat',n:'Strong colour',lo:.5,hi:2,d:1.2},
  {k:'redDeep',n:'Red depth',lo:0,hi:.8,d:.3},{k:'fireHold',n:'Fire held orange',lo:0,hi:1,d:.5},{k:'cool',n:'Cool shadows',lo:0,hi:.3,d:.04},
  {k:'warm',n:'Warm highlights',lo:0,hi:.3,d:.03},{k:'vig',n:'Vignette',lo:0,hi:1.5,d:.3},{k:'hal',n:'Halation',lo:0,hi:4,d:1.4},
  {k:'halT',n:'Halation threshold',lo:.3,hi:1,d:.68},{k:'olive',n:'Green to olive',lo:0,hi:1,d:.3},
- {k:'tribeB',n:'Tribe brightness',lo:.5,hi:1.6,d:1},{k:'tribeS',n:'Tribe colour strength',lo:0,hi:2,d:1}];
+ {k:'tribeB',n:'Tribe brightness',lo:.5,hi:1.6,d:1},{k:'tribeS',n:'Tribe colour strength',lo:0,hi:2,d:1},{k:'redRange',n:'Red range',lo:.05,hi:.9,d:.35}];
 const film={look:0,grain:.6,dust:.35,p:{}};try{Object.assign(film,JSON.parse(localStorage.getItem(FILM_KEY))||{})}catch(e){}if(film.look>1)film.look=1;
 for(const q of FILM_P)if(typeof film.p[q.k]!=='number')film.p[q.k]=q.d;
 let filmRT=null,filmQ=null,filmT=0,filmArma=0;const filmSc=[];
@@ -3387,7 +3387,7 @@ function filmInit(){if(filmRT)return;const w=glc.width||1,h=glc.height||1;
   const mat=new C.ShaderMaterial({depthTest:false,depthWrite:false,uniforms:{tD:{value:filmRT.texture},uRes:{value:new C.Vector2(w,h)},uSeed:{value:0},uGrain:{value:0},uP:{value:FILM_P.map(q=>film.p[q.k])},
     uS0:{value:new C.Color()},uS1:{value:new C.Color()},uS2:{value:new C.Color()},uS3:{value:new C.Color()},uSp:{value:sp},uSc:{value:sc}},
     vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position.xy,0.,1.);}',
-    fragmentShader:`uniform sampler2D tD;uniform vec2 uRes;uniform float uSeed,uGrain,uP[16];uniform vec3 uS0,uS1,uS2,uS3;uniform vec4 uSp[8];uniform vec4 uSc[3];varying vec2 vUv;
+    fragmentShader:`uniform sampler2D tD;uniform vec2 uRes;uniform float uSeed,uGrain,uP[17];uniform vec3 uS0,uS1,uS2,uS3;uniform vec4 uSp[8];uniform vec4 uSc[3];varying vec2 vUv;
 float h(vec2 p){return fract(sin(dot(p,vec2(12.9898,78.233)))*43758.5453);}
 vec3 sky(float y){float t=1.-y;return t<.3?mix(uS0,uS1,t/.3):t<.62?mix(uS1,uS2,(t-.3)/.32):mix(uS2,uS3,(t-.62)/.38);}
 vec3 px(vec2 uv){vec4 s=texture2D(tD,uv);return s.rgb+sky(uv.y)*(1.-s.a);}
@@ -3397,10 +3397,14 @@ void main(){vec2 uv=vUv,d=1./uRes;vec3 c=px(uv);
  vec4 raw=texture2D(tD,uv);float tm=step(.99,raw.a)*(1.-step(.9995,raw.a));vec3 tc=c;
  c*=uP[0];
  float l=dot(c,vec3(.299,.587,.114)),mx=max(c.r,max(c.g,c.b)),sat=mx-min(c.r,min(c.g,c.b));
- float ww=smoothstep(.04,.22,c.r-c.g),bw=smoothstep(.04,.2,c.b-max(c.r,c.g)),strong=max(ww,bw)*smoothstep(.08,.35,sat/max(mx,.04));
+ // a true red: red is the top channel, the hue sits close to pure red (green and blue both low, not green well above blue as in browns,
+ // skin and orange), and the colour is strong for its brightness. uP[16] sets how far towards orange counts as red.
+ float sr=sat/max(mx,.04),hue=c.r>=mx?abs(c.g-c.b)/max(sat,.001):1.,
+  red=(1.-smoothstep(uP[16]*.6,uP[16],hue))*smoothstep(.35,.6,sr)*step(c.g+c.b,c.r*1.6),
+  ww=smoothstep(.04,.22,c.r-c.g),fire=ww*smoothstep(.6,.9,mx),bw=smoothstep(.04,.2,c.b-max(c.r,c.g))*smoothstep(.08,.35,sr),strong=max(red,max(fire,bw));
  vec3 g=mix(vec3(l),c,mix(uP[4],uP[5],strong));
  g.g-=max(g.g-max(g.r,g.b),0.)*uP[13];
- float rw=clamp((c.r-max(c.g,c.b))*2.5,0.,1.);g.gb*=1.-uP[6]*rw;g.r*=1.-uP[6]*.25*rw;
+ g.gb*=1.-uP[6]*red;g.r*=1.-uP[6]*.25*red;
  float hot=ww*smoothstep(.72,1.,l);g.g*=1.-.44*uP[7]*hot;g.b*=1.-uP[7]*hot;
  g=pow(clamp(g,0.,1.),vec3(1./uP[1]));g=mix(g,g*g*(3.-2.*g),uP[2]);
  g*=mix(vec3(1.-uP[8],1.,1.),vec3(1.+uP[9],1.,1.-uP[9]*1.6),smoothstep(.15,.8,l));
