@@ -600,13 +600,13 @@ const SCEN=[
   me:{mana:300,wood:200,huts:2},news:['Two full thrall folds and a Wicker God, ready from the start'],
   intro:'We have settled in the middle of everything. Three narrow causeways run from the rival islands to ours, and every army will march along one of them. But we did not come empty-handed: our folds are full of the wild folk, and the Wicker God already stands in its grove, waiting to be fed.'},
  {title:'Late to the Feast',seed:17203,style:'continent',enemies:3,diff:'hard',fog:false,goal:{type:'conquer'},all:true,raids:[{t:100,n:3},{t:240,n:5},{t:360,n:7}],routDread:20,
-  me:{mana:100,wood:40,huts:1},them:{mana:500,huts:3,warriors:4},ai:{first:480,mana:.75,breed:.85,int:170,needInc:1,mil:.4,gap:1.5},
+  me:{mana:100,wood:40,huts:1},them:{mana:500,huts:3,warriors:4},ai:{first:480,mana:.8,breed:.88,int:160,needInc:1,mil:.42,gap:1.4},tier:'Stern',
   intro:'We arrive with little, and the others have been here for years. Their halls are built and their warriors drilled. We must be cleverer than them, because we cannot be stronger.'},
  {title:'Blood Moon',seed:18301,style:'highlands',enemies:3,diff:'hard',fog:true,goal:{type:'conquer'},all:true,
-  me:{mana:300,wood:200,huts:2},ai:{war:1.2,first:240,mana:.85,breed:.9,needInc:1,mil:.44,gap:1.3},
+  me:{mana:300,wood:200,huts:2},ai:{war:1.25,first:230,mana:.9,breed:.93,needInc:1,mil:.45,gap:1.2},tier:'Stern',
   intro:'Something has stirred the neighbours to fury. They will come early and often. Make them pay for every step.'},
  {title:'The Drowned Lands',seed:19417,style:'islands',enemies:3,diff:'hard',fog:true,goal:{type:'conquer'},all:true,
-  me:{mana:200,wood:120,huts:1},them:{mana:400},ai:{mana:1,breed:.95,mil:.47,gap:1.15},
+  me:{mana:200,wood:120,huts:1},them:{mana:400},ai:{mana:1.05,breed:.97,mil:.48,gap:1.1},tier:'Stern',
   intro:'The sea has taken most of the world. What land is left is small and fought over, and the others are richer in offerings than we are.'},
  {title:'The Last Harvest',seed:20521,style:'continent',enemies:3,diff:'hard',fog:true,centre:true,goal:{type:'conquer'},all:true,
   me:{mana:400,wood:240,huts:2,warriors:2},them:{mana:700,huts:3,warriors:6,archers:3},ai:{war:1.3,first:240,mana:1.15},
@@ -648,10 +648,11 @@ const TOKS=[
 const TOKMAP={};for(const [cat,list] of TOKS)for(const t of list)TOKMAP[t[0]]={id:t[0],d:t[1],h:t[2]||t[1],cat,u:null};
 function tokGet(){try{return JSON.parse(localStorage.getItem(TOK_KEY))||{}}catch(e){return {}}}
 function tokLive(){return running&&!watching&&!devMode()}
-function earn(id){const t=TOKMAP[id];if(!t||!tokLive())return;const g=tokGet();if(g[id])return;g[id]=Date.now();try{localStorage.setItem(TOK_KEY,JSON.stringify(g))}catch(e){}
+function earn(id){const t=TOKMAP[id];if(!t||!tokLive())return;const g=tokGet();if(g[id])return;g[id]=Date.now();try{localStorage.setItem(TOK_KEY,JSON.stringify(g))}catch(e){}(stats.tokGame||(stats.tokGame=[])).push(id);
   setTimeout(()=>{toast('A token: '+t.d);sfx('built',.5)},400)}
 function A(){return stats.ach||(stats.ach={})}
 let killCount=0;
+function diffName(){const SC=scen();return SC&&SC.tier?SC.tier:DIFFNAME[settings.diff]}
 function devMode(){try{return localStorage.getItem(DEV_KEY)==='1'}catch(e){return false}}
 function campProg(){try{const d=JSON.parse(localStorage.getItem(CAMP_KEY));if(d&&typeof d.unlocked==='number')return d}catch(e){}return {unlocked:0,best:{}}}
 function campSave(p){try{localStorage.setItem(CAMP_KEY,JSON.stringify(p))}catch(e){}}
@@ -938,9 +939,13 @@ function leapTick(u,dt){const L=u.leap,T=tribes[u.tribe];L.t+=dt;
     if(L.t>2){L.st='fall';u.ay=hAt(u.x,u.z)+.05;u.air=true;u.avx=L.ox*3.4;u.avz=L.oz*3.4;u.avy=3.5;sfx('cast',.6,u.x,u.z)}return true}
   if(L.st==='fall'){if(u.air)return false;leapDone(u,T);return true}
   return true}
-function leapDone(u,T){if(T.id===0){const a=A();a.leaps=(a.leaps||0)+1;earn('r_leap');if(a.leaps>=2)earn('d_leap2')}u.leapt=true;u.leap=null;killUnit(u,null);const rc=blds.find(b=>b.alive&&b.bt==='reinc'&&b.tribe===T.id);
+function leapArmy(ti){let n=0;for(const v of units)if(v.alive&&v.tribe===ti&&MIL[v.type])n++;return n}
+// Up to five fighters the rite works in full. A bigger standing army blunts it: the rivals' terror shrinks in proportion, and she stays dead for longer.
+function leapScale(ti){const n=leapArmy(ti);return {n,f:n<=5?1:5/n,rb:Math.round(TUNE.shamanRespawn*Math.min(4,Math.max(1,n/5)))}}
+function leapDone(u,T){const LS=leapScale(T.id);if(T.id===0){const a=A();a.leaps=(a.leaps||0)+1;earn('r_leap');if(a.leaps>=2)earn('d_leap2')}u.leapt=true;u.leap=null;killUnit(u,null);const rc=blds.find(b=>b.alive&&b.bt==='reinc'&&b.tribe===T.id);
   if(rc){const y=hAt(rc.x,rc.z);for(let i=0;i<LEAP_N;i++){const a=i/LEAP_N*TAU+.3,v=spawnUnit('brave',T.id,rc.x+Math.cos(a)*1.7,rc.z+Math.sin(a)*1.7);v.think=1.5+R();for(let k=0;k<10;k++)PA.emit(v.x,y+.3+R(),v.z,(R()-.5)*.6,.8+R(),(R()-.5)*.6,1,1,.95,.8,.9,.35,-.2)}}
-  for(const o of tribes)if(o!==T&&!o.wild&&o.alive){o.dread=100;o.terrorUntil=gt+LEAP_TRUCE;o.terrorQuota=Math.min(villagerCount(o.id),Math.round(o.stats.pop*LEAP_FLEE));o.terrorRate=o.terrorQuota/(LEAP_TRUCE-2);o.terrorAcc=0}
+  for(const o of tribes)if(o!==T&&!o.wild&&o.alive){o.dread=100;o.terrorUntil=gt+LEAP_TRUCE;o.terrorQuota=Math.min(villagerCount(o.id),Math.round(o.stats.pop*LEAP_FLEE*LS.f));o.terrorRate=o.terrorQuota/(LEAP_TRUCE-2);o.terrorAcc=0}
+  if(LS.rb>TUNE.shamanRespawn)T.reincT=gt+LS.rb;
   T.truceUntil=gt+LEAP_TRUCE;for(const o of tribes)if(o.ai&&o.id!==T.id){const ai=o.ai;ai.nextAtk=Math.max(ai.nextAtk,gt+LEAP_TRUCE);
     if(ai.wave&&ai.wave.tgt===T.id){const set=new Set(ai.wave.ids);for(const w of units)if(w.alive&&set.has(w.id)){orderUnit(w,ai.base.x+(R()-.5)*6,ai.base.z+(R()-.5)*6,false);w.raidT=0}ai.wave=null}}
   sfx('built',1);if(T.id===0&&!watching){toast(`She is gone over the edge. ${LEAP_N} of your people step out from among the stones, and for a while even your enemies are still.`);flash(.25)}}
@@ -2775,7 +2780,7 @@ function renderTribe(force){const T=tribes[0];if(!T)return;let h='';const b=sel.
     if(veh.length)h+=`<button class="qs go" data-act="unload"><span>${veh.reduce((a,v)=>a+v.pass.length,0)} aboard</span><b>Unload</b></button>`;
     const q=(act,lab,n,sub)=>`<button class="qs" data-act="${act}" ${n?'':'disabled'}><span>${sub}</span><b>${lab}</b></button>`;
     h+=T.tomb&&!T.shaman?q('shaman','Tomb',1,'Find the fortress'):q('shaman','Cunning Woman',T.shaman?1:0,T.shaman?'Select and find':'Reborn in '+Math.max(0,Math.ceil(T.reincT-gt))+'s');
-    if(canLeap(T))h+=`<button class="qs go" data-act="leap"><span>${LEAP_N} villagers rise from the stones; no attacks for ${LEAP_TRUCE}s</span><b>Ättestupa</b></button>`;
+    if(canLeap(T)){const LS=leapScale(0);h+=`<button class="qs go" data-act="leap"><span>${LEAP_N} villagers rise from the stones; no attacks for ${LEAP_TRUCE}s${LS.n>5?`; with ${LS.n} fighters standing, the terror is weaker and she is gone ${LS.rb}s`:''}</span><b>Ättestupa</b></button>`}
     const guards=myUnits(u=>u.post).length,army=myUnits(u=>MIL[u.type]&&!u.post).length;
     const f5=k=>{const n=myUnits(u=>u.type===k&&!u.post&&!sel.includes(u)).length;return `<button class="qs" data-act="five:${k}" ${n?'':'disabled'}><span>nearest</span><b>+5</b></button>`};
     const fr=k=>myUnits(u=>u.type===k&&!u.post).length;h+=q('army','Army',army,army+' fighters')+q('warrior','Warriors',fr('warrior'),fr('warrior')+' ready')+f5('warrior')+q('archer','Archers',fr('archer'),fr('archer')+' ready')+f5('archer')+q('oss','Osses',fr('oss'),fr('oss')+' ready')+f5('oss')+q('guard','Guards',guards,guards+' posted');
@@ -2896,7 +2901,7 @@ function openCampaign(){const pr=campProg(),L=$('levels');let h='';const dev=dev
   $('campSub').textContent=pr.complete?'The wheel has turned. Every level is yours to play again.':`Twenty years of the wheel, each harder than the last. ${pr.unlocked+1} of 20 open.`;$('menu').hidden=true;$('campaign').hidden=false}
 function showLevel(i){const sc=SCEN[i];if(settings.campaign==null)skirmishSettings=Object.assign({},settings);
   Object.assign(settings,{seed:sc.seed,style:sc.style,enemies:sc.enemies,diff:sc.diff,fog:sc.fog?1:0,campaign:i});allowSets=scenSets(i);buildWorld();
-  $('liNum').textContent=`Level ${i+1} of ${SCEN.length} · ${DIFFNAME[sc.diff]} · ${sc.enemies} rival${sc.enemies>1?'s':''}`;$('liTitle').textContent=sc.title;$('liText').textContent=sc.intro;
+  $('liNum').textContent=`Level ${i+1} of ${SCEN.length} · ${sc.tier||DIFFNAME[sc.diff]} · ${sc.enemies} rival${sc.enemies>1?'s':''}`;$('liTitle').textContent=sc.title;$('liText').textContent=sc.intro;
   $('liGoal').textContent=goalText(sc);$('liNews').textContent=sc.news&&sc.news.length?'New: '+sc.news.join(', ')+'.':sc.all?'Everything is open to you.':'';
   $('campaign').hidden=true;$('menu').hidden=true;$('levelIntro').hidden=false}
 $('bCampaign').addEventListener('click',()=>{audio();openCampaign()});
@@ -2912,15 +2917,17 @@ function celebrateFrame(){const T=tribes[0];let n=0;for(const u of units){if(!u.
   for(const b of blds)if(b.alive&&b.tribe===0&&R()<.15){const y=hAt(b.x,b.z);PA.emit(b.x+(R()-.5)*2,y+1+R()*2,b.z+(R()-.5)*2,(R()-.5),2+R()*3,(R()-.5),.8,1,.5,.15,1,.6,-1)}
   cam.yaw+=.0025}
 const DIFFNAME={easy:'Easy',normal:'Normal',hard:'Hard'};
-function tokWin(){const a=A(),d=settings.diff,st=settings.style;earn('w_'+d);earn(['islands','isles','twin','hub'].includes(st)?'w_arch':['highlands','crags'].includes(st)?'w_high':'w_cont');
+function tokWin(){const a=A(),d=settings.diff,st=settings.style,SC0=scen();earn('w_'+(SC0&&SC0.tier&&d==='hard'?'normal':d));earn(['islands','isles','twin','hub'].includes(st)?'w_arch':['highlands','crags'].includes(st)?'w_high':'w_cont');
   if(armageddon)earn('r_moot');if(!a.dreadOver)earn('d_nofear');if(!a.trainedWar)earn('d_noblade');const i=settings.campaign;
   if(i!=null){if(i===0)earn('c1');if(i===4)earn('c5');if(i===9)earn('c10');if(i===14)earn('c15');if(i===SCEN.length-1)earn('c20');if(i===4&&!a.lostBld)earn('d_thornwall')}}
 function endGame(win){if(win)tokWin();clearSave();$('bAgain').textContent='Play this world again';$('bNew').textContent='Choose a new world';$('bNext').hidden=true;
   {const SC=scen();if(SC){const i=settings.campaign;$('bAgain').textContent=win?'Play this level again':'Try again';$('bNew').textContent='Back to the campaign';
     if(win){if(!devMode()){const pr=campProg();pr.unlocked=Math.max(pr.unlocked,Math.min(SCEN.length-1,i+1));if(!pr.best[i]||gt<pr.best[i])pr.best[i]=Math.round(gt);if(i===SCEN.length-1)pr.complete=true;campSave(pr)}if(i<SCEN.length-1){$('bNext').hidden=false;$('bNext').textContent=`Onward: ${i+2}. ${SCEN[i+1].title}`}}}}over=true;running=false;droneLevel();sfx(win?'built':'die',1);$('endT').textContent=win?'Victory':'Defeat';
   $('endS').textContent=win?(armageddon?'The Moot is quiet. Of all the peoples who walked there, only yours walked away.':'Every rival Cunning Woman has been cast out. The world is yours to shape.'):(armageddon?'Your people fell at the Moot. The world goes on without them.':'Your tribe has been wiped from the world. The fields grow over the huts.');
-  const m=Math.floor(gt/60),s=Math.floor(gt%60);$('endStats').innerHTML=`<div><b>${DIFFNAME[settings.diff]}</b>difficulty</div><div><b>${m}:${String(s).padStart(2,'0')}</b>time</div><div><b>${stats.casts}</b>spells cast</div><div><b>${stats.killed}</b>enemies slain</div><div><b>${stats.razed}</b>buildings razed</div><div><b>${stats.burned}</b>given to the wicker</div>`;
-  $('endT').textContent=win?`Victory · ${DIFFNAME[settings.diff]}`:`Defeat · ${DIFFNAME[settings.diff]}`;
+  const m=Math.floor(gt/60),s=Math.floor(gt%60);{const a=stats.ach||{},T0=tribes[0]||{},cell=(v,l)=>`<div><b>${v}</b>${l}</div>`;let h=cell(diffName(),'difficulty')+cell(`${m}:${String(s).padStart(2,'0')}`,'time')+cell(T0.peak||0,'most followers')+cell(stats.casts,'spells cast')+cell(stats.killed,'enemies slain')+cell(stats.lost||0,'of your own lost')+cell(stats.razed,'buildings razed')+cell(stats.burned,'given to the fire');
+    const opt=[[stats.taken,'captives carried home'],[a.harvest,'raiders dragged to the altar'],[stats.hunted,'taken by the Hunt'],[stats.queenOffered,'May Queens offered'],[a.leaps,a.leaps===1?'leap from the crag':'leaps from the crag'],[(stats.tokGame||[]).length,'tokens earned']];
+    for(const [v,l] of opt)if(v)h+=cell(v,l);$('endStats').innerHTML=h}
+  $('endT').textContent=win?'Victory':'Defeat';
   if(win)rejoice(()=>{$('end').hidden=false});else setTimeout(()=>{$('end').hidden=false},900)}
 
 // ---------------- audio ----------------
@@ -3151,6 +3158,6 @@ function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;fogK=Math.mi
   }catch(err){if(!errShown){errShown=true;console.error(err);const fr=String(err.stack||'').split('\n').filter(l=>/\bat\b/.test(l)).slice(0,2).map(l=>{const m=l.match(/at\s+(?:Object\.)?([\w$.]+)?\s*\(?.*?:(\d+):\d+\)?\s*$/);return m?(m[1]||'?')+':'+m[2]:''}).filter(Boolean).join(' < ');toast('Something went wrong: '+err.message+(fr?' ['+fr+']':''))}}
   requestAnimationFrame(frame)}
 resize();buildWorld();showContinue();requestAnimationFrame(frame);
-window.__ws={get HUT_TOP(){return HUT_TOP},villagerCount,tokGet,keepsake,useKeepsake,walkReach,postAt,setSel,get banners(){return banners},get sel(){return sel},get world(){return world},light,memorial,get stats(){return stats},get cam(){return cam},get WS(){return WS},wsOpen,wsClose,captureDef,defFromData,merge,ORIG_UMOD,ORIG_BMOD,get UM(){return UM},get BM(){return BM},get wear(){return wear},get buntings(){return buntings},get patches(){return patches},get wells(){return wells},get units(){return units},get tribes(){return tribes},get blds(){return blds},sim,beginGame,get gt(){return gt},castSpell,tryCast,saveGame,loadGame,setSel,command,showLevel,SCEN,field,get walkA(){return walk},hAt,get water(){return water},findSpot,get allow(){return allowSets},get pass(){return pass},get swamps(){return swamps},get debris(){return debris},queenValue,invokeArma,startRitual,sendVehicle,get wildId(){return wildId},get armageddon(){return armageddon},placeBuilding,validSpot,orderMove,spawnUnit,command,get water(){return water},findSpot};
+window.__ws={get HUT_TOP(){return HUT_TOP},endGame,villagerCount,tokGet,keepsake,useKeepsake,walkReach,postAt,setSel,get banners(){return banners},get sel(){return sel},get world(){return world},light,memorial,get stats(){return stats},get cam(){return cam},get WS(){return WS},wsOpen,wsClose,captureDef,defFromData,merge,ORIG_UMOD,ORIG_BMOD,get UM(){return UM},get BM(){return BM},get wear(){return wear},get buntings(){return buntings},get patches(){return patches},get wells(){return wells},get units(){return units},get tribes(){return tribes},get blds(){return blds},sim,beginGame,get gt(){return gt},castSpell,tryCast,saveGame,loadGame,setSel,command,showLevel,SCEN,field,get walkA(){return walk},hAt,get water(){return water},findSpot,get allow(){return allowSets},get pass(){return pass},get swamps(){return swamps},get debris(){return debris},queenValue,invokeArma,startRitual,sendVehicle,get wildId(){return wildId},get armageddon(){return armageddon},placeBuilding,validSpot,orderMove,spawnUnit,command,get water(){return water},findSpot};
 })();
 </script>
