@@ -119,7 +119,7 @@ legend{font:11px var(--f-display);letter-spacing:.14em;color:var(--muted);margin
 .seg{display:flex;gap:4px;flex-wrap:wrap}
 .seg button{flex:1 1 auto;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:15px}
 #tune{position:absolute;top:8px;right:8px;bottom:8px;width:min(340px,calc(100% - 16px));overflow:auto;z-index:60;background:rgba(20,15,11,.88);border:1px solid var(--line);border-radius:12px;padding:12px 14px;box-sizing:border-box;font-size:13px}#tune h3{margin:0 0 4px}#tune p{margin:0 0 8px;color:var(--muted);font-size:12px}
-.tuneR{display:grid;grid-template-columns:118px 1fr 44px;gap:8px;align-items:center;margin:4px 0;color:var(--muted);font-size:12px}.tuneR input{width:100%;accent-color:var(--ochre)}.tuneR b{font-weight:400;text-align:right;font-variant-numeric:tabular-nums}
+.tuneR{display:grid;grid-template-columns:140px 1fr 44px;gap:8px;align-items:center;margin:4px 0;color:var(--muted);font-size:12px}.tuneR input{width:100%;accent-color:var(--ochre)}.tuneR b{font-weight:400;text-align:right;font-variant-numeric:tabular-nums}
 .tuneB{display:flex;flex-direction:column;gap:6px;margin-top:10px}#tuneOut{width:100%;height:70px;margin-top:8px;font-size:11px}.filmBox .tuneBtn{margin-top:10px;width:100%}
 .fs{display:grid;grid-template-columns:130px 1fr;gap:10px;align-items:center;margin-top:8px;font-size:13px;color:var(--muted)}.fs input{width:100%;accent-color:var(--ochre)}
 .seg button.on{border-color:var(--mana);color:var(--mana);background:rgba(232,182,76,.09)}
@@ -1790,6 +1790,8 @@ const matT=new C.MeshLambertMaterial({color:0xffffff,flatShading:true}),matF=new
 const gMatT=new C.MeshLambertMaterial({color:0xffffff,transparent:true,opacity:.42,flatShading:true,depthWrite:false}),gMatF=new C.MeshLambertMaterial({vertexColors:true,transparent:true,opacity:.42,flatShading:true,depthWrite:false});
 const FRENZY_C=new C.Color(1,.35,.1),WHITE_C=new C.Color(1,1,1),SHIELD_C=new C.Color(.6,.95,1),_c=new C.Color();
 function inst(g,m,cap){const im=new C.InstancedMesh(g,m,cap);im.instanceMatrix.setUsage(C.DynamicDrawUsage);im.setColorAt(0,WHITE_C);im.count=0;im.frustumCulled=false;scene.add(im);return im}
+// Tribe-coloured parts write alpha 254/255 so the film grade can find them and leave them out (invisible otherwise).
+matT.onBeforeCompile=sh=>{sh.fragmentShader=sh.fragmentShader.replace('#include <dithering_fragment>','#include <dithering_fragment>\n\tgl_FragColor.a=254./255.;')};
 function mkPair(def,cap,ghost){const d=def();return {t:inst(merge(d.t),ghost?gMatT:matT,cap),f:inst(merge(d.f),ghost?gMatF:matF,cap),n:0,cap}}
 const UCAP={queen:8,hunter:40,brave:700,warrior:360,oss:240,captive:120,archer:300,shaman:8,ghost:120,balloon:60,wild:200};
 // ---------------- MODEL EDITS ----------------
@@ -3368,12 +3370,13 @@ function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;fogK=Math.mi
 // The world is drawn to an off-screen target, then graded onto the screen with the CSS sky composited
 // underneath; the HUD is HTML above the canvas and stays clean. Grain changes at 24 frames a second.
 const FILM_KEY='wicker-film-v1';
-// Every number in the grade, in the order the shader reads them (uP[0..13]); the Tune panel edits these live.
+// Every number in the grade, in the order the shader reads them (uP[0..15]); tribe colours skip the grade and use only the last two; the Tune panel edits these live.
 const FILM_P=[{k:'expo',n:'Exposure',lo:.5,hi:2,d:1.18},{k:'mids',n:'Mid-tone lift',lo:.6,hi:1.8,d:1.12},{k:'contrast',n:'Contrast',lo:0,hi:1,d:.3},
  {k:'black',n:'Black lift',lo:0,hi:.15,d:.02},{k:'landSat',n:'Land colour',lo:0,hi:1.3,d:.65},{k:'strongSat',n:'Strong colour',lo:.5,hi:2,d:1.2},
  {k:'redDeep',n:'Red depth',lo:0,hi:.8,d:.3},{k:'fireHold',n:'Fire held orange',lo:0,hi:1,d:.5},{k:'cool',n:'Cool shadows',lo:0,hi:.3,d:.04},
  {k:'warm',n:'Warm highlights',lo:0,hi:.3,d:.03},{k:'vig',n:'Vignette',lo:0,hi:1.5,d:.3},{k:'hal',n:'Halation',lo:0,hi:4,d:1.4},
- {k:'halT',n:'Halation threshold',lo:.3,hi:1,d:.68},{k:'olive',n:'Green to olive',lo:0,hi:1,d:.3}];
+ {k:'halT',n:'Halation threshold',lo:.3,hi:1,d:.68},{k:'olive',n:'Green to olive',lo:0,hi:1,d:.3},
+ {k:'tribeB',n:'Tribe brightness',lo:.5,hi:1.6,d:1},{k:'tribeS',n:'Tribe colour strength',lo:0,hi:2,d:1}];
 const film={look:0,grain:.6,dust:.35,p:{}};try{Object.assign(film,JSON.parse(localStorage.getItem(FILM_KEY))||{})}catch(e){}if(film.look>1)film.look=1;
 for(const q of FILM_P)if(typeof film.p[q.k]!=='number')film.p[q.k]=q.d;
 let filmRT=null,filmQ=null,filmT=0,filmArma=0;const filmSc=[];
@@ -3384,13 +3387,14 @@ function filmInit(){if(filmRT)return;const w=glc.width||1,h=glc.height||1;
   const mat=new C.ShaderMaterial({depthTest:false,depthWrite:false,uniforms:{tD:{value:filmRT.texture},uRes:{value:new C.Vector2(w,h)},uSeed:{value:0},uGrain:{value:0},uP:{value:FILM_P.map(q=>film.p[q.k])},
     uS0:{value:new C.Color()},uS1:{value:new C.Color()},uS2:{value:new C.Color()},uS3:{value:new C.Color()},uSp:{value:sp},uSc:{value:sc}},
     vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position.xy,0.,1.);}',
-    fragmentShader:`uniform sampler2D tD;uniform vec2 uRes;uniform float uSeed,uGrain,uP[14];uniform vec3 uS0,uS1,uS2,uS3;uniform vec4 uSp[8];uniform vec4 uSc[3];varying vec2 vUv;
+    fragmentShader:`uniform sampler2D tD;uniform vec2 uRes;uniform float uSeed,uGrain,uP[16];uniform vec3 uS0,uS1,uS2,uS3;uniform vec4 uSp[8];uniform vec4 uSc[3];varying vec2 vUv;
 float h(vec2 p){return fract(sin(dot(p,vec2(12.9898,78.233)))*43758.5453);}
 vec3 sky(float y){float t=1.-y;return t<.3?mix(uS0,uS1,t/.3):t<.62?mix(uS1,uS2,(t-.3)/.32):mix(uS2,uS3,(t-.62)/.38);}
 vec3 px(vec2 uv){vec4 s=texture2D(tD,uv);return s.rgb+sky(uv.y)*(1.-s.a);}
 void main(){vec2 uv=vUv,d=1./uRes;vec3 c=px(uv);
  vec3 hl=vec3(0.);for(int i=0;i<8;i++){float a=float(i)*.785398;vec2 o=vec2(cos(a),sin(a))*d;hl+=max(px(uv+o*5.)-uP[12],0.)+max(px(uv+o*12.)-uP[12],0.)*.6;}
  float hv=dot(hl/16.,vec3(.5,.35,.15));c+=vec3(.9,.22,.05)*hv*uP[11];
+ vec4 raw=texture2D(tD,uv);float tm=step(.99,raw.a)*(1.-step(.9995,raw.a));vec3 tc=c;
  c*=uP[0];
  float l=dot(c,vec3(.299,.587,.114)),mx=max(c.r,max(c.g,c.b)),sat=mx-min(c.r,min(c.g,c.b));
  float ww=smoothstep(.04,.22,c.r-c.g),bw=smoothstep(.04,.2,c.b-max(c.r,c.g)),strong=max(ww,bw)*smoothstep(.08,.35,sat/max(mx,.04));
@@ -3401,6 +3405,7 @@ void main(){vec2 uv=vUv,d=1./uRes;vec3 c=px(uv);
  g=pow(clamp(g,0.,1.),vec3(1./uP[1]));g=mix(g,g*g*(3.-2.*g),uP[2]);
  g*=mix(vec3(1.-uP[8],1.,1.),vec3(1.+uP[9],1.,1.-uP[9]*1.6),smoothstep(.15,.8,l));
  g=vec3(1.,.8,.55)*uP[3]+g*(1.-uP[3]);
+ float tl=dot(tc,vec3(.299,.587,.114));tc=clamp(mix(vec3(tl),tc,uP[15])*uP[14],0.,1.);g=mix(g,tc,tm);
  vec2 q=uv-.5;g*=1.-dot(q,q)*uP[10];
  vec2 gp=floor(gl_FragCoord.xy);float n=h(gp+uSeed)+h(gp*1.31+uSeed*1.7+3.1)-1.;
  g+=n*uGrain*.07*(1.-.75*smoothstep(.5,1.,l))*(.55+.45*smoothstep(0.,.25,l));
