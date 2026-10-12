@@ -276,6 +276,7 @@ details.help summary{cursor:pointer;color:var(--text);font:14px var(--f-display)
           <li>All-against-all needs an unlit wicker man, ten followers to burn and a full bar of mana. Every hut falls, and every soul walks to the Moot at the world's heart to fight to the end.</li>
           <li>Pick a spell and tap a target. Your Cunning Woman walks into range and casts. If she dies she returns at your stone circle after forty-five seconds, as long as your tribe survives.</li>
           <li>The Scrying Torch plants a burning beacon where the Cunning Woman aims it. The land around it stays in sight for as long as it stands, which makes it a lookout over a pass, a rival's door or a hollow hill. Enemies can tear it down.</li>
+          <li>Ättestupa: when fewer than four villagers are left, your Cunning Woman can raise a crag at the edge of the village, climb it while your people watch, and go over the edge. Six villagers step out of the stone circle, no rival attacks you for thirty seconds, and she is reborn as usual. The crag stays, and she climbs the same one if it ever comes to that again.</li>
           <li>You win when every rival tribe has no followers or buildings left.</li>
         </ul>
       </details>
@@ -824,7 +825,7 @@ function killUnit(u,src){if(!u.alive)return;u.alive=false;u.hp=0;const y=unitY(u
   else for(let i=0;i<14;i++)PA.emit(u.x,y+.5,u.z,(R()-.5)*1.5,R()*2,(R()-.5)*1.5,.6,.5,.7,1,.8,.4,-1);
   if(u.pass){for(const p of u.pass){p.inV=null;p.x=u.x;p.z=u.z;if(u.type==='balloon'){p.air=true;p.ay=y;p.avx=(R()-.5)*2;p.avz=(R()-.5)*2;p.avy=1}else killUnit(p,null)}u.pass.length=0}
   if(u.tribe===0&&u.type!=='ghost')stats.lost++;else if(src&&src.tribe===0)stats.killed++;
-  if(u.type==='shaman'){const T=tribes[u.tribe];const one=scen()&&scen().oneLife&&!watching;if(T.shaman===u){T.shaman=null;T.reincT=gt+TUNE.shamanRespawn;if(one&&T.alive&&!T.wild)T.oneLifeLost=true}if(u.tribe===0&&!one)toast(`Your Cunning Woman has fallen. She returns to the stone circle in ${TUNE.shamanRespawn} seconds.`)}
+  if(u.type==='shaman'){const T=tribes[u.tribe];const one=scen()&&scen().oneLife&&!watching;if(T.shaman===u){T.shaman=null;T.reincT=gt+TUNE.shamanRespawn;if(one&&T.alive&&!T.wild)T.oneLifeLost=true}if(u.tribe===0&&!one&&!u.leapt)toast(`Your Cunning Woman has fallen. She returns to the stone circle in ${TUNE.shamanRespawn} seconds.`)}
   if(u.sel)deselect(u);sfx('die',.5,u.x,u.z)}
 function convertUnit(u,ti){if(u.inV||!u.alive)return;if(u.type==='wild'){u.type='brave';u.mhp=UT.brave.hp;u.hp=Math.max(u.hp,35)}u.tribe=ti;u.hyp=null;u.st='idle';u.tgt=null;u.order=null;u.gx=u.x;u.gz=u.z;if(u.sel&&ti!==0)deselect(u);
   for(let i=0;i<10;i++)PA.emit(u.x,unitY(u)+.5,u.z,(R()-.5)*1.5,1+R()*2,(R()-.5)*1.5,.7,.9,.85,.5,1,.35,-1)}
@@ -849,6 +850,41 @@ const UNTURNED={reinc:1,barrow:1,moot:1,tomb:1,hedge:1,torch:1};
 function faceBuilding(b){const D=BT[b.bt],s=D.s;if(UNTURNED[b.bt])return;const rc=blds.find(o=>o.alive&&o.bt==='reinc'&&o.tribe===b.tribe&&o!==b);
   const j=(hsh(b.id*13+7)-.5)*.3;let want=rc&&d2(b.x,b.z,rc.x,rc.z)>9?Math.atan2(wd(rc.x-b.x),wd(rc.z-b.z))+j:hsh(b.id*31+5)*TAU;
   for(const k of[0,1,-1,2,-2,3,-3,4]){const a=want+k*Math.PI/4,dx=wrap(b.x+Math.sin(a)*(s/2+.6)),dz=wrap(b.z+Math.cos(a)*(s/2+.6));if(walk[cidx(dx,dz)]||k===4){b.yaw=a;b.dx=dx;b.dz=dz;return}}}
+// ---------------- Ättestupa ----------------
+// When the people are almost gone, the Cunning Woman can raise a crag at the edge of the village, climb it while her people watch,
+// and go over the edge. Six villagers step out of the stone circle, and for thirty seconds no rival attacks. The crag stays.
+const LEAP_N=6,LEAP_TRUCE=30,LEAP_BELOW=4;
+function villagerCount(ti){let n=0;for(const u of units)if(u.alive&&u.tribe===ti&&u.type==='brave')n++;for(const b of blds)if(b.alive&&b.tribe===ti&&b.bt==='hut')n+=b.occ;return n}
+function canLeap(T){const sh=T.shaman;return !!(sh&&sh.alive&&!sh.leap&&!sh.hanging&&!sh.inV&&!sh.air&&!T.tomb&&!armageddon&&!(scen()&&scen().oneLife)&&villagerCount(T.id)<LEAP_BELOW)}
+function makeCrag(T){const rc=blds.find(b=>b.alive&&b.bt==='reinc'&&b.tribe===T.id);if(!rc)return null;
+  let r0=0;for(const b of blds)if(b.alive&&b.tribe===T.id&&b.bt!=='hedge'&&b.bt!=='torch'&&b!==rc)r0=Math.max(r0,Math.sqrt(d2(b.x,b.z,rc.x,rc.z)));
+  const foes=blds.filter(b=>b.alive&&b.bt==='reinc'&&b.tribe!==T.id&&b.tribe!==wildId);let best=null,bs=-1e9;
+  for(let R0=clamp(r0+5,11,26);R0<=34&&!best;R0+=3)for(let k=0;k<24;k++){const a=k/24*TAU,ox=Math.cos(a),oz=Math.sin(a),x=wrap(rc.x+ox*R0),z=wrap(rc.z+oz*R0),c=cidx(x,z);
+    if(!walk[c]||hAt(x,z)<.6)continue;let ok=true;for(const b of blds)if(b.alive&&d2(x,z,b.x,b.z)<(4.5+BT[b.bt].s*.5)**2){ok=false;break}if(!ok)continue;
+    for(let t=1;t<4&&ok;t++)if(water[cidx(x+ox*t*1.2,z+oz*t*1.2)]||water[cidx(x-ox*t,z-oz*t)])ok=false;if(!ok||!walkReach(x,z,rc.x,rc.z))continue;
+    let sc=hAt(x,z)*.6;for(const f of foes)sc+=Math.min(60,Math.sqrt(d2(x,z,f.x,f.z)))*.1;if(sc>bs){bs=sc;best={x,z,ox,oz}}}
+  if(!best)return null;const {x,z,ox,oz}=best;
+  const bb=forVerts(x,z,4.2,(c,d)=>{const vx=wd(c%N-x),vz=wd(((c/N)|0)-z),along=vx*ox+vz*oz,dd=d*(along>0?1.75:1);H[c]+=5*(1-sstep(.9,4,dd))});postTerrain(...bb);for(const t of trees)if(t.alive&&d2(t.x,t.z,x,z)<4.4*4.4)killTree(t);
+  for(let i=0;i<3;i++){const a=Math.atan2(oz,ox)+(i-1)*.9;stones.push({x:wrap(x+Math.cos(a)*.9-ox*.3),z:wrap(z+Math.sin(a)*.9-oz*.3),s:.45+i*.08,r:a})}
+  for(let i=0;i<40;i++)dust(x+(R()-.5)*6,z+(R()-.5)*6);cam.shake=Math.max(cam.shake,.5);sfx('quake',.7,x,z);
+  return T.crag={x,z,ox,oz}}
+function startLeap(T){if(!canLeap(T))return;const sh=T.shaman,cr=T.crag||makeCrag(T);if(!cr){toast('There is no ground for it at the edge of the village');return}
+  const bx=wrap(cr.x-cr.ox*3.8),bz=wrap(cr.z-cr.oz*3.8);sh.leap={st:'walk',bx,bz,tx:wrap(cr.x+cr.ox*.7),tz:wrap(cr.z+cr.oz*.7),ox:cr.ox,oz:cr.oz,t:0};
+  if(sh.sel)deselect(sh);sh.tgt=null;sh.order=null;sh.st='move';setTarget(sh,bx,bz);
+  let i=0;for(const u of units)if(u.alive&&u.tribe===T.id&&u.type==='brave'&&!u.inV){const a=Math.atan2(-cr.oz,-cr.ox)+(i%7-3)*.32,r=2.4+(i/7|0)*.9;orderUnit(u,bx+Math.cos(a)*r,bz+Math.sin(a)*r,false);u.cmd=false;i++}
+  if(T.id===0)toast('Your Cunning Woman walks to the edge of the village. Your people gather below to watch.')}
+function leapTick(u,dt){const L=u.leap,T=tribes[u.tribe];L.t+=dt;
+  if(L.st==='walk'){if(d2(u.x,u.z,L.bx,L.bz)<1||L.t>45){L.st='climb';L.t=0;L.sx=u.x;L.sz=u.z;return true}const r=moveStep(u,dt);if(r===2)setTarget(u,L.bx,L.bz);return true}
+  if(L.st==='climb'){const f=Math.min(1,L.t/3.2);u.x=wrap(L.sx+wd(L.tx-L.sx)*f);u.z=wrap(L.sz+wd(L.tz-L.sz)*f);u.face=Math.atan2(L.ox,L.oz);if(f>=1){L.st='stand';L.t=0}return true}
+  if(L.st==='stand'){u.face=Math.atan2(L.ox,L.oz);if(R()<dt*3)PN.emit(u.x,unitY(u)+1.2,u.z,(R()-.5)*.3,.3,(R()-.5)*.3,1.5,.6,.58,.55,.3,.6,-.1);
+    if(L.t>2){L.st='fall';u.ay=hAt(u.x,u.z)+.05;u.air=true;u.avx=L.ox*3.4;u.avz=L.oz*3.4;u.avy=3.5;sfx('cast',.6,u.x,u.z)}return true}
+  if(L.st==='fall'){if(u.air)return false;leapDone(u,T);return true}
+  return true}
+function leapDone(u,T){u.leapt=true;u.leap=null;killUnit(u,null);const rc=blds.find(b=>b.alive&&b.bt==='reinc'&&b.tribe===T.id);
+  if(rc){const y=hAt(rc.x,rc.z);for(let i=0;i<LEAP_N;i++){const a=i/LEAP_N*TAU+.3,v=spawnUnit('brave',T.id,rc.x+Math.cos(a)*1.7,rc.z+Math.sin(a)*1.7);v.think=1.5+R();for(let k=0;k<10;k++)PA.emit(v.x,y+.3+R(),v.z,(R()-.5)*.6,.8+R(),(R()-.5)*.6,1,1,.95,.8,.9,.35,-.2)}}
+  T.truceUntil=gt+LEAP_TRUCE;for(const o of tribes)if(o.ai&&o.id!==T.id){const ai=o.ai;ai.nextAtk=Math.max(ai.nextAtk,gt+LEAP_TRUCE);
+    if(ai.wave&&ai.wave.tgt===T.id){const set=new Set(ai.wave.ids);for(const w of units)if(w.alive&&set.has(w.id)){orderUnit(w,ai.base.x+(R()-.5)*6,ai.base.z+(R()-.5)*6,false);w.raidT=0}ai.wave=null}}
+  sfx('built',1);if(T.id===0&&!watching){toast(`She is gone over the edge. ${LEAP_N} of your people step out from among the stones, and for a while even your enemies are still.`);flash(.25)}}
 function placeBuilding(ti,type,spot,instant){const D=BT[type],s=D.s,{cx0,cz0}=spot;
   let sum=0,n=0;for(let dz=0;dz<=s;dz++)for(let dx=0;dx<=s;dx++){sum+=H[wi(cz0+dz)*N+wi(cx0+dx)];n++}
   const avg=Math.max(.4,sum/n);for(let dz=0;dz<=s;dz++)for(let dx=0;dx<=s;dx++)H[wi(cz0+dz)*N+wi(cx0+dx)]=avg;
@@ -982,6 +1018,7 @@ function sendVehicle(v,x,z,am){v.dest={x:wrap(x),z:wrap(z),am:!!am};
 function updUnit(u,dt){const D=UT[u.type],T=tribes[u.tribe];
   if(u.hanging){if(!u.hanging.alive){const b=u.hanging;u.hanging=null;u.inV=null;u.x=b.x;u.z=b.z;killUnit(u,null)}return}
   if(u.inV){u.x=u.inV.x;u.z=u.inV.z;return}
+  if(u.leap&&leapTick(u,dt))return;
   if(u.fits){if(gt>=u.fits){u.fits=0;atk=u.fitsBy;dmgUnit(u,u.type==='shaman'?120:999,null);return}
     // paroxysms: rooted to the spot, twisting and jerking, giving off a sickly green haze
     u.st='idle';u.tgt=null;u.order=null;u.face=(u.face||0)+(R()-.5)*2.5;if(R()<dt*6)u.swing=gt;
@@ -1369,6 +1406,7 @@ function aiAttack(T,army){const ai=T.ai,base=ai.base;const foes=tribes.filter(o=
   const others=watching?foes:foes.filter(o=>o.id!==0);let pick=(!watching&&tribes[0].alive&&(R()<ai.D.pTarget||!others.length))?tribes[0]:others[(R()*others.length)|0];
   if(settings.diff==='hard'||watching){const avg=foes.reduce((a,o)=>a+o.stats.pop,0)/foes.length;let tot=0;const w=foes.map(o=>{let x=1;if(o.stats.pop>avg*1.3)x+=1.5;if(tribes.some(t=>t.ai&&t!==T&&t.ai.wave&&t.ai.wave.tgt===o.id))x*=.4;tot+=x;return x});let r=R()*tot;pick=foes[0];for(let i=0;i<foes.length;i++){r-=w[i];if(r<=0){pick=foes[i];break}}}
   if(ai.only0&&!watching){if(!tribes[0].alive)return;pick=tribes[0]}
+  if(pick.truceUntil>gt){const alt=foes.filter(o=>!(o.truceUntil>gt));if(!alt.length||ai.only0){ai.nextAtk=gt+8;return}pick=alt[(R()*alt.length)|0]}
   let tgt=null,bd=1e9;for(const b of blds)if(b.alive&&b.tribe===pick.id&&!BT[b.bt].inv&&b.bt!=='hedge'){const d=d2(base.x,base.z,b.x,b.z);if(d<bd){bd=d;tgt=b}}
   const tomb=blds.find(b=>b.alive&&b.bt==='tomb'&&b.tribe!==T.id);if(tomb&&R()<.5)tgt=tomb;if(scen()&&scen().oneLife&&pick.shaman&&pick.shaman.alive&&!pick.shaman.inV&&R()<.5)tgt=pick.shaman;const oak=blds.find(b=>b.alive&&b.bt==='oak'&&b.tribe!==T.id&&(b.awake||b.hangUntil));if(oak&&R()<.4)tgt=oak;
   if(!tgt){for(const u of units)if(u.alive&&u.tribe===pick.id&&!u.inV){const d=d2(base.x,base.z,u.x,u.z);if(d<bd){bd=d;tgt=u}}}if(!tgt)return;
@@ -1498,7 +1536,8 @@ function separation(){for(const arr of grid){const n=Math.min(arr.length,90);if(
 function regrow(){let alive=0;for(const t of trees)if(t.alive)alive++;if(alive>=treeCap||!alive)return;
   for(let k=0;k<2;k++){const t=trees[(R()*trees.length)|0];if(!t||!t.alive)continue;const a=R()*TAU,r=1.2+R()*2,x=wrap(t.x+Math.cos(a)*r),z=wrap(t.z+Math.sin(a)*r),c=cidx(x,z),h=hAt(x,z);
     if(h>.8&&h<9.5&&walk[c]&&!bOcc[c]&&!(hazU[c]>gt)){trees.push({x,z,wood:TUNE.woodPerTree,alive:true,sc:.8+R()*.45,tint:.85+R()*.25,born:gt});tGridDirty=true}}}
-function checkEnd(){if(over)return;{const SC=scen();if(SC&&tribes[0].alive){const g=SC.goal,T=tribes[0];if((g.type==='survive'&&gt>=g.n)||(g.type==='captives'&&(T.stats.caps||0)>=g.n)||(g.type==='queen'&&(stats.queenOffered||0)>=(g.n||1))){endGame(true);return}}}if(watching){const left=tribes.filter(T=>!T.wild&&T.alive);if(left.length<=1)endWatch(left[0]);return}if(!tribes[0].alive){endGame(false);return}if(tribes.slice(1).filter(T=>!T.wild).every(T=>!T.alive))endGame(true)}
+let leapLast=false;
+function checkEnd(){if(over)return;if(tribes[0]&&!watching){const v=canLeap(tribes[0]);if(v!==leapLast){leapLast=v;dockDirty=true}}{const SC=scen();if(SC&&tribes[0].alive){const g=SC.goal,T=tribes[0];if((g.type==='survive'&&gt>=g.n)||(g.type==='captives'&&(T.stats.caps||0)>=g.n)||(g.type==='queen'&&(stats.queenOffered||0)>=(g.n||1))){endGame(true);return}}}if(watching){const left=tribes.filter(T=>!T.wild&&T.alive);if(left.length<=1)endWatch(left[0]);return}if(!tribes[0].alive){endGame(false);return}if(tribes.slice(1).filter(T=>!T.wild).every(T=>!T.alive))endGame(true)}
 function spawnWild(x,z){const u=spawnUnit('wild',wildId,x,z);u.hx=u.x;u.hz=u.z;return u}
 function wildSpot(){for(let t=0;t<60;t++){const x=R()*N,z=R()*N,c=cidx(x,z);if(!pass[c])continue;let ok=true;for(const b of blds)if(b.alive&&b.tribe!==wildId&&d2(x,z,b.x,b.z)<22*22){ok=false;break}if(ok)return {x,z}}return null}
 function wildTick(){if(armageddon||gt<wildT)return;wildT=gt+TUNE.wildEvery;let n=0;for(const u of units)if(u.alive&&u.tribe===wildId)n++;if(n>=TUNE.wildMax)return;const p=wildSpot();if(!p)return;const k=2+(R()*2|0);for(let i=0;i<k;i++)spawnWild(p.x+(R()-.5)*2,p.z+(R()-.5)*2)}
@@ -2659,6 +2698,7 @@ function renderTribe(force){const T=tribes[0];if(!T)return;let h='';const b=sel.
     if(veh.length)h+=`<button class="qs go" data-act="unload"><span>${veh.reduce((a,v)=>a+v.pass.length,0)} aboard</span><b>Unload</b></button>`;
     const q=(act,lab,n,sub)=>`<button class="qs" data-act="${act}" ${n?'':'disabled'}><span>${sub}</span><b>${lab}</b></button>`;
     h+=T.tomb&&!T.shaman?q('shaman','Tomb',1,'Find the fortress'):q('shaman','Cunning Woman',T.shaman?1:0,T.shaman?'Select and find':'Reborn in '+Math.max(0,Math.ceil(T.reincT-gt))+'s');
+    if(canLeap(T))h+=`<button class="qs go" data-act="leap"><span>${LEAP_N} villagers rise from the stones; no attacks for ${LEAP_TRUCE}s</span><b>Ättestupa</b></button>`;
     const guards=myUnits(u=>u.post).length,army=myUnits(u=>MIL[u.type]&&!u.post).length;
     const f5=k=>{const n=myUnits(u=>u.type===k&&!u.post&&!sel.includes(u)).length;return `<button class="qs" data-act="five:${k}" ${n?'':'disabled'}><span>nearest</span><b>+5</b></button>`};
     const fr=k=>myUnits(u=>u.type===k&&!u.post).length;h+=q('army','Army',army,army+' fighters')+q('warrior','Warriors',fr('warrior'),fr('warrior')+' ready')+f5('warrior')+q('archer','Archers',fr('archer'),fr('archer')+' ready')+f5('archer')+q('oss','Osses',fr('oss'),fr('oss')+' ready')+f5('oss')+q('guard','Guards',guards,guards+' posted');
@@ -2681,6 +2721,7 @@ $('pTribe').addEventListener('click',e=>{const t=e.target.closest('[data-act]');
   else if(a==='shaman')focusShaman();
   else if(a.startsWith('five:')){const k=a.slice(5),cand=myUnits(u=>u.type===k&&!u.post&&!sel.includes(u)).sort((p,q)=>((p.st==='idle'?0:400)+d2(p.x,p.z,cam.fx,cam.fz))-((q.st==='idle'?0:400)+d2(q.x,q.z,cam.fx,cam.fz)));
     const keep=sel.filter(u=>!u.bt&&u.tribe===0&&u.alive);setSel(keep.concat(cand.slice(0,5)));sfx('select',.4)}
+  else if(a==='leap')startLeap(T);
   else if(a==='army')pick(u=>MIL[u.type]&&!u.post);else if(a==='guard')pick(u=>!!u.post);else if(a==='brave')pick(u=>u.type==='brave');else if(a==='veh')pick(u=>UT[u.type].veh);else pick(u=>u.type===a&&!u.post);
   renderTribe(true)});
 function centerOn(arr){let sx=0,sz=0;const r=arr[0];for(const u of arr){sx+=wd(u.x-r.x);sz+=wd(u.z-r.z)}cam.fx=wrap(r.x+sx/arr.length);cam.fz=wrap(r.z+sz/arr.length)}
