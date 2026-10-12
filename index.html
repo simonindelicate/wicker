@@ -2652,8 +2652,8 @@ function updTerrain(){const ix=Math.floor(cam.fx),iz=Math.floor(cam.fz),frx=cam.
 function drawEntities(){
   for(const k in UM)UM[k].n=0;let cn=0;HALO.n=0;
   for(const u of units){if(!u.alive)continue;
-    if(u.hanging){const b=u.hanging,rx=wd(b.x-cam.fx),rz=wd(b.z-cam.fz),r2=rx*rx+rz*rz,M=UM.shaman;if(r2>VR2||M.n>=M.cap||(!visB(b)))continue;const y=hAt(b.x,b.z)-r2*K+1.15,i=M.n++,yaw=Math.sin(gt*.7)*.5;
-      place(M.t,i,rx+2.1,y,rz,yaw,1.6);place(M.f,i,rx+2.1,y,rz,yaw,1.6);_c.copy(tribes[u.tribe].c).multiplyScalar(.7);M.t.setColorAt(i,_c);M.f.setColorAt(i,WHITE_C);continue}
+    if(u.hanging){const b=u.hanging,rx=wd(b.x-cam.fx),rz=wd(b.z-cam.fz),r2=rx*rx+rz*rz,M=UM.shaman;if(r2>VR2||M.n>=M.cap||(!visB(b)))continue;const y=hAt(b.x,b.z)-r2*K+1.15,i=M.n++,yaw=(b.yaw||0)+Math.sin(gt*.7)*.5,[ox,oz]=byaw(b,2.1,0);
+      place(M.t,i,rx+ox,y,rz+oz,yaw,1.6);place(M.f,i,rx+ox,y,rz+oz,yaw,1.6);_c.copy(tribes[u.tribe].c).multiplyScalar(.7);M.t.setColorAt(i,_c);M.f.setColorAt(i,WHITE_C);continue}
     if(u.inV)continue;const rx=wd(u.x-cam.fx),rz=wd(u.z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2)continue;if(!visU(u))continue;
     const M=UM[u.type];if(M.n>=M.cap)continue;let y=unitY(u)-r2*K,ox=0,oz=0,yaw=u.face;const god=false;const sc=u.type==='shaman'?1.6:1;if(u.type==='shaman'&&HALO.n<HALO.max){const tc=tribes[u.tribe].c;HALO.emit(u.x,unitY(u)+1.05,u.z,0,0,0,1,.55+tc.r*.45,.5+tc.g*.45,.4+tc.b*.45,.38+.08*Math.sin(gt*3+u.anim),3.4,0);HALO.emit(u.x,unitY(u)+1.85,u.z,0,0,0,1,1,.9,.6,.5,.9,0)}if(god)y+=.9+Math.sin(gt*2)*.15;
     if(u.moving)y+=Math.abs(Math.sin(gt*11+u.anim))*.07;
