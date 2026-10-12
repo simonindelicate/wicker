@@ -543,7 +543,7 @@ const ICON={
 //  oneLife = a tribe whose shaman dies is finished; ai.airRaid = rivals favour balloons and fly fighters over;
 //  ai.hangRaid = rivals attack your shaman whenever she hangs in Herne's Oak,
 //  keep = player's village sits in a ring of crags with gates (hedge country),
-//  ai.only0 = rivals attack only the player; ai.first/int/need/needInc = first wave time, gap between waves, wave size,
+//  ai.only0 = rivals attack only the player; ai.firstAt0 = each rival's first N waves go for the player; ai.first/int/need/needInc = first wave time, gap between waves, wave size,
 //  tomb = entombment allowed, news = what to mention as new, me / them = starting stock
 //  (mana, wood, huts, braves, warriors, archers, altar:false = no free altar, manaMult =
 //  offering yield), ai = rival tuning (first = first attack
@@ -578,7 +578,7 @@ const SCEN=[
   intro:'Up here the land is broken into crags and there is barely room for two huts. Nobody can grow until they make level ground. Feed the altar, flatten the rock around the village, and build on what you make. Across the rocks one other people is just as cramped, and the first to spread out will win.'},
  {title:'Fire from the Sky',seed:7717,style:'isles',enemies:2,diff:'normal',fog:true,goal:{type:'conquer'},oneLife:true,ban:['bridge'],
   addB:['balloon'],addS:['whirl'],news:['Balloon Works','Whirlwind'],
-  me:{mana:300,wood:220,huts:2},ai:{airRaid:true,first:420},
+  me:{mana:300,wood:220,huts:2},ai:{airRaid:true,first:420,firstAt0:1},
   intro:'Every people here keeps its own island, and the sea is too deep and too wide for any bridge. Our enemies have learned to fly. Their balloonists drop fire on the huts and carry fighters over the water. Here a Cunning Woman does not come back: if ours dies we are finished, and if theirs dies so are they. Keep fighters sworn to her side, keep the Rook Trees watching, and when you are ready, put her in a balloon.'},
  {title:'May Morning',seed:8803,style:'continent',enemies:1,diff:'normal',fog:true,goal:{type:'queen',n:3},
   addB:['maypole'],addS:['hypno'],news:['Maypole','Hypnotise'],
@@ -1424,7 +1424,7 @@ function updProjs(dt){for(let i=projs.length-1;i>=0;i--){const p=projs[i];p.t+=d
   if(f>=1){projs.splice(i,1);if(p.kind==='arrow'){const t=p.tgt;if(t&&t.alive&&d2(x,z,t.x,t.z)<(t.bt?BT[t.bt].s*BT[t.bt].s*.3:1.1))hit(t,p.dmg*(0.85+R()*.3),p.src&&p.src.alive?p.src:null);for(let k=0;k<4;k++)PA.emit(x,y,z,(R()-.5)*2,R()*2,(R()-.5)*2,.25,1,.6,.2,1,.25,4)}else if(p.onHit)p.onHit(wrap(p.tx),wrap(p.tz))}}}
 
 // ---------------- AI ----------------
-function mkAI(i,s){const D=DIFF[settings.diff],P=TRIBES[i].pers||{},SA=(scen()&&scen().ai)||{},war=(P.war||1)*(SA.war||1);return {base:{x:s.x,z:s.z},nextBuild:4+i,nextAtk:SA.first!=null?SA.first+(SA.only0?(i-1)*20:R()*40):(D.first+R()*60)/war,need:SA.need??Math.max(3,Math.round(D.need/war)),needInc:SA.needInc??D.needInc,only0:!!SA.only0,airRaid:!!SA.airRaid,hangRaid:!!SA.hangRaid,balCap:SA.balCap,freeBridge:!!SA.freeBridge,D,int:SA.int??D.int/war,res:D.res,gap:D.gap*(P.castGap||1)*(SA.gap||1),castT:0,milR:SA.mil??(D.milR+(P.mil||0)),bridge:null,calm:0,siege:0}}
+function mkAI(i,s){const D=DIFF[settings.diff],P=TRIBES[i].pers||{},SA=(scen()&&scen().ai)||{},war=(P.war||1)*(SA.war||1);return {base:{x:s.x,z:s.z},nextBuild:4+i,nextAtk:SA.first!=null?SA.first+(SA.only0?(i-1)*20:R()*40):(D.first+R()*60)/war,need:SA.need??Math.max(3,Math.round(D.need/war)),needInc:SA.needInc??D.needInc,only0:!!SA.only0,airRaid:!!SA.airRaid,hangRaid:!!SA.hangRaid,balCap:SA.balCap,freeBridge:!!SA.freeBridge,firstAt0:SA.firstAt0||0,sent:0,D,int:SA.int??D.int/war,res:D.res,gap:D.gap*(P.castGap||1)*(SA.gap||1),castT:0,milR:SA.mil??(D.milR+(P.mil||0)),bridge:null,calm:0,siege:0}}
 function findSpot(T,type){const b=T.ai.base,S=T.stats,f=field(b.x,b.z);for(let t=0;t<90;t++){const a=R()*TAU,r=4.5+R()*Math.min(24,7+S.blds*1.6),v=validSpot(T.id,type,b.x+Math.cos(a)*r,b.z+Math.sin(a)*r);if(v.err)continue;const sz=type==='hedge'?1:BT[type].s;let ok=false;for(let dz=-1;dz<=sz&&!ok;dz++)for(let dx=-1;dx<=sz;dx++){if(f[wi(v.cz0+dz)*N+wi(v.cx0+dx)]>=0){ok=true;break}}if(ok)return v}return null}
 // Scripted raids (Late to the Feast): each rival in turn sends one raid on the player at a set time, topped up to its size.
 function forceRaid(T,n){const ai=T.ai,base=ai.base;if(!tribes[0].alive||armageddon)return;const army=[];for(const u of units)if(u.alive&&u.tribe===T.id&&!u.inV&&!u.post&&(u.type==='warrior'||u.type==='archer')&&army.length<n)army.push(u);
@@ -1497,18 +1497,19 @@ function aiAttack(T,army){const ai=T.ai,base=ai.base;const foes=tribes.filter(o=
   const others=watching?foes:foes.filter(o=>o.id!==0);let pick=(!watching&&tribes[0].alive&&(R()<ai.D.pTarget||!others.length))?tribes[0]:others[(R()*others.length)|0];
   if(settings.diff==='hard'||watching){const avg=foes.reduce((a,o)=>a+o.stats.pop,0)/foes.length;let tot=0;const w=foes.map(o=>{let x=1;if(o.stats.pop>avg*1.3)x+=1.5;if(tribes.some(t=>t.ai&&t!==T&&t.ai.wave&&t.ai.wave.tgt===o.id))x*=.4;tot+=x;return x});let r=R()*tot;pick=foes[0];for(let i=0;i<foes.length;i++){r-=w[i];if(r<=0){pick=foes[i];break}}}
   if(ai.only0&&!watching){if(!tribes[0].alive)return;pick=tribes[0]}
+  if(ai.sent<ai.firstAt0&&!watching&&tribes[0].alive&&!(tribes[0].truceUntil>gt))pick=tribes[0];
   if(pick.truceUntil>gt){const alt=foes.filter(o=>!(o.truceUntil>gt));if(!alt.length||ai.only0){ai.nextAtk=gt+8;return}pick=alt[(R()*alt.length)|0]}
   let tgt=null,bd=1e9;for(const b of blds)if(b.alive&&b.tribe===pick.id&&!BT[b.bt].inv&&b.bt!=='hedge'){const d=d2(base.x,base.z,b.x,b.z);if(d<bd){bd=d;tgt=b}}
   const tomb=blds.find(b=>b.alive&&b.bt==='tomb'&&b.tribe!==T.id);if(tomb&&R()<.5)tgt=tomb;if(scen()&&scen().oneLife&&pick.shaman&&pick.shaman.alive&&!pick.shaman.inV&&R()<.5)tgt=pick.shaman;const oak=blds.find(b=>b.alive&&b.bt==='oak'&&b.tribe!==T.id&&(b.awake||b.hangUntil));if(oak&&R()<.4)tgt=oak;
   if(!tgt){for(const u of units)if(u.alive&&u.tribe===pick.id&&!u.inV){const d=d2(base.x,base.z,u.x,u.z);if(d<bd){bd=d;tgt=u}}}if(!tgt)return;
   const f=field(tgt.x,tgt.z,false),reach=f[cidx(base.x,base.z)]>=0||walkReach(tgt.x,tgt.z,base.x,base.z);
   if(reach){for(const u of army){const a=R()*TAU,r=R()*3;orderUnit(u,tgt.x+Math.cos(a)*r,tgt.z+Math.sin(a)*r,true,tgt.x,tgt.z);u.raidT=gt+150}
-    ai.wave={ids:army.map(u=>u.id),n0:army.length,tgt:pick.id,t:gt};
+    ai.wave={ids:army.map(u=>u.id),n0:army.length,tgt:pick.id,t:gt};ai.sent++;
     if(pick.id===0&&!watching){toast(`A horn sounds from the ${T.name} lands: ${army.length} of their fighters are marching on you. Watch the map.`);sfx('horn',1)}
     const sh=T.shaman;if(sh&&sh.st==='idle'&&T.mana>150)orderUnit(sh,tgt.x,tgt.z,true);ai.nextAtk=gt+ai.int*(ai.only0?1:(.8+R()*.4));ai.need+=ai.needInc??ai.D.needInc}
   else if(army.some(u=>u.type==='balloon')&&(ai.airRaid||!allowS('bridge'))){const bal=army.filter(u=>u.type==='balloon'),foot=army.filter(u=>u.type!=='balloon'&&u.type!=='oss'&&!u.inV),ids=[];
     for(const v of bal){const take=foot.splice(0,UT.balloon.cap-v.pass.length);for(const u of take){u.inV=v;v.pass.push(u);u.st='idle';ids.push(u.id)}sendVehicle(v,tgt.x+(R()-.5)*4,tgt.z+(R()-.5)*4,true);ids.push(v.id)}
-    ai.wave={ids,n0:ids.length,tgt:pick.id,t:gt};if(pick.id===0&&!watching){toast(`Balloons rise over the ${T.name} island: ${bal.length} of them, carrying ${ids.length-bal.length} fighters, are coming for you.`);sfx('horn',1)}ai.nextAtk=gt+ai.int*(.8+R()*.4)}
+    ai.wave={ids,n0:ids.length,tgt:pick.id,t:gt};ai.sent++;if(pick.id===0&&!watching){toast(`Balloons rise over the ${T.name} island: ${bal.length} of them, carrying ${ids.length-bal.length} fighters, are coming for you.`);sfx('horn',1)}ai.nextAtk=gt+ai.int*(.8+R()*.4)}
   else if(allowS('bridge')){ai.bridge={x:tgt.x,z:tgt.z,t:gt};ai.nextAtk=gt+25}else ai.nextAtk=gt+60}
 function aiHangRaid(T,army){const ai=T.ai,oak=blds.find(b=>b.alive&&b.bt==='oak'&&b.tribe===0&&b.hangUntil&&!b.awake);if(!oak){ai.hr=null;return}
   if(!ai.hr||ai.hr.until!==oak.hangUntil)ai.hr={until:oak.hangUntil,n:0,next:gt+8+T.id*6};
