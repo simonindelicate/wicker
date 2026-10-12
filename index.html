@@ -940,7 +940,7 @@ function leapTick(u,dt){const L=u.leap,T=tribes[u.tribe];L.t+=dt;
   return true}
 function leapDone(u,T){if(T.id===0){const a=A();a.leaps=(a.leaps||0)+1;earn('r_leap');if(a.leaps>=2)earn('d_leap2')}u.leapt=true;u.leap=null;killUnit(u,null);const rc=blds.find(b=>b.alive&&b.bt==='reinc'&&b.tribe===T.id);
   if(rc){const y=hAt(rc.x,rc.z);for(let i=0;i<LEAP_N;i++){const a=i/LEAP_N*TAU+.3,v=spawnUnit('brave',T.id,rc.x+Math.cos(a)*1.7,rc.z+Math.sin(a)*1.7);v.think=1.5+R();for(let k=0;k<10;k++)PA.emit(v.x,y+.3+R(),v.z,(R()-.5)*.6,.8+R(),(R()-.5)*.6,1,1,.95,.8,.9,.35,-.2)}}
-  for(const o of tribes)if(o!==T&&!o.wild&&o.alive)o.dread=100;
+  for(const o of tribes)if(o!==T&&!o.wild&&o.alive){o.dread=100;o.terrorUntil=gt+LEAP_TRUCE}
   T.truceUntil=gt+LEAP_TRUCE;for(const o of tribes)if(o.ai&&o.id!==T.id){const ai=o.ai;ai.nextAtk=Math.max(ai.nextAtk,gt+LEAP_TRUCE);
     if(ai.wave&&ai.wave.tgt===T.id){const set=new Set(ai.wave.ids);for(const w of units)if(w.alive&&set.has(w.id)){orderUnit(w,ai.base.x+(R()-.5)*6,ai.base.z+(R()-.5)*6,false);w.raidT=0}ai.wave=null}}
   sfx('built',1);if(T.id===0&&!watching){toast(`She is gone over the edge. ${LEAP_N} of your people step out from among the stones, and for a while even your enemies are still.`);flash(.25)}}
@@ -1547,7 +1547,7 @@ function computeStats(){if(banners.length)banners=banners.filter(b=>units.some(u
 function tribeUpkeep(T){const S=T.stats;
   for(const b of blds)if(b.alive&&b.done&&b.bt==='maypole'&&b.tribe===T.id){let n=0;for(const u of units)if(u.alive&&u.st==='dance'&&u.bld===b)n++;b.dancers=n;T.dread=Math.max(0,(T.dread||0)-n*TUNE.mayDreadPerDancer);
     if(!queenOf(T.id)){b.merry=(b.merry||0)+n;if(b.merry>=TUNE.mayCrown)crown(T,b)}}
-  T.dread=Math.max(0,(T.dread||0)-(TUNE.dreadDecay+TUNE.dreadDecayPerHut*S.huts));if(T.dread>TUNE.desertAt&&!armageddon&&R()<(T.dread-TUNE.desertAt)/TUNE.desertSpread)desert(T);
+  T.dread=Math.max(0,(T.dread||0)-(TUNE.dreadDecay+TUNE.dreadDecayPerHut*S.huts));if(T.terrorUntil>gt)T.dread=100;if(T.dread>TUNE.desertAt&&!armageddon&&R()<(T.dread-TUNE.desertAt)/TUNE.desertSpread)desert(T);
   for(const b of blds)if(b.alive&&b.done&&b.tribe===T.id&&b.bt==='fold'){if(b.capt.length>=2&&b.capt.length<BT.fold.hold&&R()<TUNE.foldBreed*b.capt.length){b.capt.push(b.capt[(R()*b.capt.length)|0]);dockDirty=true}}
   for(const b of blds)if(b.alive&&b.tribe===T.id&&isHold(b)&&b.capt.length&&R()<TUNE.foldEscapeBase+b.capt.length*TUNE.foldEscapePerCaptive){b.capt.pop();spawnWild(b.dx,b.dz).escapedFrom=T.id;if(T.id===0&&gt-escToastT>20){escToastT=gt;toast('A captive has slipped out of the fold')}}
   if(!T.shaman&&T.alive&&!armageddon&&!T.tomb&&!T.broken){if(!T.reincT)T.reincT=gt+TUNE.shamanRespawn;if(gt>=T.reincT&&S.pop>0){const r=blds.find(b=>b.alive&&b.bt==='reinc'&&b.tribe===T.id);if(r){const u=spawnUnit('shaman',T.id,r.x,r.z+2);T.shaman=u;T.reincT=0;ring(r.x,r.z,2,1,.85,.4);if(T.id===0){toast('Your Cunning Woman is reborn');sfx('built',.8)}}}}
