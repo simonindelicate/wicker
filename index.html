@@ -539,6 +539,7 @@ const ICON={
 //  twin | islands | continent | highlands, enemies, diff, fog, centre = start surrounded),
 //  addB / addS = buildings and spells unlocked from this level on (all = everything),
 //  lockB = buildings the player may not build on this level only (rivals still can),
+//  tombHere = entombment allowed for the player on this level only (rivals do not attempt it);
 //  ban = buildings/spells ('tomb' = entombment) that nobody may use on this level only,
 //  oneLife = a tribe whose shaman dies is finished; ai.airRaid = rivals favour balloons and fly fighters over;
 //  ai.hangRaid = rivals attack your shaman whenever she hangs in Herne's Oak,
@@ -576,7 +577,7 @@ const SCEN=[
   addS:['ghost','flatten'],news:['Ghost Army','Flatten'],
   me:{mana:100,wood:180,huts:2},ai:{first:540},
   intro:'Up here the land is broken into crags and there is barely room for two huts. Nobody can grow until they make level ground. Feed the altar, flatten the rock around the village, and build on what you make. Across the rocks one other people is just as cramped, and the first to spread out will win.'},
- {title:'Fire from the Sky',seed:7717,style:'isles',enemies:2,diff:'normal',fog:true,goal:{type:'conquer'},oneLife:true,ban:['bridge'],
+ {title:'Fire from the Sky',seed:7717,style:'isles',enemies:2,diff:'normal',fog:true,goal:{type:'conquer'},oneLife:true,tombHere:true,ban:['bridge'],
   addB:['balloon'],addS:['whirl'],news:['Balloon Works','Whirlwind'],
   me:{mana:300,wood:220,huts:2},ai:{airRaid:true,first:420,firstAt0:1,balRush:150},
   intro:'Every people here keeps its own island, and the sea is too deep and too wide for any bridge. Our enemies have learned to fly. Their balloonists drop fire on the huts and carry fighters over the water. Here a Cunning Woman does not come back: if ours dies we are finished, and if theirs dies so are they. Keep fighters sworn to her side, keep the Rook Trees watching, and when you are ready, put her in a balloon.'},
@@ -628,7 +629,7 @@ const SCEN=[
 ];
 let allowSets=null,skirmishSettings=null;
 function scen(){return settings.campaign!=null?SCEN[settings.campaign]:null}
-function scenSets(i){const b=new Set(['hut']),sp=new Set();let tomb=false;for(let k=0;k<=i;k++){const L=SCEN[k];(L.addB||[]).forEach(x=>b.add(x));(L.addS||[]).forEach(x=>sp.add(x));if(L.tomb)tomb=true;if(L.all){BUILDABLE.forEach(x=>b.add(x));SP.forEach(x=>sp.add(x.k));tomb=true}}for(const x of (SCEN[i].ban||[])){b.delete(x);sp.delete(x);if(x==='tomb')tomb=false}return {b,s:sp,tomb}}
+function scenSets(i){const b=new Set(['hut']),sp=new Set();let tomb=false;for(let k=0;k<=i;k++){const L=SCEN[k];(L.addB||[]).forEach(x=>b.add(x));(L.addS||[]).forEach(x=>sp.add(x));if(L.tomb===true)tomb=true;if(L.all){BUILDABLE.forEach(x=>b.add(x));SP.forEach(x=>sp.add(x.k));tomb=true}}if(SCEN[i].tombHere)tomb=true;for(const x of (SCEN[i].ban||[])){b.delete(x);sp.delete(x);if(x==='tomb')tomb=false}return {b,s:sp,tomb}}
 const allowB=t=>!allowSets||(t==='tomb'?allowSets.tomb:allowSets.b.has(t));
 const allowS=k=>!allowSets||allowSets.s.has(k);
 const allowPB=t=>allowB(t)&&!((scen()||{}).lockB||[]).includes(t);
@@ -980,7 +981,8 @@ function destroyBld(b){if(!b.alive||BT[b.bt].inv)return;if(b.tribe===0&&b.bt!=='
   for(let dz=0;dz<s;dz++)for(let dx=0;dx<s;dx++){const c=wi(b.cz0+dz)*N+wi(b.cx0+dx);if(bOcc[c]===b.id)bOcc[c]=0}
   for(let i=0;i<b.occ;i++){const a=R()*TAU,u=spawnUnit('brave',b.tribe,b.x+Math.cos(a)*s*.6,b.z+Math.sin(a)*s*.6);if(water[cidx(u.x,u.z)]){killUnit(u);continue}u.st='flee';u.ft=4+R()*2;setTarget(u,b.x+Math.cos(a)*(9+R()*4),b.z+Math.sin(a)*(9+R()*4));u.think=2}
   for(const ct of b.capt)spawnWild(b.x+(R()-.5)*s,b.z+(R()-.5)*s);b.capt.length=0;
-  if(b.bt==='tomb'){const T=tribes[b.tribe];T.tomb=null;T.reincT=gt+TUNE.tombRespawn;T.mana=Math.floor(T.mana*TUNE.tombManaKeep);flash(.4);toast(b.tribe===0&&!watching?'Your tomb has fallen and your Cunning Woman with it. She will rise again at the stone circle in a minute, and half your mana is lost.':`The ${T.name} tomb has fallen`)}
+  if(b.bt==='tomb'&&scen()&&scen().oneLife&&!watching){const T=tribes[b.tribe];T.tomb=null;T.oneLifeLost=true;flash(.4);if(b.tribe===0)toast('Your tomb has fallen, and your Cunning Woman with it. Here she does not come back.')}
+  else if(b.bt==='tomb'){const T=tribes[b.tribe];T.tomb=null;T.reincT=gt+TUNE.tombRespawn;T.mana=Math.floor(T.mana*TUNE.tombManaKeep);flash(.4);toast(b.tribe===0&&!watching?'Your tomb has fallen and your Cunning Woman with it. She will rise again at the stone circle in a minute, and half your mana is lost.':`The ${T.name} tomb has fallen`)}
   const y=hAt(b.x,b.z);for(let i=0;i<40;i++){PA.emit(b.x+(R()-.5)*s,y+R()*1.5,b.z+(R()-.5)*s,(R()-.5)*3,1+R()*4,(R()-.5)*3,.6+R()*.6,1,.5,.15,1,.9,4)}
   for(let i=0;i<20;i++)PN.emit(b.x+(R()-.5)*s,y+R(),b.z+(R()-.5)*s,(R()-.5),1+R(),(R()-.5),2+R()*2,.3,.28,.26,.7,1.6,-.3);
   if(b.tribe!==0&&!b.burnt)stats.razed++;
@@ -1233,7 +1235,11 @@ function updUnit(u,dt){const D=UT[u.type],T=tribes[u.tribe];
     if(dd>3.3){u.rt=0;const r=moveStep(u,dt);if(r===2){u.st='idle';b.rite=null;if(u.tribe===0)toast('Your Cunning Woman cannot reach the hill')}else if(r===1){const a=R()*TAU;setTarget(u,b.x+Math.cos(a)*2.4,b.z+Math.sin(a)*2.4)}break}
     u.rcT=(u.rcT||0)-dt;if(u.rcT<=0){u.rcT=.5;u.present=units.filter(o=>o.alive&&o.st==='wait'&&o.riteB===b&&o.tribe===u.tribe)}
     if(!u.present||u.present.length<TUNE.entombFollowers){u.rt=0;u.chop=false;
-      if(u.tribe===0&&gt>(b.rite.fc||0)){b.rite.fc=gt+3;const f=field(b.dx,b.dz,false),stuck=units.filter(o=>o.alive&&o.tribe===0&&!o.inV&&o.st==='enter'&&o.purpose==='entomb'&&o.bld===b&&!inFerry(o)&&f[cidx(o.x,o.z)]<0);if(stuck.length&&startFerry(stuck,b.dx,b.dz,o=>sendToRite(o,b)))b.rite.ferry=true}
+      if(u.tribe===0&&gt>(b.rite.fc||0)){b.rite.fc=gt+3;const f=field(b.dx,b.dz,false),stuck=units.filter(o=>o.alive&&o.tribe===0&&!o.inV&&o.st==='enter'&&o.purpose==='entomb'&&o.bld===b&&!inFerry(o)&&f[cidx(o.x,o.z)]<0);if(stuck.length&&startFerry(stuck,b.dx,b.dz,o=>sendToRite(o,b)))b.rite.ferry=true;
+        // anyone who gave up on the way is replaced, so the rite never waits on a follower who is not coming
+        const coming=units.filter(o=>o.alive&&o.tribe===0&&((o.st==='enter'&&o.purpose==='entomb'&&o.bld===b)||o.inV||(o.ferryJ&&inFerry(o)))).length,need=TUNE.entombFollowers-(u.present?u.present.length:0)-coming;
+        if(need>0){const c=units.filter(o=>o.alive&&o.tribe===0&&!o.inV&&!o.air&&o.type!=='shaman'&&!UT[o.type].veh&&o.type!=='captive'&&o.type!=='queen'&&o.type!=='ghost'&&!o.carry&&o.st!=='enter'&&o.st!=='wait'&&!(o.ferryJ&&inFerry(o))).sort((p,q)=>((p.type==='brave'?0:1)-(q.type==='brave'?0:1))||d2(p.x,p.z,b.x,b.z)-d2(q.x,q.z,b.x,b.z));
+          for(const o of c.slice(0,need))sendToRite(o,b)}}
 if(gt-b.rite.t>(b.rite.ferry?300:120)){b.rite=null;u.st='idle';if(u.tribe===0)toast('Too few followers reached the hill. The rite is abandoned.')}break}
     u.face=Math.atan2(wd(b.x-u.x),wd(b.z-u.z));u.rt=(u.rt||0)+dt;u.chop=true;const by=hAt(b.x,b.z);
     if(R()<dt*20)PN.emit(b.x+(R()-.5)*3,by+.3,b.z+(R()-.5)*3,(R()-.5)*.4,.8+R(),(R()-.5)*.4,2,.42,.07,.05,.7,.9,-.2);
@@ -1496,7 +1502,7 @@ function aiThink(T){const ai=T.ai,S=T.stats,base=ai.base,sh=T.shaman;{const SC=s
   if(!threat&&gt>(ai.wildT||0)){ai.wildT=gt+(15+R()*10)*((TRIBES[T.id].pers||{}).ossHunt||1);const os=units.filter(u=>u.alive&&u.tribe===T.id&&u.type==='oss'&&u.st==='idle'&&!u.carry);if(os.length){let best=null,bd=38*38;for(const u of units)if(u.alive&&u.tribe===wildId){const d=d2(base.x,base.z,u.x,u.z);if(d<bd){bd=d;best=u}}if(best){const o=os[0];o.rcx=best.x;o.rcz=best.z;o.st='roam';setTarget(o,best.x,best.z)}}}
   aiFaith(T);
   if(sh&&sh.st==='idle'&&!threat&&!sh.hanging){const oak=blds.find(b=>b.alive&&b.done&&b.bt==='oak'&&b.tribe===T.id&&!b.awake&&!b.hangUntil);if(oak)startHang(sh,oak)}
-  if(sh&&sh.st==='idle'&&!threat&&!T.tomb&&allowB('tomb')&&settings.diff!=='easy'&&S.pop>=TUNE.aiEntombPop&&T.mana>=TUNE.entombMana&&gt>(ai.ritT||600)){ai.ritT=gt+90;let hb=null,bd=60*60;for(const b of blds)if(b.alive&&b.bt==='barrow'&&!b.rite){const d=d2(base.x,base.z,b.x,b.z);if(d<bd){bd=d;hb=b}}if(hb&&R()<.6)startRitual(sh,hb)}
+  if(sh&&sh.st==='idle'&&!threat&&!T.tomb&&allowB('tomb')&&!(scen()&&scen().tombHere)&&settings.diff!=='easy'&&S.pop>=TUNE.aiEntombPop&&T.mana>=TUNE.entombMana&&gt>(ai.ritT||600)){ai.ritT=gt+90;let hb=null,bd=60*60;for(const b of blds)if(b.alive&&b.bt==='barrow'&&!b.rite){const d=d2(base.x,base.z,b.x,b.z);if(d<bd&&walkReach(b.dx,b.dz,sh.x,sh.z)){bd=d;hb=b}}if(hb&&R()<.6)startRitual(sh,hb)}
   if(gt>ai.nextBuild){ai.nextBuild=gt+ai.D.build+R()*2;aiBuild(T)}
   aiTrain(T,army.length);
   if(sh&&sh.st==='idle'&&!threat){const e=enemyNear(sh.x,sh.z,T.id,15);if(e)ai.calm=gt;else if(gt-ai.calm>20&&d2(sh.x,sh.z,base.x,base.z)>18*18){orderUnit(sh,base.x+(R()-.5)*4,base.z+2+R()*3,false)}}
@@ -3525,6 +3531,6 @@ document.querySelectorAll('.filmBox').forEach(box=>{box.addEventListener('click'
   box.addEventListener('input',e=>{const r=e.target.closest('input[data-fk]');if(!r)return;film[r.dataset.fk]=+r.value;filmSave();filmUI()})});
 filmUI();
 resize();buildWorld();showContinue();requestAnimationFrame(frame);
-window.__ws={get HUT_TOP(){return HUT_TOP},endGame,villagerCount,tokGet,keepsake,useKeepsake,walkReach,postAt,setSel,get banners(){return banners},get sel(){return sel},get world(){return world},light,memorial,get stats(){return stats},get cam(){return cam},get WS(){return WS},wsOpen,wsClose,captureDef,defFromData,merge,ORIG_UMOD,ORIG_BMOD,get UM(){return UM},get BM(){return BM},get wear(){return wear},get buntings(){return buntings},get patches(){return patches},get wells(){return wells},get units(){return units},get tribes(){return tribes},get blds(){return blds},sim,beginGame,get gt(){return gt},castSpell,tryCast,saveGame,loadGame,setSel,command,showLevel,SCEN,field,get walkA(){return walk},hAt,get water(){return water},findSpot,get allow(){return allowSets},get pass(){return pass},get swamps(){return swamps},get debris(){return debris},queenValue,invokeArma,startRitual,sendVehicle,get wildId(){return wildId},get armageddon(){return armageddon},placeBuilding,validSpot,orderMove,spawnUnit,command,get water(){return water},findSpot};
+window.__ws={get HUT_TOP(){return HUT_TOP},endGame,destroyBld,villagerCount,tokGet,keepsake,useKeepsake,walkReach,postAt,setSel,get banners(){return banners},get sel(){return sel},get world(){return world},light,memorial,get stats(){return stats},get cam(){return cam},get WS(){return WS},wsOpen,wsClose,captureDef,defFromData,merge,ORIG_UMOD,ORIG_BMOD,get UM(){return UM},get BM(){return BM},get wear(){return wear},get buntings(){return buntings},get patches(){return patches},get wells(){return wells},get units(){return units},get tribes(){return tribes},get blds(){return blds},sim,beginGame,get gt(){return gt},castSpell,tryCast,saveGame,loadGame,setSel,command,showLevel,SCEN,field,get walkA(){return walk},hAt,get water(){return water},findSpot,get allow(){return allowSets},get pass(){return pass},get swamps(){return swamps},get debris(){return debris},queenValue,invokeArma,startRitual,sendVehicle,get wildId(){return wildId},get armageddon(){return armageddon},placeBuilding,validSpot,orderMove,spawnUnit,command,get water(){return water},findSpot};
 })();
 </script>
