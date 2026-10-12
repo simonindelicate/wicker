@@ -2638,11 +2638,17 @@ function fin(im,n){im.count=n;im.instanceMatrix.needsUpdate=true;if(im.instanceC
 // particles
 const PV=`attribute float size;attribute vec4 col;varying vec4 vC;uniform float uScale;void main(){vC=col;vec4 mv=modelViewMatrix*vec4(position,1.);gl_PointSize=size*uScale/-mv.z;gl_Position=projectionMatrix*mv;}`;
 const PF=`varying vec4 vC;void main(){vec2 d=gl_PointCoord-.5;float r=dot(d,d)*4.;if(r>1.)discard;gl_FragColor=vec4(vC.rgb,vC.a*(1.-r));}`;
-class PSys{constructor(max,add){this.max=max;this.n=0;const F=()=>new Float32Array(max);
+// Additive particles (fire, sparks, magic) mark the pixels they light with alpha 252/255 (MIN blend, so the mark never
+// spreads past them), which lets the film grade find fire for certain. The halo leaves alpha alone, so a tribe-coloured
+// cloak under it keeps its 254/255 mark and the glow is not taken for fire. Invisible with the film look off.
+const PF_FIRE=`varying vec4 vC;void main(){vec2 d=gl_PointCoord-.5;float r=dot(d,d)*4.;if(r>1.)discard;float a=vC.a*(1.-r);if(a<.02)discard;gl_FragColor=vec4(vC.rgb*a,252./255.);}`;
+class PSys{constructor(max,add,kind){this.max=max;this.n=0;const F=()=>new Float32Array(max);
   this.x=F();this.y=F();this.z=F();this.vx=F();this.vy=F();this.vz=F();this.l=F();this.ml=F();this.r=F();this.g=F();this.b=F();this.a=F();this.s=F();this.gr=F();this.nfA=F();this.noFog=false;
   this.pos=new Float32Array(max*3);this.col=new Float32Array(max*4);this.siz=new Float32Array(max);
   const g=new C.BufferGeometry();g.setAttribute('position',new C.BufferAttribute(this.pos,3).setUsage(C.DynamicDrawUsage));g.setAttribute('col',new C.BufferAttribute(this.col,4).setUsage(C.DynamicDrawUsage));g.setAttribute('size',new C.BufferAttribute(this.siz,1).setUsage(C.DynamicDrawUsage));
-  this.geo=g;this.mat=new C.ShaderMaterial({uniforms:{uScale:{value:400}},vertexShader:PV,fragmentShader:PF,transparent:true,depthWrite:false,blending:add?C.AdditiveBlending:C.NormalBlending});
+  this.geo=g;this.mat=new C.ShaderMaterial({uniforms:{uScale:{value:400}},vertexShader:PV,fragmentShader:kind==='fire'?PF_FIRE:PF,transparent:true,depthWrite:false,blending:add?C.AdditiveBlending:C.NormalBlending});
+  if(kind==='fire')Object.assign(this.mat,{blending:C.CustomBlending,blendEquation:C.AddEquation,blendSrc:C.OneFactor,blendDst:C.OneFactor,blendEquationAlpha:C.MinEquation,blendSrcAlpha:C.OneFactor,blendDstAlpha:C.OneFactor});
+  else if(kind==='glow')Object.assign(this.mat,{blending:C.CustomBlending,blendEquation:C.AddEquation,blendSrc:C.SrcAlphaFactor,blendDst:C.OneFactor,blendEquationAlpha:C.AddEquation,blendSrcAlpha:C.ZeroFactor,blendDstAlpha:C.OneFactor});
   this.pts=new C.Points(g,this.mat);this.pts.frustumCulled=false;this.pts.renderOrder=add?3:2;scene.add(this.pts)}
   emit(x,y,z,vx,vy,vz,l,r,g,b,a,s,gr){if(this.n>=this.max)return;const i=this.n++;this.x[i]=x;this.y[i]=y;this.z[i]=z;this.vx[i]=vx;this.vy[i]=vy;this.vz[i]=vz;this.l[i]=l;this.ml[i]=l;this.r[i]=r;this.g[i]=g;this.b[i]=b;this.a[i]=a;this.s[i]=s;this.gr[i]=gr;this.nfA[i]=this.noFog?1:0}
   update(dt){let i=0;while(i<this.n){this.l[i]-=dt;if(this.l[i]<=0){const j=--this.n;for(const k of['x','y','z','vx','vy','vz','l','ml','r','g','b','a','s','gr','nfA'])this[k][i]=this[k][j];continue}
@@ -2650,7 +2656,7 @@ class PSys{constructor(max,add){this.max=max;this.n=0;const F=()=>new Float32Arr
   write(){for(let i=0;i<this.n;i++){const rx=wd(this.x[i]-cam.fx),rz=wd(this.z[i]-cam.fz);this.pos[i*3]=rx;this.pos[i*3+1]=this.y[i]-(rx*rx+rz*rz)*K;this.pos[i*3+2]=rz;
       const f=this.l[i]/this.ml[i],al=this.a[i]*Math.min(1,f*2.2)*(fogOn&&!this.nfA[i]?vis[cidx(this.x[i],this.z[i])]:1);this.col[i*4]=this.r[i];this.col[i*4+1]=this.g[i];this.col[i*4+2]=this.b[i];this.col[i*4+3]=al;this.siz[i]=this.s[i]*(this.gr[i]<0?(1.6-f*.6):1)}
     this.geo.setDrawRange(0,this.n);for(const k of['position','col','size'])this.geo.attributes[k].needsUpdate=true}}
-const PN=new PSys(3500,false),PA=new PSys(5000,true),HALO=new PSys(16,true);
+const PN=new PSys(3500,false),PA=new PSys(5000,true,'fire'),HALO=new PSys(16,true,'glow');
 
 // ---------------- render ----------------
 function updCam(dt){const fh=Math.max(hAt(cam.fx,cam.fz),0);cam.fh+=(fh-cam.fh)*Math.min(1,dt*4);
@@ -3394,14 +3400,14 @@ vec3 px(vec2 uv){vec4 s=texture2D(tD,uv);return s.rgb+sky(uv.y)*(1.-s.a);}
 void main(){vec2 uv=vUv,d=1./uRes;vec3 c=px(uv);
  vec3 hl=vec3(0.);for(int i=0;i<8;i++){float a=float(i)*.785398;vec2 o=vec2(cos(a),sin(a))*d;hl+=max(px(uv+o*5.)-uP[12],0.)+max(px(uv+o*12.)-uP[12],0.)*.6;}
  float hv=dot(hl/16.,vec3(.5,.35,.15));c+=vec3(.9,.22,.05)*hv*uP[11];
- vec4 raw=texture2D(tD,uv);float tm=step(.99,raw.a)*(1.-step(.9995,raw.a));vec3 tc=c;
+ vec4 raw=texture2D(tD,uv);float tm=step(.993,raw.a)*(1.-step(.9995,raw.a)),fm=step(.984,raw.a)*(1.-step(.9915,raw.a));vec3 tc=c;
  c*=uP[0];
  float l=dot(c,vec3(.299,.587,.114)),mx=max(c.r,max(c.g,c.b)),sat=mx-min(c.r,min(c.g,c.b));
  // a true red: red is the top channel, the hue sits close to pure red (green and blue both low, not green well above blue as in browns,
  // skin and orange), and the colour is strong for its brightness. uP[16] sets how far towards orange counts as red.
  float sr=sat/max(mx,.04),hue=c.r>=mx?abs(c.g-c.b)/max(sat,.001):1.,
   red=(1.-smoothstep(uP[16]*.6,uP[16],hue))*smoothstep(.35,.6,sr)*step(c.g+c.b,c.r*1.6),
-  fire=smoothstep(.12,.45,c.r-c.b)*step(c.b,c.g)*smoothstep(.93,.995,tc.r),bw=smoothstep(.04,.2,c.b-max(c.r,c.g))*smoothstep(.08,.35,sr),strong=max(red,bw);
+  fire=fm*smoothstep(.12,.45,c.r-c.b)*step(c.b,c.g)*smoothstep(.45,.85,tc.r),bw=smoothstep(.04,.2,c.b-max(c.r,c.g))*smoothstep(.08,.35,sr),strong=max(red,bw);
  // fire (bright, warm: red well above blue, which takes in yellow flame too) is never drained, whatever Strong colour says
  vec3 g=mix(vec3(l),c,mix(mix(uP[4],uP[5],strong),max(1.,uP[5]),fire));
  g.g-=max(g.g-max(g.r,g.b),0.)*uP[13];
