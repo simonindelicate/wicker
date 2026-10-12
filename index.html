@@ -242,7 +242,7 @@ details.help summary{cursor:pointer;color:var(--text);font:14px var(--f-display)
           <fieldset><legend>Rival skill</legend><div class="seg" id="oDf"><button data-v="easy">Easy</button><button data-v="normal" class="on">Normal</button><button data-v="hard">Hard</button></div></fieldset>
           <fieldset><legend>Fog of war</legend><div class="seg" id="oFog"><button data-v="1" class="on">On</button><button data-v="0">Off</button></div></fieldset>
           <fieldset><legend>World seed</legend><div class="seedrow"><input id="oSeed" inputmode="numeric" aria-label="World seed"><button class="btn" id="oReroll">New world</button></div></fieldset>
-          <fieldset class="filmBox"><legend>Film</legend><div class="seg"><button data-fl="0">Off</button><button data-fl="1">35mm</button><button data-fl="2">16mm</button></div><div class="filmS"><label class="fs"><span>Grain</span><input type="range" min="0" max="1" step="0.05" data-fk="grain"></label><label class="fs"><span>Dust and scratches</span><input type="range" min="0" max="1" step="0.05" data-fk="dust"></label></div></fieldset>
+          <fieldset class="filmBox"><legend>Film</legend><div class="seg"><button data-fl="0">Off</button><button data-fl="1">35mm</button></div><div class="filmS"><label class="fs"><span>Grain</span><input type="range" min="0" max="1" step="0.05" data-fk="grain"></label><label class="fs"><span>Dust and scratches</span><input type="range" min="0" max="1" step="0.05" data-fk="dust"></label></div></fieldset>
         </div>
         <figure class="prev"><canvas id="prev" width="256" height="256"></canvas><figcaption id="prevCap">Your tribe is ochre.</figcaption></figure>
       </div>
@@ -336,7 +336,7 @@ details.help summary{cursor:pointer;color:var(--text);font:14px var(--f-display)
     <div class="sheet" style="width:min(420px,100%)">
       <h2>Paused</h2>
       <p class="sub" id="pauseInfo"></p>
-      <fieldset class="filmBox"><legend>Film</legend><div class="seg"><button data-fl="0">Off</button><button data-fl="1">35mm</button><button data-fl="2">16mm</button></div><div class="filmS"><label class="fs"><span>Grain</span><input type="range" min="0" max="1" step="0.05" data-fk="grain"></label><label class="fs"><span>Dust and scratches</span><input type="range" min="0" max="1" step="0.05" data-fk="dust"></label></div></fieldset>
+      <fieldset class="filmBox"><legend>Film</legend><div class="seg"><button data-fl="0">Off</button><button data-fl="1">35mm</button></div><div class="filmS"><label class="fs"><span>Grain</span><input type="range" min="0" max="1" step="0.05" data-fk="grain"></label><label class="fs"><span>Dust and scratches</span><input type="range" min="0" max="1" step="0.05" data-fk="dust"></label></div></fieldset>
       <button class="primary" id="bResume">Resume</button>
       <button class="secondary" id="bAbandon">Abandon and choose a new world</button>
     </div>
@@ -3353,35 +3353,40 @@ function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;fogK=Math.mi
   requestAnimationFrame(frame)}
 
 // ---------------- film look (optional) ----------------
-// Off, 35mm (cinema: fine grain, gentle fade) or 16mm (television: coarser grain, softer, more faded).
+// Off or 35mm: dull colours drained, strong reds and fire kept deep and vivid, firm contrast, grain, halation, dust.
 // The world is drawn to an off-screen target, then graded onto the screen with the CSS sky composited
 // underneath; the HUD is HTML above the canvas and stays clean. Grain changes at 24 frames a second.
 const FILM_KEY='wicker-film-v1';
-const film={look:0,grain:.6,dust:.35};try{Object.assign(film,JSON.parse(localStorage.getItem(FILM_KEY))||{})}catch(e){}
+const film={look:0,grain:.6,dust:.35};try{Object.assign(film,JSON.parse(localStorage.getItem(FILM_KEY))||{})}catch(e){}if(film.look>1)film.look=1;
 let filmRT=null,filmQ=null,filmT=0,filmArma=0;const filmSc=[];
 const SKY_N=[0x080605,0x1d1410,0x473829,0x7f725b],SKY_A=[0x0f0202,0x3a0a07,0x76220f,0x9a4224];
 function filmInit(){if(filmRT)return;const w=glc.width||1,h=glc.height||1;
   filmRT=renderer.capabilities.isWebGL2&&C.WebGLMultisampleRenderTarget?new C.WebGLMultisampleRenderTarget(w,h,{samples:4}):new C.WebGLRenderTarget(w,h);
   const sp=[];for(let i=0;i<8;i++)sp.push(new C.Vector4());const sc=[];for(let i=0;i<3;i++)sc.push(new C.Vector4());
-  const mat=new C.ShaderMaterial({depthTest:false,depthWrite:false,uniforms:{tD:{value:filmRT.texture},uRes:{value:new C.Vector2(w,h)},uSeed:{value:0},uGrain:{value:0},uK:{value:0},
+  const mat=new C.ShaderMaterial({depthTest:false,depthWrite:false,uniforms:{tD:{value:filmRT.texture},uRes:{value:new C.Vector2(w,h)},uSeed:{value:0},uGrain:{value:0},
     uS0:{value:new C.Color()},uS1:{value:new C.Color()},uS2:{value:new C.Color()},uS3:{value:new C.Color()},uSp:{value:sp},uSc:{value:sc}},
     vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position.xy,0.,1.);}',
-    fragmentShader:`uniform sampler2D tD;uniform vec2 uRes;uniform float uSeed,uGrain,uK;uniform vec3 uS0,uS1,uS2,uS3;uniform vec4 uSp[8];uniform vec4 uSc[3];varying vec2 vUv;
+    fragmentShader:`uniform sampler2D tD;uniform vec2 uRes;uniform float uSeed,uGrain;uniform vec3 uS0,uS1,uS2,uS3;uniform vec4 uSp[8];uniform vec4 uSc[3];varying vec2 vUv;
 float h(vec2 p){return fract(sin(dot(p,vec2(12.9898,78.233)))*43758.5453);}
 vec3 sky(float y){float t=1.-y;return t<.3?mix(uS0,uS1,t/.3):t<.62?mix(uS1,uS2,(t-.3)/.32):mix(uS2,uS3,(t-.62)/.38);}
 vec3 px(vec2 uv){vec4 s=texture2D(tD,uv);return s.rgb+sky(uv.y)*(1.-s.a);}
 void main(){vec2 uv=vUv,d=1./uRes;vec3 c=px(uv);
- if(uK>0.){vec3 b=(px(uv+vec2(d.x,0.))+px(uv-vec2(d.x,0.))+px(uv+vec2(0.,d.y))+px(uv-vec2(0.,d.y)))*.25;c=mix(c,b,.5*uK);}
- vec3 hl=vec3(0.);for(int i=0;i<8;i++){float a=float(i)*.785398;vec2 o=vec2(cos(a),sin(a))*d;hl+=max(px(uv+o*5.)-.6,0.)+max(px(uv+o*12.)-.6,0.)*.6;}
- float hv=dot(hl/16.,vec3(.5,.35,.15));c+=vec3(1.,.34,.12)*hv*(1.7+uK*.8);
- float l=dot(c,vec3(.299,.587,.114));
- vec3 g=mix(vec3(l),c,.8-.1*uK);g.g-=max(g.g-max(g.r,g.b),0.)*.35;g.r+=max(c.g-c.r,0.)*.08;
- g*=mix(vec3(.88,1.,.97),vec3(1.08,1.,.84),smoothstep(.08,.75,l));
- g=g*1.16/(1.+g*.16);
- vec3 lift=vec3(.07,.058,.044)*(1.+uK*.7);g=lift+g*(1.-lift);
- vec2 q=uv-.5;g*=1.-dot(q,q)*(.6+.4*uK);
- vec2 gp=floor(gl_FragCoord.xy/(1.+uK*.7));float n=h(gp+uSeed)+h(gp*1.31+uSeed*1.7+3.1)-1.;
- g+=n*uGrain*(.075+.05*uK)*(1.-.75*smoothstep(.5,1.,l))*(.55+.45*smoothstep(0.,.25,l));
+ vec3 hl=vec3(0.);for(int i=0;i<8;i++){float a=float(i)*.785398;vec2 o=vec2(cos(a),sin(a))*d;hl+=max(px(uv+o*5.)-.68,0.)+max(px(uv+o*12.)-.68,0.)*.6;}
+ float hv=dot(hl/16.,vec3(.5,.35,.15));c+=vec3(.9,.22,.05)*hv*1.4;
+ float l=dot(c,vec3(.299,.587,.114)),mx=max(c.r,max(c.g,c.b)),sat=mx-min(c.r,min(c.g,c.b));
+ // the land (grass, earth, stone, sky) drains towards khaki and grey; reds, oranges, fire and deep blues keep or gain colour
+ float ww=smoothstep(.04,.22,c.r-c.g),bw=smoothstep(.04,.2,c.b-max(c.r,c.g)),strong=max(ww,bw)*smoothstep(.08,.35,sat/max(mx,.04));
+ vec3 g=mix(vec3(l),c,mix(.58,1.2,strong));
+ // reds go deep rather than light, and fire stays orange instead of blowing out to yellow-white
+ float rw=clamp((c.r-max(c.g,c.b))*2.5,0.,1.);g.gb*=1.-.3*rw;g.r*=1.-.08*rw;
+ float hot=ww*smoothstep(.72,1.,l);g.g*=1.-.22*hot;g.b*=1.-.5*hot;
+ // contrast: a firm S-curve, with only the faintest warm lift in the blacks
+ g=clamp(g,0.,1.);g=mix(g,g*g*(3.-2.*g),.55);
+ g*=mix(vec3(.94,1.,1.),vec3(1.03,1.,.95),smoothstep(.15,.8,l));
+ g=vec3(.018,.014,.01)+g*.985;
+ vec2 q=uv-.5;g*=1.-dot(q,q)*.7;
+ vec2 gp=floor(gl_FragCoord.xy);float n=h(gp+uSeed)+h(gp*1.31+uSeed*1.7+3.1)-1.;
+ g+=n*uGrain*.07*(1.-.75*smoothstep(.5,1.,l))*(.55+.45*smoothstep(0.,.25,l));
  float asp=uRes.x/uRes.y;
  for(int i=0;i<8;i++){vec4 p=uSp[i];if(p.z<=0.)continue;vec2 e=(uv-p.xy)*vec2(asp,1.);float an=atan(e.y,e.x);
   float rr=p.z*(1.+.35*sin(an*3.+p.w*20.)+.2*sin(an*5.+p.w*7.));float m=1.-smoothstep(rr*.55,rr,length(e));
@@ -3393,16 +3398,16 @@ void main(){vec2 uv=vUv,d=1./uRes;vec3 c=px(uv);
   const m=new C.Mesh(new C.PlaneGeometry(2,2),mat);m.frustumCulled=false;filmQ.scene.add(m)}
 function filmSize(){if(!filmRT)return;const w=glc.width||1,h=glc.height||1;filmRT.setSize(w,h);filmQ.mat.uniforms.uRes.value.set(w,h)}
 function filmRender(dt){filmInit();if(filmRT.width!==glc.width||filmRT.height!==glc.height)filmSize();
-  const U=filmQ.mat.uniforms,k=film.look===2?1:0;U.uK.value=k;U.uGrain.value=film.grain;
+  const U=filmQ.mat.uniforms;U.uGrain.value=film.grain;
   filmArma+=Math.max(-dt/2,Math.min(dt/2,(armageddon?1:0)-filmArma));
   ['uS0','uS1','uS2','uS3'].forEach((n,i)=>{U[n].value.setHex(SKY_N[i]).lerp(_fc.setHex(SKY_A[i]),filmArma)});
   // scratches live for a second or two and drift; dust lasts a single film frame
   for(const s of filmSc){s.t-=dt;s.x+=s.v*dt}for(let i=filmSc.length-1;i>=0;i--)if(filmSc[i].t<=0)filmSc.splice(i,1);
-  if(filmSc.length<3&&Math.random()<dt*film.dust*(.12+.35*k))filmSc.push({x:.05+Math.random()*.9,v:(Math.random()-.5)*.01,t:.6+Math.random()*2.4,w:.8+Math.random()*1.2,a:.25+Math.random()*.35,s:Math.random()});
+  if(filmSc.length<3&&Math.random()<dt*film.dust*.15)filmSc.push({x:.05+Math.random()*.9,v:(Math.random()-.5)*.01,t:.6+Math.random()*2.4,w:.8+Math.random()*1.2,a:.25+Math.random()*.35,s:Math.random()});
   for(let i=0;i<3;i++){const s=filmSc[i];U.uSc.value[i].set(s?s.x:0,s?s.a*Math.min(1,s.t*4):0,s?s.w:0,s?s.s:0)}
   filmT-=dt;if(filmT<=0){filmT=1/24;U.uSeed.value=Math.random()*100;
-    let n=0;const want=film.dust<=0?0:Math.floor(Math.random()*Math.random()*film.dust*(4+8*k)+(Math.random()<film.dust*.25?1:0));
-    for(let i=0;i<8;i++){const v=U.uSp.value[i];if(n<want){n++;v.set(Math.random(),Math.random(),(.0015+Math.random()*Math.random()*.006)*(1+k*.6),Math.random())}else v.set(0,0,0,0)}}
+    let n=0;const want=film.dust<=0?0:Math.floor(Math.random()*Math.random()*film.dust*4+(Math.random()<film.dust*.25?1:0));
+    for(let i=0;i<8;i++){const v=U.uSp.value[i];if(n<want){n++;v.set(Math.random(),Math.random(),(.0015+Math.random()*Math.random()*.006),Math.random())}else v.set(0,0,0,0)}}
   renderer.setRenderTarget(filmRT);renderer.render(scene,camera);renderer.setRenderTarget(null);renderer.render(filmQ.scene,filmQ.cam)}
 const _fc=new C.Color();
 function filmSave(){try{localStorage.setItem(FILM_KEY,JSON.stringify(film))}catch(e){}}
