@@ -97,6 +97,9 @@ Tokens are earned only in live play: never in "Watch the tribes fight", and neve
 | `d_thornwall` |  | Survive The Long Watch without losing a building |  |
 | `d_nofear` |  | Win without your dread ever passing the mark |  |
 | `d_noblade` |  | Win without training a warrior |  |
+| `d_skytomb` |  | Win Fire from the Sky from inside a hollow hill |  |
+| `d_threefolds` |  | Have three Thrall Folds full at once |  |
+| `d_threefires` |  | Have three wicker men burning close together at once |  |
 
 ## Curiosities
 

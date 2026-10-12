@@ -647,7 +647,7 @@ const TOKS=[
  ['Growth',[['pop25','Lead 25 followers'],['pop50','Lead 50 followers'],['pop100','Lead 100 followers'],['pop150','Lead 150 followers']]],
  ['Endurance',[['t30','Last half an hour in one game'],['t60','Last an hour in one game'],['t120','Last two hours in one game']]],
  ['Victories',[['w_easy','Win on Easy'],['w_normal','Win on Normal'],['w_hard','Win on Hard'],['w_arch','Win on an archipelago'],['w_cont','Win on a continent'],['w_high','Win in the highlands']]],
- ['Deeds',[['d_godcaps','Burn a Wicker God filled entirely with captives'],['d_richqueen','Offer a May Queen at her richest'],['d_harvest20','Drag twenty broken raiders to your altar in one game'],['d_carried','Have the whirlwind carry off a building'],['d_fever8',"Have one St. Anthony's Fire take eight people"],['d_leap2','Go over the edge twice in one game'],['d_thornwall','Survive The Long Watch without losing a building'],['d_nofear','Win without your dread ever passing the mark'],['d_noblade','Win without training a warrior']]],
+ ['Deeds',[['d_godcaps','Burn a Wicker God filled entirely with captives'],['d_richqueen','Offer a May Queen at her richest'],['d_harvest20','Drag twenty broken raiders to your altar in one game'],['d_carried','Have the whirlwind carry off a building'],['d_fever8',"Have one St. Anthony's Fire take eight people"],['d_leap2','Go over the edge twice in one game'],['d_thornwall','Survive The Long Watch without losing a building'],['d_nofear','Win without your dread ever passing the mark'],['d_noblade','Win without training a warrior'],['d_skytomb','Win Fire from the Sky from inside a hollow hill'],['d_threefolds','Have three Thrall Folds full at once'],['d_threefires','Have three wicker men burning close together at once']]],
  ['Curiosities',[
   ['x_lightfits',"Strike down someone in the fits of St. Anthony's Fire with Lightning",'The burning man does not need the sky as well. Give it to him anyway.'],
   ['x_erodebr2','Sink ground raised by a Land Bridge with Erode, twice in one game','What the woman raises, the woman may drown. Twice.'],
@@ -996,13 +996,13 @@ function sacrifice(u,b){const T=tribes[u.tribe];if(b.claim===u)b.claim=null;cons
   if(b.lit)return;
   if(b.bt==='altar'){const v=Math.round(offerValue(b,cap,wild)*T.manaMult);T.mana=Math.min(MANA_MAX,T.mana+v);if(!cap)T.dread=Math.min(100,T.dread+DREAD.altar);b.busy=gt+2.5;
     const y=hAt(b.x,b.z);for(let i=0;i<18;i++)PA.emit(b.x+(R()-.5)*.6,y+.9,b.z+(R()-.5)*.6,(R()-.5)*1.2,1+R()*2,(R()-.5)*1.2,.7,.75,.08,.06,1,.4,2);
-    b.mem=(b.mem||0)+1;tribes[b.tribe].rib=(tribes[b.tribe].rib||0)+1;sfx('die',.5,b.x,b.z);if(u.tribe===0){if(!u.harvest)toast(`${cap?'A captive':'A villager'} is given to the grove. +${v} mana`);stats.burned++}return}
+    b.mem=(b.mem||0)+1;sacN(b.tribe,1);sfx('die',.5,b.x,b.z);if(u.tribe===0){if(!u.harvest)toast(`${cap?'A captive':'A villager'} is given to the grove. +${v} mana`);stats.burned++}return}
   b.inside.push({cap,wild});if(u.tribe===0)stats.burned++;dockDirty=true;
   if(b.inside.length>=BT[b.bt].holdN)light(b)}
 function memorial(kind,x,z,tribe){const M=stats.mem||(stats.mem=[]);if(M.length>=60)return;
   if(kind==='doll'){const near=M.filter(m=>m.k==='doll'&&d2(m.cx,m.cz,x,z)<5*5);const c=near[0]||{cx:x,cz:z};const i=near.length,a=i*2.39996+.5,r=2.4+(i>=8?.7:0);M.push({k:'doll',cx:c.cx,cz:c.cz,x:wrap(c.cx+Math.cos(a)*r),z:wrap(c.cz+Math.sin(a)*r),tribe,t:gt})}
   else M.push({k:kind,x,z,tribe,t:gt})}
-function light(b){const T=tribes[b.tribe],D=BT[b.bt];if(b.lit)return;b.lit=true;if(b.tribe===0){earn(b.bt==='god'?'r_burngod':'r_burnman');if(b.bt==='god'&&b.inside.length>=12&&b.inside.every(o=>o.cap))earn('d_godcaps')}if(!armageddon)memorial('doll',b.x,b.z,b.tribe);b.litT=gt;b.burnEnd=gt+D.burnT;if(b.bt==='god')b.burnEnd+=3;let v=0,own=0;
+function light(b){const T=tribes[b.tribe],D=BT[b.bt];if(b.lit)return;b.lit=true;sacN(b.tribe,b.inside.length);if(b.tribe===0){earn(b.bt==='god'?'r_burngod':'r_burnman');if(b.bt==='god'&&b.inside.length>=12&&b.inside.every(o=>o.cap))earn('d_godcaps')}if(!armageddon)memorial('doll',b.x,b.z,b.tribe);b.litT=gt;b.burnEnd=gt+D.burnT;if(b.bt==='god')b.burnEnd+=3;let v=0,own=0;
   for(const o of b.inside){v+=offerValue(b,o.cap,o.wild);if(!o.cap)own++}
   v=Math.round(v*T.manaMult);T.mana=Math.min(MANA_MAX,T.mana+v);T.dread=Math.min(100,T.dread+own*DREAD[D.site]);
   if(b.bt==='wicker')T.frenzyUntil=Math.min(gt+TUNE.frenzyMax,Math.max(gt,T.frenzyUntil||0)+TUNE.frenzyPerHead*b.inside.length);
@@ -1049,7 +1049,8 @@ function crown(T,mp){const ds=units.filter(u=>u.alive&&u.tribe===T.id&&u.st==='d
   const q=spawnUnit('queen',T.id,c.x,c.z);q.born=gt;q.hx=mp.x+2;q.hz=mp.z+2;q.mp=mp.id;removeUnit(c);mp.merry=0;
   const y=hAt(mp.x,mp.z);for(let i=0;i<60;i++){const a=R()*TAU,r=R()*2.5;PA.emit(mp.x+Math.cos(a)*r,y+.5+R()*4,mp.z+Math.sin(a)*r,Math.cos(a)*1.5,1+R()*2.5,Math.sin(a)*1.5,1.6,i%3?.95:.92,i%3?.45:.85,i%3?.6:.3,1,.4,1.2)}
   sfx('built',1,mp.x,mp.z);toast(T.id===0&&!watching?'A May Queen is crowned. Keep her alive and her offering grows richer; guard her well.':`The ${T.name} folk have crowned a May Queen`)}
-function offerQueen(T,b,u){if(T.id===0){earn('r_offerqueen');if(queenValue(u)>=TUNE.queenMax)earn('d_richqueen');stats.queenOffered=(stats.queenOffered||0)+1;const SC=scen();if(SC&&SC.goal.type==='queen'&&(SC.goal.n||1)>1&&stats.queenOffered<SC.goal.n)setTimeout(()=>toast(`${stats.queenOffered} of ${SC.goal.n} May Queens given to the fire`),2500)}const v=Math.round(queenValue(u)*T.manaMult);T.mana=Math.min(MANA_MAX,T.mana+v);T.frenzyUntil=Math.min(gt+TUNE.frenzyMax,Math.max(gt,T.frenzyUntil||0)+TUNE.queenFrenzy);
+function sacN(ti,n){const T=tribes[ti];if(T&&n>0)T.sac=Math.max(T.sac||0,T.rib||0)+n}
+function offerQueen(T,b,u){sacN(T.id,1);if(T.id===0){earn('r_offerqueen');if(queenValue(u)>=TUNE.queenMax)earn('d_richqueen');stats.queenOffered=(stats.queenOffered||0)+1;const SC=scen();if(SC&&SC.goal.type==='queen'&&(SC.goal.n||1)>1&&stats.queenOffered<SC.goal.n)setTimeout(()=>toast(`${stats.queenOffered} of ${SC.goal.n} May Queens given to the fire`),2500)}const v=Math.round(queenValue(u)*T.manaMult);T.mana=Math.min(MANA_MAX,T.mana+v);T.frenzyUntil=Math.min(gt+TUNE.frenzyMax,Math.max(gt,T.frenzyUntil||0)+TUNE.queenFrenzy);
   {let a=hsh(((b.x*31+b.z*17)*10)|0)*TAU,qx=0,qz=0;for(let t=0;t<12;t++,a+=.6){qx=wrap(b.x+Math.cos(a)*(BT[b.bt].s*.5+2.4));qz=wrap(b.z+Math.sin(a)*(BT[b.bt].s*.5+2.4));if(!bOcc[cidx(qx,qz)]&&!water[cidx(qx,qz)])break}memorial('queen',qx,qz,T.id)}
   queenSpectacle(b);toast(T.id===0&&!watching?`The May Queen goes willingly. +${v} mana, and your people are in a frenzy.`:`The ${T.name} folk have given a May Queen to the fire`)}
 function desert(T){const c=units.filter(u=>u.alive&&u.tribe===T.id&&u.type==='brave'&&!u.inV&&!u.air&&u.st!=='enter'&&u.st!=='wait');let u=c.length?c[(R()*c.length)|0]:null;
@@ -1531,7 +1532,7 @@ function harvestBroken(T,alive,di){const Dt=tribes[di],out={n:0,where:'altar'};i
     let dest=null,bd=1e18;for(const b of own)if(b.done&&!b.lit&&b.bt==='altar'){const d=d2(u.x,u.z,b.x,b.z);if(d<bd){bd=d;dest=b}}
     if(!dest)for(const b of own)if(b.done&&!b.lit&&(b.bt==='wicker'||b.bt==='god')&&b.inside.length+walking(b)<BT[b.bt].holdN){const d=d2(u.x,u.z,b.x,b.z);if(d<bd){bd=d;dest=b}}
     if(u.carry)releaseCarry(u);if(u.sel)deselect(u);const x=u.x,z=u.z;removeUnit(u);out.n++;
-    if(!dest){const v=Math.round(YIELD.altar[1]*Dt.manaMult);Dt.mana=Math.min(MANA_MAX,Dt.mana+v);const y=hAt(x,z);for(let i=0;i<14;i++)PA.emit(x,y+.4,z,(R()-.5)*1.5,1+R()*2,(R()-.5)*1.5,.7,.75,.08,.06,1,.4,2);out.where='ground';continue}
+    if(!dest){const v=Math.round(YIELD.altar[1]*Dt.manaMult);Dt.mana=Math.min(MANA_MAX,Dt.mana+v);sacN(Dt.id,1);const y=hAt(x,z);for(let i=0;i<14;i++)PA.emit(x,y+.4,z,(R()-.5)*1.5,1+R()*2,(R()-.5)*1.5,.7,.75,.08,.06,1,.4,2);out.where='ground';continue}
     out.where=dest.bt==='altar'?'altar':BT[dest.bt].label.toLowerCase();
     const c=spawnUnit('captive',di,x,z);c.capt={tribe:T.id};c.harvest=true;c.st='enter';c.bld=dest;c.purpose='sac';setTarget(c,dest.dx,dest.dz);
     let br=null,bb=18*18;for(const v of units)if(v.alive&&v.tribe===di&&v.type==='brave'&&!v.inV&&!used.has(v)&&(v.st==='idle'||v.st==='gather')){const d=d2(x,z,v.x,v.z);if(d<bb){bb=d;br=v}}
@@ -1699,6 +1700,8 @@ function regrow(){let alive=0;for(const t of trees)if(t.alive)alive++;if(alive>=
     if(h>.8&&h<9.5&&walk[c]&&!bOcc[c]&&!(hazU[c]>gt)){trees.push({x,z,wood:TUNE.woodPerTree,alive:true,sc:.8+R()*.45,tint:.85+R()*.25,born:gt});tGridDirty=true}}}
 let leapLast=false;
 function tokTick(){const T=tribes[0];if(!T||!T.alive||!tokLive())return;const a=A(),p=T.stats.pop;if(p>=25)earn('pop25');if(p>=50)earn('pop50');if(p>=100)earn('pop100');if(p>=150)earn('pop150');
+  {let nf=0;const lit=[];for(const b of blds){if(!b.alive||b.tribe!==0||!b.done)continue;if(b.bt==='fold'&&b.capt.length>=BT.fold.hold)nf++;if((b.bt==='wicker'||b.bt==='god')&&b.lit&&gt<b.burnEnd)lit.push(b)}if(nf>=3)earn('d_threefolds');
+   for(let i=0;i<lit.length;i++)for(let j=i+1;j<lit.length;j++)for(let k=j+1;k<lit.length;k++){const A=lit[i],B=lit[j],K2=lit[k],R2=14*14;if(d2(A.x,A.z,B.x,B.z)<R2&&d2(A.x,A.z,K2.x,K2.z)<R2&&d2(B.x,B.z,K2.x,K2.z)<R2)earn('d_threefires')}}
   if(gt>=1800)earn('t30');if(gt>=3600)earn('t60');if(gt>=7200)earn('t120');if(T.dread>TUNE.desertAt)a.dreadOver=true;
   const sh=T.shaman;if(sh&&sh.alive&&!sh.inV&&sh.hitT>gt-4){const near=units.filter(o=>o.alive&&o.type==='shaman'&&o.tribe!==0&&!o.inV&&o.hitT>gt-4&&d2(o.x,o.z,sh.x,sh.z)<100);
     for(let i=0;i<near.length;i++)for(let j=i+1;j<near.length;j++)if(near[i].tribe!==near[j].tribe&&d2(near[i].x,near[i].z,near[j].x,near[j].z)<100)earn('x_threeway')}
@@ -2677,6 +2680,12 @@ const PEBBLE=inst(merge([P(new C.DodecahedronGeometry(.13,0),0xb9b3a4,0,.05,0)])
 const GBP=inst(merge([P(cyl(.035,.045,1.6,5),0x5b4632,0,.8,0),P(new C.BoxGeometry(.5,.04,.04),0x5b4632,.2,1.5,0),P(new C.SphereGeometry(.06,5,4),0xd9cfb6,0,1.62,0)]),matF,60);
 const GBC=inst(merge([P(new C.BoxGeometry(.42,.52,.02),0xffffff,.22,1.22,0)]),new C.MeshLambertMaterial({color:0xffffff,side:C.DoubleSide}),60);
 const STAKE=inst(merge([P(cyl(.03,.035,.9,4),0x6b4a2c,0,.45,0)]),matF,400);
+// sacrifice stakes: painted posts in the flower colours and the tribe's own, set along a three-armed spiral out from the stone circle
+const SPK_CAP=1600,SPIRAL_MAX=300,SPK_C=[0xd85a7a,0xe7c84a,0xf1ece0];
+const SACK=inst(merge([P(cyl(.05,.06,.42,5),0xffffff,0,.21,0),P(new C.ConeGeometry(.06,.1,5),0xffffff,0,.47,0)]),matF,SPK_CAP);
+const SPIRAL=(()=>{const arms=3,r0=3.2,gap=5.4,step=.5,per=Math.ceil(SPIRAL_MAX*1.6/arms),A=[];
+  for(let a=0;a<arms;a++){const th0=a/arms*TAU;let th=th0;A.push([]);for(let i=0;i<per;i++){const r=r0+gap*(th-th0)/TAU;A[a].push([Math.cos(th)*r,Math.sin(th)*r]);th+=step/r}}
+  const out=[];for(let i=0;i<per;i++)for(let a=0;a<arms;a++)out.push(A[a][i]);return out})();
 const RIB=(()=>{const g=new C.BoxGeometry(.04,.32,.012);g.translate(0,-.16,0);return inst(g,new C.MeshLambertMaterial({color:0xffffff}),900)})();
 const KIND=inst(merge([P(new C.ConeGeometry(.28,.32,5),0x5a3d24,0,.16,0),P(new C.BoxGeometry(.5,.05,.06),0x7a5634,0,.08,0,0,.6,.2),P(new C.BoxGeometry(.46,.05,.06),0x6b4a2c,0,.1,0,0,-.7,-.2)]),matF,120);
 const BENCH=inst(merge([P(cyl(.11,.11,1,6),0x6b4a2c,0,.26,0,0,0,Math.PI/2),P(new C.BoxGeometry(.08,.2,.2),0x5a3d24,-.35,.1,0),P(new C.BoxGeometry(.08,.2,.2),0x5a3d24,.35,.1,0)]),matF,60);
@@ -2800,15 +2809,16 @@ function drawEntities(){
     if(pn<60){place(POST,pn,rx,hAt(q.x,q.z)-r2*K,rz,0,1);_c.setRGB(fv,fv,fv);POST.setColorAt(pn,_c);pn++}
     for(let k=0;k<14;k++){const ring=k<5?.38:.68,a=k<5?k/5*TAU:(k-5)/9*TAU+.2,fx=Math.cos(a)*ring,fz=Math.sin(a)*ring;flw(rx+fx,rz+fz,q.x+fx,q.z+fz,a,1.5+hsh(q.id*31+k)*.4,FLOWER_C[(q.id+(k<5?0:1+(k&1)))%3],fv)}}
   // ---- dressing of the meaningful places, and memorials of what was given there ----
-  let kn=0,sn2=0,rn2=0,bn2=0,dn=0,mn=0,hn=0;const vf=(x,z)=>fogOn?Math.max(.42,vis[cidx(x,z)]):1;
+  let kn=0,sn2=0,rn2=0,bn2=0,dn=0,mn=0,hn=0,sk=0;const vf=(x,z)=>fogOn?Math.max(.42,vis[cidx(x,z)]):1;
   const at=(b,lx,lz)=>{[lx,lz]=byaw(b,lx,lz);const x=wd(b.x-cam.fx)+lx,z=wd(b.z-cam.fz)+lz;return [x,z,b.x+lx,b.z+lz,hAt(b.x+lx,b.z+lz)-(x*x+z*z)*K]};
   const pebble=(b,lx,lz,sc,yaw)=>{if(mn>=500)return;const [x,z,,,y]=at(b,lx,lz);place(PEBBLE,mn,x,y,z,yaw,sc);_c.setRGB(1,1,1).multiplyScalar(vf(b.x,b.z));PEBBLE.setColorAt(mn,_c);mn++};
   const settledT=new Set();for(const b of blds)if(b.alive&&b.flT)settledT.add(b.tribe);
   const oldest={};for(const b of blds)if(b.alive&&b.done&&b.bt==='hut'&&b.flT&&(!oldest[b.tribe]||b.id<oldest[b.tribe].id))oldest[b.tribe]=b;
   for(const b of blds){if(!b.alive||!b.done)continue;const rx=wd(b.x-cam.fx),rz=wd(b.z-cam.fz);if(rx*rx+rz*rz>VR2*.75||!visB(b))continue;const fv=vf(b.x,b.z);
-    if(b.bt==='reinc'){const T=tribes[b.tribe];let n=Math.min(40,Math.max(T.rib||0,blds.reduce((s,o)=>s+(o.alive&&o.tribe===b.tribe&&o.bt==='altar'?o.mem||0:0),0)));
-      for(let k=0;k<n&&rn2<900;k++){const tier=(k/10)|0,a=(k%10)/10*TAU+tier*.31,hy=1.24-tier*.24,r=.208-.04*hy/1.3,[x,z,,,y]=at(b,Math.cos(a)*r,Math.sin(a)*r);
-        place(RIB,rn2,x,y+hy,z,-a-Math.PI/2,1);_c.setHex(PALE_C[(k+b.id)%PALE_C.length]).multiplyScalar(fv);RIB.setColorAt(rn2,_c);rn2++}}
+    // every life given (altar, wicker, May Queen, raiders put to death) raises a painted stake; they wind out from the stone circle in three arms
+    if(b.bt==='reinc'){const T=tribes[b.tribe];const n=Math.min(SPIRAL_MAX,Math.max(T.sac||0,T.rib||0));let k=0;
+      for(let q=0;k<n&&q<SPIRAL.length&&sk<SPK_CAP;q++){const [lx,lz]=SPIRAL[q],[x,z,wx,wz,y]=at(b,lx,lz),c=cidx(wx,wz);if(water[c]||bOcc[c])continue;
+        place(SACK,sk,x,y,z,q*2.1,1,.8+hsh(b.id*31+q)*.45);_c.setHex(hsh(b.id*7+q*13)<.25?0:SPK_C[(q*7+b.id)%3]);if(_c.getHex()===0)_c.copy(T.c);_c.multiplyScalar(fv);SACK.setColorAt(sk,_c);sk++;k++}}
     if(b.bt==='reinc'&&settledT.has(b.tribe)){for(let i=0;i<8;i++){const a=i/8*TAU+.393;for(let j=0;j<3;j++){const aa=a+(j-1)*.14,r=1.62+(j===1?.12:0),fx=Math.cos(aa)*r,fz=Math.sin(aa)*r;const [x,z,wx,wz]=at(b,fx,fz);flw(x,z,wx,wz,aa,1.25,FLOWER_C[(i+j)%3],fv)}}
       for(let i=0;i<9;i++){const a=i/9*TAU,fx=Math.cos(a)*.22,fz=Math.sin(a)*.22;const [x,z,wx,wz]=at(b,fx,fz);flw(x,z,wx,wz,a,1.05,FLOWER_C[i%3],fv,1.02)}}
     else if(b.bt==='maypole'){for(let i=0;i<12;i++){const a=i/12*TAU+.13,fx=Math.cos(a)*3.05,fz=Math.sin(a)*3.05;const [x,z,wx,wz]=at(b,fx,fz);flw(x,z,wx,wz,a,1.45,FLOWER_C[i%3],fv)}
@@ -2827,7 +2837,7 @@ function drawEntities(){
     else if(m.k==='queen'){if(pn<60){place(POST,pn,rx,y,rz,0,1);_c.setRGB(fv,fv,fv);POST.setColorAt(pn,_c);pn++}
       for(let k=0;k<6;k++){const a=k/6*TAU;flw(rx+Math.cos(a)*.1,rz+Math.sin(a)*.1,m.x+Math.cos(a)*.1,m.z+Math.sin(a)*.1,a,.7,FLOWER_C[k%2],fv,1.08)}
       for(let k=0;k<16;k++){const ring=k<6?.42:.75,a=k<6?k/6*TAU:(k-6)/10*TAU+.3,fx=Math.cos(a)*ring,fz=Math.sin(a)*ring;flw(rx+fx,rz+fz,m.x+fx,m.z+fz,a,1.5,FLOWER_C[k%3],fv)}}}
-  fin(PEBBLE,mn);fin(STAKE,sn2);fin(RIB,rn2);fin(KIND,kn);fin(BENCH,bn2);fin(DOLL,dn);fin(EMBER,hn);
+  fin(PEBBLE,mn);fin(STAKE,sn2);fin(SACK,sk);fin(RIB,rn2);fin(KIND,kn);fin(BENCH,bn2);fin(DOLL,dn);fin(EMBER,hn);
   fin(POST,pn);
   fin(FLS,fn);fin(FLB,fn);fin(EDGE,en);
   let wn=0;for(const w of wells){const rx=wd(w.x-cam.fx),rz=wd(w.z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2||!seenAt(w.x,w.z)||wn>=40)continue;const fv=fogOn?Math.max(.42,vis[cidx(w.x,w.z)]):1,sy=Math.min(1,(gt-w.born)/8);
@@ -3202,7 +3212,7 @@ function celebrateFrame(){const T=tribes[0];let n=0;for(const u of units){if(!u.
 const DIFFNAME={easy:'Easy',normal:'Normal',hard:'Hard'};
 function tokWin(){const a=A(),d=settings.diff,st=settings.style,SC0=scen();earn('w_'+(SC0&&SC0.tier&&d==='hard'?'normal':d));earn(['islands','isles','twin','hub'].includes(st)?'w_arch':['highlands','crags'].includes(st)?'w_high':'w_cont');
   if(armageddon)earn('r_moot');if(!a.dreadOver)earn('d_nofear');if(!a.trainedWar)earn('d_noblade');const i=settings.campaign;
-  if(i!=null){if(i===0)earn('c1');if(i===4)earn('c5');if(i===9)earn('c10');if(i===14)earn('c15');if(i===SCEN.length-1)earn('c20');if(i===4&&!a.lostBld)earn('d_thornwall')}}
+  if(i!=null){if(i===0)earn('c1');if(i===4)earn('c5');if(i===9)earn('c10');if(i===14)earn('c15');if(i===SCEN.length-1)earn('c20');if(i===4&&!a.lostBld)earn('d_thornwall');if(SCEN[i].title==='Fire from the Sky'&&tribes[0].tomb&&tribes[0].tomb.alive)earn('d_skytomb')}}
 function endGame(win){if(win)tokWin();clearSave();$('bAgain').textContent='Play this world again';$('bNew').textContent='Choose a new world';$('bNext').hidden=true;
   {const SC=scen();if(SC){const i=settings.campaign;$('bAgain').textContent=win?'Play this level again':'Try again';$('bNew').textContent='Back to the campaign';
     if(win){if(!devMode()){const pr=campProg();pr.unlocked=Math.max(pr.unlocked,Math.min(SCEN.length-1,i+1));if(!pr.best[i]||gt<pr.best[i])pr.best[i]=Math.round(gt);if(i===SCEN.length-1)pr.complete=true;campSave(pr)}if(i<SCEN.length-1){$('bNext').hidden=false;$('bNext').textContent=`Onward: ${i+2}. ${SCEN[i+1].title}`}}}}over=true;running=false;droneLevel();sfx(win?'built':'die',1);$('endT').textContent=win?'Victory':'Defeat';
