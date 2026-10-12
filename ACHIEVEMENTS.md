@@ -1,6 +1,6 @@
 # Wicker: tokens (achievements)
 
-Every token the game can award. The ID is fixed and is how the game recognises the token, so it never changes. The working description is what the game shows until a real name is written. Fill in the **Name** column with the folk-horror name or pun; the description can stay as the line under the name, or be rewritten too. Curiosities also have a riddling hint shown while they are still locked.
+Every token the game can award. The ID is fixed and is how the game recognises the token, so it never changes. The working description is what the game shows until a real name is written. Fill in the **Name** column with the folk-horror name or pun; the description can stay as the line under the name, or be rewritten too. Curiosities also have a riddling hint, kept for later; for now every locked token shows its plain description.
 
 Tokens are earned only in live play: never in "Watch the tribes fight", and never while test mode is on. They are kept in the browser, and the keepsake on the Tokens screen carries them (with campaign progress) to another browser.
 

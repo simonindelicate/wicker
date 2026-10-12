@@ -3116,7 +3116,7 @@ $('wsIOapply').addEventListener('click',()=>{let o;try{o=JSON.parse($('wsIOt').v
 $('wsIOclose').addEventListener('click',()=>{$('wsIO').hidden=true});
 $('bGallery').addEventListener('click',()=>wsOpen());
 function openTokens(){const g=tokGet();let h='',n=0,got=0;for(const [cat,list] of TOKS){h+=`<div class="tokCat">${cat}</div><div class="tokGrid">`;for(const t of list){const o=TOKMAP[t[0]],have=!!g[o.id];n++;if(have)got++;
-    h+=`<div class="tok${have?' got':''}"><i></i><span>${have?o.d:o.h}</span></div>`}h+='</div>'}
+    h+=`<div class="tok${have?' got':''}"><i></i><span>${o.d}</span></div>`}h+='</div>'}
   $('tokList').innerHTML=h;$('tokSub').textContent=`${got} of ${n} earned.${devMode()?' Test mode is on: tokens are not earned while it is.':''}`;$('tokIO').value='';$('menu').hidden=true;$('tokens').hidden=false}
 function keepsake(){const json=JSON.stringify({v:1,camp:campProg(),tok:tokGet()});return 'WICKER1:'+btoa(unescape(encodeURIComponent(json)))}
 function useKeepsake(txt){try{txt=txt.trim();if(!txt.startsWith('WICKER1:'))throw 0;const d=JSON.parse(decodeURIComponent(escape(atob(txt.slice(8)))));
