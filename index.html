@@ -1065,9 +1065,15 @@ function startRitual(sh,b){const T=tribes[sh.tribe];if(!b||b.bt!=='barrow')retur
   if(T.stats.pop-1<TUNE.entombFollowers){if(sh.tribe===0)toast('The hill demands twenty followers. You have too few.');return false}
   if(T.mana<TUNE.entombMana){if(sh.tribe===0)toast(`The hill will not open for less than ${TUNE.entombMana} mana.`);return false}
   b.rite={tribe:sh.tribe,t:gt};sh.st='ritual';sh.bld=b;sh.rt=0;sh.order=null;sh.tgt=null;const a=R()*TAU;setTarget(sh,b.x+Math.cos(a)*2.4,b.z+Math.sin(a)*2.4);
-  const cands=units.filter(u=>u.alive&&u.tribe===sh.tribe&&!u.inV&&!u.air&&u.type!=='shaman'&&!UT[u.type].veh&&u.type!=='captive'&&u.type!=='queen'&&u.type!=='ghost'&&u.st!=='enter').sort((a,c)=>((a.type==='brave'?0:1)-(c.type==='brave'?0:1))||d2(a.x,a.z,b.x,b.z)-d2(c.x,c.z,b.x,b.z));
+  const cands=units.filter(u=>u.alive&&u.tribe===sh.tribe&&!u.inV&&!u.air&&u.type!=='shaman'&&!UT[u.type].veh&&u.type!=='captive'&&u.type!=='queen'&&u.type!=='ghost'&&!u.carry&&u.st!=='enter').sort((a,c)=>((a.type==='brave'?0:1)-(c.type==='brave'?0:1))||d2(a.x,a.z,b.x,b.z)-d2(c.x,c.z,b.x,b.z));
   let n=0;for(const u of cands){if(n>=TUNE.entombFollowers)break;sendToRite(u,b);n++}
   while(n<TUNE.entombFollowers){const br=getFreeBrave(T,b.x,b.z);if(!br)break;sendToRite(br,b);n++}
+  // a hill over the water: balloons carry her and any followers who cannot walk there; with no balloons the rite is not begun
+  if(sh.tribe===0){const f=field(b.dx,b.dz,false),far=units.filter(u=>u.alive&&u.tribe===0&&!u.inV&&(u===sh||(u.st==='enter'&&u.purpose==='entomb'&&u.bld===b))&&f[cidx(u.x,u.z)]<0);
+    if(far.length){const resume=u=>{if(u===sh){u.st='ritual';u.bld=b;u.rt=0;const a=R()*TAU;setTarget(u,b.x+Math.cos(a)*2.4,b.z+Math.sin(a)*2.4)}else sendToRite(u,b)};
+      if(startFerry(far,b.dx,b.dz,resume)){b.rite.ferry=true;const nf=far.length-(far.includes(sh)?1:0);toast(`The hollow hill lies over the water. Your balloons will carry ${far.includes(sh)?'your Cunning Woman'+(nf?' and ':''):''}${nf?nf+' followers':''} across.`);return true}
+      b.rite=null;for(const u of units)if(u.alive&&u.tribe===0&&u.st==='enter'&&u.purpose==='entomb'&&u.bld===b){u.st='idle';u.cmd=false}sh.st='idle';
+      toast('The hollow hill lies over the water. Raise a Land Bridge, or build balloons to carry your people there.');return false}}
   if(sh.tribe===0)toast('Your Cunning Woman walks to the hollow hill, and twenty followers go with her.');return true}
 function entomb(sh,b,ps){const T=tribes[sh.tribe];if(sh.tribe===0)earn('r_entomb');
   for(const p of ps){const y=unitY(p);for(let i=0;i<6;i++)PN.emit(p.x,y+.3,p.z,(R()-.5)*.6,.6+R(),(R()-.5)*.6,1.5,.3,.25,.2,.7,.6,-.3);removeUnit(p)}
@@ -1088,8 +1094,9 @@ function produce(b){const type=BT[b.bt].train,T=tribes[b.tribe];if(b.tribe===0&&
 function unload(v){if(!v.pass||!v.pass.length)return;const dest=v.dest;const lf=dest?field(dest.x,dest.z,false):null;
   let c=nearestCell(v.x,v.z,4,c=>pass[c]===1&&(!lf||lf[c]>=0));if(!c)c=nearestCell(v.x,v.z,4,c=>pass[c]===1);
   if(!c){if(v.tribe===0)toast('No dry land close enough to unload');return}
-  const ps=v.pass.slice();v.pass.length=0;for(const u of ps){u.inV=null;u.ferryJ=0;u.x=wrap(c.x+(R()-.5)*1.2);u.z=wrap(c.z+(R()-.5)*1.2);u.st='idle';u.gx=u.x;u.gz=u.z;u.think=1.5;u.order=null}
+  const ps=v.pass.slice(),jobs=ps.map(u=>u.ferryJ&&ferries.find(J=>J.id===u.ferryJ));v.pass.length=0;for(const u of ps){u.inV=null;u.ferryJ=0;u.x=wrap(c.x+(R()-.5)*1.2);u.z=wrap(c.z+(R()-.5)*1.2);u.st='idle';u.gx=u.x;u.gz=u.z;u.think=1.5;u.order=null}
   if(dest&&d2(c.x,c.z,dest.x,dest.z)>4){if(dest.am){for(const u of ps)orderUnit(u,dest.x+(R()-.5)*3,dest.z+(R()-.5)*3,true,dest.x,dest.z)}else orderMove(ps,dest.x,dest.z)}
+  ps.forEach((u,i)=>{const J=jobs[i];if(J&&J.then&&u.alive)J.then(u)});
   v.dest=null;dockDirty=true}
 // ---------------- ferrying by balloon ----------------
 // Order people somewhere they cannot walk and your balloons (any selected with them first, then any idle and empty)
@@ -1099,11 +1106,16 @@ function unload(v){if(!v.pass||!v.pass.length)return;const dest=v.dest;const lf=
 let ferries=[],ferryT=0;
 const uById=id=>units.find(u=>u.id===id);
 function inFerry(u){return !!u.ferryJ&&ferries.some(J=>J.id===u.ferryJ)}
-function startFerry(grp,x,z){const people=grp.filter(u=>u.alive&&u.tribe===0&&!UT[u.type].veh&&!u.inV);if(!people.length)return false;
+// The oak rite when she cannot walk there (the barrow rite ferries itself, followers and all, in startRitual): balloons carry her (and any fighters sent with her) over, then she begins it.
+function riteOrFerry(sh,b,fn,comp){const f=field(b.dx,b.dz,false);if(sh.tribe!==0||f[cidx(sh.x,sh.z)]>=0||!pass[cidx(b.dx,b.dz)])return fn(sh,b);
+  const grp=[sh].concat((comp||[]).filter(u=>UT[u.type].veh||(MIL[u.type]&&u.type!=='oss'&&f[cidx(u.x,u.z)]<0)));
+  if(startFerry(grp,b.dx,b.dz,u=>{if(u===sh)fn(u,b)})){toast('Your balloons will carry her over');return true}
+  return fn(sh,b)}
+function startFerry(grp,x,z,then){const people=grp.filter(u=>u.alive&&u.tribe===0&&!UT[u.type].veh&&!u.inV);if(!people.length)return false;
   const bal=grp.filter(u=>u.alive&&u.tribe===0&&u.type==='balloon');
   for(const v of units)if(v.alive&&v.tribe===0&&v.type==='balloon'&&!bal.includes(v)&&!inFerry(v)&&v.st==='idle'&&!v.pass.length&&!v.post)bal.push(v);
   if(!bal.length)return false;
-  const J={id:nextId++,dest:{x,z},people:people.map(u=>u.id),bal:bal.map(v=>v.id)};
+  const J={id:nextId++,dest:{x,z},people:people.map(u=>u.id),bal:bal.map(v=>v.id),then:then||null};
   for(const o of ferries){o.people=o.people.filter(id=>!J.people.includes(id));o.bal=o.bal.filter(id=>!J.bal.includes(id))}
   for(const v of bal){v.ferryJ=J.id;v.fs=v.pass.length?'load':'go';v.fT=gt+1;v.fpx=null}
   for(const u of people){u.ferryJ=J.id;u.st='idle';u.order=null;u.tgt=null;u.gx=u.x;u.gz=u.z;u.cmd=true}
@@ -1182,6 +1194,7 @@ function updUnit(u,dt){const D=UT[u.type],T=tribes[u.tribe];
   case 'wait':{const b=u.riteB;if(!b||!b.alive||!b.rite||b.rite.tribe!==u.tribe){u.st='idle';u.riteB=null}else u.chop=true;break}
   case 'home':{let h=u.bld;if(!u.carry){u.st='idle';break}if(!h||!h.alive||!h.done||h.capt.length>=BT[h.bt].hold){h=nearestHolder(u.tribe,u.x,u.z,false);u.bld=h;if(h)setTarget(u,h.dx,h.dz)}
     if(!h){u.st='idle';u.think=2;break}
+    if(u.tribe===0&&gt>(u.fChk||0)){u.fChk=gt+3;const f=field(h.dx,h.dz,false);if(f[cidx(u.x,u.z)]<0&&startFerry([u],h.dx,h.dz,o=>{o.st='home';o.bld=null}))break}
     if(d2(u.x,u.z,h.dx,h.dz)<.6&&u.carry.type==='queen'){const q=spawnUnit('queen',u.tribe,h.dx,wrap(h.dz+1));q.born=u.carry.born;q.thrall=true;q.orig=u.carry.orig;q.hx=q.x;q.hz=q.z;u.carry=null;u.st='idle';u.think=.5;u.cmdCap=false;dockDirty=true;if(u.tribe===0&&!watching)toast('The captured May Queen is home. Offer her at any altar or wicker figure for her full worth.');break}
     if(d2(u.x,u.z,h.dx,h.dz)<.6){h.capt.push(u.carry.tribe);u.carry=null;u.st='idle';u.think=.5;u.cmdCap=false;if(u.tribe===0)stats.taken++;dockDirty=true;break}
     const r=moveStep(u,dt);if(r===2){u.st='idle';u.think=2}else if(r===1)setTarget(u,h.dx,h.dz);break}
@@ -1219,7 +1232,9 @@ function updUnit(u,dt){const D=UT[u.type],T=tribes[u.tribe];
   case 'ritual':{const b=u.bld;if(!b||!b.alive||b.bt!=='barrow'||!b.rite||b.rite.tribe!==u.tribe){u.st='idle';break}const dd=Math.sqrt(d2(u.x,u.z,b.x,b.z));
     if(dd>3.3){u.rt=0;const r=moveStep(u,dt);if(r===2){u.st='idle';b.rite=null;if(u.tribe===0)toast('Your Cunning Woman cannot reach the hill')}else if(r===1){const a=R()*TAU;setTarget(u,b.x+Math.cos(a)*2.4,b.z+Math.sin(a)*2.4)}break}
     u.rcT=(u.rcT||0)-dt;if(u.rcT<=0){u.rcT=.5;u.present=units.filter(o=>o.alive&&o.st==='wait'&&o.riteB===b&&o.tribe===u.tribe)}
-    if(!u.present||u.present.length<TUNE.entombFollowers){u.rt=0;u.chop=false;if(gt-b.rite.t>120){b.rite=null;u.st='idle';if(u.tribe===0)toast('Too few followers reached the hill. The rite is abandoned.')}break}
+    if(!u.present||u.present.length<TUNE.entombFollowers){u.rt=0;u.chop=false;
+      if(u.tribe===0&&gt>(b.rite.fc||0)){b.rite.fc=gt+3;const f=field(b.dx,b.dz,false),stuck=units.filter(o=>o.alive&&o.tribe===0&&!o.inV&&o.st==='enter'&&o.purpose==='entomb'&&o.bld===b&&!inFerry(o)&&f[cidx(o.x,o.z)]<0);if(stuck.length&&startFerry(stuck,b.dx,b.dz,o=>sendToRite(o,b)))b.rite.ferry=true}
+if(gt-b.rite.t>(b.rite.ferry?300:120)){b.rite=null;u.st='idle';if(u.tribe===0)toast('Too few followers reached the hill. The rite is abandoned.')}break}
     u.face=Math.atan2(wd(b.x-u.x),wd(b.z-u.z));u.rt=(u.rt||0)+dt;u.chop=true;const by=hAt(b.x,b.z);
     if(R()<dt*20)PN.emit(b.x+(R()-.5)*3,by+.3,b.z+(R()-.5)*3,(R()-.5)*.4,.8+R(),(R()-.5)*.4,2,.42,.07,.05,.7,.9,-.2);
     if(R()<dt*14)PA.emit(u.x,unitY(u)+1.2,u.z,(R()-.5),1.5,(R()-.5),.8,.9,.2,.1,1,.4,0);
@@ -2954,7 +2969,7 @@ function command(grp,g,hu,hb,ht){if(grp.filter(u=>u.type==='balloon'&&u.tribe===
   for(const u of grp){u.post=null;u.postSpot=false}
   const guardable=hb&&(hb.bt==='barrow'||((hb.bt==='tomb'||hb.bt==='oak')&&hb.tribe===0));
   if(guardable){const sh=grp.find(u=>u.type==='shaman');let rest=grp.filter(u=>u!==sh);
-    if(sh&&hb.bt==='barrow')startRitual(sh,hb);else if(sh&&hb.bt==='oak'&&hb.done&&!hb.awake&&!hb.hangUntil)startHang(sh,hb);else if(sh)rest.push(sh);
+    if(sh&&hb.bt==='barrow')startRitual(sh,hb);else if(sh&&hb.bt==='oak'&&hb.done&&!hb.awake&&!hb.hangUntil)riteOrFerry(sh,hb,startHang,rest);else if(sh)rest.push(sh);
     const fighters=rest.filter(u=>MIL[u.type]&&u.type!=='oss'&&!UT[u.type].veh),others=rest.filter(u=>!fighters.includes(u));
     if(fighters.length){const s2=BT[hb.bt].s*.5+2;fighters.forEach((u,i)=>{const a=i/fighters.length*TAU+.3,x=hb.x+Math.cos(a)*s2,z=hb.z+Math.sin(a)*s2;orderUnit(u,x,z,false);u.post=hb.id;u.cmd=true});toast(`${fighters.length} posted to guard the ${BT[hb.bt].label.replace(/^The /,'').toLowerCase()}`)}
     if(others.length)orderMove(others,hb.x,wrap(hb.z+BT[hb.bt].s*.5+2.5));mark(hb.x,hb.z,1,.6,.3);return}
@@ -3058,7 +3073,7 @@ $('pTribe').addEventListener('click',e=>{const t=e.target.closest('[data-act]');
   else if(a==='cap'){if(captivesOf(0)>b.cq){b.cq++;toast(`A captive will be led from the fold to the ${nm}.`)}}
   else if(a==='fillc'){const room=BT[b.bt].holdN-b.inside.length-b.sq-b.cq,c=Math.min(room,captivesOf(0)-b.cq);b.cq+=Math.max(0,c);b.sq+=Math.max(0,room-Math.max(0,c));toast(`Filling the ${nm}: ${Math.max(0,c)} captive${c===1?'':'s'} and ${Math.max(0,room-Math.max(0,c))} villager${room-c===1?'':'s'} on the way.`)}
   else if(a==='offerq'){const q=sel[0];let best=null,bd=1e18;for(const x of blds)if(x.alive&&x.done&&x.tribe===0&&BT[x.bt].site&&!x.lit){const d=d2(q.x,q.z,x.x,x.z);if(d<bd){bd=d;best=x}}if(!best){toast('You need an altar or a wicker figure to offer her at');return}q.st='enter';q.bld=best;q.purpose='sac';q.cmd=true;setTarget(q,best.dx,best.dz);toast(`The May Queen walks to the ${BT[best.bt].label.toLowerCase()}`)}
-  else if(a==='hang'){if(T.shaman&&startHang(T.shaman,b))toast('Your Cunning Woman walks to the oak')}
+  else if(a==='hang'){if(T.shaman&&!b.awake&&!b.hangUntil&&b.done){const f=field(b.dx,b.dz,false);if(f[cidx(T.shaman.x,T.shaman.z)]<0)riteOrFerry(T.shaman,b,startHang);else if(startHang(T.shaman,b))toast('Your Cunning Woman walks to the oak')}}
   else if(a==='rite'){if(T.shaman)startRitual(T.shaman,b)}
   else if(a==='callout'){const n=b.occ;while(b.occ>0){b.occ--;const u=spawnUnit('brave',0,b.dx+(R()-.5)*2,b.dz+R());u.think=1.5}toast(`${n} villager${n===1?'':'s'} come out to work.`)}
   else if(a==='unload'){for(const v of sel)if(v.pass&&v.pass.length)unload(v)}
