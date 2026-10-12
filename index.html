@@ -913,6 +913,8 @@ function faceBuilding(b){const D=BT[b.bt],s=D.s;if(UNTURNED[b.bt])return;const r
 // When the people are almost gone, the Cunning Woman can raise a crag at the edge of the village, climb it while her people watch,
 // and go over the edge. Six villagers step out of the stone circle, and for thirty seconds no rival attacks. The crag stays.
 const LEAP_N=6,LEAP_TRUCE=30,LEAP_BELOW=4,LEAP_FLEE=.6;  // LEAP_FLEE: share of each rival's people (villagers only) who flee in terror during the truce
+// The player's last TRAIN_KEEP villagers are never taken for training, counting those already walking in.
+const TRAIN_KEEP=2;function spareVillagers(ti){let n=villagerCount(ti);for(const u of units)if(u.alive&&u.tribe===ti&&u.type==='brave'&&u.st==='enter'&&u.purpose==='train')n--;return n}
 function villagerCount(ti){let n=0;for(const u of units)if(u.alive&&u.tribe===ti&&u.type==='brave')n++;for(const b of blds)if(b.alive&&b.tribe===ti&&b.bt==='hut')n+=b.occ;return n}
 function canLeap(T){const sh=T.shaman;return !!(sh&&sh.alive&&!sh.leap&&!sh.hanging&&!sh.inV&&!sh.air&&!T.tomb&&!armageddon&&!(scen()&&scen().oneLife)&&villagerCount(T.id)<LEAP_BELOW)}
 function makeCrag(T){const rc=blds.find(b=>b.alive&&b.bt==='reinc'&&b.tribe===T.id);if(!rc)return null;
@@ -1263,7 +1265,7 @@ function updBld(b,dt){const D=BT[b.bt],T=tribes[b.tribe];if(D.inv)return;
   if(b.bt==='hut'){if(b.occ>0&&T.stats.pop<T.stats.cap){b.breed+=dt*(TUNE.breedBase+TUNE.breedPerOccupant*b.occ)*T.breedMult;if(b.breed>=1){b.breed=0;const u=spawnUnit('brave',b.tribe,b.dx,b.dz);u.think=1}}
     if(b.occ>0&&R()<dt*.8){const [cx,cz]=byaw(b,.3,0);PN.emit(b.x+cx,hAt(b.x,b.z)+2.2,b.z+cz,(R()-.5)*.2,.5,(R()-.5)*.2,2.5,.55,.53,.5,.35,.7,-.15)}}
   if(D.train&&!armageddon){if(b.trainee){b.tt-=dt;if(b.tt<=0){b.trainee=false;b.q--;produce(b);dockDirty=true}}
-    else if(b.q>0){const cl=b.claim;if(!cl||!cl.alive||cl.st!=='enter'||cl.bld!==b){const br=getFreeBrave(T,b.x,b.z);if(br){if(T.id===0)mark(br.x,br.z,.6,.85,1);br.st='enter';br.bld=b;br.purpose='train';setTarget(br,b.dx,b.dz);b.claim=br}}}}
+    else if(b.q>0){const cl=b.claim;if(!cl||!cl.alive||cl.st!=='enter'||cl.bld!==b){b.held=T.id===0&&spareVillagers(T.id)<=TRAIN_KEEP;const br=b.held?null:getFreeBrave(T,b.x,b.z);if(br){if(T.id===0)mark(br.x,br.z,.6,.85,1);br.st='enter';br.bld=b;br.purpose='train';setTarget(br,b.dx,b.dz);b.claim=br}}}}
   if(b.bt==='oak'){
     if(b.hangUntil&&!b.awake&&gt>=b.hangUntil){b.awake=true;if(b.tribe===0)earn('r_hunt');b.hangUntil=0;const sh=units.find(u=>u.alive&&u.hanging===b);if(sh){sh.hanging=null;sh.inV=null;sh.x=b.dx;sh.z=b.dz;sh.st='idle';sh.gx=sh.x;sh.gz=sh.z}
       flash(.35);sfx('thunder',.9,b.x,b.z);toast(b.tribe===0&&!watching?'The oak wakes. The Wild Hunt rides for you.':`The Wild Hunt rides for the ${T.name} folk`);b.hT=0}
@@ -2948,7 +2950,7 @@ function renderTribe(force){const T=tribes[0];if(!T)return;let h='';const b=sel.
   if(b&&b.tribe===wildId){const D=BT[b.bt];if(b.bt==='barrow'){const busy=b.rite&&b.rite.tribe!==0,can=T.shaman&&!T.tomb&&T.stats.pop>20&&T.mana>=TUNE.entombMana&&!busy;h+=`<div class="card"><b>${D.label}</b><span>${busy?'Another Cunning Woman is at the hill':b.rite?'Your rite is under way':'Seal your Cunning Woman inside with twenty followers'}</span></div><button class="qs go" data-act="rite" ${can&&!b.rite?'':'disabled'}><span>She becomes a god, for good</span><b>Begin the entombment</b></button>`}
     else h+=`<div class="card"><b>${D.label}</b><span>${D.info}</span></div>`;if(force||h!==lastTribeHTML){$('pTribe').innerHTML=h;lastTribeHTML=h}return}
   if(b){const D=BT[b.bt];let st=b.done?(b.bt==='hut'?`${b.occ} of 5 villagers inside`:D.info):`Being built · ${Math.floor(b.prog*100)}%`;
-    if(b.done&&D.train&&b.q>0)st=b.trainee?`Training ${UT[D.train].label.toLowerCase()} · ${Math.ceil(b.tt)}s · ${b.q} queued`:`Waiting for a villager · ${b.q} queued`;
+    if(b.done&&D.train&&b.q>0)st=b.trainee?`Training ${UT[D.train].label.toLowerCase()} · ${Math.ceil(b.tt)}s · ${b.q} queued`:(b.held?`Waiting · your last ${TRAIN_KEEP} villagers will not be trained · ${b.q} queued`:`Waiting for a villager · ${b.q} queued`);
     h+=`<div class="card"><b>${D.label}</b><span>${st}</span></div>`;
     if(b.done&&D.train)h+=`<button class="qs go" data-act="train" ${T.mana<D.mana?'disabled':''}><span>${D.mana} mana</span><b>Train ${UT[D.train].label.toLowerCase()}</b></button><button class="qs" data-act="cancel" ${b.q-(b.trainee?1:0)<=0?'disabled':''}><span>Refund mana</span><b>Cancel one</b></button>`;
     const caps=captivesOf(0);
