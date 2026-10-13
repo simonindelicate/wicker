@@ -1,0 +1,975 @@
+﻿WICKER: THE WORDS (current game, commit fd23dc7)
+
+
+Edit any text under a ### line and send the file back; leave the ### lines alone. Words in {curly brackets} are filled in by the game ({tribe}, {number} and so on; {…} is a phrase the game picks), so keep them, though you can move them. (s) means the game adds an s for more than one. A line starting // is a note to me. Names, buttons and one-word labels are left out.
+
+
+============================================================
+A. THE TITLE SCREEN
+============================================================
+
+
+### 001
+‘Tis time o’ the cunning, and thou art swollen wi’ it. There's power here, in the land, in the forests - but Nature shalbe not mocked - to wield her weapons ye must pay her a toll. What toll? Why nought but th’toll o’blood. Drag them to the table, let them hang, see their flesh burn in th’shapes o’wicker - from their bones new life shall grow; thy belly shall grow wi’ it. Ah, what sights ye’ll birth, O Cunning Woman. Send the Oss and drag them home, feed the land and go garlanded, love, for all shall bless thy dominion on the earth.
+
+
+### 002
+Watch the villages fight among themselves
+
+
+### 003
+Your village is ochre. {number}% land, {number} rival(s). Pale marks are the Moot and the hollow hills.
+
+
+============================================================
+B. HOW TO PLAY
+============================================================
+
+
+### 004
+Tap your people to select them. Tap the ground to move them, or an enemy to attack.
+
+
+### 005
+Drag with one finger to pan. Pinch to zoom, and twist two fingers to turn the world.
+
+
+### 006
+Turn on Box, then drag to select a group. Double-tap a unit to select all of that kind nearby.
+
+
+### 007
+To clear your selection, tap with two fingers at once, press and hold on empty ground, or tap the selection line above the tabs.
+
+
+### 008
+Left-click selects your people, or tells the selected ones what to do; drag to box-select. Right-click on empty ground clears the selection; right-click on something still commands.
+
+
+### 009
+Right-drag turns the view, middle-drag or WASD pans, the wheel zooms. Space finds your Cunning Woman, keys 1–0 pick spells, F toggles full screen, Esc cancels.
+
+
+### 010
+Villagers chop wood, build, and go into huts to breed. From the men, a grave; and from the grace, a seed; and from that seed: the trees!
+
+
+### 011
+The forest altar takes one offering at a time and is stronger the more trees stand around it. The wicker man takes five and burns, giving mana and a frenzy of speed. The Wicker God takes twelve and burns for an enormous offering, terrifying any enemy who sees it. Both wicker figures burn down on use and must be rebuilt.
+
+
+### 012
+Burning your own people fills the dread meter. Past the mark, frightened villagers start slipping away into the wilds. Dread fades with time, and faster with more huts.
+
+
+### 013
+Osses, from the Oss House, roam the ground around where you last sent them and seize anyone they can catch, wildmen or enemy, carrying them home to your thrall fold at a run. Once an Oss has a captive it will not take orders until it is home. Captives are worth far more than your own people and cause no dread; kill an Oss on its way home and its captive goes free. You start with one thrall fold, which holds fifteen. Two or more captives left together in a fold will breed, slowly at first and then faster, so a fold left alone fills itself.
+
+
+### 014
+Herne's Oak is a vast dead tree raised in deep woodland. Hang your Cunning Woman from it for two minutes, during which she can do nothing, and the Wild Hunt rides for you: antlered horsemen who roam the whole world killing anyone they find outside the reach of an enemy Cunning Woman. Every death they cause feeds you as richly as a captive, and lost riders return.
+
+
+### 015
+Build a Maypole and idle villagers will dance around it, easing your people's dread. After enough merriment a May Queen is crowned. The longer she lives, the more her offering is worth, up to a vast sum with no dread and a long frenzy. Select fighters and tap her to swear them as her guards; you can do the same for your Cunning Woman. Rival Osses will hunt her, and a captured Queen can be offered by her captors for her full worth.
+
+
+### 016
+Blackthorn hedges are cheap thorny barriers. Choose the hedge, tap where it starts and where it ends, and villagers plant it a length at a time. Nothing walks through a finished hedge, your own people included, so leave gaps; enemies must go round or hack through, which turns open ground into chokepoints.
+
+
+### 017
+Your Bog is a hidden trap: your own people cross it safely, but enemies cannot see it and march straight in. It lasts until it has drowned ten of them. Fighters near their own buildings also take slightly less damage.
+
+
+### 018
+When a rival army sets out for you, a horn sounds and the marching column shows on your map through the fog. An attack that loses half its strength breaks and runs home.
+
+
+### 019
+The Rook Tree is a lookout in a dead tree. It sees a long way and hurls fire-pots at any enemy balloon in range, bringing one down in three hits. It ignores everything on the ground.
+
+
+### 020
+To hold ground, select warriors or archers (the +5 buttons on the Tribe tab add the five nearest of a kind) and press Post on the selection line, then tap a spot. They form up round a banner, fight whatever comes near without chasing far, and take less harm while they stand at their post. Sending fighters to your oak, your tomb or a hollow hill posts them there the same way. Guards are left out when you select your army; give them any other order to take them off their post.
+
+
+### 021
+A tribe that loses every building, trained unit and its Cunning Woman is finished: its last villagers are dragged off as captives by whoever broke it. A tribe whose people are all dead hands its empty buildings to the conqueror, with an offering of mana.
+
+
+### 022
+Ground where a building has been razed is salted earth: for three minutes its old owner cannot build there. A rival that falls to a fifth of its greatest size is broken. Its people gather at their stone circle where everyone can see them, its buildings fall to disrepair and its Cunning Woman does not return; destroy her last fighters and the rest are yours for your pyres.
+
+
+### 023
+Tap a rival's marker at the top of the screen to look at where her people are. Tap again to move on to the next group.
+
+
+### 024
+Training buildings turn a villager into a warrior, archer, Oss or balloonist.
+
+
+### 025
+To cross water, have your Cunning Woman raise a Land Bridge from the shore towards the land you want. Anyone can walk it, your enemies included. Or, if you have balloons, simply order your people across: idle balloons fly to them, carry them over and come back until everyone is across.
+
+
+### 026
+Balloonists drift above the fighting and drop charges. Only other balloonists can reach them.
+
+
+### 027
+Wildmen wander the wilds. They make easy captives.
+
+
+### 028
+Hollow hills are ancient barrows that await discovery in wild country. Send your Cunning Woman with twenty sacrifices and at least 1,500 mana to perform the ritual of attaining and seal her inside. The hill becomes a wicker fortress: from it she sees everything and casts anywhere at half the mana. If enemies tear it down she is lost for a minute, then rises at your stone circle, and half your mana goes with her.
+
+
+### 029
+All-against-all needs an unlit wicker man, ten followers to burn and a full bar of mana. All shall leave their dwellings where they stand and make way to the Moot at the world's end, there to fight to the death.
+
+
+### 030
+Pick a spell and tap a target. Your Cunning Woman walks into range and casts. If she dies she returns at your stone circle after forty-five seconds while your tribe survives.
+
+
+### 031
+The Scrying Torch spell conjures a burning beacon where the Cunning Woman aims it. The land around it stays in sight for as long as it stands, which makes it a lookout over a pass, a rival's door or a hollow hill. Enemies can tear it down.
+
+
+### 032
+Ättestupa: when fewer than three villagers are left, your Cunning Woman can raise a crag at the edge of the village, climb it while your people watch, and go over the edge. Six villagers step out of the stone circle, no rival attacks you for thirty seconds, and she is reborn as usual. The crag stays, and she climbs the same one if it ever comes to that again.
+
+
+### 033
+You win when every rival tribe has no followers or buildings left.
+
+
+============================================================
+C. THE TWENTY LEVELS
+============================================================
+
+
+--- Level 1 — The Strait ---
+
+
+### 034
+The Strait
+
+
+### 035
+Greetings, Cunning Woman. It is a pleasure to meet thee. Here. Powerless. On a forsaken world.
+
+
+Do you see them? Across the water? Cowering? We must reach them, my love. 
+
+
+Thy power is not thine own. Nature has its price and you will have to pay it if you wish to bend her to thy will. Raise up an altar among the trees, my dear. Thou shalt find thy villagers obedient; eager for the kiss of the knife. Train them well, raise a great crossing. Ye should not need to cross that same water twice.
+
+
+--- Level 2 — The Grove ---
+
+
+### 036
+The Grove
+
+
+### 037
+‘tis time to keep thy appointment with the wicker man. An offering in the flames is far more prized by the land, but such a rote cannot be wasted on fewer than five of… the right kind of adult. 
+
+
+--- Level 3 — Hobby Horse ---
+
+
+### 038
+Hobby Horse
+
+
+### 039
+Behold the Oss, O Cunning Woman - send them out amidst the wilds to seek those poor lost hearthless folk. Would not their lives be better returned to the fecund soil wherein all life gestures? The Osses shall capture them beneath their oilskin capes and return them happily to thy thrall folds. From thence - renewal!
+
+
+--- Level 4 — Bowmen ---
+
+
+### 040
+Bowmen
+
+
+### 041
+Train bowmen, O Cunning Woman. These villages across the fens are bilious, ‘tis reported. Thy needs must be repelled. Make thy sacrifices, wield thy weapons and rain arrows down upon the assailants.
+
+
+--- Level 5 — The Long Watch ---
+
+
+### 042
+The Long Watch
+
+
+### 043
+Our people are weak, my love. They cower craven and unwilling to fight. But we have our crag-ringed vale and our blackthorn seed and thou hast the power of the Bog and the Dyke. Deploy them. Thine altars and pyres reward the transmutation of craven flesh - feed them well and build your defences. Hold fast my love and we shall survive this trial of character.
+
+
+--- Level 6 — The High Places ---
+
+
+### 044
+The High Places
+
+
+### 045
+‘tis gnarly ground we find ourselves upon, my dearest - up here there is no welcoming meadow ‘pok which to sink a foundation. Make meadows, love, for summer is here and your people need lands to till. The folk of Blood lie beyond the mountain. Do not let them fall upon thee.
+
+
+--- Level 7 — Fire from the Sky ---
+
+
+### 046
+Fire from the Sky
+
+
+### 047
+‘tis time to take wing, O beloved. Thy foes swell their halls across the sea - we must see them sink beneath the waves. We have a new weapon - the balloon. From above we can rain fire upon them, carry our fighting men to their shores and defend our lands from their intrusions. In opportunity there is danger - our enemies have this weapon themselves. Raise the rook trees to resist them and claim the skies for thine own. The land is sick upon these islands - a cunning woman cannot be reborn amidst the salt. Your death will be the end of all.
+
+
+--- Level 8 — May Morning ---
+
+
+### 048
+May Morning
+
+
+### 049
+Wicker is in short supply this season - if we are to survive, we shall need to appease the land as our oldest ancestors taught us. Crown the May Queen and exalt her for a season. Nature is a lustful mistress. Only the fairest of our daughters shall fit her for a bride. Crown her. Guard her. Attend her prime. Why, then she shall dance her bloody nuptials and bring all favour upon us.
+
+
+--- Level 9 — The Wicker God ---
+
+
+### 050
+The Wicker God
+
+
+### 051
+They speak of a greater rite - a twelvefold wonder to light the eyes of the whole world. The price is dear, but the rewards are… delectable.
+
+
+--- Level 10 — Hollow Hills ---
+
+
+### 052
+Hollow Hills
+
+
+### 053
+The hills are hollow, this much is known. Wouldst thou like to abandon this heap of crinkling flesh, my love? Wouldst thou join me in the all-seeing? When thou hast power enough, take twenty and find a hollow hill. There, perform the ancient rite of attainment and see the world entire.
+
+
+--- Level 11 — Herne's Oak ---
+
+
+### 054
+Herne's Oak
+
+
+### 055
+Didst thou achieve the little death, my sweetness? What secrets didst thou learn? Perhaps ye learned of the wild hunt? And how it may be summoned? And the price?
+
+
+Plant Herne’s oak in the deep wood. Place guards. Recall thy songs. 
+
+
+Upon the ruddy oaken branch
+The Cunning Woman hangs
+And from her dead and bitter womb
+The Wild Hunt bares its fangs
+O come away, my wayward girl
+Look not upon her flesh
+The Wild Hunt shalbe coming soon,
+The husks of men to thresh
+
+
+
+
+--- Level 12 — Three Fires ---
+
+
+### 056
+Three Fires
+
+
+### 057
+Truly thy pow’r grows with each passing season my love. Look upon these three pretenders, befouling the hills with their presence. Wake the fires of the earth, my dear, such grim music we shall make.
+
+
+--- Level 13 — The Moot ---
+
+
+### 058
+The Moot
+
+
+### 059
+At the world's end, there is a crossroads. With absolute power thou canst command it. Grow fat, my love. Fat with power, with sons, with wicker. It is ok your hands to declare at last the Battle of All-against-all.
+
+
+--- Level 14 — Highland Winter ---
+
+
+### 060
+Highland Winter
+
+
+### 061
+There is little left for me to teach thee. Winter approaches. Do as thou wilt.
+
+
+--- Level 15 — The Turning Year ---
+
+
+### 062
+The Turning Year
+
+
+### 063
+Canst thou see shoots in the melting frost? Do they see them too? Are they coming?
+
+
+--- Level 16 — Surrounded ---
+
+
+### 064
+Surrounded
+
+
+### 065
+We find ourselves encircled, my love. But our Wicker God is ready to be offered and our thrall holds are full perhaps it is not so hopeless as it looks.
+
+
+--- Level 17 — Late to the Feast ---
+
+
+### 066
+Late to the Feast
+
+
+### 067
+We are behind! Sacrifices must continue until morale improves. Perhaps we can think more swiftly, beat them back, break their spirits…
+
+
+--- Level 18 — Blood Moon ---
+
+
+### 068
+Blood Moon
+
+
+### 069
+The moon hangs low, tonight, sweetness. Dost thou feel it in thy loins? The agitation of it? The urge? Canst thou smell it? The thick, animal smell of blood iron and ebbing life? Is it not delightful?
+
+
+--- Level 19 — The Drowned Lands ---
+
+
+### 070
+The Drowned Lands
+
+
+### 071
+This salty, archipelagious country is not our natural home, my lady - it suits the other better. But we must dig in. There is soil to find our strength in yet.
+
+
+--- Level 20 — The Last Harvest ---
+
+
+### 072
+The Last Harvest
+
+
+### 073
+I think this may be our last dance, my sweetness, my beloved, my daintiest of daughters, my most fertile of wives. Give it everything, love, let thine be a reign of fire let thy song be a song of rebirth. For thou hast been magnificent, sweet one. 
+
+
+Come, o come, beloved
+Come meet me in the hill
+The world above hath cowered
+At the working of thy will
+‘tis on to stranger meadows
+‘tis off to drink thy fill
+O come, O come, my sweetheart
+Come meet me in the hill
+
+
+============================================================
+D. SPELLS
+============================================================
+
+
+### 074
+Scry where e're the beacon burns. For it shalbe thine eyes.
+
+
+### 075
+Thy will readily done upon thine enemies.
+
+
+### 076
+The strike of thunder is a blow no man or woman can survive.
+
+
+### 077
+Calls forth a cloud o’ wicked horseflies to bite and sting and scatter thy assailants for ten seconds.
+
+
+### 078
+Turns wandering wildmen within the circle into your villagers.
+
+
+### 079
+A ward against harm for those within its ‘fluence.
+
+
+### 080
+Raise the shades of dead men. Brief candles who make war, draw the eye and melt away come striking.
+
+
+### 081
+Raise up a causeway towards heights and across water.
+
+
+### 082
+From crags and cliffsides spring forth green and level fields. Cannot be cast upon the water.
+
+
+### 083
+Witch them to thy cause - they’ll fight for you for twenty-five seconds.
+
+
+### 084
+A twisting wind that tears walls from their foundations afore wand’ring in search of new victims.
+
+
+### 085
+A sucking mire that offers safe passage to those who know the way - and clammy death to those who do not. Will remain until ten are claimed.
+
+
+### 086
+Creates a dyke within the downs to drown thy foes and their works.
+
+
+### 087
+Behold, the very earth shall shake and rupture.
+
+
+### 088
+A bitter rain of stoney death. Watch as they flee their collapsing homes.
+
+
+### 089
+Engender a plague of paroxysms, contagion and a bloody demise.
+
+
+### 090
+Nature’s cruellest vengeance at the command.
+
+
+### 091
+There shalbe a moot at the world’s end and every living souls shalbe a soldier in the battle of all against all. So hath it been and so mote it be.
+
+
+============================================================
+E. BUILDINGS AND PEOPLE
+============================================================
+
+
+### 092
+Trains osses, who roam and carry off captives
+
+
+### 093
+A thorny barrier. Tap where it starts and where it ends; nothing walks through until it is hacked down
+
+
+### 094
+Villagers dance here, easing dread, until a May Queen is crowned
+
+
+### 095
+A lookout high in a dead tree; sees far and hurls fire-pots at balloons
+
+
+### 096
+Pens up to fifteen captives your osses bring home
+
+
+### 097
+Takes one offering at a time; stronger among trees
+
+
+### 098
+Holds twelve; burns for an enormous offering
+
+
+### 099
+A burning beacon; the land around it stays in sight while it stands
+
+
+### 100
+Your Cunning Woman lies sealed here
+
+
+### 101
+Hang your Cunning Woman from it for two minutes and the Wild Hunt rides
+
+
+### 102
+Holds five; burns for mana and a frenzy
+
+
+### 103
+Your Cunning Woman is reborn here
+
+
+### 104
+Seal your Cunning Woman inside with twenty followers and 1,500 mana
+
+
+### 105
+Where every people gathers at the end
+
+
+============================================================
+F. MESSAGES DURING PLAY
+============================================================
+
+
+### 106
+Your bog has drowned {number} and drains away, sated.
+
+
+### 107
+Your Cunning Woman has fallen. She returns to the stone circle in {number} seconds.
+
+
+### 108
+The ground there is cursed
+
+
+### 109
+This ground has been salted. Nothing of yours will stand here for a while
+
+
+### 110
+Herne's Oak must stand in deep woodland
+
+
+### 111
+A forest altar must stand among trees
+
+
+### 112
+There is no ground for it at the edge of the village
+
+
+### 113
+Your Cunning Woman walks to the edge of the village. Your people gather below to watch.
+
+
+### 114
+She is gone over the edge. {number} of your people step out from among the stones, and for a while even your enemies are still.
+
+
+### 115
+Your tomb has fallen, and your Cunning Woman with it. Here she does not come back.
+
+
+### 116
+Your tomb has fallen and your Cunning Woman with it. She will rise again at the stone circle in a minute, and half your mana is lost.
+
+
+### 117
+{…} is given to the grove. +{number} mana
+
+
+### 118
+, and your people are in a frenzy
+
+
+### 119
+The Wicker God of the {tribe} folk is burning
+
+
+### 120
+A May Queen is crowned. Keep her alive and her offering grows richer; guard her well.
+
+
+### 121
+The {tribe} folk have crowned a May Queen
+
+
+### 122
+{number} of {number} May Queens given to the fire
+
+
+### 123
+The May Queen goes willingly. +{number} mana, and your people are in a frenzy.
+
+
+### 124
+The {tribe} folk have given a May Queen to the fire
+
+
+### 125
+A villager has fled into the wilds. Your people are afraid.
+
+
+### 126
+The hills are silent in this land
+
+
+### 127
+Your Cunning Woman already lies in a hill
+
+
+### 128
+Another Cunning Woman is already at this hill
+
+
+### 129
+The hill demands twenty followers. You have too few.
+
+
+### 130
+The hill will not open for less than {number} mana.
+
+
+### 131
+The hollow hill lies over the water. Your balloons will carry {…}{…} across.
+
+
+### 132
+The hollow hill lies over the water. Raise a Land Bridge, or build balloons to carry your people there.
+
+
+### 133
+Your Cunning Woman walks to the hollow hill, and twenty followers go with her.
+
+
+### 134
+Your Cunning Woman is sealed in the hill. From the tomb she sees everything and casts anywhere at half the mana. Guard it: if it falls, so does she.
+
+
+### 135
+The {tribe} Cunning Woman has been sealed in a hollow hill
+
+
+### 136
+Your balloons will carry her over
+
+
+### 137
+The balloons are lost. {number} of your people are left on this side.
+
+
+### 138
+The captured May Queen is home. Offer her at any altar or wicker figure for her full worth.
+
+
+### 139
+Your May Queen has been seized by the {tribe} folk. Kill the Oss before it gets her home.
+
+
+### 140
+Your Oss has seized the {tribe} May Queen.
+
+
+### 141
+Your Cunning Woman cannot reach the oak
+
+
+### 142
+Your Cunning Woman hangs from the oak. In two minutes the Wild Hunt will ride.
+
+
+### 143
+The {tribe} Cunning Woman hangs from Herne's Oak
+
+
+### 144
+Your Cunning Woman cannot reach the hill
+
+
+### 145
+Too few followers reached the hill. The rite is abandoned.
+
+
+### 146
+Your Cunning Woman cannot get within range
+
+
+### 147
+The oak wakes. The Wild Hunt rides for you.
+
+
+### 148
+The Wild Hunt rides for the {tribe} folk
+
+
+### 149
+The shield turned the lightning
+
+
+### 150
+There were no wildmen in the circle
+
+
+### 151
+The torch needs a scrap of level, open ground
+
+
+### 152
+A scrying torch burns. The land around it will stay in sight while it stands.
+
+
+### 153
+A horn sounds from the {tribe} lands: {number} of their fighters are marching on you. Watch the map.
+
+
+### 154
+The {tribe} attack breaks.{…} The rest run for home, shamed; it will be a while before they come again.
+
+
+### 155
+ {number} of their fighters are cut off and put to death where they stand; their blood goes into the earth.
+
+
+### 156
+ {number} of their fighters are cut off and dragged to your {place}.
+
+
+### 157
+Balloons rise over the {tribe} island: {number} of them, carrying {number} fighters, are coming for you.
+
+
+### 158
+The {tribe} folk have seen your Cunning Woman hanging. {number} of their fighters are running for the oak.
+
+
+### 159
+The {tribe} osses are coming for your May Queen{…}.
+
+
+### 160
+, with fighters at their backs
+
+
+### 161
+A captive has slipped out of the fold
+
+
+### 162
+Your Cunning Woman is reborn
+
+
+### 163
+Your settlement is under attack
+
+
+### 164
+The {tribe} folk are broken. Their last people are gathering at their stone circle, and their halls are falling in. Their Cunning Woman will not return.
+
+
+### 165
+The {tribe} tribe is gone. Its {number} empty buildings are yours, and nature yields {number} mana from its hearths.
+
+
+### 166
+Your people are all dead. The {tribe} folk take what is left.
+
+
+### 167
+The {tribe} tribe is gone. The {tribe} folk take its empty halls.
+
+
+### 168
+The {tribe} tribe is broken. Your osses drag its last {number} villagers to your folds.
+
+
+### 169
+Your tribe is broken. The {tribe} folk drag your last villagers away.
+
+
+### 170
+The {tribe} tribe is broken; the {tribe} folk drag its last villagers away.
+
+
+### 171
+The {tribe} tribe has been wiped out
+
+
+### 172
+The {tribe} Cunning Woman is dead, and her people scatter.{…}
+
+
+### 173
+The battle of all-against-all has already begun
+
+
+### 174
+All-against-all needs a finished, unlit wicker man
+
+
+### 175
+All-against-all needs a full bar of mana
+
+
+### 176
+All-against-all needs ten followers to burn
+
+
+### 177
+Ten souls burn in the wicker. The end is coming.
+
+
+### 178
+The {tribe} tribe has called down the battle of all-against-all
+
+
+### 179
+The battle of all-against-all. The huts are burning, and every soul walks to the Moot.
+
+
+### 180
+{number} posted here. They will hold this ground and fight whatever comes near.
+
+
+### 181
+Your Cunning Woman is waiting to be reborn
+
+
+### 182
+Your Cunning Woman is hanging from the oak
+
+
+### 183
+One follower walks to the {…}
+
+
+### 184
+Your balloons will carry them over
+
+
+### 185
+There is no way across. Your Cunning Woman can raise a Land Bridge, or a balloon can carry them.
+
+
+### 186
+There is no way across. Your Cunning Woman can raise a Land Bridge, or balloons from a Balloon Works can carry them.
+
+
+### 187
+All-against-all: ten followers burn in your wicker man and your mana is spent. Every hut falls and the last tribe standing wins. This cannot be undone.
+
+
+### 188
+Grow your tribe while you can. Rivals usually first attack after about {number} minutes.
+
+
+============================================================
+G. PAUSE, VICTORY, DEFEAT AND REJOICING
+============================================================
+
+
+### 189
+Every other people has been burned, captured or driven into the wilds. The {tribe} folk have the world to themselves.
+
+
+### 190
+The last tribes fell together. The wildmen inherit the world.
+
+
+### 191
+There is no first or last!
+
+
+### 192
+The harvest shall be fruitful this year.
+
+
+### 193
+Come now, rise now, from the forest, from the furrows, from the fields, and live!
+
+
+### 194
+Happy day!
+
+
+### 195
+Thou livest deliciously!
+
+
+### 196
+Sumer is icumen in, lhude sing cuccu!
+
+
+### 197
+The barns will be full and the hearths warm.
+
+
+### 198
+The old fires are lit on every hill.
+
+
+### 199
+The earth is fed, and the earth is grateful.
+
+
+### 200
+Dance, for none are left to mourn.
+
+
+### 201
+Every furrow sings tonight.
+
+
+### 202
+The Moot is quiet. Of all the peoples who walked there, only yours walked away.
+
+
+### 203
+Every rival Cunning Woman has been cast out. The world is yours to shape.
+
+
+### 204
+Your people fell at the Moot. The world goes on without them.
+
+
+### 205
+Your tribe has been wiped from the world. The fields grow over the huts.
+
+
+============================================================
+H. THE CAMPAIGN SCREENS
+============================================================
+
+
+### 206
+History is a wheel that rises and ebbs with the seasons, dying and renewing in the endless wheel of nature. These are hard times, O Cunning Woman, can't thou lead thy village deliciously?
+
+
+### 207
+Hold {number} captives in your folds at once.
+
+
+### 208
+Crown {number} May Queens and offer each to the fire.
+
+
+### 209
+Crown a May Queen and offer her to the fire.
+
+
+### 210
+The wheel has turned. Every level is yours to play again.
