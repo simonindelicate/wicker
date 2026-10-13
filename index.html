@@ -762,6 +762,8 @@ const SEASONS=['spring','summer','autumn','winter'],SNOWLINE=4.6,COLD_R=14,COLD_
 let season='spring',wildFl=[],snowT=0;
 const LEAF={spring:0x2a4a2e,summer:0x34522a,winterLow:0x26442e,winterHigh:0x929eae},AUT=[0x86682c,0x7e5428,0x664226,0x5c5a2c];
 function seasonFor(){const SC=scen();if(SC&&SC.season)return SC.season;return SEASONS[(hsh(((settings.seed|0)*7+13)>>>0)*4)|0]}
+// the ground's own colour, averaged round a point (hollow hills wear the season of the grass about them)
+function groundCol(x,z,r,out){let R=0,G=0,B=0;for(let k=0;k<8;k++){const a=k/8*TAU,c=cidx(x+Math.cos(a)*r,z+Math.sin(a)*r);R+=colW[c*3];G+=colW[c*3+1];B+=colW[c*3+2]}return out.setRGB(R/8,G/8,B/8)}
 function snowAt(c){return H[c]>SNOWLINE+(TN[c]-1)*6}
 function wildFlowers(){wildFl=[];if(season!=='spring')return;const st=(world&&world.starts)||[],r=n=>hsh(((settings.seed|0)*131+n)>>>0);
   for(let i=0;i<8000&&wildFl.length<300;i++){const x=r(i*2)*N,z=r(i*2+1)*N,c=cidx(x,z),h=H[c];if(h<.7||h>5.5||water[c]||!walk[c])continue;
@@ -1941,7 +1943,7 @@ const MODEL_DATA={
   {"s":"cyl","a":[0.115,0.115,0.3,8],"p":[-0.621,1.286,0.047],"r":[24,22,0],"k":[1,1,1],"c":"#16130e","t":0}
  ],
  "b:barrow":[
-  {"s":"sphere","a":[1.75,10,4,0,6.2832,0,1.5708],"p":[0,0,0],"r":[0,0,0],"k":[1,0.55,1],"c":"#4b5532","t":0},
+  {"s":"sphere","a":[1.75,10,4,0,6.2832,0,1.5708],"p":[0,0,0],"r":[0,0,0],"k":[1,0.55,1],"c":"#ffffff","t":1},
   {"s":"box","a":[0.3,1,0.3],"p":[-0.45,0.5,1.3],"r":[0,0,0],"k":[1,1,1],"c":"#67645c","t":0},
   {"s":"box","a":[0.3,1,0.3],"p":[0.45,0.5,1.3],"r":[0,0,0],"k":[1,1,1],"c":"#67645c","t":0},
   {"s":"box","a":[1.35,0.24,0.62],"p":[0,1.1,1.3],"r":[0,0,0],"k":[1,1,1],"c":"#5d5a53","t":0},
@@ -1954,7 +1956,7 @@ const MODEL_DATA={
   {"s":"box","a":[0.3,0.5,0.7],"p":[0.378,0.01,1.366],"r":[-30,0,-13],"k":[1,1,1],"c":"#676767","t":0},
   {"s":"sphere","a":[0.1,5,3,0,6.283185307179586,0,3.141592653589793],"p":[0.68,0.01,1.588],"r":[0,0,0],"k":[1,1,1],"c":"#696969","t":0},
   {"s":"box","a":[1.17,0.03,0.3],"p":[0,0.6,1.436],"r":[0,0,-1],"k":[1,1,1],"c":"#676767","t":0},
-  {"s":"sphere","a":[1.51,10,4,0,6.2832,0,1.5708],"p":[0.58,-0.186,-1.134],"r":[0,0,0],"k":[1,0.55,1],"c":"#4b5532","t":0}
+  {"s":"sphere","a":[1.51,10,4,0,6.2832,0,1.5708],"p":[0.58,-0.186,-1.134],"r":[0,0,0],"k":[1,0.55,1],"c":"#ffffff","t":1}
  ],
  "b:reinc":[
   {"s":"box","a":[0.44,0.38,0.44],"p":[0,1.45,0],"r":[0,0,0],"k":[1,1,1],"c":"#ffffff","t":1},
@@ -2699,6 +2701,8 @@ function applyModelEdits(){const E=modelEdits();for(const k in ORIG_UMOD)UMOD[k]
 try{applyModelEdits()}catch(e){console.error(e)}
 const UM={};for(const k in UMOD)UM[k]=mkPair(UMOD[k],UCAP[k],k==='ghost');
 const BM={};for(const k in BMOD)BM[k]=mkPair(BMOD[k],k==='reinc'||k==='barrow'||k==='moot'||k==='tomb'?8:k==='hut'?180:k==='hedge'?600:k==='hedgelink'?1200:60);
+// the hollow hill's mounds use the 'tribe' slot to take the ground's colour, but must be graded like the ground, so they get a plain material
+BM.barrow.t.material=new C.MeshLambertMaterial({color:0xffffff,flatShading:true});
 // where hut bunting is tied: just under the roof peak of whatever the hut model is now
 let HUT_TOP=1.78;function measureHut(){let y=0;for(const m of[BM.hut.t,BM.hut.f]){m.geometry.computeBoundingBox();y=Math.max(y,m.geometry.boundingBox.max.y)}HUT_TOP=Math.max(.8,y-.06)}measureHut();
 const SIL=inst(merge([P(cyl(.09,.15,.42,5),0xffffff,0,.21,0),P(new C.SphereGeometry(.1,6,5),0xffffff,0,.53,0)]),new C.MeshBasicMaterial({vertexColors:true}),200);
@@ -2818,7 +2822,7 @@ function drawEntities(){
   for(const k in BM)BM[k].n=0;
   for(const b of blds){if(!b.alive)continue;const rx=wd(b.x-cam.fx),rz=wd(b.z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2+40)continue;if(!visB(b))continue;const M=BM[b.bt];if(M.n>=M.cap)continue;const dim=b.tribe!==0&&!isVis(b.x,b.z);
     const y=hAt(b.x,b.z)-r2*K,sy=b.done?1:.12+.88*b.prog,i=M.n++,yw=b.bt==='hedge'?(b.id*2.39996)%TAU:(b.yaw||0);place(M.t,i,rx,y,rz,yw,1,sy);place(M.f,i,rx,y,rz,yw,1,sy);
-    const T=tribes[b.tribe];_c.copy(b.bt==='hut'?T.roof:T.c);if(gt-b.hitT<.1)_c.setRGB(1,.9,.8);if(!b.done)_c.multiplyScalar(.7);M.t.setColorAt(i,_c);
+    const T=tribes[b.tribe];if(b.bt==='barrow')groundCol(b.x,b.z,3.2,_c);else{_c.copy(b.bt==='hut'?T.roof:T.c);if(gt-b.hitT<.1)_c.setRGB(1,.9,.8);if(!b.done)_c.multiplyScalar(.7)}M.t.setColorAt(i,_c);
     _c.setRGB(1,1,1);if(b.hp<b.mhp*.5)_c.multiplyScalar(.65);if(!b.done)_c.setRGB(.85,.8,.7);if(b.lit)_c.setRGB(.42,.26,.18);if(dim)_c.multiplyScalar(.5);M.f.setColorAt(i,_c)}
   {const HL=BM.hedgelink,hm=new Map();for(const b of blds)if(b.alive&&b.bt==='hedge')hm.set(wi(b.cz0)*N+wi(b.cx0),b);
     for(const b of hm.values()){if(!visB(b))continue;for(const [dx,dz] of [[1,0],[0,1],[1,1],[1,-1]]){const o=hm.get(wi(b.cz0+dz)*N+wi(b.cx0+dx));if(!o||!visB(o))continue;
