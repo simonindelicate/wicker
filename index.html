@@ -760,7 +760,7 @@ function genWorld(seed,style,nT,opts){opts=opts||{};
 // set theirs.
 const SEASONS=['spring','summer','autumn','winter'],SNOWLINE=4.6,COLD_R=14,COLD_SPD=.85,COLD_CD=1.15;
 let season='spring',wildFl=[],snowT=0;
-const LEAF={spring:0x2a4a2e,summer:0x34522a,winterLow:0x26442e,winterHigh:0xc8d8ec},AUT=[0xa47a24,0xb05a1c,0x8e331c,0x6e5226];
+const LEAF={spring:0x2a4a2e,summer:0x34522a,winterLow:0x26442e,winterHigh:0x929eae},AUT=[0x86682c,0x7e5428,0x664226,0x5c5a2c];
 function seasonFor(){const SC=scen();if(SC&&SC.season)return SC.season;return SEASONS[(hsh(((settings.seed|0)*7+13)>>>0)*4)|0]}
 function snowAt(c){return H[c]>SNOWLINE+(TN[c]-1)*6}
 function wildFlowers(){wildFl=[];if(season!=='spring')return;const st=(world&&world.starts)||[],r=n=>hsh(((settings.seed|0)*131+n)>>>0);
@@ -781,10 +781,10 @@ function vcol(c){const h=H[c],x=c%N,z=(c/N)|0;
   else if(h<.55){r=.6;g=.53;b=.38}
   else if(sl>1.25){r=.4;g=.36;b=.31}
   else if(h<7){const t=h/7;r=lerp(.44,.34,t);g=lerp(.52,.41,t);b=lerp(.26,.22,t);
-    if(season==='summer'){r*=1.04;g*=1.01;b*=.92}else if(season==='autumn'){r=lerp(r,.5,.45);g=lerp(g,.44,.45);b=lerp(b,.26,.45)}}
+    if(season==='summer'){r*=1.04;g*=1.01;b*=.92}else if(season==='autumn'){const q=clamp((h-2)/2.4,0,1),k=.8*(1-q*q*(3-2*q));r=lerp(r,.47,k);g=lerp(g,.37,k);b=lerp(b,.23,k)}}
   else if(h<10.5){r=.42;g=.33;b=.31}
   else{r=.56;g=.54;b=.5}
-  if(season==='winter'&&hazU[c]<=gt&&h>=.55){if(snowAt(c)){const k=sl>1.25?.7:1;r=lerp(r,.8,k);g=lerp(g,.88,k);b=lerp(b,1,k)}else{r=lerp(r,.6,.4);g=lerp(g,.66,.4);b=lerp(b,.68,.4)}}
+  if(season==='winter'&&hazU[c]<=gt&&h>=.55){if(snowAt(c)){const k=sl>1.25?.7:1;r=lerp(r,.6,k);g=lerp(g,.65,k);b=lerp(b,.74,k)}else{r=lerp(r,.6,.4);g=lerp(g,.66,.4);b=lerp(b,.68,.4)}}
   if(saltU[c]>gt&&hazU[c]<=gt&&h>=0){r=lerp(r,.7,.55);g=lerp(g,.68,.55);b=lerp(b,.62,.55)}
   const v=hazU[c]>gt?1:TN[c];colW[c*3]=r*v;colW[c*3+1]=g*v;colW[c*3+2]=b*v}
 function recompute(x0,z0,x1,z1){
