@@ -293,6 +293,7 @@ details.help summary{cursor:pointer;color:var(--text);font:14px var(--f-display)
           <li>All-against-all needs an unlit wicker man, ten followers to burn and a full bar of mana. All shall leave their dwellings where they stand and make way to the Moot at the world's end, there to fight to the death.</li>
           <li>Pick a spell and tap a target. Your Cunning Woman walks into range and casts. If she dies she returns at your stone circle after forty-five seconds while your tribe survives.</li>
           <li>The Scrying Torch spell conjures a burning beacon where the Cunning Woman aims it. The land around it stays in sight for as long as it stands, which makes it a lookout over a pass, a rival's door or a hollow hill. Enemies can tear it down.</li>
+          <li>In winter, anyone caught out in the wilds, far from their own buildings, moves and strikes a little slower.</li>
           <li>Ättestupa: when fewer than three villagers are left, your Cunning Woman can raise a crag at the edge of the village, climb it while your people watch, and go over the edge. Six villagers step out of the stone circle, no rival attacks you for thirty seconds, and she is reborn as usual. The crag stays, and she climbs the same one if it ever comes to that again.</li>
           <li>You win when every rival tribe has no followers or buildings left.</li>
         </ul>
@@ -539,6 +540,7 @@ const ICON={
 //  twin | islands | continent | highlands, enemies, diff, fog, centre = start surrounded),
 //  addB / addS = buildings and spells unlocked from this level on (all = everything),
 //  lockB = buildings the player may not build on this level only (rivals still can),
+//  season = spring, summer, autumn or winter (one-off games pick one from the seed);
 //  tombHere = entombment allowed for the player on this level only (rivals do not attempt it);
 //  ban = buildings/spells ('tomb' = entombment) that nobody may use on this level only,
 //  oneLife = a tribe whose shaman dies is finished; ai.airRaid = rivals favour balloons and fly fighters over;
@@ -553,77 +555,77 @@ const ICON={
 //  Goals: conquer | survive (n seconds) | captives (hold n) | queen (offer a May Queen).
 // =====================================================================================
 const SCEN=[
- {title:'The Strait',seed:1101,style:'twin',enemies:1,diff:'easy',fog:false,goal:{type:'conquer'},
+ {title:'The Strait',season:'spring',seed:1101,style:'twin',enemies:1,diff:'easy',fog:false,goal:{type:'conquer'},
   addB:['hut','altar','camp'],addS:['blast','bridge'],news:['Forest Altar','Warrior Camp','Blast','Land Bridge'],
   me:{mana:0,wood:150,huts:2,altar:false,manaMult:2.5},ai:{first:1e9,breed:.5,cap:28,mil:.12,gap:3},
   intro:'Across the water a people keeps its own fires and will not answer when we call. Our Cunning Woman has no power of her own: everything she does must be paid for with a life. Build a forest altar among the trees and give it villagers, one at a time. With what it gives back, raise warriors, lift the sea floor into a road, and cross.'},
- {title:'The Grove',seed:2207,style:'twin',enemies:1,diff:'easy',fog:false,goal:{type:'conquer'},
+ {title:'The Grove',season:'spring',seed:2207,style:'twin',enemies:1,diff:'easy',fog:false,goal:{type:'conquer'},
   addB:['wicker'],addS:['lightning'],news:['Wicker Man','Lightning'],
   me:{mana:250,wood:150,huts:2,manaMult:1.5},ai:{first:720,breed:.6,cap:40,mil:.25,gap:2},
   intro:'The grove gives a little for each life. The wicker man gives far more, but it takes five at once, and it must burn to give anything at all. Feed it, and the Cunning Woman will have what she needs.'},
- {title:'Hobby Horse',seed:3313,style:'continent',enemies:1,diff:'easy',fog:true,goal:{type:'captives',n:10},
+ {title:'Hobby Horse',season:'spring',seed:3313,style:'continent',enemies:1,diff:'easy',fog:true,goal:{type:'captives',n:10},
   addB:['osshouse','fold'],addS:['swarm','torch'],news:['Oss House','Thrall Fold','Plague of Flies','Scrying Torch'],wild:1.8,
   me:{mana:250,wood:180,huts:2},ai:{first:900,cap:50},
   intro:'The wild folk wander the woods with no hearth and no name. The Oss will bring them in. Fill the fold with ten of them and the people will know we can feed the fires for a long winter.'},
- {title:'Bowmen',seed:4421,style:'continent',enemies:1,diff:'normal',fog:true,goal:{type:'conquer'},
+ {title:'Bowmen',season:'summer',seed:4421,style:'continent',enemies:1,diff:'normal',fog:true,goal:{type:'conquer'},
   addB:['range'],addS:['shield'],news:['Archery Range','Shield'],
   me:{mana:250,wood:150,huts:2},
   intro:'This neighbour is not idle. Their warriors will come. Archers behind a line of spears will meet them, and the Cunning Woman can turn a blow aside.'},
- {title:'The Long Watch',seed:5531,style:'continent',enemies:2,diff:'normal',fog:true,keep:true,goal:{type:'survive',n:600},
+ {title:'The Long Watch',season:'summer',seed:5531,style:'continent',enemies:2,diff:'normal',fog:true,keep:true,goal:{type:'survive',n:600},
   addB:['hedge','nest'],addS:['swamp','erode'],lockB:['camp'],news:['Blackthorn Hedge','Rook Tree','Bog','Erode'],
   me:{mana:400,wood:260,huts:2,warriors:4,manaMult:2},them:{mana:400,warriors:4},ai:{first:150,int:110,need:4,needInc:1,only0:true,mil:.36,cap:70},
   intro:'Two peoples have smelt our smoke, and both are coming for us. We cannot beat them and we have no camp to raise more warriors. But our valley is ringed with crags, and there are only three ways in. Plant blackthorn across the gaps, wake the bog beyond them, sink the ground under anyone who forces a way through, and hold the village for ten minutes until they tire of us. The altar gives twice what it usually does here; feed it.'},
- {title:'The High Places',seed:6607,style:'crags',enemies:1,diff:'normal',fog:true,goal:{type:'conquer'},
+ {title:'The High Places',season:'summer',seed:6607,style:'crags',enemies:1,diff:'normal',fog:true,goal:{type:'conquer'},
   addS:['ghost','flatten'],news:['Ghost Army','Flatten'],
   me:{mana:100,wood:180,huts:2},ai:{first:540},
   intro:'Up here the land is broken into crags and there is barely room for two huts. Nobody can grow until they make level ground. Feed the altar, flatten the rock around the village, and build on what you make. Across the rocks one other people is just as cramped, and the first to spread out will win.'},
- {title:'Fire from the Sky',seed:7717,style:'isles',enemies:2,diff:'normal',fog:true,goal:{type:'conquer'},oneLife:true,tombHere:true,ban:['bridge'],
+ {title:'Fire from the Sky',season:'summer',seed:7717,style:'isles',enemies:2,diff:'normal',fog:true,goal:{type:'conquer'},oneLife:true,tombHere:true,ban:['bridge'],
   addB:['balloon'],addS:['whirl'],news:['Balloon Works','Whirlwind'],
   me:{mana:300,wood:220,huts:2},ai:{airRaid:true,first:420,firstAt0:1,balRush:150},
   intro:'Every people here keeps its own island, and the sea is too deep and too wide for any bridge. Our enemies have learned to fly. Their balloonists drop fire on the huts and carry fighters over the water. Here a Cunning Woman does not come back: if ours dies we are finished, and if theirs dies so are they. Keep fighters sworn to her side, keep the Rook Trees watching, and when you are ready, put her in a balloon.'},
- {title:'May Morning',seed:8803,style:'continent',enemies:2,diff:'normal',fog:false,goal:{type:'mana',n:1000},ban:['wicker','god'],
+ {title:'May Morning',season:'spring',seed:8803,style:'continent',enemies:2,diff:'normal',fog:false,goal:{type:'mana',n:1000},ban:['wicker','god'],
   addB:['maypole'],addS:['hypno'],news:['Maypole','Hypnotise'],
   me:{mana:300,wood:220,huts:3},ai:{first:600,queenHunt:true,may:150},
   intro:'Wicker is in short supply this season - if we are to survive, we shall need to do things in the oldest way. Crown the May Queen and exalt her for a season. Nature is a lustful mistress. Only the fairest of our daughters shall fit her for a bride. Crown her. Guard her. Attend her prime. Why then she shall dance her bloody nuptials and bring all favour upon us.'},
- {title:'The Wicker God',seed:9901,style:'islands',enemies:2,diff:'normal',fog:true,goal:{type:'conquer'},
+ {title:'The Wicker God',season:'summer',seed:9901,style:'islands',enemies:2,diff:'normal',fog:true,goal:{type:'conquer'},
   addB:['god'],addS:['quake'],news:['Wicker God','Earthquake'],
   me:{mana:300,wood:300,huts:3},
   intro:'Twelve go into the belly of the ram and the whole world sees it burn. Fill it with strangers and the Cunning Woman will shake the earth beneath our enemies.'},
- {title:'Hollow Hills',seed:10433,style:'continent',enemies:2,diff:'normal',fog:true,goal:{type:'conquer'},
+ {title:'Hollow Hills',season:'autumn',seed:10433,style:'continent',enemies:2,diff:'normal',fog:true,goal:{type:'conquer'},
   tomb:true,addS:['fire'],news:['Entombment',"Day o'the Stones"],
   me:{mana:400,wood:220,huts:3},
   intro:'Out in the wilds the old hills are hollow. Walk the Cunning Woman there with twenty of the faithful and fifteen hundred mana and she will never walk again; but she will see everything, and reach everywhere.'},
- {title:"Herne's Oak",seed:11551,style:'continent',enemies:2,diff:'normal',fog:true,goal:{type:'conquer'},
+ {title:"Herne's Oak",season:'autumn',seed:11551,style:'continent',enemies:2,diff:'normal',fog:true,goal:{type:'conquer'},
   addB:['oak'],addS:['angel'],news:["Herne's Oak","St. Anthony's Fire"],ban:['wicker','god'],
   me:{mana:400,wood:360,huts:3},ai:{hangRaid:true},
   intro:'In the deep wood stands the dead oak. Hang the Cunning Woman from it for two minutes and the Hunt will ride for us, and every life they take will be ours. No wicker will burn in this wood, and our rivals know what the oak means: the moment she hangs, they will come for her. Guard the tree.'},
- {title:'Three Fires',seed:12619,style:'highlands',enemies:3,diff:'normal',fog:true,goal:{type:'conquer'},
+ {title:'Three Fires',season:'autumn',seed:12619,style:'highlands',enemies:3,diff:'normal',fog:true,goal:{type:'conquer'},
   addS:['volcano'],news:['Volcano','Three rivals'],
   me:{mana:400,wood:220,huts:3},
   intro:'Three peoples share these hills with us, and none of them will share for long. The mountains themselves can be made to burn.'},
- {title:'The Moot',seed:13729,style:'isles',enemies:3,diff:'normal',fog:true,goal:{type:'conquer'},ban:['bridge','balloon','tomb','angel'],
+ {title:'The Moot',season:'autumn',seed:13729,style:'isles',enemies:3,diff:'normal',fog:true,goal:{type:'conquer'},ban:['bridge','balloon','tomb','angel'],
   addS:['arma'],news:['All-against-all'],
   me:{mana:400,wood:220,huts:3},
   intro:'Four peoples on four islands, and no road, wing or spell will carry anyone across. There is only one way this ends. Grow, fill the wicker man, gather a full bar of mana, and call every soul to the stones at the heart of the world to settle it there.'},
- {title:'Highland Winter',seed:14843,style:'highlands',enemies:3,diff:'normal',fog:true,goal:{type:'conquer'},all:true,
+ {title:'Highland Winter',season:'winter',seed:14843,style:'highlands',enemies:3,diff:'normal',fog:true,goal:{type:'conquer'},all:true,
   me:{mana:300,wood:180,huts:2},them:{mana:300,huts:2},
   intro:'The year turns cold and the rivals are hungry. Everything you have learned is yours to use.'},
- {title:'The Turning Year',seed:15907,style:'islands',enemies:3,diff:'hard',fog:true,goal:{type:'conquer'},all:true,
+ {title:'The Turning Year',season:'winter',seed:15907,style:'islands',enemies:3,diff:'hard',fog:true,goal:{type:'conquer'},all:true,
   me:{mana:300,wood:180,huts:2},
   intro:'From here the land is not kind. Three peoples, each as cunning as we are. Nothing is held back from us, and nothing from them.'},
- {title:'Surrounded',seed:16111,style:'hub',enemies:3,diff:'hard',fog:true,bounty:true,goal:{type:'conquer'},all:true,ai:{balCap:2,freeBridge:true},
+ {title:'Surrounded',season:'winter',seed:16111,style:'hub',enemies:3,diff:'hard',fog:true,bounty:true,goal:{type:'conquer'},all:true,ai:{balCap:2,freeBridge:true},
   me:{mana:300,wood:200,huts:2},news:['Two full thrall folds and a Wicker God, ready from the start'],
   intro:'We have settled in the middle of everything. Three narrow causeways run from the rival islands to ours, and every army will march along one of them. But we did not come empty-handed: our folds are full of the wild folk, and the Wicker God already stands in its grove, waiting to be fed.'},
- {title:'Late to the Feast',seed:17203,style:'continent',enemies:3,diff:'hard',fog:false,goal:{type:'conquer'},all:true,raids:[{t:100,n:3},{t:240,n:5},{t:360,n:7}],routDread:20,
+ {title:'Late to the Feast',season:'autumn',seed:17203,style:'continent',enemies:3,diff:'hard',fog:false,goal:{type:'conquer'},all:true,raids:[{t:100,n:3},{t:240,n:5},{t:360,n:7}],routDread:20,
   me:{mana:100,wood:40,huts:1},them:{mana:500,huts:3,warriors:4},ai:{first:480,mana:.8,breed:.88,int:160,needInc:1,mil:.42,gap:1.4},tier:'Stern',
   intro:'We arrive with little, and the others have been here for years. Their halls are built and their warriors drilled. We must be cleverer than them, because we cannot be stronger.'},
- {title:'Blood Moon',seed:18301,style:'highlands',enemies:3,diff:'hard',fog:true,goal:{type:'conquer'},all:true,
+ {title:'Blood Moon',season:'autumn',seed:18301,style:'highlands',enemies:3,diff:'hard',fog:true,goal:{type:'conquer'},all:true,
   me:{mana:300,wood:200,huts:2},ai:{war:1.25,first:230,mana:.9,breed:.93,needInc:1,mil:.45,gap:1.2},tier:'Stern',
   intro:'Something has stirred the neighbours to fury. They will come early and often. Make them pay for every step.'},
- {title:'The Drowned Lands',seed:19417,style:'islands',enemies:3,diff:'hard',fog:true,goal:{type:'conquer'},all:true,
+ {title:'The Drowned Lands',season:'winter',seed:19417,style:'islands',enemies:3,diff:'hard',fog:true,goal:{type:'conquer'},all:true,
   me:{mana:200,wood:120,huts:1},them:{mana:400},ai:{mana:1.05,breed:.97,mil:.48,gap:1.1},tier:'Stern',
   intro:'The sea has taken most of the world. What land is left is small and fought over, and the others are richer in offerings than we are.'},
- {title:'The Last Harvest',seed:20521,style:'continent',enemies:3,diff:'hard',fog:true,centre:true,goal:{type:'conquer'},all:true,
+ {title:'The Last Harvest',season:'autumn',seed:20521,style:'continent',enemies:3,diff:'hard',fog:true,centre:true,goal:{type:'conquer'},all:true,
   me:{mana:400,wood:240,huts:2,warriors:2},them:{mana:700,huts:3,warriors:6,archers:3},ai:{war:1.3,first:240,mana:1.15},
   intro:'This is the end of the year, and perhaps the end of us. Three strong peoples surround us and they have already begun. Only the bog, the thorn, the hollow hill and the Hunt can turn this. Rejoice, if we live.'}
 ];
@@ -750,6 +752,26 @@ function genWorld(seed,style,nT,opts){opts=opts||{};
   return {h,starts,centre,barrows,riteSpot,stones:st,trees:tr,tn:Float32Array.from({length:N*N},()=>.92+rng()*.16)};
 }
 
+
+// ---------------- seasons ----------------
+// Spring: as before, with yellow flowers out in the wild. Summer: a warmer green. Autumn: drained grass and trees in four
+// autumn shades. Winter: frosted grass, snow and white trees above the snowline, falling snow, and anyone far from their own
+// buildings (out in the wilds) moves and strikes a little slower. One-off games take a season from the seed; campaign levels
+// set theirs.
+const SEASONS=['spring','summer','autumn','winter'],SNOWLINE=4.6,COLD_R=14,COLD_SPD=.85,COLD_CD=1.15;
+let season='spring',wildFl=[],snowT=0;
+const LEAF={spring:0x2a4a2e,summer:0x34522a,winterLow:0x26442e,winterHigh:0xc8d8ec},AUT=[0xa47a24,0xb05a1c,0x8e331c,0x6e5226];
+function seasonFor(){const SC=scen();if(SC&&SC.season)return SC.season;return SEASONS[(hsh(((settings.seed|0)*7+13)>>>0)*4)|0]}
+function snowAt(c){return H[c]>SNOWLINE+(TN[c]-1)*6}
+function wildFlowers(){wildFl=[];if(season!=='spring')return;const st=(world&&world.starts)||[],r=n=>hsh(((settings.seed|0)*131+n)>>>0);
+  for(let i=0;i<8000&&wildFl.length<300;i++){const x=r(i*2)*N,z=r(i*2+1)*N,c=cidx(x,z),h=H[c];if(h<.7||h>5.5||water[c]||!walk[c])continue;
+    if(st.some(s=>d2(x,z,s.x,s.z)<16*16))continue;wildFl.push({x,z,a:r(i*7+3)*TAU,n:1+((r(i*5+1)*3)|0)})}}
+function leafCol(t){if(season==='autumn')return AUT[(hsh(((t.x*977+t.z*131)|0)>>>0)*4)|0];if(season==='winter')return snowAt(cidx(t.x,t.z))?LEAF.winterHigh:LEAF.winterLow;return LEAF[season]}
+function coldAt(u){if(season!=='winter'||u.tribe===wildId||u.type==='hunter'||u.type==='ghost'||UT[u.type].veh||u.inV)return false;
+  for(const b of blds)if(b.alive&&b.tribe===u.tribe&&d2(u.x,u.z,b.x,b.z)<COLD_R*COLD_R)return false;return true}
+function snowFall(dt){if(season!=='winter')return;snowT+=dt*70;while(snowT>=1){snowT--;const a=R()*TAU,r=Math.sqrt(R())*Math.min(30,cam.dist*.9),x=wrap(cam.fx+Math.cos(a)*r),z=wrap(cam.fz+Math.sin(a)*r);
+  PN.emit(x,Math.max(0,hAt(x,z))+5+R()*5,z,(R()-.5)*.4,-.9-R()*.4,(R()-.5)*.4,7,.95,.96,.98,.85,.09+R()*.06,0)}}
+
 // ---------------- terrain bookkeeping ----------------
 function vcol(c){const h=H[c],x=c%N,z=(c/N)|0;
   const sl=Math.max(Math.abs(h-H[z*N+wi(x+1)]),Math.abs(h-H[z*N+wi(x-1)]),Math.abs(h-H[wi(z+1)*N+x]),Math.abs(h-H[wi(z-1)*N+x]));
@@ -758,9 +780,11 @@ function vcol(c){const h=H[c],x=c%N,z=(c/N)|0;
   else if(h<0){const t=clamp(-h/4,0,1);r=lerp(.42,.12,t);g=lerp(.38,.12,t);b=lerp(.27,.1,t)}
   else if(h<.55){r=.6;g=.53;b=.38}
   else if(sl>1.25){r=.4;g=.36;b=.31}
-  else if(h<7){const t=h/7;r=lerp(.44,.34,t);g=lerp(.52,.41,t);b=lerp(.26,.22,t)}
+  else if(h<7){const t=h/7;r=lerp(.44,.34,t);g=lerp(.52,.41,t);b=lerp(.26,.22,t);
+    if(season==='summer'){r*=1.04;g*=1.01;b*=.92}else if(season==='autumn'){r=lerp(r,.5,.45);g=lerp(g,.44,.45);b=lerp(b,.26,.45)}}
   else if(h<10.5){r=.42;g=.33;b=.31}
   else{r=.56;g=.54;b=.5}
+  if(season==='winter'&&hazU[c]<=gt&&h>=.55){if(snowAt(c)){const k=sl>1.25?.7:1;r=lerp(r,.8,k);g=lerp(g,.88,k);b=lerp(b,1,k)}else{r=lerp(r,.6,.4);g=lerp(g,.66,.4);b=lerp(b,.68,.4)}}
   if(saltU[c]>gt&&hazU[c]<=gt&&h>=0){r=lerp(r,.7,.55);g=lerp(g,.68,.55);b=lerp(b,.62,.55)}
   const v=hazU[c]>gt?1:TN[c];colW[c*3]=r*v;colW[c*3+1]=g*v;colW[c*3+2]=b*v}
 function recompute(x0,z0,x1,z1){
@@ -869,7 +893,7 @@ function removeUnit(u){u.alive=false;u.removed=true;if(u.sel)deselect(u)}
 function deselect(e){e.sel=false;sel=sel.filter(o=>o!==e);dockDirty=true}
 function setTarget(u,x,z,fx,fz){u.tx=wrap(x);u.tz=wrap(z);u.fx=wrap(fx===undefined?x:fx);u.fz=wrap(fz===undefined?z:fz);u.useField=0;u.stuck=0}
 
-function moveStep(u,dt){const D=UT[u.type];const fz=tribes[u.tribe]&&tribes[u.tribe].frenzyUntil>gt;const spd=D.spd*(fz?TUNE.frenzySpeed:1)*(u.carry?TUNE.ossCarrySpeed:1);
+function moveStep(u,dt){const D=UT[u.type];const fz=tribes[u.tribe]&&tribes[u.tribe].frenzyUntil>gt;const spd=D.spd*(fz?TUNE.frenzySpeed:1)*(u.carry?TUNE.ossCarrySpeed:1)*(u.cold?COLD_SPD:1);
   const dx=wd(u.tx-u.x),dz=wd(u.tz-u.z),dd=Math.hypot(dx,dz);if(dd<.2)return 1;
   let wx=dx,wz=dz;
   if(!D.fly&&dd>2&&(dd>10||u.useField>gt)){const f=field(u.fx,u.fz),c=cidx(u.x,u.z),dc=f[c];
@@ -1148,7 +1172,7 @@ function sendVehicle(v,x,z,am){v.dest={x:wrap(x),z:wrap(z),am:!!am};
   v.st='move';setTarget(v,x,z);v.unloadArrive=!water[cidx(x,z)];return true}
 
 // ---------------- unit behaviour ----------------
-function updUnit(u,dt){const D=UT[u.type],T=tribes[u.tribe];
+function updUnit(u,dt){const D=UT[u.type],T=tribes[u.tribe];if(season==='winter'){u.coldT=(u.coldT||0)-dt;if(u.coldT<=0){u.coldT=1+R()*.5;u.cold=coldAt(u)}}else u.cold=false;
   if(u.hanging){if(!u.hanging.alive){const b=u.hanging;u.hanging=null;u.inV=null;u.x=b.x;u.z=b.z;killUnit(u,null)}return}
   if(u.inV){u.x=u.inV.x;u.z=u.inV.z;return}
   if(u.leap&&leapTick(u,dt))return;
@@ -1181,7 +1205,7 @@ function updUnit(u,dt){const D=UT[u.type],T=tribes[u.tribe];
   case 'attack':{const t=u.tgt;
     if(!t||!t.alive||t.tribe===u.tribe||t.inV||(!t.bt&&!canHit(u,t))||(!t.bt&&!u.cmdAtk&&beingTaken(t,u.tribe))){resumeAfter(u);break}
     const isB=!!t.bt,rr=(D.rng||1)+(isB?BT[t.bt].s*.5:.3),dd=Math.sqrt(d2(u.x,u.z,t.x,t.z));
-    if(dd<=rr){u.face=Math.atan2(wd(t.x-u.x),wd(t.z-u.z));if(u.cd<=0){u.cd=D.cd*(T.frenzyUntil>gt?TUNE.frenzyAttack:1);if(D.bomb)fireCharge(u,t);else if(D.ranged)fireArrow(u,t);else{hit(t,D.dmg*(0.8+R()*.4),u);u.swing=gt;if(R()<.5)sfx('hit',.25,u.x,u.z)}}}
+    if(dd<=rr){u.face=Math.atan2(wd(t.x-u.x),wd(t.z-u.z));if(u.cd<=0){u.cd=D.cd*(T.frenzyUntil>gt?TUNE.frenzyAttack:1)*(u.cold?COLD_CD:1);if(D.bomb)fireCharge(u,t);else if(D.ranged)fireArrow(u,t);else{hit(t,D.dmg*(0.8+R()*.4),u);u.swing=gt;if(R()<.5)sfx('hit',.25,u.x,u.z)}}}
     else{if(!u.order&&!u.cmdAtk&&d2(u.gx,u.gz,u.x,u.z)>(u.post?TUNE.guardLeash*TUNE.guardLeash:18*18)){resumeAfter(u);break}
       if(isB){const a=Math.atan2(wd(u.z-t.z),wd(u.x-t.x));setTarget(u,t.x+Math.cos(a)*(rr-.2),t.z+Math.sin(a)*(rr-.2),t.x,t.z)}else{u.tx=t.x;u.tz=t.z;u.fx=t.x;u.fz=t.z}
       if(moveStep(u,dt)===2)resumeAfter(u)}
@@ -2703,8 +2727,8 @@ const WELL=(()=>{const f=[P(cyl(.5,.55,.55,10),0x8a857a,0,.27,0),P(cyl(.4,.4,.02
   P(cyl(.06,.06,.5,6),0x5a3d24,0,1.0,0,0,0,Math.PI/2),P(new C.BoxGeometry(.14,.14,.14),0x7a5634,0,.78,0)];return inst(merge(f),matF,40)})();
 const WELLT=inst(merge([P(new C.ConeGeometry(.78,.45,4),0xffffff,0,1.42,0,0,Math.PI/4)]),new C.MeshLambertMaterial({color:0xffffff,flatShading:true}),40);
 const FLS=inst(merge([P(cyl(.012,.012,.16,3),0x3d6b2a,-.06,.08,0),P(cyl(.012,.012,.2,3),0x3d6b2a,.05,.1,.03),P(cyl(.012,.012,.13,3),0x3d6b2a,0,.065,-.06),P(new C.ConeGeometry(.07,.06,4),0x4a7a32,0,.03,0)]),matF,2400);
-const FLB=inst(merge([P(new C.SphereGeometry(.045,5,3),0xffffff,-.06,.17,0),P(new C.SphereGeometry(.05,5,3),0xffffff,.05,.21,.03),P(new C.SphereGeometry(.04,5,3),0xffffff,0,.14,-.06)]),new C.MeshLambertMaterial({color:0xffffff,flatShading:true}),500);
-const TM=inst(merge([P(cyl(.07,.1,.5,5),0x4a3322,0,.25,0),P(new C.ConeGeometry(.52,1.05,6),0x203a26,0,.95,0),P(new C.ConeGeometry(.37,.8,6),0x2a4a2e,0,1.45,0)]),matF,1800);
+const FLB=inst(merge([P(new C.SphereGeometry(.045,5,3),0xffffff,-.06,.17,0),P(new C.SphereGeometry(.05,5,3),0xffffff,.05,.21,.03),P(new C.SphereGeometry(.04,5,3),0xffffff,0,.14,-.06)]),new C.MeshLambertMaterial({color:0xffffff,flatShading:true}),2400);
+const TMK=inst(merge([P(cyl(.07,.1,.5,5),0x4a3322,0,.25,0)]),matF,1800),TMC=inst(merge([P(new C.ConeGeometry(.52,1.05,6),0xc4c8c4,0,.95,0),P(new C.ConeGeometry(.37,.8,6),0xffffff,0,1.45,0)]),matF,1800);
 const SM=inst(merge([P(new C.BoxGeometry(.42,1.6,.32),0x6f6a60,0,.78,0),P(new C.BoxGeometry(.3,.2,.26),0x5e5a52,0,1.65,0)]),matF,80);
 const ringG=new C.RingGeometry(.42,.54,24);ringG.rotateX(-Math.PI/2);
 const RM=inst(ringG,new C.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:.9,depthWrite:false}),300);
@@ -2805,8 +2829,8 @@ function drawEntities(){
       _c.copy(tribes[b.tribe].c);HL.t.setColorAt(i,_c);_c.setRGB(1,1,1);if(!b.done||!o.done)_c.setRGB(.85,.8,.7);if((b.tribe!==0&&!isVis(b.x,b.z))||b.hp<b.mhp*.5)_c.multiplyScalar(.6);HL.f.setColorAt(i,_c)}}}
   for(const k in BM){fin(BM[k].t,BM[k].n);fin(BM[k].f,BM[k].n)}
   let tn=0;for(const t of trees){if(!t.alive)continue;const rx=wd(t.x-cam.fx),rz=wd(t.z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2||tn>=1800)continue;if(!seenAt(t.x,t.z))continue;const fv=fogOn?Math.max(.42,vis[cidx(t.x,t.z)]):1;
-    const gr=t.born?Math.min(1,(gt-t.born)/30):1;place(TM,tn,rx,hAt(t.x,t.z)-r2*K,rz,t.tint*7,t.sc*(.45+.55*clamp(t.wood/TUNE.woodPerTree,0,1))*(.3+.7*gr));_c.setRGB(t.tint*fv,t.tint*fv,t.tint*fv);TM.setColorAt(tn,_c);tn++}
-  fin(TM,tn);
+    const gr=t.born?Math.min(1,(gt-t.born)/30):1;const ty=hAt(t.x,t.z)-r2*K,tsc=t.sc*(.45+.55*clamp(t.wood/TUNE.woodPerTree,0,1))*(.3+.7*gr);place(TMK,tn,rx,ty,rz,t.tint*7,tsc);place(TMC,tn,rx,ty,rz,t.tint*7,tsc);_c.setRGB(t.tint*fv,t.tint*fv,t.tint*fv);TMK.setColorAt(tn,_c);_c.setHex(leafCol(t)).multiplyScalar(t.tint*fv);TMC.setColorAt(tn,_c);tn++}
+  fin(TMK,tn);fin(TMC,tn);
   let fn=0,en=0;const flw=(x,z,wx,wz,yaw,sc,col,fv,yo)=>{if(fn>=2400)return;const y=hAt(wx,wz)-(x*x+z*z)*K+(yo||0);place(FLS,fn,x,y,z,yaw,sc);place(FLB,fn,x,y,z,yaw,sc);_c.setRGB(fv,fv,fv);FLS.setColorAt(fn,_c);_c.setHex(col).multiplyScalar(fv);FLB.setColorAt(fn,_c);fn++};
   for(const b of blds){if(!b.alive||!b.done||!b.flT||b.bt!=='hut')continue;const rx=wd(b.x-cam.fx),rz=wd(b.z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2*.75||!visB(b))continue;
     const sp=flowerSpots(b),cnt=Math.min(sp.length,Math.floor((gt-b.flT)/TUNE.flowerEvery));if(!cnt)continue;const fv=fogOn?Math.max(.42,vis[cidx(b.x,b.z)]):1;
@@ -2851,6 +2875,8 @@ function drawEntities(){
       for(let k=0;k<16;k++){const ring=k<6?.42:.75,a=k<6?k/6*TAU:(k-6)/10*TAU+.3,fx=Math.cos(a)*ring,fz=Math.sin(a)*ring;flw(rx+fx,rz+fz,m.x+fx,m.z+fz,a,1.5,FLOWER_C[k%3],fv)}}}
   fin(PEBBLE,mn);fin(STAKE,sn2);fin(SACK,sk);fin(RIB,rn2);fin(KIND,kn);fin(BENCH,bn2);fin(DOLL,dn);fin(EMBER,hn);
   fin(POST,pn);
+  if(season==='spring')for(const f of wildFl){const rx=wd(f.x-cam.fx),rz=wd(f.z-cam.fz);if(rx*rx+rz*rz>VR2*.75||!seenAt(f.x,f.z))continue;const fv=fogOn?Math.max(.42,vis[cidx(f.x,f.z)]):1;
+    for(let i=0;i<f.n;i++){const dx=Math.cos(f.a+i*2.1)*.32*i,dz=Math.sin(f.a+i*2.1)*.32*i;flw(rx+dx,rz+dz,f.x+dx,f.z+dz,f.a+i,1.5,0xf0cc3a,fv)}}
   fin(FLS,fn);fin(FLB,fn);fin(EDGE,en);
   let wn=0;for(const w of wells){const rx=wd(w.x-cam.fx),rz=wd(w.z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2||!seenAt(w.x,w.z)||wn>=40)continue;const fv=fogOn?Math.max(.42,vis[cidx(w.x,w.z)]):1,sy=Math.min(1,(gt-w.born)/8);
     place(WELL,wn,rx,hAt(w.x,w.z)-r2*K,rz,w.x*3,1,sy);place(WELLT,wn,rx,hAt(w.x,w.z)-r2*K,rz,w.x*3,1,sy);_c.setRGB(fv,fv,fv);WELL.setColorAt(wn,_c);const T=tribes[w.tribe];_c.copy(T&&T.roof?T.roof:WHITE_C).multiplyScalar(fv);WELLT.setColorAt(wn,_c);wn++}
@@ -3162,7 +3188,7 @@ function buildWorld(){const SC=scen();const w=genWorld(settings.seed,settings.st
   armageddon=false;$('app').classList.remove('arma');scene.fog.color.setHex(0x7f725b);fogOn=false;vis.fill(1);visNow.fill(0);seen.fill(0);wildT=40;
   for(const d of debris)scene.remove(d.m);debris=[];
   units=[];blds=[];effects=[];projs=[];sel=[];banners=[];ferries=[];posting=false;bById.clear();fcache.clear();hazList.clear();gt=0;tver=0;PA.n=0;PN.n=0;stats={casts:0,lost:0,killed:0,razed:0,burned:0,taken:0};over=false;
-  recompute(0,0,N-1,N-1);
+  season=seasonFor();recompute(0,0,N-1,N-1);wildFlowers();
   trees=w.trees.map(t=>({x:t.x,z:t.z,wood:TUNE.woodPerTree,alive:true,sc:.8+R()*.45,tint:.85+R()*.25}));treeCap=Math.round(trees.length*1.1);tGridDirty=true;
   tribes=[];
   for(let i=0;i<=settings.enemies;i++){const s=w.starts[i],D=DIFF[settings.diff];const ai=i||watching,ST=SC?(ai?SC.them||{}:SC.me||{}):{},SA=(SC&&SC.ai)||{};const T={dread:0,tomb:null,id:i,...TRIBES[i],c:new C.Color(TRIBES[i].col),mana:ST.mana??(ai?150:D.pMana0),wood:ST.wood??(ai?40:D.pWood),woodGoal:ai?120:160,alive:true,shaman:null,reincT:0,cd:{},manaMult:ai?D.mana*((TRIBES[i].pers||{}).mana||1)*(SA.mana||1):(SC?(ST.manaMult||1):D.pMana),breedMult:(ai?D.breed:D.pBreed)*(ai&&SA.breed||1),capMax:ai?SA.cap:undefined,ai:ai?mkAI(i,s):null,stats:{pop:0,braves:0,outB:0,housed:0,others:0,mil:0,queued:0,huts:0,blds:0,sites:0,b:{},cap:25,cnt:{}}};
@@ -3296,7 +3322,7 @@ function loadGame(){const d=readSave();if(!d)return false;
   gt=d.gt;hazList.clear();saltList.clear();for(let c=0;c<N*N;c++){if(hazU[c]>gt)hazList.add(c);if(saltU[c]>gt)saltList.add(c)}
   for(const d of debris)scene.remove(d.m);debris=[];effects=[];projs=[];sel=[];bById.clear();fcache.clear();PA.n=0;PN.n=0;tver=0;over=false;
   trees=d.trees.map(a=>({x:a[0],z:a[1],wood:a[2],sc:a[3],tint:a[4],born:a[5]||undefined,alive:true}));treeCap=Math.max(treeCap,Math.round(trees.length*1.1));tGridDirty=true;
-  recompute(0,0,N-1,N-1);
+  season=seasonFor();recompute(0,0,N-1,N-1);wildFlowers();
   banners=d.banners||[];const uMap=new Map(),bMap=new Map();units=d.units;blds=d.blds;for(const u of units)uMap.set(u.id,u);for(const b of blds)bMap.set(b.id,b);
   const dec=v=>{if(v===null||typeof v!=='object')return v;if(Array.isArray(v))return v.map(dec);if('$u' in v)return uMap.get(v.$u)||null;if('$b' in v)return bMap.get(v.$b)||null;if('$t' in v)return trees[v.$t]||null;const o={};for(const k in v)o[k]=dec(v[k]);return o};
   for(const e of units)for(const k in e)if(e[k]&&typeof e[k]==='object')e[k]=dec(e[k]);
@@ -3456,7 +3482,7 @@ function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;fogK=Math.mi
     if(running&&!paused&&!over){const steps=speed;for(let i=0;i<steps;i++)sim(dt)}
     if(inMenu){cam.yaw+=dt*.06}
     if(running)keyCam(dt);
-    if(celebrating)celebrateFrame();const pdt=(running&&!paused)?dt*speed:(inMenu||celebrating?dt:0);PA.update(pdt);PN.update(pdt);
+    if(celebrating)celebrateFrame();const pdt=(running&&!paused)?dt*speed:(inMenu||celebrating?dt:0);snowFall(pdt);PA.update(pdt);PN.update(pdt);
     updCam(dt);updTerrain();drawEntities();drawIndicators();PA.write();PN.write();HALO.write();if(film.look)filmRender(dt);else renderer.render(scene,camera);
     if(running&&!over&&!watching){saveT-=dt;if(saveT<=0){saveT=20;saveGame()}}
     if(running||over){drawOverlay();mmT-=dt;if(mmT<=0){mmT=.3;drawMini()}hudT-=dt;if(hudT<=0||dockDirty){hudT=.25;updHUD()}}else ctx.clearRect(0,0,cw,ch);
@@ -3553,6 +3579,6 @@ document.querySelectorAll('.filmBox').forEach(box=>{box.addEventListener('click'
   box.addEventListener('input',e=>{const r=e.target.closest('input[data-fk]');if(!r)return;film[r.dataset.fk]=+r.value;filmSave();filmUI()})});
 filmUI();
 resize();buildWorld();showContinue();requestAnimationFrame(frame);
-window.__ws={get HUT_TOP(){return HUT_TOP},endGame,destroyBld,crown,villagerCount,tokGet,keepsake,useKeepsake,walkReach,postAt,setSel,get banners(){return banners},get sel(){return sel},get world(){return world},light,memorial,get stats(){return stats},get cam(){return cam},get WS(){return WS},wsOpen,wsClose,captureDef,defFromData,merge,ORIG_UMOD,ORIG_BMOD,get UM(){return UM},get BM(){return BM},get wear(){return wear},get buntings(){return buntings},get patches(){return patches},get wells(){return wells},get units(){return units},get tribes(){return tribes},get blds(){return blds},sim,beginGame,get gt(){return gt},castSpell,tryCast,saveGame,loadGame,setSel,command,showLevel,SCEN,field,get walkA(){return walk},hAt,get water(){return water},findSpot,get allow(){return allowSets},get pass(){return pass},get swamps(){return swamps},get debris(){return debris},queenValue,invokeArma,startRitual,sendVehicle,get wildId(){return wildId},get armageddon(){return armageddon},placeBuilding,validSpot,orderMove,spawnUnit,command,get water(){return water},findSpot};
+window.__ws={get HUT_TOP(){return HUT_TOP},get wildFl(){return wildFl},get season(){return season},endGame,destroyBld,crown,villagerCount,tokGet,keepsake,useKeepsake,walkReach,postAt,setSel,get banners(){return banners},get sel(){return sel},get world(){return world},light,memorial,get stats(){return stats},get cam(){return cam},get WS(){return WS},wsOpen,wsClose,captureDef,defFromData,merge,ORIG_UMOD,ORIG_BMOD,get UM(){return UM},get BM(){return BM},get wear(){return wear},get buntings(){return buntings},get patches(){return patches},get wells(){return wells},get units(){return units},get tribes(){return tribes},get blds(){return blds},sim,beginGame,get gt(){return gt},castSpell,tryCast,saveGame,loadGame,setSel,command,showLevel,SCEN,field,get walkA(){return walk},hAt,get water(){return water},findSpot,get allow(){return allowSets},get pass(){return pass},get swamps(){return swamps},get debris(){return debris},queenValue,invokeArma,startRitual,sendVehicle,get wildId(){return wildId},get armageddon(){return armageddon},placeBuilding,validSpot,orderMove,spawnUnit,command,get water(){return water},findSpot};
 })();
 </script>
