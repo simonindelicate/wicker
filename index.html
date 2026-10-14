@@ -541,6 +541,7 @@ const ICON={
 //  twin | islands | continent | highlands, enemies, diff, fog, centre = start surrounded),
 //  addB / addS = buildings and spells unlocked from this level on (all = everything),
 //  lockB = buildings the player may not build on this level only (rivals still can),
+//  square = four villages evenly spaced at the corners of a square; openVillages = every village always in sight, the land between fogged;
 //  season = spring, summer, autumn or winter (one-off games pick one from the seed);
 //  tombHere = entombment allowed for the player on this level only (rivals do not attempt it);
 //  ban = buildings/spells ('tomb' = entombment) that nobody may use on this level only,
@@ -626,8 +627,8 @@ const SCEN=[
  {title:'The Drowned Lands',season:'winter',seed:19417,style:'islands',enemies:3,diff:'hard',fog:true,goal:{type:'conquer'},all:true,
   me:{mana:200,wood:120,huts:1},them:{mana:400},ai:{mana:1.05,breed:.97,mil:.48,gap:1.1},tier:'Stern',
   intro:'This salty, archipelagic country is not our natural home, my lady - it suits the other better. But we must dig in. There is soil to find our strength in yet.'},
- {title:'The Last Harvest',season:'autumn',seed:20521,style:'continent',enemies:3,diff:'hard',fog:true,centre:true,centreGap:48,goal:{type:'conquer'},all:true,
-  me:{mana:400,wood:240,huts:2,warriors:2},them:{mana:700,huts:3,warriors:6,archers:3},ai:{war:1.3,first:360,mana:1.15,capMe:[2,8]},
+ {title:'The Last Harvest',season:'autumn',seed:20521,style:'continent',enemies:3,diff:'hard',fog:true,square:true,openVillages:true,goal:{type:'conquer'},all:true,
+  me:{mana:400,wood:240,huts:2,warriors:6,archers:3},them:{mana:600,huts:3,warriors:8,archers:4},
   intro:'I think this may be our last dance, my sweetness, my beloved, my daintiest of daughters, my most fertile of wives. Give it everything, love, let thine be a reign of fire let thy song be a song of rebirth. For thou hast been magnificent, sweet one.\n\nCome, o come, beloved\nCome meet me in the hill\nThe world above hath cowered\nAt the working of thy will\n‘tis on to stranger meadows\n‘tis off to drink thy fill\nO come, O come, my sweetheart\nCome meet me in the hill'}
 ];
 let allowSets=null,skirmishSettings=null;
@@ -720,7 +721,10 @@ function genWorld(seed,style,nT,opts){opts=opts||{};
       let y=lerp(-4.5,1.4+clamp(v,0,1)*7,m);let dc=1e9;for(const P of hubPaths)for(let q=0;q<P.length-1;q++)dc=Math.min(dc,segD(x,z,P[q],P[q+1]));
       const wc=1-sstep(1.7,2.8,dc);if(wc>0){const hc=1.6+.35*Math.max(0,inside);if(y<hc||inside<9)y=lerp(y,hc,wc)}h[i]=y}}
   const starts=[];
-  if(hubC){for(let k=0;k<nT;k++)starts.push(hubC[k])}else if(twinC){for(let k=0;k<nT;k++)starts.push(twinC[k%twinC.length])}else if(style==='crags'&&nT<=2){const j=()=>(rng()-.5)*6;starts.push({x:42+j(),z:64+j()},{x:86+j(),z:64+j()});starts.length=nT}else for(let k=0;k<nT;k++){let best=null,bs=-1e9;for(let t=0;t<400;t++){const x=rng()*N,z=rng()*N;let md=k?1e9:40;for(const s of starts)md=Math.min(md,Math.sqrt(d2(x,z,s.x,s.z)));
+  // square: four villages at the corners of a square, evenly spaced round the wrapping world, which leaves the Moot and the
+  // hollow hills to fall in the open ground between them
+  if(opts.square&&nT===4){const o=rng()*N,j=()=>(rng()-.5)*6;for(const [a,b] of [[0,0],[64,0],[64,64],[0,64]])starts.push({x:wrap(o+a+j()),z:wrap(o*.7+b+j())})}
+  else if(hubC){for(let k=0;k<nT;k++)starts.push(hubC[k])}else if(twinC){for(let k=0;k<nT;k++)starts.push(twinC[k%twinC.length])}else if(style==='crags'&&nT<=2){const j=()=>(rng()-.5)*6;starts.push({x:42+j(),z:64+j()},{x:86+j(),z:64+j()});starts.length=nT}else for(let k=0;k<nT;k++){let best=null,bs=-1e9;for(let t=0;t<400;t++){const x=rng()*N,z=rng()*N;let md=k?1e9:40;for(const s of starts)md=Math.min(md,Math.sqrt(d2(x,z,s.x,s.z)));
       const hh=bil(h,x,z);const sc=md+(hh>.6?8:0)-(hh>9?10:0);if(sc>bs){bs=sc;best={x,z}}}starts.push(best)}
   const plateau=(s,r0,r1,th)=>{for(let dz=-r1;dz<=r1;dz++)for(let dx=-r1;dx<=r1;dx++){const d=Math.hypot(dx,dz);if(d>r1)continue;const w=d<r0?1:1-sstep(r0,r1,d);
       const c=wi(Math.round(s.z)+dz)*N+wi(Math.round(s.x)+dx);h[c]=h[c]*(1-w)+th*w}};
@@ -1749,7 +1753,9 @@ function wildTick(){if(armageddon||gt<wildT)return;wildT=gt+TUNE.wildEvery;let n
 function updFog(){if(!fogOn)return;visNow.fill(0);const T=tribes[0];if(T&&T.tomb){visNow.fill(1);seen.fill(1);return}
   const mark=(x,z,r)=>{const cx=Math.floor(x),cz=Math.floor(z),r2=r*r;for(let dz=-r;dz<=r;dz++){const w=Math.floor(Math.sqrt(r2-dz*dz)),row=wi(cz+dz)*N;for(let dx=-w;dx<=w;dx++){const c=row+wi(cx+dx);visNow[c]=1;seen[c]=1}}};
   for(const u of units)if(u.alive&&u.tribe===0&&!u.inV)mark(u.x,u.z,u.type==='shaman'?11:u.type==='balloon'?13:7);
-  for(const b of blds)if(b.alive&&b.tribe===0)mark(b.x,b.z,b.bt==='nest'&&b.done?TUNE.nestSight:b.bt==='torch'?TUNE.torchSight:8)}
+  for(const b of blds)if(b.alive&&b.tribe===0)mark(b.x,b.z,b.bt==='nest'&&b.done?TUNE.nestSight:b.bt==='torch'?TUNE.torchSight:8);
+  // openVillages: every people's home ground is always in sight; only the land between is fogged
+  {const SC=scen();if(SC&&SC.openVillages)for(const b of blds)if(b.alive&&b.bt==='reinc'&&tribes[b.tribe]&&!tribes[b.tribe].wild)mark(b.x,b.z,18)}}
 const isVis=(x,z)=>!fogOn||visNow[cidx(x,z)]===1,seenAt=(x,z)=>!fogOn||seen[cidx(x,z)]===1;
 const visU=u=>u.tribe===0||isVis(u.x,u.z)||!!(tribes[u.tribe]&&tribes[u.tribe].broken),visB=b=>b.tribe===0||seenAt(b.x,b.z)||!!(tribes[b.tribe]&&tribes[b.tribe].broken);
 function invokeArma(ti){const T=tribes[ti];if(!allowS('arma'))return false;if(armageddon){if(ti===0)toast('The battle of all-against-all has already begun');return false}
@@ -3191,7 +3197,7 @@ function drawPreview(){const pc=$('prev'),px=pc.getContext('2d');const tmp=docum
   const land=(()=>{let n=0;for(let c=0;c<N*N;c++)if(!water[c])n++;return Math.round(n/(N*N)*100)})();
   $('prevCap').textContent=`Your village is ochre. ${land}% land, ${settings.enemies} rival${settings.enemies>1?'s':''}. Pale marks are the Moot and the hollow hills.`}
 function openMenu(){if(settings.campaign!=null){if(skirmishSettings)Object.assign(settings,skirmishSettings);settings.campaign=null}allowSets=null;applyAllow();showContinue();scene.fog.near=30;scene.fog.far=80;watching=false;document.body.classList.remove('watch');running=false;droneLevel();over=false;inMenu=true;$('menu').hidden=false;for(const id of['top','mini','side','dock'])$(id).hidden=true;hint(null);armed=null;placing=null;$('oSeed').value=settings.seed;buildWorld()}
-function buildWorld(){const SC=scen();const w=genWorld(settings.seed,settings.style,settings.enemies+1,{centre:SC&&SC.centre,centreGap:SC&&SC.centreGap,keep:SC&&SC.keep});world=w;H=w.h;TN=w.tn;
+function buildWorld(){const SC=scen();const w=genWorld(settings.seed,settings.style,settings.enemies+1,{centre:SC&&SC.centre,centreGap:SC&&SC.centreGap,keep:SC&&SC.keep,square:SC&&SC.square});world=w;H=w.h;TN=w.tn;
   walk=new Uint8Array(N*N);water=new Uint8Array(N*N);pass=new Uint8Array(N*N);hazU=new Float32Array(N*N);hazType=new Int8Array(N*N);hazOwner=new Int8Array(N*N).fill(-1);saltU=new Float32Array(N*N);saltOwner=new Int8Array(N*N);saltList.clear();wear=new Float32Array(N*N);wearShown=new Uint8Array(N*N);flowers=[];hazGrp=new Int32Array(N*N);swamps={};swampSeq=1;hedgeA=new Uint8Array(N*N);bOcc=new Int32Array(N*N);colW=new Float32Array(N*N*3);
   armageddon=false;$('app').classList.remove('arma');scene.fog.color.setHex(0x7f725b);fogOn=false;vis.fill(1);visNow.fill(0);seen.fill(0);wildT=40;
   for(const d of debris)scene.remove(d.m);debris=[];
