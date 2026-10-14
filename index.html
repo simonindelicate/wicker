@@ -440,10 +440,10 @@ const TUNE={
 };
 const TRIBES=[
   {name:'Ochre',col:0xc4892a,css:'#d39b3c',pers:{}},
-  {name:'Blood',col:0x8e1d18,css:'#b8392f',pers:{war:1.12,mil:.04,castGap:1.2,train:{camp:.46,range:.3,osshouse:.17,balloon:.07}}},
+  {name:'Blood',col:0x8e1d18,css:'#b8392f',pers:{war:1.12,mil:.04,castGap:1.2,grudge:{Forest:2},train:{camp:.46,range:.3,osshouse:.17,balloon:.07}}},
   {name:'Forest',col:0x179c80,css:'#33c4a0',pers:{war:.9,mil:-.04,mana:1.05,ossHunt:.85,train:{camp:.35,range:.28,osshouse:.28,balloon:.09}}},
   {name:'Ash',col:0xcfc9bc,css:'#d8d2c5',pers:{oak:.85,train:{camp:.38,range:.28,osshouse:.2,balloon:.16}}}];
-// pers: war = attack eagerness, mil = extra share of fighters, castGap = slower spellcasting, mana = sacrifice yield, ossHunt = shorter gaps between Oss hunts, oak = earlier Herne's Oak, train = what they train
+// pers: war = attack eagerness, mil = extra share of fighters, castGap = slower spellcasting, mana = sacrifice yield, ossHunt = shorter gaps between Oss hunts, grudge = extra weight when picking that tribe to attack (Hard and above), oak = earlier Herne's Oak, train = what they train
 const MANA_MAX=TUNE.manaMax,YIELD=TUNE.yield,DREAD=TUNE.dread;MAXD=TUNE.zoomMax;
 const UT={
   brave:{hp:50,spd:2.1,dmg:4,cd:1,rng:.9,aggro:0,label:'Villager',pl:'villagers'},
@@ -1596,7 +1596,7 @@ const target=Math.floor(S.pop*(ai.milR+(T.mana>1500?.15:0)));if(armyN+S.queued>=
 function orderUnit(u,x,z,am,fx,fz){if(u.type==='oss'){u.rcx=wrap(x);u.rcz=wrap(z)}u.st=am?'amove':'move';setTarget(u,x,z,fx,fz);u.order=am?'amove':null;u.otx=u.tx;u.otz=u.tz;u.ofx=u.fx;u.ofz=u.fz;u.gx=u.tx;u.gz=u.tz;u.tgt=null;u.scan=0}
 function aiAttack(T,army){const ai=T.ai,base=ai.base;const foes=tribes.filter(o=>o.alive&&o.id!==T.id&&!o.wild);if(!foes.length)return;
   const others=watching?foes:foes.filter(o=>o.id!==0);let pick=(!watching&&tribes[0].alive&&(R()<ai.D.pTarget||!others.length))?tribes[0]:others[(R()*others.length)|0];
-  if(settings.diff==='hard'||settings.diff==='extreme'||watching){const avg=foes.reduce((a,o)=>a+o.stats.pop,0)/foes.length;let tot=0;const w=foes.map(o=>{let x=1;if(o.stats.pop>avg*1.3)x+=1.5;if(tribes.some(t=>t.ai&&t!==T&&t.ai.wave&&t.ai.wave.tgt===o.id))x*=.4;tot+=x;return x});let r=R()*tot;pick=foes[0];for(let i=0;i<foes.length;i++){r-=w[i];if(r<=0){pick=foes[i];break}}}
+  if(settings.diff==='hard'||settings.diff==='extreme'||watching){const avg=foes.reduce((a,o)=>a+o.stats.pop,0)/foes.length;let tot=0;const gr=(TRIBES[T.id].pers||{}).grudge||{};const w=foes.map(o=>{let x=1;if(o.stats.pop>avg*1.3)x+=1.5;x*=gr[o.name]||1;if(tribes.some(t=>t.ai&&t!==T&&t.ai.wave&&t.ai.wave.tgt===o.id))x*=.4;tot+=x;return x});let r=R()*tot;pick=foes[0];for(let i=0;i<foes.length;i++){r-=w[i];if(r<=0){pick=foes[i];break}}}
   if(ai.only0&&!watching){if(!tribes[0].alive)return;pick=tribes[0]}
   if(ai.sent<ai.firstAt0&&!watching&&tribes[0].alive&&!(tribes[0].truceUntil>gt))pick=tribes[0];
   const rush=ai.forceP;if(ai.forceP){ai.forceP=false;if(!watching&&tribes[0].alive)pick=tribes[0]}
