@@ -80,6 +80,7 @@ Tokens are earned only in live play: never in "Watch the tribes fight", and neve
 | `w_easy` |  | Win on Easy |  |
 | `w_normal` |  | Win on Normal |  |
 | `w_hard` |  | Win on Hard |  |
+| `w_extreme` |  | Win on Extreme |  |
 | `w_arch` |  | Win on an archipelago |  |
 | `w_cont` |  | Win on a continent |  |
 | `w_high` |  | Win in the highlands |  |

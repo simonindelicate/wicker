@@ -242,7 +242,7 @@ details.help summary{cursor:pointer;color:var(--text);font:14px var(--f-display)
         <div>
           <fieldset><legend>Rival villages</legend><div class="seg" id="oEn"><button data-v="1">One</button><button data-v="2" class="on">Two</button><button data-v="3">Three</button></div></fieldset>
           <fieldset><legend>World</legend><div class="seg" id="oSt"><button data-v="islands" class="on">Archipelago</button><button data-v="continent">Continent</button><button data-v="highlands">Highlands</button></div></fieldset>
-          <fieldset><legend>Rival skill</legend><div class="seg" id="oDf"><button data-v="easy">Easy</button><button data-v="normal" class="on">Normal</button><button data-v="hard">Hard</button></div></fieldset>
+          <fieldset><legend>Rival skill</legend><div class="seg" id="oDf"><button data-v="easy">Easy</button><button data-v="normal" class="on">Normal</button><button data-v="hard">Hard</button><button data-v="extreme" id="oDfX" hidden>Extreme</button></div></fieldset>
           <fieldset><legend>Fog of war</legend><div class="seg" id="oFog"><button data-v="1" class="on">On</button><button data-v="0">Off</button></div></fieldset>
           <fieldset><legend>World seed</legend><div class="seedrow"><input id="oSeed" inputmode="numeric" aria-label="World seed"><button class="btn" id="oReroll">New world</button></div></fieldset>
           <fieldset class="filmBox"><legend>Film</legend><div class="seg"><button data-fl="0">Off</button><button data-fl="1">35mm</button></div><div class="filmS"><label class="fs"><span>Grain</span><input type="range" min="0" max="1" step="0.05" data-fk="grain"></label><label class="fs"><span>Dust and scratches</span><input type="range" min="0" max="1" step="0.05" data-fk="dust"></label><button class="tuneBtn" type="button">Advanced film grade settings</button></div></fieldset>
@@ -650,7 +650,7 @@ const TOKS=[
  ['Rites',[['r_burnman','Burn a wicker man'],['r_burngod','Burn a Wicker God'],['r_queen','Crown a May Queen'],['r_offerqueen','Give a May Queen to the fire'],['r_hunt','Wake the Wild Hunt'],['r_entomb','Seal your Cunning Woman in a hollow hill'],['r_leap','Ättestupa'],['r_arma','Call down the battle of all-against-all'],['r_moot','Walk away from the Moot']]],
  ['Growth',[['pop25','Lead 25 followers'],['pop50','Lead 50 followers'],['pop100','Lead 100 followers'],['pop150','Lead 150 followers']]],
  ['Endurance',[['t30','Last half an hour in one game'],['t60','Last an hour in one game'],['t120','Last two hours in one game']]],
- ['Victories',[['w_easy','Win on Easy'],['w_normal','Win on Normal'],['w_hard','Win on Hard'],['w_arch','Win on an archipelago'],['w_cont','Win on a continent'],['w_high','Win in the highlands']]],
+ ['Victories',[['w_easy','Win on Easy'],['w_normal','Win on Normal'],['w_hard','Win on Hard'],['w_extreme','Win on Extreme'],['w_arch','Win on an archipelago'],['w_cont','Win on a continent'],['w_high','Win in the highlands']]],
  ['Deeds',[['d_godcaps','Burn a Wicker God filled entirely with captives'],['d_richqueen','Offer a May Queen at her richest'],['d_harvest20','Drag twenty broken raiders to your altar in one game'],['d_carried','Have the whirlwind carry off a building'],['d_fever8',"Have one St. Anthony's Fire take eight people"],['d_leap2','Go over the edge twice in one game'],['d_thornwall','Survive The Long Watch without losing a building'],['d_nofear','Win without your dread ever passing the mark'],['d_noblade','Win without training a warrior'],['d_skytomb','Win Fire from the Sky from inside a hollow hill'],['d_threefolds','Have three Thrall Folds full at once'],['d_threefires','Have three wicker men burning close together at once']]],
  ['Curiosities',[
   ['x_lightfits',"Strike down someone in the fits of St. Anthony's Fire with Lightning",'The burning man does not need the sky as well. Give it to him anyway.'],
@@ -678,7 +678,9 @@ function campSave(p){try{localStorage.setItem(CAMP_KEY,JSON.stringify(p))}catch(
 const DIFF={
   easy:{mana:.6,breed:.45,build:9,hutRate:130,first:540,int:260,need:5,needInc:1,res:220,gap:12,milR:.28,pTarget:.3,maxSpell:320,pMana:1.25,pBreed:1.3,pWood:150,pMana0:300,pHuts:2},
   normal:{mana:.85,breed:.8,build:6,hutRate:85,first:330,int:180,need:7,needInc:2,res:160,gap:7,milR:.4,pTarget:.45,maxSpell:650,pMana:1.1,pBreed:1.1,pWood:80,pMana0:200,pHuts:1},
-  hard:{mana:1.25,breed:1.05,build:4,hutRate:65,first:270,int:120,need:9,needInc:2,res:110,gap:4,milR:.5,pTarget:.55,maxSpell:9999,pMana:1,pBreed:1,pWood:40,pMana0:150,pHuts:1}};
+  hard:{mana:1.25,breed:1.05,build:4,hutRate:65,first:270,int:120,need:9,needInc:2,res:110,gap:4,milR:.5,pTarget:.55,maxSpell:9999,pMana:1,pBreed:1,pWood:40,pMana0:150,pHuts:1},
+  // extreme: everyone starts bare — a Cunning Woman, five villagers, no mana, wood, huts, altar or fold — and a fallen tomb is permadeath
+  extreme:{mana:1.4,breed:1.15,build:3.5,hutRate:55,first:210,int:100,need:10,needInc:2,res:110,gap:3,milR:.55,pTarget:.6,maxSpell:9999,pMana:1,pBreed:1,pWood:0,pMana0:0,pHuts:0,bare:true,braves:5,aiMana0:0,aiWood:0,aiHuts:0}};
 
 // ---------------- state ----------------
 let H,walk,water,pass,hazU,hazType,hazOwner,bOcc,colW,TN,hazList=new Set(),saltU=new Float32Array(N*N),saltOwner=new Int8Array(N*N),saltList=new Set(),wear=new Float32Array(N*N),wearShown=new Uint8Array(N*N),flowers=[],decoT=0,wearT=0;
@@ -1012,7 +1014,7 @@ function destroyBld(b){if(!b.alive||BT[b.bt].inv)return;if(b.tribe===0&&b.bt!=='
   for(let dz=0;dz<s;dz++)for(let dx=0;dx<s;dx++){const c=wi(b.cz0+dz)*N+wi(b.cx0+dx);if(bOcc[c]===b.id)bOcc[c]=0}
   for(let i=0;i<b.occ;i++){const a=R()*TAU,u=spawnUnit('brave',b.tribe,b.x+Math.cos(a)*s*.6,b.z+Math.sin(a)*s*.6);if(water[cidx(u.x,u.z)]){killUnit(u);continue}u.st='flee';u.ft=4+R()*2;setTarget(u,b.x+Math.cos(a)*(9+R()*4),b.z+Math.sin(a)*(9+R()*4));u.think=2}
   for(const ct of b.capt)spawnWild(b.x+(R()-.5)*s,b.z+(R()-.5)*s);b.capt.length=0;
-  if(b.bt==='tomb'&&scen()&&scen().oneLife&&!watching){const T=tribes[b.tribe];T.tomb=null;T.oneLifeLost=true;flash(.4);if(b.tribe===0)toast('Your tomb has fallen, and your Cunning Woman with it. Here she does not come back.')}
+  if(b.bt==='tomb'&&((scen()&&scen().oneLife)||(!scen()&&settings.diff==='extreme'))&&!watching){const T=tribes[b.tribe];T.tomb=null;T.oneLifeLost=true;flash(.4);if(b.tribe===0)toast('Your tomb has fallen, and your Cunning Woman with it. Here she does not come back.')}
   else if(b.bt==='tomb'){const T=tribes[b.tribe];T.tomb=null;T.reincT=gt+TUNE.tombRespawn;T.mana=Math.floor(T.mana*TUNE.tombManaKeep);flash(.4);toast(b.tribe===0&&!watching?'Your tomb has fallen and your Cunning Woman with it. She will rise again at the stone circle in a minute, and half your mana is lost.':`The ${T.name} tomb has fallen`)}
   const y=hAt(b.x,b.z);for(let i=0;i<40;i++){PA.emit(b.x+(R()-.5)*s,y+R()*1.5,b.z+(R()-.5)*s,(R()-.5)*3,1+R()*4,(R()-.5)*3,.6+R()*.6,1,.5,.15,1,.9,4)}
   for(let i=0;i<20;i++)PN.emit(b.x+(R()-.5)*s,y+R(),b.z+(R()-.5)*s,(R()-.5),1+R(),(R()-.5),2+R()*2,.3,.28,.26,.7,1.6,-.3);
@@ -1575,7 +1577,7 @@ function harvestBroken(T,alive,di){const Dt=tribes[di],out={n:0,where:'altar'};i
 function enemyBalloonNear(T){const b=T.ai.base;for(const u of units)if(u.alive&&u.type==='balloon'&&u.tribe!==T.id&&u.tribe!==wildId&&d2(b.x,b.z,u.x,u.z)<30*30)return true;return false}
 function aiBuild(T){const S=T.stats,ai=T.ai;if(S.sites>=2)return;let want=null;const realB=S.b;if(allowSets){S.b=Object.assign({},realB);for(const t of BUILDABLE)if(!allowB(t))S.b[t]=99}
   const capped=T.capMax&&TUNE.popBase+S.huts*TUNE.popPerHut>=T.capMax;
-  if((S.cap-S.pop<6&&!capped)||S.huts<2)want='hut';else if(!S.b.camp)want='camp';else if(ai.queenHunt&&!S.b.osshouse&&S.braves>=6)want='osshouse';else if(ai.may&&!S.b.maypole&&S.braves>=8&&gt>ai.may)want='maypole';else if(ai.airRaid&&!S.b.balloon&&S.braves>=6)want='balloon';else if(!S.b.range&&S.braves>=8)want='range';else if(!S.b.osshouse&&S.braves>=8)want='osshouse';else if((!S.b.fold||S.caps>=S.b.fold*13)&&S.b.osshouse&&(S.b.fold||0)<3)want='fold';else if(!S.b.altar)want='altar';else if(!S.b.maypole&&S.braves>=16&&gt>480)want='maypole';else if(!S.b.wicker&&S.braves>=14&&gt>(settings.diff==='easy'?420:240))want='wicker';else if(!S.b.balloon&&S.braves>=14&&gt>300)want='balloon';else if((S.b.nest||0)<(gt>420?1:0)+(S.huts>6?1:0)+(enemyBalloonNear(T)?1:0))want='nest';else if(!S.b.god&&settings.diff!=='easy'&&S.pop>=55&&gt>600)want='god';else if(!S.b.oak&&settings.diff!=='easy'&&S.pop>=TUNE.aiOakPop*((TRIBES[T.id].pers||{}).oak||1)&&gt>TUNE.aiOakTime*((TRIBES[T.id].pers||{}).oak||1))want='oak';
+  if((S.cap-S.pop<6&&!capped)||S.huts<2)want='hut';else if(ai.D.bare&&!S.b.altar)want='altar';else if(!S.b.camp)want='camp';else if(ai.queenHunt&&!S.b.osshouse&&S.braves>=6)want='osshouse';else if(ai.may&&!S.b.maypole&&S.braves>=8&&gt>ai.may)want='maypole';else if(ai.airRaid&&!S.b.balloon&&S.braves>=6)want='balloon';else if(!S.b.range&&S.braves>=8)want='range';else if(!S.b.osshouse&&S.braves>=8)want='osshouse';else if((!S.b.fold||S.caps>=S.b.fold*13)&&S.b.osshouse&&(S.b.fold||0)<3)want='fold';else if(!S.b.altar)want='altar';else if(!S.b.maypole&&S.braves>=16&&gt>480)want='maypole';else if(!S.b.wicker&&S.braves>=14&&gt>(settings.diff==='easy'?420:240))want='wicker';else if(!S.b.balloon&&S.braves>=14&&gt>300)want='balloon';else if((S.b.nest||0)<(gt>420?1:0)+(S.huts>6?1:0)+(enemyBalloonNear(T)?1:0))want='nest';else if(!S.b.god&&settings.diff!=='easy'&&S.pop>=55&&gt>600)want='god';else if(!S.b.oak&&settings.diff!=='easy'&&S.pop>=TUNE.aiOakPop*((TRIBES[T.id].pers||{}).oak||1)&&gt>TUNE.aiOakTime*((TRIBES[T.id].pers||{}).oak||1))want='oak';
   else if(S.huts<Math.min(9,2+gt/ai.D.hutRate))want='hut';else if((S.b.camp||0)<2&&gt>420)want='camp';else if((S.b.range||0)<2&&gt>520)want='range';
   S.b=realB;if(!want||!allowB(want))return;if(T.wood<BT[want].wood){T.woodGoal=Math.max(120,BT[want].wood+30);if(allowS('flatten')&&gt>(ai.woodChk||0)){ai.woodChk=gt+30;const f=field(ai.base.x,ai.base.z);let n=0;for(const t of trees)if(t.alive&&d2(t.x,t.z,ai.base.x,ai.base.z)<22*22&&f[cidx(t.x,t.z)]>=0)n++;ai.treeStarved=n<4}if(ai.treeStarved)aiFlatten(T);return}
   const sp=findSpot(T,want);if(sp)placeBuilding(T.id,want,sp);else aiFlatten(T)}
@@ -1594,7 +1596,7 @@ const target=Math.floor(S.pop*(ai.milR+(T.mana>1500?.15:0)));if(armyN+S.queued>=
 function orderUnit(u,x,z,am,fx,fz){if(u.type==='oss'){u.rcx=wrap(x);u.rcz=wrap(z)}u.st=am?'amove':'move';setTarget(u,x,z,fx,fz);u.order=am?'amove':null;u.otx=u.tx;u.otz=u.tz;u.ofx=u.fx;u.ofz=u.fz;u.gx=u.tx;u.gz=u.tz;u.tgt=null;u.scan=0}
 function aiAttack(T,army){const ai=T.ai,base=ai.base;const foes=tribes.filter(o=>o.alive&&o.id!==T.id&&!o.wild);if(!foes.length)return;
   const others=watching?foes:foes.filter(o=>o.id!==0);let pick=(!watching&&tribes[0].alive&&(R()<ai.D.pTarget||!others.length))?tribes[0]:others[(R()*others.length)|0];
-  if(settings.diff==='hard'||watching){const avg=foes.reduce((a,o)=>a+o.stats.pop,0)/foes.length;let tot=0;const w=foes.map(o=>{let x=1;if(o.stats.pop>avg*1.3)x+=1.5;if(tribes.some(t=>t.ai&&t!==T&&t.ai.wave&&t.ai.wave.tgt===o.id))x*=.4;tot+=x;return x});let r=R()*tot;pick=foes[0];for(let i=0;i<foes.length;i++){r-=w[i];if(r<=0){pick=foes[i];break}}}
+  if(settings.diff==='hard'||settings.diff==='extreme'||watching){const avg=foes.reduce((a,o)=>a+o.stats.pop,0)/foes.length;let tot=0;const w=foes.map(o=>{let x=1;if(o.stats.pop>avg*1.3)x+=1.5;if(tribes.some(t=>t.ai&&t!==T&&t.ai.wave&&t.ai.wave.tgt===o.id))x*=.4;tot+=x;return x});let r=R()*tot;pick=foes[0];for(let i=0;i<foes.length;i++){r-=w[i];if(r<=0){pick=foes[i];break}}}
   if(ai.only0&&!watching){if(!tribes[0].alive)return;pick=tribes[0]}
   if(ai.sent<ai.firstAt0&&!watching&&tribes[0].alive&&!(tribes[0].truceUntil>gt))pick=tribes[0];
   const rush=ai.forceP;if(ai.forceP){ai.forceP=false;if(!watching&&tribes[0].alive)pick=tribes[0]}
@@ -1644,7 +1646,7 @@ function aiFaith(T){const S=T.stats,ai=T.ai;if(armageddon)return;
   const sites=blds.filter(b=>b.alive&&b.done&&b.tribe===T.id&&BT[b.bt].site&&!b.lit);const altar=sites.find(b=>b.bt==='altar'),wm=sites.find(b=>b.bt==='wicker'),god=sites.find(b=>b.bt==='god');
   const caps=captivesOf(T.id);
   if(caps>0){const tg=god||wm||altar;if(tg){const room=tg.bt==='altar'?(tg.cq>0?0:1):BT[tg.bt].holdN-tg.inside.length-tg.cq-tg.sq;if(room>0)tg.cq+=Math.min(room,caps)}}
-  const want=settings.diff==='hard'?700:settings.diff==='normal'?450:300;
+  const want=settings.diff==='hard'||settings.diff==='extreme'?700:settings.diff==='normal'?450:300;
   if(altar&&T.mana<want&&T.dread<25&&S.braves>(ai.treeStarved?8:12)&&!altar.sq)altar.sq=1;
   if(wm&&T.dread<15&&S.braves>24&&wm.inside.length+wm.sq+wm.cq<5&&R()<.25)wm.sq=5-wm.inside.length-wm.cq;
   if(god&&T.dread<8&&S.braves>40&&god.inside.length+god.sq+god.cq<12&&R()<.15)god.sq=12-god.inside.length-god.cq}
@@ -1653,7 +1655,7 @@ function aiCast(T){const ai=T.ai,sh=casterOf(T);if(!sh||sh.hanging||sh.st==='cas
   let cx=sh.x,cz=sh.z;if(sh.tomb){const eb=blds.filter(b=>b.alive&&b.tribe!==T.id&&b.tribe!==wildId&&!BT[b.bt].inv);if(!eb.length)return;const t=eb[(R()*eb.length)|0];cx=t.x;cz=t.z}
   const rr=14;const en=[];query(grid,cx,cz,rr,o=>{if(o.alive&&o.tribe!==T.id&&o.tribe!==wildId&&!o.inV&&o.type!=='ghost'&&d2(cx,cz,o.x,o.z)<rr*rr)en.push(o)});
   const opts=[];
-  if(en.length){const es=en.find(o=>o.type==='shaman');if(es&&ok('lightning')&&gt>(ai.boltT||0)&&!(es.shield>gt))opts.push(['lightning',es.x,es.z,settings.diff==='easy'?1:settings.diff==='normal'?3:6,'sh']);
+  if(en.length){const es=en.find(o=>o.type==='shaman');if(es&&ok('lightning')&&gt>(ai.boltT||0)&&!(es.shield>gt))opts.push(['lightning',es.x,es.z,settings.diff==='easy'?1:settings.diff==='normal'?3:settings.diff==='extreme'?8:6,'sh']);
     let best=en[0],bc=0;for(let i=0;i<Math.min(8,en.length);i++){const e=en[(R()*en.length)|0];let c=0;for(const o of en)if(d2(e.x,e.z,o.x,o.z)<9)c++;if(c>bc){bc=c;best=e}}
     if(bc>=7&&ok('fire'))opts.push(['fire',best.x,best.z,5]);if(bc>=6&&ok('angel')&&settings.diff!=='easy')opts.push(['angel',best.x,best.z,4]);
     if(bc>=5&&ok('hypno'))opts.push(['hypno',best.x,best.z,3]);if(bc>=4&&ok('swarm'))opts.push(['swarm',best.x,best.z,3]);
@@ -3196,7 +3198,7 @@ function drawPreview(){const pc=$('prev'),px=pc.getContext('2d');const tmp=docum
   for(const b of blds)if(b.alive&&b.tribe===wildId){px.fillStyle='#d9cfb6';px.strokeStyle='#0d0a08';px.lineWidth=1.5;px.beginPath();px.arc(b.x*sc,b.z*sc,b.bt==='moot'?5:4,0,TAU);px.fill();px.stroke()}
   const land=(()=>{let n=0;for(let c=0;c<N*N;c++)if(!water[c])n++;return Math.round(n/(N*N)*100)})();
   $('prevCap').textContent=`Your village is ochre. ${land}% land, ${settings.enemies} rival${settings.enemies>1?'s':''}. Pale marks are the Moot and the hollow hills.`}
-function openMenu(){if(settings.campaign!=null){if(skirmishSettings)Object.assign(settings,skirmishSettings);settings.campaign=null}allowSets=null;applyAllow();showContinue();scene.fog.near=30;scene.fog.far=80;watching=false;document.body.classList.remove('watch');running=false;droneLevel();over=false;inMenu=true;$('menu').hidden=false;for(const id of['top','mini','side','dock'])$(id).hidden=true;hint(null);armed=null;placing=null;$('oSeed').value=settings.seed;buildWorld()}
+function openMenu(){{const pr=campProg(),ok=!!pr.complete||devMode();$('oDfX').hidden=!ok;if(!ok&&settings.diff==='extreme'){settings.diff='hard';$('oDf').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x.dataset.v==='hard'))}}if(settings.campaign!=null){if(skirmishSettings)Object.assign(settings,skirmishSettings);settings.campaign=null}allowSets=null;applyAllow();showContinue();scene.fog.near=30;scene.fog.far=80;watching=false;document.body.classList.remove('watch');running=false;droneLevel();over=false;inMenu=true;$('menu').hidden=false;for(const id of['top','mini','side','dock'])$(id).hidden=true;hint(null);armed=null;placing=null;$('oSeed').value=settings.seed;buildWorld()}
 function buildWorld(){const SC=scen();const w=genWorld(settings.seed,settings.style,settings.enemies+1,{centre:SC&&SC.centre,centreGap:SC&&SC.centreGap,keep:SC&&SC.keep,square:SC&&SC.square});world=w;H=w.h;TN=w.tn;
   walk=new Uint8Array(N*N);water=new Uint8Array(N*N);pass=new Uint8Array(N*N);hazU=new Float32Array(N*N);hazType=new Int8Array(N*N);hazOwner=new Int8Array(N*N).fill(-1);saltU=new Float32Array(N*N);saltOwner=new Int8Array(N*N);saltList.clear();wear=new Float32Array(N*N);wearShown=new Uint8Array(N*N);flowers=[];hazGrp=new Int32Array(N*N);swamps={};swampSeq=1;hedgeA=new Uint8Array(N*N);bOcc=new Int32Array(N*N);colW=new Float32Array(N*N*3);
   armageddon=false;$('app').classList.remove('arma');scene.fog.color.setHex(0x7f725b);fogOn=false;vis.fill(1);visNow.fill(0);seen.fill(0);wildT=40;
@@ -3205,16 +3207,16 @@ function buildWorld(){const SC=scen();const w=genWorld(settings.seed,settings.st
   season=seasonFor();recompute(0,0,N-1,N-1);wildFlowers();
   trees=w.trees.map(t=>({x:t.x,z:t.z,wood:TUNE.woodPerTree,alive:true,sc:.8+R()*.45,tint:.85+R()*.25}));treeCap=Math.round(trees.length*1.1);tGridDirty=true;
   tribes=[];
-  for(let i=0;i<=settings.enemies;i++){const s=w.starts[i],D=DIFF[settings.diff];const ai=i||watching,ST=SC?(ai?SC.them||{}:SC.me||{}):{},SA=(SC&&SC.ai)||{};const T={dread:0,tomb:null,id:i,...TRIBES[i],c:new C.Color(TRIBES[i].col),mana:ST.mana??(ai?150:D.pMana0),wood:ST.wood??(ai?40:D.pWood),woodGoal:ai?120:160,alive:true,shaman:null,reincT:0,cd:{},manaMult:ai?D.mana*((TRIBES[i].pers||{}).mana||1)*(SA.mana||1):(SC?(ST.manaMult||1):D.pMana),breedMult:(ai?D.breed:D.pBreed)*(ai&&SA.breed||1),capMax:ai?SA.cap:undefined,ai:ai?mkAI(i,s):null,stats:{pop:0,braves:0,outB:0,housed:0,others:0,mil:0,queued:0,huts:0,blds:0,sites:0,b:{},cap:25,cnt:{}}};
+  for(let i=0;i<=settings.enemies;i++){const s=w.starts[i],D=DIFF[settings.diff];const ai=i||watching,ST=SC?(ai?SC.them||{}:SC.me||{}):{},SA=(SC&&SC.ai)||{};const T={dread:0,tomb:null,id:i,...TRIBES[i],c:new C.Color(TRIBES[i].col),mana:ST.mana??(ai?(D.aiMana0??150):D.pMana0),wood:ST.wood??(ai?(D.aiWood??40):D.pWood),woodGoal:ai?120:160,alive:true,shaman:null,reincT:0,cd:{},manaMult:ai?D.mana*((TRIBES[i].pers||{}).mana||1)*(SA.mana||1):(SC?(ST.manaMult||1):D.pMana),breedMult:(ai?D.breed:D.pBreed)*(ai&&SA.breed||1),capMax:ai?SA.cap:undefined,ai:ai?mkAI(i,s):null,stats:{pop:0,braves:0,outB:0,housed:0,others:0,mil:0,queued:0,huts:0,blds:0,sites:0,b:{},cap:25,cnt:{}}};
     T.roof=T.c.clone().lerp(new C.Color(0xc9a55a),.3);tribes.push(T);
     const rs=validSpot(i,'reinc',s.x,s.z);const sp=rs.err?{cx0:Math.floor(s.x-1),cz0:Math.floor(s.z-1)}:rs;const r=placeBuilding(i,'reinc',sp,true);
     if(T.ai){T.ai.base={x:r.x,z:r.z}}
-    let huts=0;const want=ST.huts??(ai?1:D.pHuts);for(let a=0;a<24&&huts<want;a++){const ang=a/12*TAU+.4,rr=a<12?5:7.5,v=validSpot(i,'hut',r.x+Math.cos(ang)*rr,r.z+Math.sin(ang)*rr);if(!v.err){const h=placeBuilding(i,'hut',v,true);h.occ=2;huts++}}
-    if(allowB('fold')){let done=false;for(let a=0;a<36&&!done;a++){const ang=a/12*TAU+3.6,rr=5.5+(a/12|0)*2.5,v=validSpot(i,'fold',r.x+Math.cos(ang)*rr,r.z+Math.sin(ang)*rr);if(!v.err){placeBuilding(i,'fold',v,true);done=true}}}
-    if(allowB('altar')&&ST.altar!==false){let done=false;for(let a=0;a<36&&!done;a++){const ang=a/12*TAU+1.7,rr=5+(a/12|0)*2.5,v=validSpot(i,'altar',r.x+Math.cos(ang)*rr,r.z+Math.sin(ang)*rr);if(!v.err){placeBuilding(i,'altar',v,true);done=true}}
+    let huts=0;const want=ST.huts??(ai?(D.aiHuts??1):D.pHuts);for(let a=0;a<24&&huts<want;a++){const ang=a/12*TAU+.4,rr=a<12?5:7.5,v=validSpot(i,'hut',r.x+Math.cos(ang)*rr,r.z+Math.sin(ang)*rr);if(!v.err){const h=placeBuilding(i,'hut',v,true);h.occ=2;huts++}}
+    if(allowB('fold')&&!D.bare){let done=false;for(let a=0;a<36&&!done;a++){const ang=a/12*TAU+3.6,rr=5.5+(a/12|0)*2.5,v=validSpot(i,'fold',r.x+Math.cos(ang)*rr,r.z+Math.sin(ang)*rr);if(!v.err){placeBuilding(i,'fold',v,true);done=true}}}
+    if(allowB('altar')&&ST.altar!==false&&!D.bare){let done=false;for(let a=0;a<36&&!done;a++){const ang=a/12*TAU+1.7,rr=5+(a/12|0)*2.5,v=validSpot(i,'altar',r.x+Math.cos(ang)*rr,r.z+Math.sin(ang)*rr);if(!v.err){placeBuilding(i,'altar',v,true);done=true}}
      if(!done){let bt=null,bd=1e9;for(const t of trees)if(t.alive){const d=d2(r.x,r.z,t.x,t.z);if(d<bd&&d>16){bd=d;bt=t}}if(bt){const v=validSpot(i,'altar',bt.x+1.5,bt.z+1.5);placeBuilding(i,'altar',v.err?{cx0:Math.floor(bt.x+.5),cz0:Math.floor(bt.z+.5)}:v,true)}}}
     T.shaman=spawnUnit('shaman',i,r.x,r.z+2.2);
-    for(let k=0;k<(ST.braves??8);k++){const a=k/8*TAU;spawnUnit('brave',i,r.x+Math.cos(a)*2.6,r.z+Math.sin(a)*2.6)}
+    for(let k=0;k<(ST.braves??D.braves??8);k++){const a=k/8*TAU;spawnUnit('brave',i,r.x+Math.cos(a)*2.6,r.z+Math.sin(a)*2.6)}
     for(const ty of ['warrior','archer'])for(let k=0;k<(ST[ty+'s']||0);k++){const a=R()*TAU,u=spawnUnit(ty,i,r.x+Math.cos(a)*4,r.z+Math.sin(a)*4);u.gx=u.x;u.gz=u.z}}
   const WTr={id:tribes.length,name:'Wild',col:0x6b5a45,css:'#8a775c',wild:true,c:new C.Color(0x6b5a45),mana:0,wood:0,woodGoal:0,alive:true,shaman:null,reincT:0,cd:{},manaMult:0,breedMult:0,ai:null,stats:{pop:0,braves:0,outB:0,housed:0,others:0,mil:0,queued:0,huts:0,blds:0,sites:0,b:{},cap:0,cnt:{}}};WTr.roof=WTr.c.clone();tribes.push(WTr);wildId=WTr.id;
   if(SC&&SC.bounty&&w.riteSpot){const T0=tribes[0],r=blds.find(b=>b.bt==='reinc'&&b.tribe===0),o=w.riteSpot,sz=BT.god.s,v=validSpot(0,'god',o.x,o.z);placeBuilding(0,'god',v.err?{cx0:Math.floor(o.x-sz/2+.5),cz0:Math.floor(o.z-sz/2+.5)}:v,true);
@@ -3261,7 +3263,7 @@ function celebrateFrame(){const T=tribes[0];let n=0;for(const u of units){if(!u.
     PA.emit(u.x+(R()-.5)*.3,unitY(u)+.3+R()*.6,u.z+(R()-.5)*.3,(R()-.5)*.4,1.5+R()*2,(R()-.5)*.4,.6,1,.45+R()*.3,.1,1,.45,-1);if(++n>220)break}
   for(const b of blds)if(b.alive&&b.tribe===0&&R()<.15){const y=hAt(b.x,b.z);PA.emit(b.x+(R()-.5)*2,y+1+R()*2,b.z+(R()-.5)*2,(R()-.5),2+R()*3,(R()-.5),.8,1,.5,.15,1,.6,-1)}
   cam.yaw+=.0025}
-const DIFFNAME={easy:'Easy',normal:'Normal',hard:'Hard'};
+const DIFFNAME={easy:'Easy',normal:'Normal',hard:'Hard',extreme:'Extreme'};
 function tokWin(){const a=A(),d=settings.diff,st=settings.style,SC0=scen();earn('w_'+(SC0&&SC0.tier&&d==='hard'?'normal':d));earn(['islands','isles','twin','hub'].includes(st)?'w_arch':['highlands','crags'].includes(st)?'w_high':'w_cont');
   if(armageddon)earn('r_moot');if(!a.dreadOver)earn('d_nofear');if(!a.trainedWar)earn('d_noblade');const i=settings.campaign;
   if(i!=null){if(i===0)earn('c1');if(i===4)earn('c5');if(i===9)earn('c10');if(i===14)earn('c15');if(i===SCEN.length-1)earn('c20');if(i===4&&!a.lostBld)earn('d_thornwall');if(SCEN[i].title==='Fire from the Sky'&&tribes[0].tomb&&tribes[0].tomb.alive)earn('d_skytomb')}}
