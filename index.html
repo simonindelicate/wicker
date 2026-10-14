@@ -925,7 +925,7 @@ function dmgUnit(t,dmg,src){if(!t.alive)return;if(src&&src.tribe!==undefined)atk
 function dmgBld(b,dmg){if(!b.alive||BT[b.bt].inv)return;if(b.tribe===0||atk===0)lastFight=gt;noteHit(b.tribe);b.hp-=dmg;b.hitT=gt;if(b.hp<=0)destroyBld(b)}
 function hit(t,dmg,src){if(src)atk=src.tribe;if(t.bt)dmgBld(t,dmg,src);else dmgUnit(t,dmg,src)}
 function killUnit(u,src){if(!u.alive)return;killCount++;if(src&&src.type==='hunter'&&src.tribe===0&&u.type==='queen'&&u.tribe!==0)earn('x_huntqueen');u.alive=false;u.hp=0;const y=unitY(u);if(u.carry)releaseCarry(u);
-  if(src&&src.type==='hunter'&&u.tribe!==src.tribe&&u.type!=='ghost'){const T=tribes[src.tribe];if(T){const v=Math.round(HUNT_V*T.manaMult);T.mana=Math.min(MANA_MAX,T.mana+v);if(src.tribe===0)stats.hunted=(stats.hunted||0)+1;for(let i=0;i<10;i++)PA.emit(u.x,y+.5,u.z,(R()-.5)*.8,1.5+R()*2,(R()-.5)*.8,.9,.75,.85,.7,1,.35,-1)}}
+  if(src&&src.type==='hunter'&&u.tribe!==src.tribe&&u.type!=='ghost'){const T=tribes[src.tribe];if(T){const v=armageddon?0:Math.round(HUNT_V*T.manaMult);T.mana=Math.min(MANA_MAX,T.mana+v);if(src.tribe===0)stats.hunted=(stats.hunted||0)+1;for(let i=0;i<10;i++)PA.emit(u.x,y+.5,u.z,(R()-.5)*.8,1.5+R()*2,(R()-.5)*.8,.9,.75,.85,.7,1,.35,-1)}}
   if(u.type!=='ghost'){for(let i=0;i<10;i++)PN.emit(u.x,y+.4,u.z,(R()-.5)*2,R()*2,(R()-.5)*2,.7,.55,.1,.08,.9,.35,9)}
   else for(let i=0;i<14;i++)PA.emit(u.x,y+.5,u.z,(R()-.5)*1.5,R()*2,(R()-.5)*1.5,.6,.5,.7,1,.8,.4,-1);
   if(u.pass){for(const p of u.pass){p.inV=null;p.x=u.x;p.z=u.z;if(u.type==='balloon'){p.air=true;p.ay=y;p.avx=(R()-.5)*2;p.avz=(R()-.5)*2;p.avy=1}else killUnit(p,null)}u.pass.length=0}
@@ -1649,7 +1649,7 @@ function aiFaith(T){const S=T.stats,ai=T.ai;if(armageddon)return;
   if(wm&&T.dread<15&&S.braves>24&&wm.inside.length+wm.sq+wm.cq<5&&R()<.25)wm.sq=5-wm.inside.length-wm.cq;
   if(god&&T.dread<8&&S.braves>40&&god.inside.length+god.sq+god.cq<12&&R()<.15)god.sq=12-god.inside.length-god.cq}
 function aiCast(T){const ai=T.ai,sh=casterOf(T);if(!sh||sh.hanging||sh.st==='cast'||gt<ai.castT||sh.air)return;
-  const ok=k=>allowS(k)&&SPK[k].c<=ai.D.maxSpell&&T.mana>=spellCost(T,k)+(k==='blast'?0:30)&&(T.cd[k]||0)<=gt;
+  const ok=k=>(!armageddon||k==='lightning'||k==='shield'||k==='blast')&&allowS(k)&&SPK[k].c<=ai.D.maxSpell&&T.mana>=spellCost(T,k)+(k==='blast'?0:30)&&(T.cd[k]||0)<=gt;
   let cx=sh.x,cz=sh.z;if(sh.tomb){const eb=blds.filter(b=>b.alive&&b.tribe!==T.id&&b.tribe!==wildId&&!BT[b.bt].inv);if(!eb.length)return;const t=eb[(R()*eb.length)|0];cx=t.x;cz=t.z}
   const rr=14;const en=[];query(grid,cx,cz,rr,o=>{if(o.alive&&o.tribe!==T.id&&o.tribe!==wildId&&!o.inV&&o.type!=='ghost'&&d2(cx,cz,o.x,o.z)<rr*rr)en.push(o)});
   const opts=[];
@@ -1767,7 +1767,7 @@ function invokeArma(ti){const T=tribes[ti];if(!allowS('arma'))return false;if(ar
   if(ti===0)earn('r_arma');wm.lit=true;wm.burnt=true;wm.burnEnd=gt+12;flash(.5);cam.shake=Math.max(cam.shake,.6);sfx('quake',1);toast(ti===0&&!watching?'Ten souls burn in the wicker. The end is coming.':`The ${T.name} tribe has called down the battle of all-against-all`);
   effects.push({t:3,up(e,dt){e.t-=dt;if(e.t>0)return true;startArma();return false}});return true}
 function mootPull(u){if(u.type==='balloon'||u.inV)return;const lf=field(moot.x,moot.z);if(lf[cidx(u.x,u.z)]>=0)return;const a=R()*TAU,r=5+R()*7,c=nearestCell(moot.x+Math.cos(a)*r,moot.z+Math.sin(a)*r,5,c=>pass[c]===1&&lf[c]>=0);if(c){u.x=c.x;u.z=c.z;u.air=false;for(let i=0;i<6;i++)PA.emit(u.x,hAt(u.x,u.z)+.5,u.z,(R()-.5),1+R()*2,(R()-.5),.6,1,.3,.15,1,.4,-1)}}
-function startArma(){armageddon=true;$('app').classList.add('arma');scene.fog.color.setHex(0x9a4224);droneLevel();
+function startArma(){armageddon=true;{const v=SPK.lightning.c+SPK.shield.c+4*SPK.blast.c;for(const T of tribes)if(T&&!T.wild)T.mana=v}$('app').classList.add('arma');scene.fog.color.setHex(0x9a4224);droneLevel();
   for(const b of blds)if(b.alive&&b.bt==='hut')destroyBld(b);
   for(const b of blds)if(b.alive&&BT[b.bt].train){b.q=0;b.trainee=false;b.claim=null}
   for(const u of units)if(u.alive&&u.tribe===wildId)removeUnit(u);
