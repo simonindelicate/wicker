@@ -1,0 +1,167 @@
+# Wicker: a retrospective changelog
+
+This is a history of how Wicker was built, reconstructed from the commit log and the waypoint builds kept in `waypoints/`. It doesn't list every commit. It follows the significant steps: each feature as it arrived, and each round of balance work, with the reasoning where the history records it. Dates are those of the commits. The repository opens on 9 October 2026 with a build that already carried most of the core game, so the first section describes that inheritance from the waypoints rather than from commits.
+
+---
+
+## Before the repository: the core game (to 9 October)
+
+The earliest kept build, `wicker-2026-10-08-rook-tree.html`, is already a complete god game in the tradition of Populous: The Beginning. It is a single HTML file using three.js, played on a wrapping 128-square heightmap world.
+
+- **Mana comes only from sacrifice.** A tribe of villagers breeds in huts, chops wood and builds. Mana comes from giving people to the fire: at a forest altar, inside a wicker man or a Wicker God, or as captives dragged home by Osses and penned in thrall folds. This is the game's defining economic rule, and nearly every later balance decision follows from it.
+- **The shaman and her spells.** A shaman (later the Cunning Woman) casts sixteen spells: Blast, Lightning, Plague of Flies, Shield, Ghost Army, Land Bridge, Flatten, Hypnotise, Whirlwind, Swamp, Erode, Earthquake, Firestorm, Angel of Death, Volcano and Armageddon.
+- **Buildings.** Huts, a warrior camp, an archery range, an Oss house, a rook nest, a thrall fold, an altar, the wicker man and Wicker God, a tomb, Herne's Oak, balloons and boats. There are also the stone circle where the shaman is reborn, the barrows, and a neutral Moot at the centre of the world.
+- **Rival tribes.** AI rivals breed, build, train, raid and cast against you and against each other.
+
+The second waypoint, `wicker-2026-10-09-pre-campaign.html`, adds the **maypole and May Queen** and the **blackthorn hedge**, together with the sacrifice spectacles, before any campaign existed.
+
+## 9 October: the campaign begins
+
+- **The twenty-level campaign.** It arrives with the first commit. It teaches the systems one at a time, from The Strait and The Grove through to The Last Harvest.
+- **Level 1 reworked.** You start at zero mana and must build an altar before anything else. Mana from sacrifice becomes the very first lesson.
+- **Level 5, The Long Watch.** A walled valley where rivals attack only the player. A test mode arrives with it, for jumping to any level during development.
+- **Boats removed.** Boats and the boathouse were cut. Level 6 became The High Places, and levels 6–13 were reworked around the remaining tools.
+- **Spell rebalancing.** Flatten was widened, Volcano made deadlier, and shamans given guards.
+- **Salted ground and broken tribes.** A tribe that is driven out leaves salted ground behind it. A tribe reduced far below its peak is *broken*: its people gather at its stone circle while its buildings crumble. A rival finder was added so you can locate the tribes you're fighting. Level 6 was moved onto one small island.
+- **`AUDIO-CUES.md`.** A list of the sounds the game wants, with suggested lengths.
+
+## 10 October: the folk register and the living village
+
+- **Renaming.** The game was renamed into a folk register. Shaman became Cunning Woman, braves became villagers, Swamp became Bog, and Armageddon became All-against-all, "the battle of all-against-all" in event messages.
+- **Villages that look lived in.** This took several passes in one day:
+  - idle pastimes for villagers;
+  - flowers growing in still rings round settled buildings, in maypole pink, yellow and white;
+  - front gardens, patches of wild flowers in spare ground, and a well for every cluster of six huts, roofed in its tribe's thatch colour;
+  - bunting strung hub-and-spoke from the maypole, the stone circle, a well or a central hut.
+
+  Worn paths were tried three ways: traffic mud, laid lanes, and narrow translucent paths. In the end they were removed entirely, because none of them looked right.
+- **Dressing the sacred places and remembering the dead.** Entombed hollow hills got five strings of bunting running from a centre pole to five flower beds. This look later informed the game's wider visual direction. Memorials began to mark where people died.
+- **New spell: Scrying Torch.** A destructible beacon that keeps the fog of war lifted around it.
+- **The model workshop.** It replaced the gallery as an in-game editor for every model, with multi-select and groups. Export is by copying only, because file saves are blocked inside the artifact viewer. Most of the game's look now comes from Simon's edits made here and "baked in". This day brought:
+  - the hut, the hollow hill, the stone circle, the Wicker God, the Cunning Woman, the May Queen, the Rider and the archery range;
+  - a new wicker man, which now carries its own kindling, replacing the separate kindling piles;
+  - a new Wicker God made from the wicker man's kindling heap at 1.8× scale;
+  - a new forest altar: a split slab, a horned post, a knife and blood.
+- **Burnings as spectacle.** Fire catches the kindling first, then climbs. The Wicker God's hands burn, and its head, built from the current model, falls, lands with a thud and smoulders.
+- **Fighters spare raid victims.** Fighters no longer kill enemies that their own Osses are in the middle of capturing.
+- **Third waypoint.** `wicker-2026-10-10-settlements.html` was kept.
+
+## 11 October: models, spells reimagined, and the Surrounded problem
+
+- **Text export.** Every piece of player-facing text was numbered for editing, with a map back to where it lives in the code. This is how Simon's later rewrites came back into the game.
+- **Surrounded, level 15.** A hub map where rival islands join yours by narrow causeways. The awake oak and the Wild Hunt were tried as the player's head start, then replaced with two full thrall folds and a finished Wicker God.
+  - **Balance lesson.** A general rule was written so the AI noticed when every land route was cut and bridged out instead. It was undone, because it changed play everywhere. The fix was narrowed to this level: on Surrounded, an attacking rival is given its Land Bridge when it can't afford one, and rival balloons are capped at two. This was the first appearance of a principle that runs through the rest of the history: fix the level, not the whole game.
+- **Spells reimagined in the folk register.**
+  - Firestorm became **Day o' the Stones**: boulders that kill villagers outright and break buildings, over ten seconds.
+  - **Whirlwind** now carries away the building it's aimed at. The Wicker God, Herne's Oak and tombs are exempt.
+  - Angel of Death became **St Anthony's Fire**: a slow green blight that gives three seconds of fits before death.
+- **The blackthorn hedge.** It got its own model: a dark mound, crooked black stems with pale thorns, sloes, blossom and a tribe rag. Each length is turned differently, the stems grow from the ground, and arching briar joins link neighbouring lengths.
+- **A wave of new models.**
+  - **Buildings:** the warrior camp (a stone roundhouse inside a palisade, with a campfire and cauldron), the archery range (a stone tower with butts and targets), the Oss house (a long barn with a horse skull on the gable), the balloon and the Balloon Works.
+  - **People:** the archer, the warrior (sword, studded round shield, tribe-coloured helm band), the villager and the Oss, and a reworked May Queen.
+- **Buildings face home.** Every building turns its door towards its tribe's stone circle, slightly unevenly. Gardens, chimney smoke, the people inside wicker figures, and the God's eyes, hands and falling head all turn with it.
+- **Broken raids.** Attackers caught on the defenders' ground are seized and dragged to the nearest altar for captive mana, with no dread. A routed tribe's next wave is smaller and comes later.
+- **Fix.** The Scrying Torch crashed on unbuildable ground. Crash messages now name where the error happened.
+
+## 12 October: endurance, tokens, film, and campaign tuning
+
+This was the busiest day in the history.
+
+- **Guarding.** A Post button stations selected warriors or archers around a tribe banner. Guards chase no more than nine paces before returning, and take 25% less damage at their post. "+5" buttons select the five nearest units of a kind.
+- **The no-villagers rule, tried and withdrawn.** A button to free every captive into your tribe, and a defeat when you had no villagers and no way to get more, were both added and then taken out the same day for a rethink.
+- **Ättestupa.** This became the answer to that rethink. With very few villagers left, the Cunning Woman raises a crag at the edge of the village and climbs it while her people watch. She goes over, six villagers rise from the stones, and no rival attacks for thirty seconds. The crag stays.
+  - **Balance passes on the terror.** The rivals' terror went through four versions: dread filled to maximum, dread held at maximum through the truce, a capped fifth of villagers fleeing, and finally a steady loss of 60% of their villagers over the truce, which gives back roughly half their numbers. It was later weakened when you hold a standing army of more than five.
+  - **Closing the cheese.** It was too easy to over-train by accident and qualify for Ättestupa. Training was first stopped from taking the last two villagers, then the floor was raised: training always leaves three villagers, and Ättestupa only opens below three. Training can no longer make you eligible.
+- **Tokens.** Sixty-four achievements across campaign waypoints, spells, buildings, rites, growth, endurance, victories, deeds and curiosities. They can only be earned in live play. A Tokens sheet has keepsake copy and paste that carries both tokens and campaign progress. `ACHIEVEMENTS.md` was added for naming them.
+- **Late to the Feast, level 16.** It was tried with two rivals and a smaller head start, then put back to three. The answer was structure: no fog, and each rival sends one scripted raid (3, 5 and 7 fighters at 1:40, 4:00 and 6:00) with nothing else before 8:00. A beaten raid sends its tribe's dread surging, so villagers desert, and an annihilated raid shames the attacker.
+- **A difficulty ramp for the campaign's end.** Levels 17–19 were eased below full Hard and escalate towards 20 across mana, breeding, wave growth, fighter share, casting pace and attack timing. They are named **Stern** rather than Hard, and count as Normal wins for tokens. Victory and defeat titles dropped the difficulty name, and end-of-game stats became richer.
+- **Models.** A new Rook Tree (a dead tree with a lookout platform, ladder, ivy and rooks), plus revisions to the Cunning Woman, wild man, maypole, torch, fold, oak, hut chimney and hedge. A fix keeps the hanging Cunning Woman under the oak's rope whichever way the oak faces.
+- **The film look.** An optional 1970s folk-horror grade:
+  - It started as Off, 35mm or 16mm, with grain and dust-and-scratches sliders. Weave and flicker were rejected as nauseating, and 16mm was dropped as unnecessary.
+  - The grade was rebuilt around the reference stills: land drained to khaki and grey, deep reds, fire held orange, firmer contrast.
+  - Its first version read as night rather than an English day. Every number was exposed on a live Tune panel so Simon could tune it by eye.
+  - Tribe colours were exempted, with their own brightness and strength sliders.
+  - Red depth was made hue-based so browns and skin stopped turning orange, with a Red range slider.
+  - Simon's tuned numbers became the defaults, and the panel moved behind a small "Advanced film grade settings" link.
+  - Fire is now identified by a mark the fire particles carry themselves. That way only real fire is held orange, and the Cunning Woman's halo no longer reads as fire.
+- **Memorials as sacrifice stakes.** Altar memorial ribbons were floating, so they were first tied round the stone circle's post. They were then replaced by coloured stakes spiralling out from the post. After a look at the first version, the spiral was tightened to wind in towards the post, and finally given five looser arms, plain blocks, random lean and short outliers further out.
+- **Fire from the Sky, level 7.** It was too easy.
+  - Each rival's first raid now goes for the player.
+  - From 2:30, each rival trains a balloon ahead of everything else and flies it straight at you, bombing buildings before people.
+  - Entombment is allowed for the player only. Simon found winning from a tomb a funny route that ignores the level's intended path, and kept it.
+  - It is a one-life level, so a fallen tomb means defeat.
+- **Balloon ferrying.** Embark and disembark had been fiddly and nearly invisible. Now, ordering people somewhere they can't walk sends idle balloons to fetch them, carry them over and shuttle back for the rest.
+  - **Edge cases handled:**
+    - stranded Osses with captives are flown home;
+    - entombing at a hill across water ferries the Cunning Woman and her twenty followers, stragglers included;
+    - with no balloons, the rite is refused instead of walking her into the sea;
+    - the oak rite ferries her too.
+- **Three new Deeds tokens.** Winning Fire from the Sky from a tomb, three full thrall folds, and three wicker men burning together.
+- **May Morning, level 8.** Burning three May Queens was trivially easy.
+  - First, two rivals raise maypoles early and send every free Oss, with fighters, after each queen you crown.
+  - That was still trivial, so wicker men and fog were removed.
+  - Then the decisive change: the goal became gathering 1,000 mana, a new goal type with progress shown in the top bar. Without wicker men, you have to keep your queens alive long enough to earn from them.
+  - The level got a new intro.
+
+## 13 October: words, seasons and wind
+
+- **Simon's text edits.** Thirty-two entries were applied, covering menu and help wording, every spell description, the campaign subtitle and the goal wording. A slimmer current export followed (`text/wicker-words.txt`, 210 entries) with its map and generator. All twenty level intros were then rewritten by Simon, and the intro panel now keeps paragraph and verse line breaks.
+- **Seasons.**
+  - **Spring:** wild flowers.
+  - **Summer:** warmer greens.
+  - **Autumn:** leaves in four muted brown shades, brown lowlands under green mid-slopes.
+  - **Winter:** frost, a snowline with white trees above it, falling snow, and a slowdown for anyone in the wilds.
+
+  Seasons are random for one-off games and set to fit each campaign level. After a first look, autumn was made less red, and winter's white was toned down for the film grade. Hollow hill mounds now take the colour of the ground around them in every season.
+- **The wind.** Simon's recording was looped seamlessly under the drone, cut down and embedded, and gets louder as you zoom out. It was then made intermittent so it wouldn't tire: it comes in for a minute or so in the calm after a fight involving you, or after a long quiet, and fighting sends it away.
+
+## 14 October: the endgame, fairness at the Moot, and Extreme
+
+- **The rivals' sortie rule, narrowed.** The first fix for the last level changed rival behaviour across every level, and it was rolled back: the emergent play, such as rivals wiping each other out for settling too close, or retaliation you provoke yourself, was too good to lose. What remained was a narrower rule for all levels:
+  - a villager or May Queen merely passing a rival's buildings no longer sets off a sortie;
+  - one who stops, to stand, chop or build, does, and is dealt with quickly.
+- **The Last Harvest, level 20, reimagined.** It was first eased with a later first attack and capped early waves, then rebuilt on Simon's brief. It was never meant to be "Surrounded part two" but a standard Hard level begun at a small disadvantage.
+  - The four villages sit evenly spaced at the corners of a square, and every village is always in sight.
+  - The Moot, the hollow hills and the wild men lie in the fogged ground between.
+  - Everyone starts with an army: you with six warriors and three archers, the rivals with eight and four. The result is big, bloody battles.
+- **All-against-all made fair.** A late defeat showed the problem. Invoking the Moot cost the invoker the full mana bar, while rivals arrived with as much as 3,000 banked, and the Moot cuts off nearly all income. A rival Cunning Woman could therefore throw every big spell in the first minute. Now:
+  - every tribe arrives with exactly enough for one Lightning, one Shield and four Blasts;
+  - rival Cunning Women cast only those spells at the Moot;
+  - the Hunt earns no mana during it.
+
+  The battle is decided by the armies.
+- **End screen.** Singular labels for one captive, raider or May Queen.
+- **Extreme.** A fourth rival skill for one-off games, unlocked by finishing the campaign.
+  - Every tribe, yours included, starts bare: a Cunning Woman, five villagers, and no mana, wood, huts, altar or fold. Everyone has to start their own economy.
+  - The rivals are faster and greedier:
+    - more mana from sacrifice and faster breeding;
+    - quicker building, with a hut every 55 seconds;
+    - attacks from 3:30 and every 100 seconds after;
+    - a larger fighter share and quicker casting;
+    - a keener eye for your Cunning Woman.
+  - Rivals build their altar straight after their first huts, since they have nothing else to run on.
+  - A fallen tomb is permadeath.
+  - A "Win on Extreme" token was added.
+
+## 15 October: film by default, and the Blood–Forest feud
+
+- **35mm on by default.** The button carries a small caption: "higher performance devices".
+- **Forest's dominance, measured.** Forest seemed to win most AI-versus-AI battles. Forty headless Watch-mode games on Hard confirmed it and explained it. Forest is the least warlike tribe, keeps more villagers, runs the strongest Oss game and gets a little more from each sacrifice. It won 9 of 20 baseline games with an average peak population of 86, against about 60 for the others. Most of that came from preying on Blood, the most aggressive tribe, which it eliminated eight times for every two the other way.
+- **The grudge.** Instead of flattening Forest towards the average, Simon proposed giving Blood a grudge against Forest: double weight when choosing Forest as a target on Hard and above. Over thirty games:
+  - Forest's wins fell to 9 of 30 (30%), level with Ochre, the tribe with no personality;
+  - Blood rose to 8 wins;
+  - the feud became even, at seven eliminations to six;
+  - Forest kept the largest population.
+
+  The personalities are intact, and the balance fix doubles as a story the player can see.
+
+---
+
+## Threads that run through the history
+
+A few principles recur often enough to be worth stating.
+
+- **The sacrifice economy decides everything.** Starting mana, folds full of captives, mana goals and the bare start of Extreme are all levers on one rule.
+- **Fix the level, not the game.** When a general AI rule was used to solve one level's problem, it usually damaged the emergent play elsewhere and was withdrawn: the bridging rule on Surrounded and the sortie rules for The Last Harvest. The fixes that lasted were scoped to the level that needed them.
+- **Cheese gets closed at its source.** Ättestupa's eligibility, a lone villager provoking an assault, and the Moot's mana asymmetry were each fixed by removing the exploitable condition rather than by punishing the player.
+- **Character over averages.** The rival personalities, the film grade's exempt tribe colours and the Blood–Forest grudge all keep what's distinctive and adjust around it.
