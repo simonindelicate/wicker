@@ -1,8 +1,22 @@
 # Wicker: a retrospective changelog
 
-This is a history of how Wicker was built, reconstructed from the commit log and the waypoint builds kept in `waypoints/`. It doesn't list every commit. It follows the significant steps: each feature as it arrived, and each round of balance work, with the reasoning where the history records it. Dates are those of the commits. The repository opens on 9 October 2026 with a build that already carried most of the core game, so the first section describes that inheritance from the waypoints rather than from commits.
+This is a history of how Wicker was built, reconstructed from the commit log, the waypoint builds kept in `waypoints/`, and the design decisions recorded from the earliest conversations. It doesn't list every commit. It follows the significant steps: each feature as it arrived, and each round of balance work, with the reasoning where the history records it. Dates are those of the commits. The repository opens on 9 October 2026 with a build that already carried most of the core game, so the first section describes that inheritance from the waypoints rather than from commits.
 
 ---
+
+## Prehistory: from Populous clone to Wicker
+
+Wicker began as **Worldshaper**, a browser god game modelled closely on Populous: The Beginning. It was 3D, with water and cliffs, touch controls and a folk-horror mood, but in its mechanics it was essentially a Populous remake: a shaman, a spell list borrowed wholesale, tribes, and priests and temples converting followers.
+
+The break came when the game was redesigned around one idea: **mana comes only from sacrifice**. That rule pulled the rest of the design after it:
+
+- **Tiers of sacrifice.** There are three places to give people to the fire: the forest altar, the wicker man, and the ram-headed Wicker God.
+- **Dread.** Sacrificing your own followers builds dread, and dread makes villagers desert. Feeding the fire with your own people becomes a real cost rather than a free conversion.
+- **Captives over converts.** Captured enemies are worth more than converts and carry no dread, so taking prisoners becomes the efficient path. Populous's priests and temples were reimagined as a capturing unit: the **Oss**, trained at the Oss House.
+- **Hollow-hill attainment.** It became a permanent late-game boost rather than a win condition. The shaman is entombed in a destructible wicker fortress, so the power she gains is also a target.
+- **The tribes.** A palette of Ochre, Blood, Forest and pale Ash.
+
+At that point the sacrifice-economy version became its own project, Wicker. Worldshaper was kept as a separate game. Multiplayer was noted as a possibility for later.
 
 ## Before the repository: the core game (to 9 October)
 
