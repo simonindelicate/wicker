@@ -179,9 +179,10 @@ details.help summary{cursor:pointer;color:var(--text);font:14px var(--f-display)
 @media (max-width:620px){
   #top{gap:4px 12px;padding-left:10px;padding-right:10px}
   .bar{width:46px}
-  #mini{width:84px;height:84px;top:calc(84px + env(safe-area-inset-top,0px));right:10px}
+  #mini{width:84px;height:84px;top:calc(var(--topH,84px) + 6px);right:10px}
+  .ctl{gap:4px;flex-wrap:wrap;justify-content:flex-end}.ctl .btn{white-space:nowrap;font-size:11px;padding:6px 7px;letter-spacing:.04em}
   #hint{bottom:calc(168px + env(safe-area-inset-bottom,0px));width:calc(100% - 24px)}
-  #toasts{top:calc(84px + env(safe-area-inset-top,0px));left:12px;transform:none;width:calc(100% - 120px);align-items:flex-start}
+  #toasts{top:calc(var(--topH,84px) + 6px);left:12px;transform:none;width:calc(100% - 120px);align-items:flex-start}
   .tile{width:70px;height:74px}
   #side{top:36%}
 }
@@ -3229,6 +3230,7 @@ function buildWorld(){const SC=scen();const w=genWorld(settings.seed,settings.st
   for(let g=0;g<Math.round((7+2*settings.enemies)*((SC&&SC.wild)||1));g++){const p=wildSpot();if(!p)continue;const k=3+(R()*2|0);for(let i=0;i<k;i++)spawnWild(p.x+(R()-.5)*2,p.z+(R()-.5)*2)}
   computeStats();rebuildTGrid();rebuildGrid();
   const p=tribes[0].shaman;cam.fx=p.x;cam.fz=p.z;cam.dist=36;drawPreview()}
+{const tp=$('top'),setTH=()=>{if(!tp.hidden)document.documentElement.style.setProperty('--topH',tp.getBoundingClientRect().bottom+'px')};if(window.ResizeObserver)new ResizeObserver(setTH).observe(tp);addEventListener('resize',setTH)}
 function devUI(){$('bHideUI').hidden=!devMode();setNoUI(false)}
 let uiNoteT=0;function setNoUI(on){document.body.classList.toggle('noui',on);const n=$('uiNote');clearTimeout(uiNoteT);if(on){n.hidden=false;n.style.opacity=1;uiNoteT=setTimeout(()=>{n.style.opacity=0;uiNoteT=setTimeout(()=>{n.hidden=true},700)},2500)}else n.hidden=true}
 $('bHideUI').addEventListener('click',()=>setNoUI(true));
