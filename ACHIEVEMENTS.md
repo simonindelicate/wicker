@@ -120,3 +120,8 @@ Tokens are earned only in live play: never in "Watch the tribes fight", and neve
 | `x_blast10` |  | Kill ten with a single Blast | One spark, many funerals. |
 | `x_erodegod` |  | Sink the ground under a rival's Wicker God while it burns | Let the burning ram go down into the water. |
 | `x_recapture` |  | Catch again a captive that slipped out of your fold | The same face twice in the pen. |
+
+## Seasons of the Witch
+
+- `s_humbled`: Endure the Humbling (working name).
+- `s_all`: Finish Seasons of the Witch (working name).

@@ -30,14 +30,17 @@ A place to keep design ideas between sessions. Nothing here is built yet. Each e
 
 **The base game stays as it is.** The current campaign and procedural games are left untouched by everything in this file, apart from the Oss quality-of-life features. The new spells, charms, livestock and the spell palette all belong to a separate mode.
 
-**Progression (Decided, 18 October):**
+**Progression (Decided, 18 October; level 1 is won by surviving five minutes):**
 
 1. **From the start:** the campaign and the base procedural games.
 2. **Finishing the campaign unlocks the challenge campaign** (working title *Seasons of the Witch*), eight levels through the four seasons.
 3. **Challenge level 1, the humbling.** Three fully stocked rivals bombard you with every new spell. You cannot win in the ordinary sense; the level is won by being humbled. From level 2 onwards rivals are back on even terms with you.
-4. **Spells unlock as they are encountered** in the challenge levels, and join the Grimoire pool for good. The Grimoire opens alongside the challenge campaign and grows as you go.
+4. **Spells unlock as they are introduced and taught** by their challenge level, and join the Grimoire pool for good. The Grimoire opens alongside the challenge campaign (base spells only) and grows as you go.
+   - **Built in v148:** the frame (menu button, level sheet, progress, tokens `s_humbled` and `s_all`), the Humbling (survive five minutes; a rival raises the Seas of Blood at 2:50), the final level the Answer (the same three rivals on the same map, now winnable, every spell yours), and alien colouring per level (land, light, fog, water). Intros and titles are placeholders. Livestock is on in every challenge level and in the Grimoire.
+7. **The final challenge level is a winnable version of the Humbling.**
+8. **Each challenge level is coloured slightly wrong** (redder, bluer, and so on).
 5. **Extreme is available in the Grimoire.**
-6. **Finishing the challenge campaign** earns a token and unlocks **NG+**: the original campaign replayed with the Grimoire mechanic.
+6. **Finishing the challenge campaign** earns a token and unlocks **NG+**: the original campaign replayed with the Grimoire mechanic. NG+ is a victory lap: rivals stay classic.
 
 Draft season plan (level identities still to be agreed, intros the user's):
 
@@ -48,8 +51,7 @@ Draft season plan (level identities still to be agreed, intros the user's):
 
 **Open questions:**
 
-- What counts as being humbled in level 1?
-- In NG+, which spells are in the palette for each campaign level, and do rivals carry Grimoire palettes too?
+- In NG+, does the player choose a Grimoire palette for each level?
 
 ## Livestock (Decided; cosmetic version built in v126, test mode only)
 

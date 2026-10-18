@@ -248,7 +248,7 @@ details.help summary{cursor:pointer;color:var(--text);font:14px var(--f-display)
           <fieldset><legend>Rival villages</legend><div class="seg" id="oEn"><button data-v="1">One</button><button data-v="2" class="on">Two</button><button data-v="3">Three</button></div></fieldset>
           <fieldset><legend>World</legend><div class="seg" id="oSt"><button data-v="islands" class="on">Archipelago</button><button data-v="continent">Continent</button><button data-v="highlands">Highlands</button></div></fieldset>
           <fieldset><legend>Rival skill</legend><div class="seg" id="oDf"><button data-v="easy">Easy</button><button data-v="normal" class="on">Normal</button><button data-v="hard">Hard</button><button data-v="extreme" id="oDfX" hidden>Extreme</button></div></fieldset>
-          <fieldset id="oModeF" hidden><legend>Spells</legend><div class="seg" id="oMode"><button data-v="classic" class="on">All</button><button data-v="grimoire">Grimoire<small class="segCap">test mode: choose nine</small></button></div></fieldset>
+          <fieldset id="oModeF" hidden><legend>Spells</legend><div class="seg" id="oMode"><button data-v="classic" class="on">All</button><button data-v="grimoire">Grimoire<small class="segCap">choose nine</small></button></div></fieldset>
           <fieldset><legend>Fog of war</legend><div class="seg" id="oFog"><button data-v="1" class="on">On</button><button data-v="0">Off</button></div></fieldset>
           <fieldset><legend>World seed</legend><div class="seedrow"><input id="oSeed" inputmode="numeric" aria-label="World seed"><button class="btn" id="oReroll">New world</button></div></fieldset>
           <fieldset class="filmBox"><legend>Film</legend><div class="seg"><button data-fl="0">Off</button><button data-fl="1">35mm<small class="segCap">higher performance devices</small></button></div><div class="filmS"><label class="fs"><span>Grain</span><input type="range" min="0" max="1" step="0.05" data-fk="grain"></label><label class="fs"><span>Dust and scratches</span><input type="range" min="0" max="1" step="0.05" data-fk="dust"></label><button class="tuneBtn" type="button">Advanced film grade settings</button></div></fieldset>
@@ -258,6 +258,7 @@ details.help summary{cursor:pointer;color:var(--text);font:14px var(--f-display)
       <button class="primary" id="bCont" hidden>Continue</button>
       <button class="primary" id="bStart">Begin</button>
       <button class="secondary" id="bCampaign">Campaign</button>
+      <button class="secondary" id="bChal" hidden>Seasons of the Witch</button>
       <button class="secondary" id="bWatch">Watch the villages fight among themselves</button>
       <button class="secondary" id="bTokens">Tokens</button>
       <button class="secondary" id="bGallery">Model workshop</button>
@@ -675,9 +676,35 @@ const SCEN=[
   me:{mana:400,wood:240,huts:2,warriors:6,archers:3},them:{mana:600,huts:3,warriors:8,archers:4},
   intro:'I think this may be our last dance, my sweetness, my beloved, my daintiest of daughters, my most fertile of wives. Give it everything, love, let thine be a reign of fire let thy song be a song of rebirth. For thou hast been magnificent, sweet one.\n\nCome, o come, beloved\nCome meet me in the hill\nThe world above hath cowered\nAt the working of thy will\n‘tis on to stranger meadows\n‘tis off to drink thy fill\nO come, O come, my sweetheart\nCome meet me in the hill'}
 ];
-let allowSets=null,skirmishSettings=null;
-function scen(){return settings.campaign!=null?SCEN[settings.campaign]:null}
-function scenSets(i){const b=new Set(['hut']),sp=new Set();let tomb=false;for(let k=0;k<=i;k++){const L=SCEN[k];(L.addB||[]).forEach(x=>b.add(x));(L.addS||[]).forEach(x=>sp.add(x));if(L.tomb===true)tomb=true;if(L.all){BUILDABLE.forEach(x=>b.add(x));SP.forEach(x=>sp.add(x.k));tomb=true}}if(SCEN[i].tombHere)tomb=true;for(const x of (SCEN[i].ban||[])){b.delete(x);sp.delete(x);if(x==='tomb')tomb=false}return {b,s:sp,tomb}}
+// ---- Seasons of the Witch: the challenge campaign, opened by finishing the campaign ----
+// teach = new spells introduced, taught and unlocked for the Grimoire by this level; rpal:'all' = rivals carry every spell;
+// otherwise rivals are even with the player (every base spell plus whatever has been taught so far). seasAt = a rival raises the Seas of Blood at this time.
+const CHAL=[
+ {title:'The Humbling',season:'spring',seed:30113,style:'continent',enemies:3,diff:'hard',fog:false,all:true,goal:{type:'survive',n:300},rpal:'all',teach:[],seasAt:170,
+  me:{mana:600,wood:200,huts:3,warriors:4,archers:3},them:{mana:3000,wood:200,huts:3,warriors:2},ai:{only0:true,first:75,int:70,need:4,war:1.2,gap:.9,mil:.3},
+  news:['Every rival knows every spell. Survive.'],
+  alien:{land:[1.18,.86,.8],sun:0xff8f72,hemi:0xd8a098,ground:0x3a1c18,fog:0x8c5546,water:[.3,.14,.13]},
+  intro:'[Placeholder intro, to be written.] Three covens have heard of thee, Cunning Woman, and they have come to show thee what thou dost not yet know. Thou canst not win here. Endure five minutes.'},
+ // the middle seasons, each teaching new spells, will sit here
+ {title:'The Answer',season:'summer',seed:30113,style:'continent',enemies:3,diff:'normal',fog:false,all:true,goal:{type:'conquer'},rpal:'all',pall:true,teach:[],
+  me:{mana:3000,wood:200,huts:3,warriors:5,archers:2},them:{mana:2500,wood:200,huts:3,warriors:5,archers:2},ai:{only0:true,first:90,int:70,need:5,war:1.3,gap:1,mil:.4},
+  news:['The same three covens, the same craft, and now it is all thine as well.'],
+  alien:{land:[.92,.86,1.18],sun:0xb8a8ff,hemi:0xa89ccc,ground:0x221a38,fog:0x5a5078,water:[.12,.14,.3]},
+  intro:'[Placeholder intro, to be written.] They came to humble thee in the spring. The year has turned, and thou hast learnt everything they knew. Answer them.'}
+];
+const CHAL_KEY='wicker-chal-v1';
+function chalProg(){try{const d=JSON.parse(localStorage.getItem(CHAL_KEY));if(d&&typeof d.unlocked==='number')return d}catch(e){}return {unlocked:0,best:{}}}
+function chalSave(p){try{localStorage.setItem(CHAL_KEY,JSON.stringify(p))}catch(e){}}
+const chalOpen=()=>devMode()||!!campProg().complete;
+// spells taught up to and including level i, and spells learnt for the Grimoire (taught by levels already won)
+function chalKnown(i){const s=new Set();for(let k=0;k<=i&&k<CHAL.length;k++)(CHAL[k].teach||[]).forEach(x=>s.add(x));return s}
+function learnt(){const p=chalProg(),s=new Set();CHAL.forEach((L,i)=>{if(p.best[i]!=null)(L.teach||[]).forEach(k=>s.add(k))});return s}
+let allowSets=null,skirmishSettings=null,campView='base',alien=null;
+// the challenge levels are lit and coloured a little wrong: land, light, fog and water are all shifted
+function applyAlien(){const a=alien;if(typeof sun==='undefined')return;sun.color.setHex(a?a.sun:0xffcf94);hemiL.color.setHex(a?a.hemi:0xd6c7a5);hemiL.groundColor.setHex(a?a.ground:0x3b2c1c);if(!armageddon)scene.fog.color.setHex(a?a.fog:0x7f725b)}
+const LVS=()=>settings.chal?CHAL:SCEN;
+function scen(){return settings.campaign!=null?LVS()[settings.campaign]:null}
+function scenSets(i){const b=new Set(['hut']),sp=new Set();let tomb=false;for(let k=0;k<=i;k++){const L=LVS()[k];(L.addB||[]).forEach(x=>b.add(x));(L.addS||[]).forEach(x=>sp.add(x));if(L.tomb===true)tomb=true;if(L.all){BUILDABLE.forEach(x=>b.add(x));SP.forEach(x=>sp.add(x.k));tomb=true}}if(LVS()[i].tombHere)tomb=true;for(const x of (LVS()[i].ban||[])){b.delete(x);sp.delete(x);if(x==='tomb')tomb=false}return {b,s:sp,tomb}}
 const allowB=t=>!allowSets||(t==='tomb'?allowSets.tomb:allowSets.b.has(t));
 const allowS=k=>!allowSets||allowSets.s.has(k);
 // Grimoire mode (test mode for now): the player casts only the spells chosen before the game; rivals keep every spell. All-against-all is always to hand.
@@ -686,9 +713,9 @@ const NEW_SP=['seas','changeling','murrain','phillip','familiar','fetch','glamou
 // Grimoire: each rival tribe carries its own nine spells, which set its style
 const GRIM_PAL={Blood:['blast','lightning','fire','quake','whirl','volcano','ghost','fetch','sworddance'],Forest:['blast','lightning','shield','glamour','hypno','swamp','familiar','changeling','beltane'],
   Ash:['blast','lightning','swarm','angel','erode','murrain','phillip','familiar','blight'],Ochre:['blast','lightning','pricking','shield','hypno','fire','changeling','fetch','keening']};
-const grimOn=()=>settings.mode==='grimoire'&&settings.campaign==null&&devMode();
+const grimOn=()=>settings.mode==='grimoire'&&settings.campaign==null&&chalOpen();
 const aiPalOK=(T,k)=>T.pal?T.pal.includes(k):!NEW_SP.includes(k);
-const palOK=k=>{const g=settings.mode==='grimoire'&&settings.campaign==null&&settings.palette;if(!g)return !NEW_SP.includes(k);return k==='arma'||settings.palette.includes(k)};
+const palOK=k=>{if(settings.chal&&settings.campaign!=null)return !NEW_SP.includes(k)||!!(scen()||{}).pall||chalKnown(settings.campaign).has(k);const g=settings.mode==='grimoire'&&settings.campaign==null&&settings.palette;if(!g)return !NEW_SP.includes(k);return k==='arma'||settings.palette.includes(k)};
 const allowPB=t=>allowB(t)&&!((scen()||{}).lockB||[]).includes(t);
 const CAMP_KEY='wicker-campaign-v1',DEV_KEY='wicker-dev';
 
@@ -697,6 +724,7 @@ const CAMP_KEY='wicker-campaign-v1',DEV_KEY='wicker-dev';
 // Only live play counts: not "Watch the tribes fight", not test mode.
 const TOK_KEY='wicker-tokens-v1';
 const TOKS=[
+ ['Seasons of the Witch',[['s_humbled','Endure the Humbling'],['s_all','Finish Seasons of the Witch']]],
  ['Campaign',[['c1','Win the first level of the campaign'],['c5','Win campaign level 5'],['c10','Win campaign level 10'],['c15','Win campaign level 15'],['c20','Win the whole campaign']]],
  ['Spells',[['sp_lightning','Cast Lightning'],['sp_ghost','Raise a Ghost Army'],['sp_hypno','Cast Hypnotise'],['sp_whirl','Call up a Whirlwind'],['sp_swamp','Lay a Bog'],['sp_erode','Cast Erode'],['sp_quake','Cast Earthquake'],['sp_fire',"Bring on Day o'the Stones"],['sp_angel',"Loose St. Anthony's Fire"],['sp_volcano','Raise a Volcano']]],
  ['Buildings',[['b_wicker','Build a Wicker Man'],['b_god','Build a Wicker God'],['b_oak',"Raise Herne's Oak"],['b_maypole','Raise a Maypole'],['b_balloon','Build a Balloon Works'],['b_nest','Build a Rook Tree'],['b_osshouse','Build an Oss House']]],
@@ -744,7 +772,7 @@ let gt=0,tver=0,nextId=1,treeCap=0;
 const cam={fx:64,fz:64,yaw:.7,dist:34,fh:2,shake:0,orbit:false};
 let sel=[],armed=null,placing=null,boxMode=false,posting=false,banners=[];
 let running=false,paused=false,speed=1,inMenu=true,over=false,stats={casts:0,lost:0,killed:0,razed:0,burned:0,taken:0};
-const settings={mode:'classic',palette:null,campaign:null,enemies:2,style:'islands',diff:'normal',fog:1,seed:(Math.random()*1e6)|0};
+const settings={mode:'classic',palette:null,campaign:null,chal:false,enemies:2,style:'islands',diff:'normal',fog:1,seed:(Math.random()*1e6)|0};
 let world=null;
 
 // ---------------- noise & generation ----------------
@@ -848,6 +876,7 @@ function vcol(c){const h=H[c],x=c%N,z=(c/N)|0;
   else{r=.56;g=.54;b=.5}
   if(season==='winter'&&hazU[c]<=gt&&h>=.55){if(snowAt(c)){const k=sl>1.25?.7:1;r=lerp(r,.6,k);g=lerp(g,.65,k);b=lerp(b,.74,k)}else{r=lerp(r,.6,.4);g=lerp(g,.66,.4);b=lerp(b,.68,.4)}}
   if(saltU[c]>gt&&hazU[c]<=gt&&h>=0){r=lerp(r,.7,.55);g=lerp(g,.68,.55);b=lerp(b,.62,.55)}
+  if(alien&&hazU[c]<=gt){const L=alien.land;r*=L[0];g*=L[1];b*=L[2]}
   const v=hazU[c]>gt?1:TN[c];colW[c*3]=r*v;colW[c*3+1]=g*v;colW[c*3+2]=b*v}
 function recompute(x0,z0,x1,z1){
   for(let z=z0;z<=z1;z++)for(let x=x0;x<=x1;x++){const cx=wi(x),cz=wi(z),c=cz*N+cx;
@@ -865,7 +894,7 @@ function swampKill(c){const g=hazGrp[c],sw=swamps[g];if(!sw)return;sw.kills++;if
   delete swamps[g];if(x0<1e9)recompute(x0,z0,x1,z1);if(sw.owner===0&&!watching)toast(`Your bog has drowned ${TUNE.swampLives} and drains away, sated.`)}
 function setHedge(b,on){const c=wi(b.cz0)*N+wi(b.cx0);hedgeA[c]=on?1:0;recompute(b.cx0,b.cz0,b.cx0,b.cz0)}
 // ---- village colour: worn paths and flowers (cosmetic only) ----
-const FLOWER_C=[0xd85a7a,0xe7c84a,0xf1ece0,0xd85a7a,0xe7c84a,0xf1ece0],FLAG_C=[0xb8322a,0xe0b440,0xeee6d2,0x35629e,0x4f7a38];let buntings=[],patches=[],wells=[],tombBeds=[],stock=[],hutches=[],stains=[],stockOn=false,fetches=[],pits=[],seaRed=0,seaRise=null;
+const FLOWER_C=[0xd85a7a,0xe7c84a,0xf1ece0,0xd85a7a,0xe7c84a,0xf1ece0],FLAG_C=[0xb8322a,0xe0b440,0xeee6d2,0x35629e,0x4f7a38];let buntings=[],patches=[],wells=[],tombBeds=[],stock=[],hutches=[],stains=[],stockOn=false,fetches=[],pits=[],seaRed=0,seaRise=null,chalSeasDone=false;
 // the fixed places around a building where flowers grow, nearest the walls first; the door side of a hut is left clear
 const FSPOTS=new WeakMap(),_fq=new C.Quaternion(),_fe=new C.Euler();
 const PALE_C=[0xeee6d2,0xd8c9a8,0xb8322a,0x9a6a4a,0xe9ddc3];
@@ -916,7 +945,7 @@ function decorTick(dt){
     const cx=b.x+sx/n,cz=b.z+sz/n;let spot=null;for(let rr=0;rr<6&&!spot;rr+=.7)for(let t=0;t<12;t++){const a=t/12*TAU,x=wrap(cx+Math.cos(a)*rr),z=wrap(cz+Math.sin(a)*rr);if(clear(x,z,1)){spot={x,z};break}}
     if(spot){wells.push({x:spot.x,z:spot.z,tribe:b.tribe,born:gt});break}}
   // livestock (test mode only for now): each settled well keeps a black goat, a few chickens and a hutch of rabbits
-  stockOn=devMode();for(const a of stock)if(!wells.includes(a.w)&&a.offer&&a.offer.aq)a.offer.aq--;stock=stock.filter(a=>wells.includes(a.w));hutches=hutches.filter(h=>wells.includes(h.w));if(!stockOn)return;
+  stockOn=devMode()||grimOn()||!!(settings.chal&&settings.campaign!=null);for(const a of stock)if(!wells.includes(a.w)&&a.offer&&a.offer.aq)a.offer.aq--;stock=stock.filter(a=>wells.includes(a.w));hutches=hutches.filter(h=>wells.includes(h.w));if(!stockOn)return;
   // carcasses of murrain spread dread, then rot away; flocks breed back when no carcass lies near
 stock=stock.filter(a=>!(a.dead&&gt-a.dead>60));
   for(const w of wells){if(!w.want||stock.some(a=>a.w===w&&a.dead))continue;w.nx=w.nx||{};for(const kind of ['goat','chicken','rabbit']){const have=stock.filter(a=>a.w===w&&a.kind===kind).length;if(have>=(w.want[kind]||0)){w.nx[kind]=0;continue}
@@ -1158,7 +1187,8 @@ function fetchTick(dt){if(!fetches.length)return;for(const f of fetches){if(f.do
     if(R()<dt*20){const y=Math.max(0,hAt(f.x,f.z));PN.emit(f.x+(R()-.5)*.5,y+.2+R()*1.4,f.z+(R()-.5)*.5,(R()-.5)*.3,.3+R()*.5,(R()-.5)*.3,1+R(),.04,.04,.04,.6,.8,-.05)}}
   fetches=fetches.filter(f=>!f.done)}
 function unmaskBy(u,ti){if(ti===0){unmask(u);return}const by=u.chg;u.chg=null;u.unmaskT=gt;if(u.sel)deselect(u);u.tribe=by;u.order=null;u.tgt=null;u.cmd=false;const hs=tribes[ti].shaman||u,dx=wd(u.x-hs.x),dz=wd(u.z-hs.z),l=Math.hypot(dx,dz)||1;u.st='flee';u.ft=3;setTarget(u,u.x+dx/l*6,u.z+dz/l*6);if(by===0&&!watching)toast(`The ${tribes[ti].name} folk have found your changeling. It runs for home.`)}
-function seaTick(){if(!seaRise)return;const d=seaRise.d;
+function seaTick(){{const SC=scen();if(SC&&SC.seasAt&&!chalSeasDone&&gt>=SC.seasAt&&!seaRise){const T=tribes.find(q=>q.ai&&!q.wild&&q.alive&&q.shaman&&q.shaman.alive);if(T){chalSeasDone=true;castLog[T.id+':seas']=(castLog[T.id+':seas']||0)+1;castSpell(T.id,'seas',T.shaman.x,T.shaman.z,T.shaman)}}}
+  if(!seaRise)return;const d=seaRise.d;
   if(gt<seaRise.t){if((seaRise.t-gt)%5<1&&!watching&&gt-(seaRise.warn||0)>4){seaRise.warn=gt;const n=Math.ceil(seaRise.t-gt);if(n<=20)toast(`The blood tide rises in ${n}.`)}
     for(const u of units){if(!u.alive||u.inV||u.air||UT[u.type].fly||!tribes[u.tribe]||!tribes[u.tribe].ai||u.seaSafe>gt)continue;if(hAt(u.x,u.z)-d>.5)continue;
       const c=nearestCell(u.x,u.z,12,q=>pass[q]&&H[q]-d>1.1);if(c){orderUnit(u,c.x,c.z,false);u.seaSafe=gt+6}}return}
@@ -2022,7 +2052,7 @@ const renderer=new C.WebGLRenderer({canvas:glc,antialias:true,alpha:true});
 renderer.setClearColor(0x000000,0);
 const scene=new C.Scene();scene.fog=new C.Fog(0x7f725b,30,80);
 const camera=new C.PerspectiveCamera(50,1,.5,400);
-scene.add(new C.HemisphereLight(0xd6c7a5,0x3b2c1c,.7));
+const hemiL=new C.HemisphereLight(0xd6c7a5,0x3b2c1c,.7);scene.add(hemiL);
 const sun=new C.DirectionalLight(0xffcf94,.95);sun.position.set(-55,32,20);scene.add(sun);
 
 // terrain
@@ -3153,7 +3183,7 @@ function updTerrain(){const ix=Math.floor(cam.fx),iz=Math.floor(cam.fz),frx=cam.
   tGeo.attributes.position.needsUpdate=true;tGeo.attributes.color.needsUpdate=true;
   const ox=((cam.fx%2)+2)%2,oz=((cam.fz%2)+2)%2,t=performance.now()/1000;
   for(let j=0;j<=WG;j++)for(let i=0;i<=WG;i++){const x=i*2-h2-ox,z=j*2-h2-oz,k=(j*WV+i)*3,wx=cam.fx+x,wz=cam.fz+z;
-    wPos[k]=x;wPos[k+1]=.04*Math.sin(wx*.9+t*1.3)+.04*Math.cos(wz*1.1+t*1.1)-drop(x*x+z*z);wPos[k+2]=z;const v=fogOn?vis[cidx(wx,wz)]:1,rd=Math.min(1,seaRed+(seaRise?.55+.2*Math.sin(t*3):0));wCol[k]=lerp(.17,.42,rd)*v;wCol[k+1]=lerp(.25,.03,rd)*v;wCol[k+2]=lerp(.22,.03,rd)*v}
+    wPos[k]=x;wPos[k+1]=.04*Math.sin(wx*.9+t*1.3)+.04*Math.cos(wz*1.1+t*1.1)-drop(x*x+z*z);wPos[k+2]=z;const v=fogOn?vis[cidx(wx,wz)]:1,rd=Math.min(1,seaRed+(seaRise?.55+.2*Math.sin(t*3):0));const aw=alien&&alien.water;wCol[k]=lerp(aw?aw[0]:.17,.42,rd)*v;wCol[k+1]=lerp(aw?aw[1]:.25,.03,rd)*v;wCol[k+2]=lerp(aw?aw[2]:.22,.03,rd)*v}
   wGeo.attributes.position.needsUpdate=true;wGeo.attributes.color.needsUpdate=true;wGeo.computeVertexNormals()}
 function drawEntities(){
   for(const k in UM)UM[k].n=0;let cn=0;HALO.n=0;
@@ -3589,7 +3619,7 @@ $('bNew').addEventListener('click',()=>{$('end').hidden=true;if(scen()){openMenu
 $('bNext').addEventListener('click',()=>{$('end').hidden=true;showLevel(settings.campaign+1)});
 function updHUD(){const T=tribes[0];if(!T)return;$('rMana').textContent=Math.floor(T.mana);$('rManaBar').style.width=Math.min(100,T.mana/MANA_MAX*100)+'%';
   $('rDreadBar').style.width=Math.min(100,T.dread||0)+'%';$('rCap').textContent=T.stats.caps||0;
-  let ch='';{const SC=scen();if(SC){const g=SC.goal;let t=`Level ${settings.campaign+1}`;if(g.type==='survive'){const left=Math.max(0,g.n-gt);t+=` · Hold on ${Math.floor(left/60)}:${String(Math.floor(left%60)).padStart(2,'0')}`}else if(g.type==='captives')t+=` · Captives ${T.stats.caps||0}/${g.n}`;else if(g.type==='queen')t+=' · Offer a May Queen';else if(g.type==='mana')t+=` · Mana ${Math.floor(T.mana)}/${g.n}`;else t+=' · Conquer';ch+=`<span class="chip">${t}</span>`}}if(T.tomb)ch+='<span class="chip att">Entombed</span>';if((T.dread||0)>40)ch+='<span class="chip ar">Your people are fleeing</span>';if(T.frenzyUntil>gt&&!over&&!celebrating)ch+=`<span class="chip fr">Frenzy ${Math.ceil(T.frenzyUntil-gt)}s</span>`;if(armageddon)ch+='<span class="chip ar">All-against-all</span>';if($('chips').innerHTML!==ch)$('chips').innerHTML=ch;$('rWood').textContent=Math.floor(T.wood);$('rPop').textContent=T.stats.pop+' / '+T.stats.cap;
+  let ch='';{const SC=scen();if(SC){const g=SC.goal;let t=`${settings.chal?'Season':'Level'} ${settings.campaign+1}`;if(g.type==='survive'){const left=Math.max(0,g.n-gt);t+=` · Hold on ${Math.floor(left/60)}:${String(Math.floor(left%60)).padStart(2,'0')}`}else if(g.type==='captives')t+=` · Captives ${T.stats.caps||0}/${g.n}`;else if(g.type==='queen')t+=' · Offer a May Queen';else if(g.type==='mana')t+=` · Mana ${Math.floor(T.mana)}/${g.n}`;else t+=' · Conquer';ch+=`<span class="chip">${t}</span>`}}if(T.tomb)ch+='<span class="chip att">Entombed</span>';if((T.dread||0)>40)ch+='<span class="chip ar">Your people are fleeing</span>';if(T.frenzyUntil>gt&&!over&&!celebrating)ch+=`<span class="chip fr">Frenzy ${Math.ceil(T.frenzyUntil-gt)}s</span>`;if(armageddon)ch+='<span class="chip ar">All-against-all</span>';if($('chips').innerHTML!==ch)$('chips').innerHTML=ch;$('rWood').textContent=Math.floor(T.wood);$('rPop').textContent=T.stats.pop+' / '+T.stats.cap;
   $('foes').innerHTML=tribes.slice(watching?0:1).filter(o=>!o.wild).map(o=>watching?`<button class="foe${o.alive?'':' dead'}" data-t="${o.id}"><i style="background:${o.css}"></i>${o.name} ${o.alive?o.stats.pop+' · '+Math.floor(o.mana)+' mana'+(o.tomb?' · entombed':''):''}</button>`:`<button class="foe${o.alive?'':' dead'}${o.broken?' broken':''}" data-t="${o.id}" title="Tap to find the ${o.name} folk"><i style="background:${o.css}"></i>${o.alive?o.stats.pop:o.name}</button>`).join('');
   updTiles();$('selT').innerHTML=selSummary();$('selX').hidden=!sel.length;$('selPost').hidden=!sel.some(u=>!u.bt&&u.tribe===0&&(u.type==='warrior'||u.type==='archer'));if(tab==='tribe')renderTribe(dockDirty);if(tab==='train')renderTrain(dockDirty);dockDirty=false}
 
@@ -3600,8 +3630,8 @@ $('oSeed').value=settings.seed;$('oSeed').addEventListener('change',()=>{setting
 $('oReroll').addEventListener('click',()=>{settings.seed=(Math.random()*1e6)|0;$('oSeed').value=settings.seed;buildWorld()});
 $('bStart').addEventListener('click',()=>{audio();if(settings.mode==='grimoire'&&devMode())openGrim();else{settings.mode='classic';beginGame()}});
 let grimSel=[];
-function openGrim(){try{grimSel=JSON.parse(localStorage.getItem(GRIM_KEY))||[]}catch(e){grimSel=[]}grimSel=grimSel.filter(k=>SPK[k]&&k!=='arma').slice(0,GRIM_N);$('menu').hidden=true;$('grim').hidden=false;drawGrim()}
-function drawGrim(){const full=grimSel.length>=GRIM_N;$('grimList').innerHTML=SP.filter(sp=>sp.k!=='arma').map(sp=>{const on=grimSel.includes(sp.k);return `<button class="lvl${on?' pick':''}" data-g="${sp.k}" ${!on&&full?'disabled':''}><b>${sp.n}</b><span>${sp.c} mana</span></button>`}).join('');
+function openGrim(){try{grimSel=JSON.parse(localStorage.getItem(GRIM_KEY))||[]}catch(e){grimSel=[]}grimSel=grimSel.filter(k=>SPK[k]&&k!=='arma'&&(devMode()||!NEW_SP.includes(k)||learnt().has(k))).slice(0,GRIM_N);$('menu').hidden=true;$('grim').hidden=false;drawGrim()}
+function drawGrim(){const full=grimSel.length>=GRIM_N;const lr=learnt(),dv=devMode();$('grimList').innerHTML=SP.filter(sp=>sp.k!=='arma'&&(dv||!NEW_SP.includes(sp.k)||lr.has(sp.k))).map(sp=>{const on=grimSel.includes(sp.k);return `<button class="lvl${on?' pick':''}" data-g="${sp.k}" ${!on&&full?'disabled':''}><b>${sp.n}</b><span>${sp.c} mana</span></button>`}).join('');
   $('grimSub').textContent=`Choose ${GRIM_N} spells to carry into this game. All-against-all is always yours. Each rival carries its own nine: Blood for war, Forest for magic and defence, Ash for beasts and disease, Ochre a little of everything. ${grimSel.length} of ${GRIM_N} chosen.`;$('grimGo').disabled=grimSel.length!==GRIM_N}
 $('grimList').addEventListener('click',e=>{const b=e.target.closest('[data-g]');if(!b||b.disabled)return;const k=b.dataset.g,i=grimSel.indexOf(k);if(i>=0)grimSel.splice(i,1);else if(grimSel.length<GRIM_N)grimSel.push(k);sfx('select',.4);drawGrim()});
 $('grimBack').addEventListener('click',()=>{$('grim').hidden=true;$('menu').hidden=false});
@@ -3621,17 +3651,17 @@ function drawPreview(){const pc=$('prev'),px=pc.getContext('2d');const tmp=docum
   for(const b of blds)if(b.alive&&b.tribe===wildId){px.fillStyle='#d9cfb6';px.strokeStyle='#0d0a08';px.lineWidth=1.5;px.beginPath();px.arc(b.x*sc,b.z*sc,b.bt==='moot'?5:4,0,TAU);px.fill();px.stroke()}
   const land=(()=>{let n=0;for(let c=0;c<N*N;c++)if(!water[c])n++;return Math.round(n/(N*N)*100)})();
   $('prevCap').textContent=`Your village is ochre. ${land}% land, ${settings.enemies} rival${settings.enemies>1?'s':''}. Pale marks are the Moot and the hollow hills.`}
-function openMenu(){setNoUI(false);{const d=devMode();$('oModeF').hidden=!d;if(!d&&settings.mode!=='classic'){settings.mode='classic';$('oMode').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x.dataset.v==='classic'))}}{const pr=campProg(),ok=!!pr.complete||devMode();$('oDfX').hidden=!ok;if(!ok&&settings.diff==='extreme'){settings.diff='hard';$('oDf').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x.dataset.v==='hard'))}}if(settings.campaign!=null){if(skirmishSettings)Object.assign(settings,skirmishSettings);settings.campaign=null}allowSets=null;applyAllow();showContinue();scene.fog.near=30;scene.fog.far=80;watching=false;document.body.classList.remove('watch');running=false;droneLevel();over=false;inMenu=true;$('menu').hidden=false;for(const id of['top','mini','side','dock'])$(id).hidden=true;hint(null);armed=null;placing=null;$('oSeed').value=settings.seed;buildWorld()}
-function buildWorld(){const SC=scen();const w=genWorld(settings.seed,settings.style,settings.enemies+1,{centre:SC&&SC.centre,centreGap:SC&&SC.centreGap,keep:SC&&SC.keep,square:SC&&SC.square});world=w;H=w.h;TN=w.tn;
+function openMenu(){setNoUI(false);$('bChal').hidden=!chalOpen();{const d=chalOpen();$('oModeF').hidden=!d;if(!d&&settings.mode!=='classic'){settings.mode='classic';$('oMode').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x.dataset.v==='classic'))}}{const pr=campProg(),ok=!!pr.complete||devMode();$('oDfX').hidden=!ok;if(!ok&&settings.diff==='extreme'){settings.diff='hard';$('oDf').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x.dataset.v==='hard'))}}if(settings.campaign!=null){if(skirmishSettings)Object.assign(settings,skirmishSettings);settings.campaign=null}settings.chal=false;allowSets=null;applyAllow();showContinue();scene.fog.near=30;scene.fog.far=80;watching=false;document.body.classList.remove('watch');running=false;droneLevel();over=false;inMenu=true;$('menu').hidden=false;for(const id of['top','mini','side','dock'])$(id).hidden=true;hint(null);armed=null;placing=null;$('oSeed').value=settings.seed;buildWorld()}
+function buildWorld(){const SC=scen();alien=SC&&SC.alien||null;applyAlien();seaRed=0;seaRise=null;chalSeasDone=false;const w=genWorld(settings.seed,settings.style,settings.enemies+1,{centre:SC&&SC.centre,centreGap:SC&&SC.centreGap,keep:SC&&SC.keep,square:SC&&SC.square});world=w;H=w.h;TN=w.tn;
   walk=new Uint8Array(N*N);water=new Uint8Array(N*N);pass=new Uint8Array(N*N);hazU=new Float32Array(N*N);hazType=new Int8Array(N*N);hazOwner=new Int8Array(N*N).fill(-1);saltU=new Float32Array(N*N);saltOwner=new Int8Array(N*N);saltList.clear();wear=new Float32Array(N*N);wearShown=new Uint8Array(N*N);flowers=[];hazGrp=new Int32Array(N*N);swamps={};swampSeq=1;hedgeA=new Uint8Array(N*N);bOcc=new Int32Array(N*N);colW=new Float32Array(N*N*3);
-  armageddon=false;$('app').classList.remove('arma');scene.fog.color.setHex(0x7f725b);fogOn=false;vis.fill(1);visNow.fill(0);seen.fill(0);wildT=40;
+  armageddon=false;$('app').classList.remove('arma');scene.fog.color.setHex(alien?alien.fog:0x7f725b);fogOn=false;vis.fill(1);visNow.fill(0);seen.fill(0);wildT=40;
   for(const d of debris)scene.remove(d.m);debris=[];
   units=[];blds=[];effects=[];projs=[];sel=[];banners=[];ferries=[];windReset();posting=false;bById.clear();fcache.clear();hazList.clear();gt=0;tver=0;PA.n=0;PN.n=0;stats={casts:0,lost:0,killed:0,razed:0,burned:0,taken:0};over=false;
   season=seasonFor();recompute(0,0,N-1,N-1);wildFlowers();
   trees=w.trees.map(t=>({x:t.x,z:t.z,wood:TUNE.woodPerTree,alive:true,sc:.8+R()*.45,tint:.85+R()*.25}));treeCap=Math.round(trees.length*1.1);tGridDirty=true;
   tribes=[];
   for(let i=0;i<=settings.enemies;i++){const s=w.starts[i],D=DIFF[settings.diff];const ai=i||watching,ST=SC?(ai?SC.them||{}:SC.me||{}):{},SA=(SC&&SC.ai)||{};const T={dread:0,tomb:null,id:i,...TRIBES[i],c:new C.Color(TRIBES[i].col),mana:ST.mana??(ai?(D.aiMana0??150):D.pMana0),wood:ST.wood??(ai?(D.aiWood??40):D.pWood),woodGoal:ai?120:160,alive:true,shaman:null,reincT:0,cd:{},manaMult:ai?D.mana*((TRIBES[i].pers||{}).mana||1)*(SA.mana||1):(SC?(ST.manaMult||1):D.pMana),breedMult:(ai?D.breed:D.pBreed)*(ai&&SA.breed||1),capMax:ai?SA.cap:undefined,ai:ai?mkAI(i,s):null,stats:{pop:0,braves:0,outB:0,housed:0,others:0,mil:0,queued:0,huts:0,blds:0,sites:0,b:{},cap:25,cnt:{}}};
-    T.roof=T.c.clone().lerp(new C.Color(0xc9a55a),.3);if(ai&&grimOn())T.pal=(GRIM_PAL[T.name]||GRIM_PAL.Ochre).slice();tribes.push(T);
+    T.roof=T.c.clone().lerp(new C.Color(0xc9a55a),.3);if(ai&&grimOn())T.pal=(GRIM_PAL[T.name]||GRIM_PAL.Ochre).slice();else if(i&&SC&&settings.chal){const kn=chalKnown(settings.campaign);T.pal=SP.map(x=>x.k).filter(k=>k!=='arma'&&(SC.rpal==='all'||!NEW_SP.includes(k)||kn.has(k)))}tribes.push(T);
     const rs=validSpot(i,'reinc',s.x,s.z);const sp=rs.err?{cx0:Math.floor(s.x-1),cz0:Math.floor(s.z-1)}:rs;const r=placeBuilding(i,'reinc',sp,true);
     if(T.ai){T.ai.base={x:r.x,z:r.z}}
     let huts=0;const want=ST.huts??(ai?(D.aiHuts??1):D.pHuts);for(let a=0;a<24&&huts<want;a++){const ang=a/12*TAU+.4,rr=a<12?5:7.5,v=validSpot(i,'hut',r.x+Math.cos(ang)*rr,r.z+Math.sin(ang)*rr);if(!v.err){const h=placeBuilding(i,'hut',v,true);h.occ=2;huts++}}
@@ -3661,7 +3691,7 @@ function beginGame(){devUI();fogOn=!!settings.fog&&!window.__nofog;if(fogOn){vis
   droneLevel();applyAllow();const SC=scen();if(SC)toast(goalText(SC));else{const fm=Math.round(DIFF[settings.diff].first/60);toast(`Grow your tribe while you can. Rivals usually first attack after about ${fm} minutes.`)}}
 function applyAllow(){for(const t of spTiles)t.hidden=!allowS(t.dataset.k)||!palOK(t.dataset.k);for(const t of bTiles)t.hidden=!allowPB(t.dataset.b)}
 function goalText(SC){const g=SC.goal;return g.type==='mana'?`Gather ${g.n} mana.`:g.type==='survive'?`Hold fast for ${Math.round(g.n/60)} minutes.`:g.type==='captives'?`Hold ${g.n} captives in your folds at once.`:g.type==='queen'?((g.n||1)>1?`Crown ${g.n} May Queens and offer each to the fire.`:'Crown a May Queen and offer her to the fire.'):'Break every rival people.'}
-function beginWatch(){devUI();allowSets=null;if(settings.campaign!=null&&skirmishSettings){Object.assign(settings,skirmishSettings)}settings.campaign=null;watching=true;buildWorld();fogOn=false;startDrone();$('menu').hidden=true;inMenu=false;running=true;paused=false;over=false;speed=1;$('bSpeed').textContent='1×';$('bPause').textContent='Pause';
+function beginWatch(){devUI();allowSets=null;if(settings.campaign!=null&&skirmishSettings){Object.assign(settings,skirmishSettings)}settings.campaign=null;settings.chal=false;watching=true;buildWorld();fogOn=false;startDrone();$('menu').hidden=true;inMenu=false;running=true;paused=false;over=false;speed=1;$('bSpeed').textContent='1×';$('bPause').textContent='Pause';
   document.body.classList.add('watch');for(const id of['top','mini'])$(id).hidden=false;for(const id of['side','dock'])$(id).hidden=true;cam.fx=moot.x;cam.fz=moot.z;cam.dist=52;setSel([]);hint(null);resize();droneLevel();
   toast('Tap a tribe at the top to find it. The speed button goes up to four times.')}
 function endWatch(T){setNoUI(false);over=true;running=false;droneLevel();$('endT').textContent=T?`The ${T.name} folk endure`:'No one endures';
@@ -3671,15 +3701,16 @@ function endWatch(T){setNoUI(false);over=true;running=false;droneLevel();$('endT
 const REJOICE=['There is no first or last!','The harvest shall be fruitful this year.','Come now, rise now, from the forest, from the furrows, from the fields, and live!','Happy day!','Thou livest deliciously!',
   'Sumer is icumen in, lhude sing cuccu!','The barns will be full and the hearths warm.','The old fires are lit on every hill.','The earth is fed, and the earth is grateful.','Dance, for none are left to mourn.','Every furrow sings tonight.'];
 let celebrating=0;
-function openCampaign(){const pr=campProg(),L=$('levels');let h='';const dev=devMode();$('devMode').checked=dev;SCEN.forEach((sc,i)=>{const lock=i>pr.unlocked&&!dev,done=pr.best[i]!=null;const bt=done?`Won in ${Math.floor(pr.best[i]/60)} min`:lock?'Locked':'Not yet won';
+function openCampaign(){const ch=campView==='chal',LS=ch?CHAL:SCEN,pr=ch?chalProg():campProg(),L=$('levels');let h='';const dev=devMode();$('devMode').checked=dev;$('campaign').querySelector('h2').textContent=ch?'Seasons of the Witch':'Campaign';LS.forEach((sc,i)=>{const lock=i>pr.unlocked&&!dev,done=pr.best[i]!=null;const bt=done?`Won in ${Math.floor(pr.best[i]/60)} min`:lock?'Locked':'Not yet won';
     h+=`<button class="lvl${done?' done':''}${i===pr.unlocked&&!done?' next':''}" data-l="${i}" ${lock?'disabled':''}><b>${i+1}. ${sc.title}</b><span>${bt}</span></button>`});L.innerHTML=h;
-  $('campSub').textContent=pr.complete?'The wheel has turned. Every level is yours to play again.':`History is a wheel that rises and ebbs with the seasons, dying and renewing in the endless wheel of nature. These are hard times, O Cunning Woman, can't thou lead thy village deliciously? ${pr.unlocked+1} of 20 open.`;$('menu').hidden=true;$('campaign').hidden=false}
-function showLevel(i){const sc=SCEN[i];if(settings.campaign==null)skirmishSettings=Object.assign({},settings);
-  Object.assign(settings,{seed:sc.seed,style:sc.style,enemies:sc.enemies,diff:sc.diff,fog:sc.fog?1:0,campaign:i});allowSets=scenSets(i);buildWorld();
-  $('liNum').textContent=`Level ${i+1} of ${SCEN.length} · ${sc.tier||DIFFNAME[sc.diff]} · ${sc.enemies} rival${sc.enemies>1?'s':''}`;$('liTitle').textContent=sc.title;$('liText').textContent=sc.intro;
-  $('liGoal').textContent=goalText(sc);$('liNews').textContent=sc.news&&sc.news.length?'New: '+sc.news.join(', ')+'.':sc.all?'Everything is open to you.':'';
+  if(ch)$('campSub').textContent=pr.complete?'Every season is yours to play again.':`[Placeholder.] The wheel turns again, and now the other covens are watching. Each season teaches new craft, and what thou learnest is thine to carry into the Grimoire. ${pr.unlocked+1} of ${CHAL.length} open.`;else $('campSub').textContent=pr.complete?'The wheel has turned. Every level is yours to play again.':`History is a wheel that rises and ebbs with the seasons, dying and renewing in the endless wheel of nature. These are hard times, O Cunning Woman, can't thou lead thy village deliciously? ${pr.unlocked+1} of 20 open.`;$('menu').hidden=true;$('campaign').hidden=false}
+function showLevel(i){const ch=campView==='chal',sc=(ch?CHAL:SCEN)[i];if(settings.campaign==null)skirmishSettings=Object.assign({},settings);
+  Object.assign(settings,{seed:sc.seed,style:sc.style,enemies:sc.enemies,diff:sc.diff,fog:sc.fog?1:0,campaign:i,chal:ch});allowSets=scenSets(i);buildWorld();
+  $('liNum').textContent=`${ch?'Season':'Level'} ${i+1} of ${(ch?CHAL:SCEN).length} · ${sc.tier||DIFFNAME[sc.diff]} · ${sc.enemies} rival${sc.enemies>1?'s':''}`;$('liTitle').textContent=sc.title;$('liText').textContent=sc.intro;
+  $('liGoal').textContent=goalText(sc);$('liNews').textContent=sc.news&&sc.news.length?(ch?sc.news.join(' '):'New: '+sc.news.join(', ')+'.'):sc.all?'Everything is open to you.':'';
   $('campaign').hidden=true;$('menu').hidden=true;$('levelIntro').hidden=false}
-$('bCampaign').addEventListener('click',()=>{audio();openCampaign()});
+$('bCampaign').addEventListener('click',()=>{audio();campView='base';openCampaign()});
+$('bChal').addEventListener('click',()=>{audio();campView='chal';openCampaign()});
 $('campBack').addEventListener('click',()=>{$('campaign').hidden=true;openMenu()});
 $('devMode').addEventListener('change',e=>{try{localStorage.setItem(DEV_KEY,e.target.checked?'1':'0')}catch(_){}openCampaign()});
 $('levels').addEventListener('click',e=>{const b=e.target.closest('[data-l]');if(!b||b.disabled)return;audio();showLevel(+b.dataset.l)});
@@ -3694,10 +3725,11 @@ function celebrateFrame(){const T=tribes[0];let n=0;for(const u of units){if(!u.
 const DIFFNAME={easy:'Easy',normal:'Normal',hard:'Hard',extreme:'Extreme'};
 function tokWin(){const a=A(),d=settings.diff,st=settings.style,SC0=scen();earn('w_'+(SC0&&SC0.tier&&d==='hard'?'normal':d));earn(['islands','isles','twin','hub'].includes(st)?'w_arch':['highlands','crags'].includes(st)?'w_high':'w_cont');
   if(armageddon)earn('r_moot');if(!a.dreadOver)earn('d_nofear');if(!a.trainedWar)earn('d_noblade');const i=settings.campaign;
-  if(i!=null){if(i===0)earn('c1');if(i===4)earn('c5');if(i===9)earn('c10');if(i===14)earn('c15');if(i===SCEN.length-1)earn('c20');if(i===4&&!a.lostBld)earn('d_thornwall');if(SCEN[i].title==='Fire from the Sky'&&tribes[0].tomb&&tribes[0].tomb.alive)earn('d_skytomb')}}
+  if(i!=null&&settings.chal){if(i===0)earn('s_humbled');if(i===CHAL.length-1)earn('s_all')}
+  else if(i!=null){if(i===0)earn('c1');if(i===4)earn('c5');if(i===9)earn('c10');if(i===14)earn('c15');if(i===SCEN.length-1)earn('c20');if(i===4&&!a.lostBld)earn('d_thornwall');if(SCEN[i].title==='Fire from the Sky'&&tribes[0].tomb&&tribes[0].tomb.alive)earn('d_skytomb')}}
 function endGame(win){setNoUI(false);if(win)tokWin();clearSave();$('bAgain').textContent='Play this world again';$('bNew').textContent='Choose a new world';$('bNext').hidden=true;
   {const SC=scen();if(SC){const i=settings.campaign;$('bAgain').textContent=win?'Play this level again':'Try again';$('bNew').textContent='Back to the campaign';
-    if(win){if(!devMode()){const pr=campProg();pr.unlocked=Math.max(pr.unlocked,Math.min(SCEN.length-1,i+1));if(!pr.best[i]||gt<pr.best[i])pr.best[i]=Math.round(gt);if(i===SCEN.length-1)pr.complete=true;campSave(pr)}if(i<SCEN.length-1){$('bNext').hidden=false;$('bNext').textContent=`Onward: ${i+2}. ${SCEN[i+1].title}`}}}}over=true;running=false;droneLevel();sfx(win?'built':'die',1);$('endT').textContent=win?'Victory':'Defeat';
+    const LS=LVS();if(win){if(!devMode()){const pr=settings.chal?chalProg():campProg();pr.unlocked=Math.max(pr.unlocked,Math.min(LS.length-1,i+1));if(!pr.best[i]||gt<pr.best[i])pr.best[i]=Math.round(gt);if(i===LS.length-1)pr.complete=true;(settings.chal?chalSave:campSave)(pr)}if(i<LS.length-1){$('bNext').hidden=false;$('bNext').textContent=`Onward: ${i+2}. ${LS[i+1].title}`}}}}over=true;running=false;droneLevel();sfx(win?'built':'die',1);$('endT').textContent=win?'Victory':'Defeat';
   $('endS').textContent=win?(armageddon?'The Moot is quiet. Of all the peoples who walked there, only yours walked away.':'Every rival Cunning Woman has been cast out. The world is yours to shape.'):(armageddon?'Your people fell at the Moot. The world goes on without them.':'Your tribe has been wiped from the world. The fields grow over the huts.');
   const m=Math.floor(gt/60),s=Math.floor(gt%60);{const a=stats.ach||{},T0=tribes[0]||{},cell=(v,l)=>`<div><b>${v}</b>${l}</div>`;let h=cell(diffName(),'difficulty')+cell(`${m}:${String(s).padStart(2,'0')}`,'time')+cell(T0.peak||0,'most followers')+cell(stats.casts,'spells cast')+cell(stats.killed,'enemies slain')+cell(stats.lost||0,'of your own lost')+cell(stats.razed,'buildings razed')+cell(stats.burned,'given to the fire');
     const opt=[[stats.taken,stats.taken===1?'captive carried home':'captives carried home'],[a.harvest,a.harvest===1?'raider dragged to the altar':'raiders dragged to the altar'],[stats.hunted,'taken by the Hunt'],[stats.queenOffered,stats.queenOffered===1?'May Queen offered':'May Queens offered'],[a.leaps,a.leaps===1?'leap from the crag':'leaps from the crag'],[(stats.tokGame||[]).length,'tokens earned']];
@@ -3777,7 +3809,7 @@ function saveGame(){if(!running||over||watching||!tribes.length||inMenu&&!paused
     tribes:tr,banners,units:units.filter(u=>u.alive).map(ent),blds:blds.filter(b=>b.alive).map(ent)};
   localStorage.setItem(SAVE_KEY,JSON.stringify(d));return true}catch(e){console.warn('save failed',e);return false}}
 function loadGame(){const d=readSave();if(!d)return false;
-  if(d.settings.campaign!=null&&settings.campaign==null)skirmishSettings=Object.assign({},settings);Object.assign(settings,d.settings);if(settings.campaign===undefined)settings.campaign=null;allowSets=settings.campaign!=null?scenSets(settings.campaign):null;watching=false;document.body.classList.remove('watch');
+  if(d.settings.campaign!=null&&settings.campaign==null)skirmishSettings=Object.assign({},settings);Object.assign(settings,d.settings);if(settings.campaign===undefined)settings.campaign=null;if(!d.settings.chal)settings.chal=false;else campView='chal';allowSets=settings.campaign!=null?scenSets(settings.campaign):null;watching=false;document.body.classList.remove('watch');
   H=unb64(d.H,Float32Array);TN=unb64(d.TN,Float32Array);hazU=unb64(d.hazU,Float32Array);hazType=unb64(d.hazType,Int8Array);hazOwner=unb64(d.hazOwner,Int8Array);hazGrp=d.hazGrp?unb64(d.hazGrp,Int32Array):new Int32Array(N*N);swamps=d.swamps||{};swampSeq=d.swampSeq||1;hedgeA=new Uint8Array(N*N);for(const b of d.blds)if(b.bt==='hedge'&&b.done)hedgeA[wi(b.cz0)*N+wi(b.cx0)]=1;
   walk=new Uint8Array(N*N);water=new Uint8Array(N*N);pass=new Uint8Array(N*N);bOcc=new Int32Array(N*N);colW=new Float32Array(N*N*3);seen.set(unb64(d.seen,Uint8Array));
   saltU=d.saltU?unb64(d.saltU,Float32Array):new Float32Array(N*N);saltOwner=d.saltOwner?unb64(d.saltOwner,Int8Array):new Int8Array(N*N);
@@ -3799,7 +3831,7 @@ function loadGame(){const d=readSave();if(!d)return false;
     T.stats={pop:0,braves:0,outB:0,housed:0,others:0,mil:0,queued:0,huts:0,blds:0,sites:0,b:{},cap:15,cnt:{},caps:0};return T});
   nextId=d.nextId;armageddon=d.armageddon;moot=d.moot;wildId=d.wildId;wildT=d.wildT;stats=d.stats;stones=d.stones||[];
   computeStats();rebuildTGrid();rebuildGrid();Object.assign(cam,d.cam);
-  $('app').classList.toggle('arma',armageddon);scene.fog.color.setHex(armageddon?0x9a4224:0x7f725b);
+  $('app').classList.toggle('arma',armageddon);alien=(scen()||{}).alien||null;applyAlien();scene.fog.color.setHex(armageddon?0x9a4224:alien?alien.fog:0x7f725b);
   fogOn=!!d.fogOn;vis.fill(fogOn?.04:1);visNow.fill(0);updFog();
   startDrone();$('menu').hidden=true;inMenu=false;running=true;paused=false;speed=1;$('bSpeed').textContent='1×';$('bPause').textContent='Pause';
   for(const id of['top','mini','side','dock'])$(id).hidden=false;setSel([]);setTab('spells');resize();droneLevel();saveT=20;applyAllow();
