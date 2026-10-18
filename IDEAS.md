@@ -88,6 +88,9 @@ Charms are positive spells, to sit alongside the curses.
 - **Corn Dolly (Candidate).** The last sheaf, woven and kept. A share of your mana is stored safely in the doll, beyond the reach of spells and of the All-against-all reset, until you burn it to release it.
 - **Witch Bottle (Candidate).** A ward buried under a building. It turns the next spell aimed at that building back on the caster.
 
+- **Glamour (Liked).** A charm with a small area that can include the Cunning Woman herself. For 30 seconds everyone inside it is disguised in the colours of the nearest rival tribe, which works as a cloak of invisibility: rivals don't attack or take them. It's useful for slipping a raid or the Cunning Woman past a village, or getting her out of trouble.
+  - **Open:** does attacking break the glamour early? Does Pricking reveal it?
+
 ## Counters
 
 - **Pricking (Candidate).** Reveals hidden things in an area: changelings, familiars and poppets. The answer to stealth.
