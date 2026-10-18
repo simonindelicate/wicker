@@ -22,6 +22,7 @@ A place to keep design ideas between sessions. Nothing here is built yet. Each e
 
   Rival Cunning Women also unmask your changelings.
 - **Built in v138:** Glamour and Pricking. Forest carries Glamour in place of Ghost Army, and Ochre carries Pricking in place of Plague of Flies.
+- **Built in v142:** Beltane Fire, Sword Dance, Cradle Blight, Keening Wail and Briar Sleep. They're in the Grimoire pool, but no rival carries them yet.
 - **Next:** teaching rivals to offer animals.
 - **Later:** the challenge levels, one per proven spell; then the unlock wiring (finishing the campaign opens the challenge campaign, and challenge levels open spells); then charms and counters as gaps appear.
 

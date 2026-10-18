@@ -519,12 +519,17 @@ const SP=[
   {k:'phillip',n:'Black Phillip',c:350,cd:45,r:14,rad:1.5,s:0},
   {k:'familiar',n:'Familiar',c:250,cd:30,r:14,rad:1.5,s:1},
   {k:'fetch',n:'The Fetch',c:900,cd:60,r:999,rad:1,s:0},
+  {k:'beltane',n:'Beltane Fire',c:250,cd:60,r:999,rad:1,s:1},
+  {k:'sworddance',n:'Sword Dance',c:250,cd:60,r:999,rad:1,s:1},
+  {k:'blight',n:'Cradle Blight',c:300,cd:45,r:14,rad:3,s:0},
+  {k:'keening',n:'Keening Wail',c:350,cd:40,r:14,rad:7,s:0},
+  {k:'briar',n:'Briar Sleep',c:400,cd:50,r:14,rad:5,s:2},
   {k:'glamour',n:'Glamour',c:220,cd:30,r:14,rad:4,s:1},
   {k:'pricking',n:'Pricking',c:150,cd:20,r:14,rad:6,s:1},
   {k:'arma',n:'All-against-all',c:TUNE.manaMax,cd:1,r:0,rad:0,s:0},
 ];
 const SPK={};SP.forEach(s=>SPK[s.k]=s);
-const SPDESC={glamour:'For ninety seconds, everyone of yours in the circle wears the colours of the nearest rival folk and no rival sees them for what they are. Striking a blow breaks it; casting does not.',pricking:'Find the Devil\'s mark. Glamours, changelings and familiars within the circle are laid bare.',fetch:'Thy Cunning Woman gives birth to her fetch. It walks slowly and straight for a rival Cunning Woman, over sea and hill, and cannot be stopped. It can only be outrun, and it fades after ninety seconds.',phillip:'Cast on a rival\'s black goat. It goes about unnoticed until it kicks, killing the first it strikes, then rampages through their village for thirty seconds.',familiar:'Cast on your own black goat. Unseen by any rival, it goes from altar to altar drinking their mana and sending it home, and lifts the fog wherever it walks.',changeling:'Swap a rival villager for a changeling. It goes home unsuspected; kindle it (or wait three minutes) and it sets fire to where it stands.',murrain:'A cattle plague. Rival livestock in the area sicken and die, and their carcasses spread dread.',torch:'Scry where e\'re the beacon burns. For it shalbe thine eyes.',blast:'Thy will readily done upon thine enemies.',lightning:'The strike of thunder is a blow no man or woman can survive.',swarm:'Calls forth a cloud o’ wicked horseflies to bite and sting and scatter thy assailants for ten seconds.',convert:'Turns wandering wildmen within the circle into your villagers.',shield:'A ward against harm for those within its ‘fluence.',ghost:'Raise the shades of dead men. Brief candles who make war, draw the eye and melt away come striking.',bridge:'Raise up a causeway towards heights and across water.',flatten:'From crags and cliffsides spring forth green and level fields. Cannot be cast upon the water.',hypno:'Witch them to thy cause - they’ll fight for you for twenty-five seconds.',whirl:'A twisting wind that tears walls from their foundations afore wand’ring in search of new victims.',swamp:'A sucking mire that offers safe passage to those who know the way - and clammy death to those who do not. Will remain until ten are claimed.',erode:'Creates a dyke within the downs to drown thy foes and their works.',quake:'Behold, the very earth shall shake and rupture.',fire:'A bitter rain of stoney death. Watch as they flee their collapsing homes.',angel:'Engender a plague of paroxysms, contagion and a bloody demise.',volcano:'Nature’s cruellest vengeance at the command.',arma:'There shalbe a moot at the world’s end and every living souls shalbe a soldier in the battle of all against all. So hath it been and so mote it be.'};
+const SPDESC={beltane:'Couples leap the Beltane fire. For a minute thy people breed twice as fast.',sworddance:'The longsword dance. For a minute thy camps and ranges train twice as fast, and those trained come out hardened.',blight:'A barren year. The rival village nearest the mark breeds no one for a minute.',keening:'A wail borne on the wind. Rival villagers in the circle are spooked into the wilds and flee towards thy land, where thy osses may take them.',briar:'A hundred years\' sleep. Every rival in the circle sleeps for thirty seconds while blackthorn grows in a ring around them, withering after a minute.',glamour:'For ninety seconds, everyone of yours in the circle wears the colours of the nearest rival folk and no rival sees them for what they are. Striking a blow breaks it; casting does not.',pricking:'Find the Devil\'s mark. Glamours, changelings and familiars within the circle are laid bare.',fetch:'Thy Cunning Woman gives birth to her fetch. It walks slowly and straight for a rival Cunning Woman, over sea and hill, and cannot be stopped. It can only be outrun, and it fades after ninety seconds.',phillip:'Cast on a rival\'s black goat. It goes about unnoticed until it kicks, killing the first it strikes, then rampages through their village for thirty seconds.',familiar:'Cast on your own black goat. Unseen by any rival, it goes from altar to altar drinking their mana and sending it home, and lifts the fog wherever it walks.',changeling:'Swap a rival villager for a changeling. It goes home unsuspected; kindle it (or wait three minutes) and it sets fire to where it stands.',murrain:'A cattle plague. Rival livestock in the area sicken and die, and their carcasses spread dread.',torch:'Scry where e\'re the beacon burns. For it shalbe thine eyes.',blast:'Thy will readily done upon thine enemies.',lightning:'The strike of thunder is a blow no man or woman can survive.',swarm:'Calls forth a cloud o’ wicked horseflies to bite and sting and scatter thy assailants for ten seconds.',convert:'Turns wandering wildmen within the circle into your villagers.',shield:'A ward against harm for those within its ‘fluence.',ghost:'Raise the shades of dead men. Brief candles who make war, draw the eye and melt away come striking.',bridge:'Raise up a causeway towards heights and across water.',flatten:'From crags and cliffsides spring forth green and level fields. Cannot be cast upon the water.',hypno:'Witch them to thy cause - they’ll fight for you for twenty-five seconds.',whirl:'A twisting wind that tears walls from their foundations afore wand’ring in search of new victims.',swamp:'A sucking mire that offers safe passage to those who know the way - and clammy death to those who do not. Will remain until ten are claimed.',erode:'Creates a dyke within the downs to drown thy foes and their works.',quake:'Behold, the very earth shall shake and rupture.',fire:'A bitter rain of stoney death. Watch as they flee their collapsing homes.',angel:'Engender a plague of paroxysms, contagion and a bloody demise.',volcano:'Nature’s cruellest vengeance at the command.',arma:'There shalbe a moot at the world’s end and every living souls shalbe a soldier in the battle of all against all. So hath it been and so mote it be.'};
 const ICON={
   blast:'<circle cx="12" cy="12" r="4"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l3 3M16 16l3 3M5 19l3-3M16 8l3-3"/>',
   lightning:'<path d="M13 2L5 14h6l-2 8 8-12h-6l2-8z"/>',
@@ -541,6 +546,11 @@ const ICON={
   fetch:'<path d="M12 3c-3 0-5 3-5 7v11l2-2 2 2 1-2 1 2 2-2 2 2V10c0-4-2-7-5-7z"/><path d="M10 10h.01M14 10h.01"/>',
   glamour:'<path d="M12 3l2 5 5 .5-4 3.5 1.5 5-4.5-3-4.5 3 1.5-5-4-3.5 5-.5z"/>',
   pricking:'<path d="M5 19L17 7M15 5l4 4M4 20l1-1"/><circle cx="18" cy="6" r="1"/>',
+  beltane:'<path d="M12 3c2 3 4 5 4 9a4 4 0 0 1-8 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-5 0-8z"/><path d="M5 21h14"/>',
+  sworddance:'<path d="M5 19L19 5M19 19L5 5M8 5h3M13 19h3"/>',
+  blight:'<path d="M12 4c-4 0-6 3-6 7 0 5 6 9 6 9s6-4 6-9c0-4-2-7-6-7z"/><path d="M8 8l8 8"/>',
+  keening:'<path d="M4 12c3-5 5 5 8 0s5 5 8 0M4 17c3-5 5 5 8 0s5 5 8 0"/>',
+  briar:'<path d="M4 20c4-6 8-6 16-14M8 16l-2-3M12 12l3 1M15 9l-1-3"/>',
   hypno:'<path d="M12 12a1 1 0 0 1 1 1 2 2 0 0 1-2 2 3 3 0 0 1-3-3 4 4 0 0 1 4-4 5 5 0 0 1 5 5 6 6 0 0 1-6 6 7 7 0 0 1-7-7"/>',
   whirl:'<path d="M3 5h18M5 9h14M7 13h10M9 17h6M11 21h2"/>',
   torch:'<path d="M12 22v-9M9 13h6l-1 2h-4z"/><path d="M12 11c-2-1-2-3-1-5 0 2 2 2 2 0 1 2 1 4-1 5z"/>',
@@ -670,7 +680,7 @@ const allowB=t=>!allowSets||(t==='tomb'?allowSets.tomb:allowSets.b.has(t));
 const allowS=k=>!allowSets||allowSets.s.has(k);
 // Grimoire mode (test mode for now): the player casts only the spells chosen before the game; rivals keep every spell. All-against-all is always to hand.
 const GRIM_N=8,GRIM_KEY='wicker-grimoire-v1';
-const NEW_SP=['changeling','murrain','phillip','familiar','fetch','glamour','pricking'];
+const NEW_SP=['changeling','murrain','phillip','familiar','fetch','glamour','pricking','beltane','sworddance','blight','keening','briar'];
 // Grimoire: each rival tribe carries its own eight spells, which set its style
 const GRIM_PAL={Blood:['blast','lightning','fire','quake','whirl','volcano','ghost','fetch'],Forest:['blast','lightning','shield','glamour','hypno','swamp','familiar','changeling'],
   Ash:['blast','lightning','swarm','angel','erode','murrain','phillip','familiar'],Ochre:['blast','lightning','pricking','shield','hypno','fire','changeling','fetch']};
@@ -963,7 +973,7 @@ function query(g,x,z,r,fn){const b0x=Math.floor((x-r)/8),b1x=Math.min(b0x+15,Mat
 const beingTaken=(o,ti)=>o.listen>gt&&o.takenBy===ti;
 function nearestEnemy(u,r,pred,wildOk){let best=null,bd=r*r;query(grid,u.x,u.z,r,o=>{if(o.tribe===u.tribe||!o.alive||o.air||o.glam>gt)return;if(u.type!=='oss'&&beingTaken(o,u.tribe))return;if(o.type==='queen'&&u.type!=='hunter'&&u.type!=='oss')return;if(o.tribe===wildId&&!wildOk)return;if(pred&&!pred(o))return;const dd=d2(u.x,u.z,o.x,o.z);if(dd<bd){bd=dd;best=o}});return best}
 function enemyNear(x,z,ti,r,ok){let best=null,bd=r*r;query(grid,x,z,r,o=>{if(o.tribe===ti||!o.alive||o.glam>gt||o.type==='ghost'||o.tribe===wildId||(ok&&!ok(o)))return;const dd=d2(x,z,o.x,o.z);if(dd<bd){bd=dd;best=o}});return best}
-function nearestEnemyBld(x,z,ti,r){let best=null,bd=r*r;for(const b of blds){if(!b.alive||b.tribe===ti||BT[b.bt].inv)continue;const dd=d2(x,z,b.x,b.z);if(dd<bd){bd=dd;best=b}}return best}
+function nearestEnemyBld(x,z,ti,r){let best=null,bd=r*r;for(const b of blds){if(!b.alive||b.tribe===ti||BT[b.bt].inv||b.tribe===wildId)continue;const dd=d2(x,z,b.x,b.z);if(dd<bd){bd=dd;best=b}}return best}
 function nearestTree(x,z,r){let best=null,bd=r*r;query(tgrid,x,z,r,t=>{if(!t.alive)return;const dd=d2(x,z,t.x,t.z);if(dd<bd){bd=dd;best=t}});return best}
 function killTree(t){if(!t.alive)return;t.alive=false;tGridDirty=true}
 
@@ -995,7 +1005,7 @@ function canHit(u,t){if(t.bt)return !BT[t.bt].inv;if(UT[t.type].fly)return !!UT[
 function resumeAfter(u){u.tgt=null;if(u.order==='amove'){u.st='amove';setTarget(u,u.otx,u.otz,u.ofx,u.ofz)}else{u.st='idle';u.gx=u.x;u.gz=u.z}}
 let atk=-1;
 function noteHit(ti){const a=atk;if(a>=0&&a!==ti&&tribes[ti]&&tribes[a]&&!tribes[a].wild)tribes[ti].lastHitBy=a}
-function dmgUnit(t,dmg,src){if(!t.alive)return;if(src&&src.tribe!==undefined)atk=src.tribe;if(t.tribe===0||atk===0)lastFight=gt;noteHit(t.tribe);if(t.shield>gt)dmg*=.3;{let red=t.tribe<8&&homeBits[bkt(t.x,t.z)]&(1<<t.tribe)?TUNE.hearth:0;if(t.post&&!t.postUnit&&d2(t.x,t.z,t.gx,t.gz)<4*4)red=Math.max(red,TUNE.guardWard);dmg*=1-red}if(t.type==='ghost')dmg=999;t.hp-=dmg;t.hitT=gt;
+function dmgUnit(t,dmg,src){if(!t.alive)return;if(src&&src.tribe!==undefined)atk=src.tribe;if(t.tribe===0||atk===0)lastFight=gt;noteHit(t.tribe);if(t.shield>gt)dmg*=.3;if(t.hard)dmg*=.8;{let red=t.tribe<8&&homeBits[bkt(t.x,t.z)]&(1<<t.tribe)?TUNE.hearth:0;if(t.post&&!t.postUnit&&d2(t.x,t.z,t.gx,t.gz)<4*4)red=Math.max(red,TUNE.guardWard);dmg*=1-red}if(t.type==='ghost')dmg=999;t.hp-=dmg;t.hitT=gt;
   if(src&&src.alive&&!src.bt){t.lastAtk=src;t.lastAtkT=gt}
   if(t.hp<=0){killUnit(t,src);return}
   if(src&&src.alive&&!src.bt&&(!UT[t.type].veh||UT[t.type].bomb)&&t.type!=='brave'&&t.type!=='wild'&&t.type!=='queen'&&t.type!=='captive'&&(t.st==='idle'||(t.st==='move'&&t.tribe!==0))&&canHit(t,src)&&!(t.type==='hunter'&&src.type==='shaman'))attack(t,src)}
@@ -1147,6 +1157,7 @@ function fetchTick(dt){if(!fetches.length)return;for(const f of fetches){if(f.do
   fetches=fetches.filter(f=>!f.done)}
 function unmaskBy(u,ti){if(ti===0){unmask(u);return}const by=u.chg;u.chg=null;u.unmaskT=gt;if(u.sel)deselect(u);u.tribe=by;u.order=null;u.tgt=null;u.cmd=false;const hs=tribes[ti].shaman||u,dx=wd(u.x-hs.x),dz=wd(u.z-hs.z),l=Math.hypot(dx,dz)||1;u.st='flee';u.ft=3;setTarget(u,u.x+dx/l*6,u.z+dz/l*6);if(by===0&&!watching)toast(`The ${tribes[ti].name} folk have found your changeling. It runs for home.`)}
 function chgTick(){phillipTick();
+  for(const b of blds)if(b.alive&&b.wither&&gt>=b.wither){b.burnt=true;destroyBld(b)}
   for(const u of units)if(u.alive&&u.glam>gt&&tribes[u.glamAs]&&tribes[u.glamAs].ai){const hs=tribes[u.glamAs].shaman;if(hs&&hs.alive&&d2(u.x,u.z,hs.x,hs.z)<36)tribes[u.glamAs].susp={x:u.x,z:u.z,t:gt}}
   for(const u of units){if(!u.alive||u.chg==null)continue;
     if(u.chg!==0&&gt-(u.chgBorn||0)>40){let n=0;for(const b of blds)if(b.alive&&b.tribe===u.tribe&&!BT[b.bt].inv&&b.bt!=='hedge'&&d2(b.x,b.z,u.x,u.z)<25)n++;if(n>=2){kindle(u);continue}}
@@ -1253,7 +1264,7 @@ function getFreeBrave(T,x,z){let best=null,bd=1e9;
   for(const b of blds)if(b.alive&&b.tribe===T.id&&b.bt==='hut'&&b.occ>0){const d=d2(x,z,b.x,b.z);if(d<bd){bd=d;hb=b}}
   if(hb){hb.occ--;return spawnUnit('brave',T.id,hb.dx,hb.dz)}return null}
 function produce(b){const type=BT[b.bt].train,T=tribes[b.tribe];if(b.tribe===0&&type==='warrior')A().trainedWar=true;
-  const u=spawnUnit(type,b.tribe,b.dx,b.dz);const gx=b.dx+(R()-.5)*3,gz=b.dz+1+R()*2;u.st='move';setTarget(u,gx,gz);u.gx=wrap(gx);u.gz=wrap(gz);
+  const u=spawnUnit(type,b.tribe,b.dx,b.dz);if(T.swordUntil>gt)u.hard=true;const gx=b.dx+(R()-.5)*3,gz=b.dz+1+R()*2;u.st='move';setTarget(u,gx,gz);u.gx=wrap(gx);u.gz=wrap(gz);
   for(let i=0;i<8;i++)PA.emit(u.x,hAt(u.x,u.z)+.5,u.z,(R()-.5),1+R()*1.5,(R()-.5),.6,.9,.8,.4,1,.3,-1)}
 function unload(v){if(!v.pass||!v.pass.length)return;const dest=v.dest;const lf=dest?field(dest.x,dest.z,false):null;
   let c=nearestCell(v.x,v.z,4,c=>pass[c]===1&&(!lf||lf[c]>=0));if(!c)c=nearestCell(v.x,v.z,4,c=>pass[c]===1);
@@ -1311,6 +1322,7 @@ function sendVehicle(v,x,z,am){v.dest={x:wrap(x),z:wrap(z),am:!!am};
 function updUnit(u,dt){const D=UT[u.type],T=tribes[u.tribe];if(season==='winter'){u.coldT=(u.coldT||0)-dt;if(u.coldT<=0){u.coldT=1+R()*.5;u.cold=coldAt(u)}}else u.cold=false;
   if(u.hanging){if(!u.hanging.alive){const b=u.hanging;u.hanging=null;u.inV=null;u.x=b.x;u.z=b.z;killUnit(u,null)}return}
   if(u.inV){u.x=u.inV.x;u.z=u.inV.z;return}
+  if(u.sleep>gt){u.moving=false;if(R()<dt*.6)PN.emit(u.x,unitY(u)+.7,u.z,.1,.35,0,1.6,.85,.85,.95,.5,.25,-.05);return}
   if(u.leap&&leapTick(u,dt))return;
   if(u.fits){if(gt>=u.fits){u.fits=0;atk=u.fitsBy;dmgUnit(u,u.type==='shaman'?120:999,null);return}
     // paroxysms: rooted to the spot, twisting and jerking, giving off a sickly green haze
@@ -1501,9 +1513,9 @@ function updBld(b,dt){const D=BT[b.bt],T=tribes[b.tribe];if(D.inv)return;
     if(!tg){b.cd=.4;return}b.cd=TUNE.nestReload;const sy=hAt(b.x,b.z)+3.4,ty=unitY(tg)+1.4,dd=Math.sqrt(bd),ti=b.tribe;b.aim=Math.atan2(wd(tg.x-b.x),wd(tg.z-b.z));
     proj({kind:'blast',sx:b.x,sz:b.z,sy,tx:tg.x,tz:tg.z,ty,dur:Math.max(.3,dd/16),arc:1.2,ti,onHit:(x,z)=>{if(tg.alive&&d2(x,z,tg.x,tg.z)<3.2*3.2){atk=ti;dmgUnit(tg,TUNE.nestDamage,null)}for(let i=0;i<18;i++)PA.emit(x,ty,z,(R()-.5)*3,(R()-.5)*3,(R()-.5)*3,.35,1,.5,.12,1,.5,2);sfx('blast',.35,x,z)}});
     sfx('arrow',.3,b.x,b.z);return}
-  if(b.bt==='hut'){if(b.occ>0&&T.stats.pop<T.stats.cap){b.breed+=dt*(TUNE.breedBase+TUNE.breedPerOccupant*b.occ)*T.breedMult;if(b.breed>=1){b.breed=0;const u=spawnUnit('brave',b.tribe,b.dx,b.dz);u.think=1}}
+  if(b.bt==='hut'){if(b.occ>0&&T.stats.pop<T.stats.cap){if(!(T.blightUntil>gt))b.breed+=dt*(TUNE.breedBase+TUNE.breedPerOccupant*b.occ)*T.breedMult*(T.beltaneUntil>gt?2:1);if(b.breed>=1){b.breed=0;const u=spawnUnit('brave',b.tribe,b.dx,b.dz);u.think=1}}
     if(b.occ>0&&R()<dt*.8){const [cx,cz]=byaw(b,.3,0);PN.emit(b.x+cx,hAt(b.x,b.z)+2.2,b.z+cz,(R()-.5)*.2,.5,(R()-.5)*.2,2.5,.55,.53,.5,.35,.7,-.15)}}
-  if(D.train&&!armageddon){if(b.trainee){b.tt-=dt;if(b.tt<=0){b.trainee=false;b.q--;produce(b);dockDirty=true}}
+  if(D.train&&!armageddon){if(b.trainee){b.tt-=dt*(T.swordUntil>gt?2:1);if(b.tt<=0){b.trainee=false;b.q--;produce(b);dockDirty=true}}
     else if(b.q>0){const cl=b.claim;if(!cl||!cl.alive||cl.st!=='enter'||cl.bld!==b){b.held=T.id===0&&spareVillagers(T.id)<=TRAIN_KEEP;const br=b.held?null:getFreeBrave(T,b.x,b.z);if(br){if(T.id===0)mark(br.x,br.z,.6,.85,1);br.st='enter';br.bld=b;br.purpose='train';setTarget(br,b.dx,b.dz);b.claim=br}}}}
   if(b.bt==='oak'){
     if(b.hangUntil&&!b.awake&&gt>=b.hangUntil){b.awake=true;if(b.tribe===0)earn('r_hunt');b.hangUntil=0;const sh=units.find(u=>u.alive&&u.hanging===b);if(sh){sh.hanging=null;sh.inV=null;sh.x=b.dx;sh.z=b.dz;sh.st='idle';sh.gx=sh.x;sh.gz=sh.z}
@@ -1610,6 +1622,20 @@ function castSpell(ti,k,px,pz,cu){atk=ti;let sx=cu?cu.x:px,sz=cu?cu.z:pz,sy=cu?u
       if(u.chg!=null&&u.chg!==ti&&u.tribe===ti){unmaskBy(u,ti);f++}}
     for(const a of stock)if(a.fam&&a.tribe!==ti&&d2(px,pz,a.x,a.z)<36){a.fam.home=true;a.fam.revealed=gt+40;f++;if(a.tribe===0&&!watching)toast('Your familiar has been pricked and runs for home.')}
     if(ti===0)toast(f?`Pricking finds the Devil's mark on ${f} ${f===1?'thing':'things'}.`:'Pricking finds no mark here.');break}
+  case 'beltane':{const T=tribes[ti];T.beltaneUntil=gt+60;for(const b of blds)if(b.alive&&b.tribe===ti&&b.bt==='hut'&&b.done){const y=hAt(b.x,b.z);for(let i=0;i<8;i++)PA.emit(b.x+(R()-.5),y+.4,b.z+(R()-.5),(R()-.5)*.6,1.5+R()*2,(R()-.5)*.6,.7,1,.6,.2,1,.5,-1)}if(ti===0)toast('The Beltane fires are lit. For a minute thy people breed twice as fast.');break}
+  case 'sworddance':{const T=tribes[ti];T.swordUntil=gt+60;for(const b of blds)if(b.alive&&b.tribe===ti&&BT[b.bt].train&&b.done)ring(b.x,b.z,2.5,.9,.85,.7);if(ti===0)toast('The sword dance begins. For a minute thy camps and ranges train twice as fast.');break}
+  case 'blight':{let tgt=null,bd=1e18;for(const b of blds){if(!b.alive||b.bt!=='hut'||b.tribe===ti||!tribes[b.tribe]||tribes[b.tribe].wild)continue;const d=d2(px,pz,b.x,b.z);if(d<bd){bd=d;tgt=tribes[b.tribe]}}
+    if(!tgt||bd>16*16){const T=tribes[ti];T.mana+=spellCost(T,'blight');T.cd.blight=0;if(ti===0)toast('Cradle Blight must fall on a rival village');break}tgt.blightUntil=gt+60;
+    for(const b of blds)if(b.alive&&b.tribe===tgt.id&&b.bt==='hut'){const y=hAt(b.x,b.z);for(let i=0;i<6;i++)PN.emit(b.x+(R()-.5),y+1.2,b.z+(R()-.5),(R()-.5)*.3,.3,(R()-.5)*.3,2.5,.35,.33,.25,.5,1,-.05)}
+    if(ti===0)toast(`The ${tgt.name} cradles stand empty. No child will be born to them for a minute.`);else if(tgt.id===0&&!watching)toast('A blight has fallen on your cradles. No child will be born for a minute.');break}
+  case 'keening':{const home=blds.find(b=>b.alive&&b.bt==='reinc'&&b.tribe===ti);let n=0;
+    for(const u of units){if(!u.alive||u.tribe===ti||u.tribe===wildId||u.type!=='brave'||u.inV||u.chg!=null||d2(px,pz,u.x,u.z)>49||R()>.6)continue;const T=tribes[u.tribe];if(u.sel)deselect(u);u.type='wild';u.tribe=wildId;u.mhp=UT.wild.hp;u.hp=Math.min(u.hp,u.mhp);u.order=null;u.tgt=null;u.cmd=false;n++;
+      if(home){const a=Math.atan2(wd(u.z-home.z),wd(u.x-home.x)),r=11+R()*4;u.st='flee';u.ft=12;setTarget(u,home.x+Math.cos(a)*r,home.z+Math.sin(a)*r)}else{u.st='flee';u.ft=4}}
+    {const y=Math.max(0,hAt(px,pz));for(let i=0;i<30;i++){const a=R()*TAU,r=R()*7;PN.emit(px+Math.cos(a)*r,y+1+R(),pz+Math.sin(a)*r,Math.cos(a)*.8,.4,Math.sin(a)*.8,1.4,.75,.78,.85,.35,.9,-.05)}}
+    if(ti===0)toast(n?`The keening carries. ${n} rival villager${n===1?' runs':'s run'} wild towards your land.`:'The keening finds no rival villagers there.');break}
+  case 'briar':{let n=0;for(const u of units){if(!u.alive||u.tribe===ti||u.tribe===wildId||u.type==='shaman'||UT[u.type].veh||u.inV||d2(px,pz,u.x,u.z)>25)continue;u.sleep=gt+30;u.tgt=null;u.st='idle';n++}
+    for(let i=0;i<30;i++){const a=i/30*TAU,x=wrap(px+Math.cos(a)*5.6),z=wrap(pz+Math.sin(a)*5.6);const v=validSpot(wildId,'hedge',x,z);if(v.err)continue;const h=placeBuilding(wildId,'hedge',v,true);h.done=true;h.prog=1;setHedge(h,1);h.wither=gt+60}
+    if(ti===0)toast(n?`${n} rival${n===1?'':'s'} fall asleep, and the blackthorn closes round them.`:'The blackthorn grows, but no rival sleeps within it.');break}
   case 'murrain':{{const y=Math.max(0,hAt(px,pz));for(let i=0;i<40;i++){const a=R()*TAU,r=R()*6;PN.emit(px+Math.cos(a)*r,y+.2+R()*.6,pz+Math.sin(a)*r,(R()-.5)*.4,.25+R()*.5,(R()-.5)*.4,2.5+R()*1.5,.5,.62,.22,.4,1.4,-.05)}}let n=0;for(const a of stock)if(!a.dead&&!a.sick&&a.tribe!==ti&&d2(px,pz,a.x,a.z)<36){a.sick=gt+6+R()*4;n++}ring(px,pz,6,.45,.55,.2);if(ti===0)toast(n?`Murrain takes ${n} beast${n===1?'':'s'}.`:'No rival beasts there');break}
   case 'hypno':query(grid,px,pz,3.5,u=>{if(u.tribe!==ti&&u.alive&&u.type!=='shaman'&&!UT[u.type].veh&&u.type!=='ghost'&&d2(px,pz,u.x,u.z)<9){const o=u.hyp?u.hyp.orig:u.tribe;convertUnit(u,ti);u.hyp={orig:o,until:gt+25}}});ring(px,pz,3,.85,.5,1);break;
   case 'whirl':{let aim=null,ad=1e9;for(const b of blds){if(!b.alive||b.tribe===ti||BT[b.bt].inv||b.bt==='tomb'||b.bt==='god'||b.bt==='oak')continue;const d=Math.sqrt(d2(px,pz,b.x,b.z));if(d<BT[b.bt].s*.6+.4&&d<ad){ad=d;aim=b}}
@@ -3102,7 +3128,7 @@ function drawEntities(){
     if(gt-u.swing<.18){ox=Math.sin(u.face)*.13;oz=Math.cos(u.face)*.13}
     if(u.type==='balloon'){y+=Math.sin(gt*1.5+u.anim)*.15}
     if(u.air)yaw+=gt*9;
-    let sy=1;if(u.past&&u.st==='idle'&&u.pastT>gt){const ph=gt*2+u.anim;if(u.past==='sit'){y-=.13;sy=.76;yaw+=Math.sin(ph*.4)*.08}else if(u.past==='tend'){const b=Math.max(0,Math.sin(ph*1.5));y-=.09*b;sy=1-.22*b}else if(u.past==='chat'){yaw+=Math.sin(ph*1.7)*.2;if(Math.sin(ph*.8)>.92)y+=.05}}
+    let sy=1;if(u.sleep>gt){sy=.4;y-=.05}else if(u.past&&u.st==='idle'&&u.pastT>gt){const ph=gt*2+u.anim;if(u.past==='sit'){y-=.13;sy=.76;yaw+=Math.sin(ph*.4)*.08}else if(u.past==='tend'){const b=Math.max(0,Math.sin(ph*1.5));y-=.09*b;sy=1-.22*b}else if(u.past==='chat'){yaw+=Math.sin(ph*1.7)*.2;if(Math.sin(ph*.8)>.92)y+=.05}}
     if(u.chg===0&&!watching&&HALO.n<HALO.max&&Math.sin(gt*2.2+u.anim)>.55)HALO.emit(u.x,unitY(u)+.55,u.z,0,0,0,1,1,.85,.35,.55,.9,0);
     else if(u.unmaskT&&gt-u.unmaskT<40&&!watching&&HALO.n<HALO.max&&Math.sin(gt*4+u.anim)>.2)HALO.emit(u.x,unitY(u)+.55,u.z,0,0,0,1,1,.25,.15,.6,1,0);
     const i=M.n++;if(u.type==='phillip'){const kp=(gt-u.swing)/.35,lean=kp>=0&&kp<1?Math.sin(kp*Math.PI)*.75:0;const t=u.tgt&&u.tgt.alive&&u.st==='attack'?u.tgt:null,yw=t?Math.atan2(wd(t.x-u.x),wd(t.z-u.z))+Math.PI:yaw;placeTilt(M.t,i,rx,y+lean*.12,rz,yw,lean,-yw,sc,sy);placeTilt(M.f,i,rx,y+lean*.12,rz,yw,lean,-yw,sc,sy)}else{place(M.t,i,rx+ox,y,rz+oz,yaw,sc,sy);place(M.f,i,rx+ox,y,rz+oz,yaw,sc,sy)}
@@ -3216,7 +3242,7 @@ function drawIndicators(){rangeRing.visible=false;tgtRing.visible=false;placeGho
   if(!running||over)return;
   const sh=tribes[0]&&tribes[0].shaman;let hp=null;
   if(armed||placing){const r=glc.getBoundingClientRect();hp=hoverMouse&&hoverSX>=0?pickGround(hoverSX,hoverSY):pickGround(r.left+r.width/2,r.top+r.height*.45)}
-  if(armed&&armed!=='arma'&&armed!=='fetch'&&sh){const s=SPK[armed];const rx=wd(sh.x-cam.fx),rz=wd(sh.z-cam.fz);rangeRing.position.set(rx,unitY(sh)-(rx*rx+rz*rz)*K+.1,rz);rangeRing.scale.setScalar(s.r);rangeRing.visible=true;
+  if(armed&&armed!=='arma'&&SPK[armed].r<999&&sh){const s=SPK[armed];const rx=wd(sh.x-cam.fx),rz=wd(sh.z-cam.fz);rangeRing.position.set(rx,unitY(sh)-(rx*rx+rz*rz)*K+.1,rz);rangeRing.scale.setScalar(s.r);rangeRing.visible=true;
     if(hp&&hoverMouse){tgtRing.position.set(hp.rx,Math.max(0,hAt(hp.x,hp.z))-(hp.rx*hp.rx+hp.rz*hp.rz)*K+.15,hp.rz);tgtRing.scale.setScalar(s.rad);tgtRing.visible=true}}
   if(placing&&hp){const v=validSpot(0,placing,hp.x,hp.z),s=BT[placing].s;let x=hp.x,z=hp.z;if(!v.err){x=v.x;z=v.z}const rx=wd(x-cam.fx),rz=wd(z-cam.fz);
     placeGhost.position.set(rx,Math.max(0,hAt(x,z))-(rx*rx+rz*rz)*K,rz);placeGhost.scale.set(s,1.2,s);ghostMat.color.setHex(v.err?0xff5544:0x66ff88);placeGhost.visible=true}}
