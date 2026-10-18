@@ -2916,7 +2916,10 @@ const PN=new PSys(3500,false),PA=new PSys(5000,true,'fire'),HALO=new PSys(16,tru
 // ---------------- render ----------------
 function updCam(dt){const fh=Math.max(hAt(cam.fx,cam.fz),0);cam.fh+=(fh-cam.fh)*Math.min(1,dt*4);
   const zt=clamp((cam.dist-14)/(MAXD-14),0,1);K=lerp(TUNE.curveNear,TUNE.curveFar,zt*zt);const p=lerp(.62,1.08,zt),cp=Math.cos(p),sp=Math.sin(p);
-  camera.position.set(Math.sin(cam.yaw)*cp*cam.dist,sp*cam.dist+cam.fh,Math.cos(cam.yaw)*cp*cam.dist);
+  // keep the camera out of hills that rise between it and what it looks at (it used to end up inside them on steep ground by the water)
+  {const hd=cp*cam.dist,sx=Math.sin(cam.yaw),sz=Math.cos(cam.yaw);let need=sp*cam.dist+cam.fh;for(const f of [.35,.55,.75,.9,1,1.1]){const hx=hd*f,h=Math.max(hAt(wrap(cam.fx+sx*hx),wrap(cam.fz+sz*hx)),0)-hx*hx*K+1.2;const req=cam.fh+(h-cam.fh)/f;if(req>need)need=req}
+    cam.lift=cam.lift==null?need:cam.lift+(need-cam.lift)*Math.min(1,dt*(need>cam.lift?8:2))}
+  camera.position.set(Math.sin(cam.yaw)*cp*cam.dist,cam.lift,Math.cos(cam.yaw)*cp*cam.dist);
   camera.lookAt(0,cam.fh,0);
   if(cam.shake>0){camera.position.x+=(R()-.5)*cam.shake;camera.position.y+=(R()-.5)*cam.shake;cam.shake=Math.max(0,cam.shake-dt*1.4)}
   scene.fog.near=cam.dist*.75+zt*20;scene.fog.far=cam.dist+44+zt*50}
