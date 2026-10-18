@@ -966,6 +966,8 @@ function moveStep(u,dt){const D=UT[u.type];const fz=tribes[u.tribe]&&tribes[u.tr
   if(!D.fly&&dd>2&&(dd>10||u.useField>gt)){const f=field(u.fx,u.fz),c=cidx(u.x,u.z),dc=f[c];
     if(dc>0){const x=c%N,z=(c/N)|0;let best=dc,bn=-1;
       for(let i=0;i<8;i++){const nx=wi(x+NB[i][0]),nz=wi(z+NB[i][1]),n=nz*N+nx,v=f[n];if(v<0||v>=best)continue;if(i>=4&&(f[z*N+nx]<0||f[nz*N+x]<0))continue;best=v;bn=n}
+      if(bn>=0){wx=wd((bn%N)+.5-u.x);wz=wd(((bn/N)|0)+.5-u.z)}}
+    else if(dc<0){const x=c%N,z=(c/N)|0;let best=1e9,bn=-1;for(let oz=-2;oz<=2;oz++)for(let ox=-2;ox<=2;ox++){const n=wi(z+oz)*N+wi(x+ox),v=f[n];if(v<0)continue;const k=v+(ox*ox+oz*oz)*2;if(k<best){best=k;bn=n}}
       if(bn>=0){wx=wd((bn%N)+.5-u.x);wz=wd(((bn/N)|0)+.5-u.z)}}}
   const l=Math.hypot(wx,wz)||1,st=Math.min(spd*dt,dd);let nx=u.x+wx/l*st,nz=u.z+wz/l*st;
   if(!D.fly){const okc=c=>pass[c]===1;const cur=cidx(u.x,u.z);
@@ -3194,7 +3196,7 @@ function command(grp,g,hu,hb,ht){if(grp.filter(u=>u.type==='balloon'&&u.tribe===
     if(rest.length&&g)orderMove(rest,hb.dx,wrap(hb.dz+1.5));mark(hb.x,hb.z,.5,1,.6);return}
   if(ht&&grp.some(u=>u.type==='brave')){const rest=[];for(const u of grp){if(u.type==='brave'){assignGather(u,ht);u.cmdGather=true}else rest.push(u)}if(rest.length)orderMove(rest,ht.x,ht.z);mark(ht.x,ht.z,.5,1,.5);return}
   if(!g)return;
-  const lead=grp.find(u=>!UT[u.type].veh);if(lead&&!water[cidx(g.x,g.z)]){const lf=field(g.x,g.z,false);if(lf[cidx(lead.x,lead.z)]<0&&pass[cidx(g.x,g.z)]){
+  const lead=grp.find(u=>!UT[u.type].veh);if(lead&&!water[cidx(g.x,g.z)]){const lf=field(g.x,g.z,false);let lc=cidx(lead.x,lead.z);if(lf[lc]<0){const nc=nearestCell(lead.x,lead.z,2,c=>lf[c]>=0);if(nc)lc=cidx(nc.x,nc.z)}if(lf[lc]<0&&pass[cidx(g.x,g.z)]){
     if(startFerry(grp,g.x,g.z)){toast('Your balloons will carry them over');mark(g.x,g.z,.6,.85,1);sfx('select',.35);return}
     toast(blds.some(b=>b.alive&&b.tribe===0&&b.bt==='balloon')?'There is no way across. Your Cunning Woman can raise a Land Bridge, or a balloon can carry them.':'There is no way across. Your Cunning Woman can raise a Land Bridge, or balloons from a Balloon Works can carry them.')}}
   orderMove(grp,g.x,g.z);mark(g.x,g.z,.6,.85,1);sfx('select',.35)}
