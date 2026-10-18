@@ -818,7 +818,7 @@ function swampKill(c){const g=hazGrp[c],sw=swamps[g];if(!sw)return;sw.kills++;if
   delete swamps[g];if(x0<1e9)recompute(x0,z0,x1,z1);if(sw.owner===0&&!watching)toast(`Your bog has drowned ${TUNE.swampLives} and drains away, sated.`)}
 function setHedge(b,on){const c=wi(b.cz0)*N+wi(b.cx0);hedgeA[c]=on?1:0;recompute(b.cx0,b.cz0,b.cx0,b.cz0)}
 // ---- village colour: worn paths and flowers (cosmetic only) ----
-const FLOWER_C=[0xd85a7a,0xe7c84a,0xf1ece0,0xd85a7a,0xe7c84a,0xf1ece0],FLAG_C=[0xb8322a,0xe0b440,0xeee6d2,0x35629e,0x4f7a38];let buntings=[],patches=[],wells=[],tombBeds=[];
+const FLOWER_C=[0xd85a7a,0xe7c84a,0xf1ece0,0xd85a7a,0xe7c84a,0xf1ece0],FLAG_C=[0xb8322a,0xe0b440,0xeee6d2,0x35629e,0x4f7a38];let buntings=[],patches=[],wells=[],tombBeds=[],stock=[],hutches=[],stockOn=false;
 // the fixed places around a building where flowers grow, nearest the walls first; the door side of a hut is left clear
 const FSPOTS=new WeakMap(),_fq=new C.Quaternion(),_fe=new C.Euler();
 const PALE_C=[0xeee6d2,0xd8c9a8,0xb8322a,0x9a6a4a,0xe9ddc3];
@@ -867,7 +867,19 @@ function decorTick(dt){
   for(const b of blds){if(!b.alive||!b.done||b.bt!=='hut'||!b.flT||gt-b.flT<60)continue;if(wells.some(w=>d2(w.x,w.z,b.x,b.z)<14*14))continue;
     let n=0,sx=0,sz=0;for(const o of blds)if(o.alive&&o.done&&o.tribe===b.tribe&&!BT[o.bt].inv&&o.bt!=='hedge'&&d2(o.x,o.z,b.x,b.z)<10*10){n++;sx+=wd(o.x-b.x);sz+=wd(o.z-b.z)}if(n<6)continue;
     const cx=b.x+sx/n,cz=b.z+sz/n;let spot=null;for(let rr=0;rr<6&&!spot;rr+=.7)for(let t=0;t<12;t++){const a=t/12*TAU,x=wrap(cx+Math.cos(a)*rr),z=wrap(cz+Math.sin(a)*rr);if(clear(x,z,1)){spot={x,z};break}}
-    if(spot){wells.push({x:spot.x,z:spot.z,tribe:b.tribe,born:gt});break}}}
+    if(spot){wells.push({x:spot.x,z:spot.z,tribe:b.tribe,born:gt});break}}
+  // livestock (test mode only for now): each settled well keeps a black goat, a few chickens and a hutch of rabbits
+  stockOn=devMode();stock=stock.filter(a=>wells.includes(a.w));hutches=hutches.filter(h=>wells.includes(h.w));if(!stockOn)return;
+  for(const w of wells){if(gt-w.born<15||stock.some(a=>a.w===w))continue;const at=(r0,r1,pad)=>{for(let k=0;k<20;k++){const a=R()*TAU,r=r0+R()*(r1-r0),x=wrap(w.x+Math.cos(a)*r),z=wrap(w.z+Math.sin(a)*r);if(clear(x,z,pad))return {x,z}}return null};
+    const mk=(kind,p)=>{if(p)stock.push({kind,w,tribe:w.tribe,x:p.x,z:p.z,tx:p.x,tz:p.z,face:R()*TAU,wait:R()*3,anim:R()*9})};
+    mk('goat',at(2,5,0));const nc=3+(R()*3|0);for(let k=0;k<nc;k++)mk('chicken',at(1.5,4,0));
+    const hp=at(3,6,1);if(hp&&!patches.some(q=>d2(q.x,q.z,hp.x,hp.z)<2.5*2.5)){const h={w,tribe:w.tribe,x:hp.x,z:hp.z,yaw:Math.atan2(wd(w.x-hp.x),wd(w.z-hp.z))};hutches.push(h);const nr=2+(R()*2|0);for(let k=0;k<nr;k++){const r={kind:'rabbit',w,hutch:h,tribe:w.tribe,lx:(R()-.5)*.8,lz:.4+R()*.6,wait:R()*2,anim:R()*9,face:R()*TAU};r.tlx=r.lx;r.tlz=r.lz;stock.push(r)}}}}
+function stockTick(dt){if(!stockOn)return;for(const a of stock){if(a.kind==='rabbit'){const h=a.hutch;if(a.wait>0){a.wait-=dt;a.moving=false}else{const dx=a.tlx-a.lx,dz=a.tlz-a.lz,l=Math.hypot(dx,dz),sp=.9*dt;
+      if(l<=sp){a.lx=a.tlx;a.lz=a.tlz;a.wait=1+R()*4;a.tlx=(R()-.5)*.9;a.tlz=.35+R()*.75;a.moving=false}else{a.lx+=dx/l*sp;a.lz+=dz/l*sp;a.lf=Math.atan2(dx,dz);a.moving=true}}
+      const c=Math.cos(h.yaw),sn=Math.sin(h.yaw);a.x=wrap(h.x+a.lx*c+a.lz*sn);a.z=wrap(h.z-a.lx*sn+a.lz*c);a.face=(a.lf||0)+h.yaw;continue}
+    if(a.wait>0){a.wait-=dt;a.moving=false;continue}const dx=wd(a.tx-a.x),dz=wd(a.tz-a.z),l=Math.hypot(dx,dz),sp=(a.kind==='goat'?.7:1.1)*dt;
+    if(l<=sp){a.x=a.tx;a.z=a.tz;a.moving=false;a.wait=a.kind==='goat'?3+R()*7:1+R()*4;const rr=a.kind==='goat'?7:4.5;for(let k=0;k<8;k++){const t=R()*TAU,r=1+R()*rr,x=wrap(a.w.x+Math.cos(t)*r),z=wrap(a.w.z+Math.sin(t)*r),c=cidx(x,z);if(!bOcc[c]&&!water[c]&&walk[c]){a.tx=x;a.tz=z;break}}}
+    else{const nx=wrap(a.x+dx/l*sp),nz=wrap(a.z+dz/l*sp),c=cidx(nx,nz);if(bOcc[c]||water[c]){a.tx=a.x;a.tz=a.z;continue}a.x=nx;a.z=nz;a.face=Math.atan2(dx,dz);a.moving=true}}}
 function hazardTick(){let ch=false;for(const c of hazList)if(hazU[c]<=gt){hazList.delete(c);const x=c%N,z=(c/N)|0;recompute(x,z,x,z);ch=true}for(const c of saltList)if(saltU[c]<=gt){saltList.delete(c);const x=c%N,z=(c/N)|0;recompute(x,z,x,z);ch=true}return ch}
 function saltGround(b,owner){const s=BT[b.bt].s,p=TUNE.saltPad;for(let dz=-p;dz<s+p;dz++)for(let dx=-p;dx<s+p;dx++){const ex=Math.max(0,-dx,dx-s+1),ez=Math.max(0,-dz,dz-s+1);if(ex*ex+ez*ez>p*p)continue;const c=wi(b.cz0+dz)*N+wi(b.cx0+dx);saltU[c]=gt+TUNE.saltTime;saltOwner[c]=owner;saltList.add(c)}recompute(b.cx0-p-1,b.cz0-p-1,b.cx0+s+p,b.cz0+s+p)}
 
@@ -1733,7 +1745,7 @@ function sim(dt){gt+=dt;
   updProjs(dt);updDebris(dt);
   statT-=dt;if(statT<=0){statT=.5;computeStats()}
   hazT-=dt;if(hazT<=0){hazT=.5;hazardTick()}
-  decorTick(dt);
+  decorTick(dt);stockTick(dt);
   secT-=dt;if(secT<=0){secT=1;for(const T of tribes){if(!T.alive||T.wild)continue;tribeUpkeep(T);if(T.ai)aiThink(T);else if(T.id===0&&!watching)playerAuto(T)}checkEnd();regrow();wildTick()}
   ferryTick(dt);
   fogT-=dt;if(fogT<=0){fogT=.25;updFog()}
@@ -1825,6 +1837,16 @@ const bowG=()=>{const g=new C.TorusGeometry(.24,.022,4,10,Math.PI);g.rotateZ(-Ma
 // new C.SphereGeometry(r,wSeg,hSeg), new C.ConeGeometry(r,h,sides), new C.TorusGeometry(r,tube,rs,ts,arc).
 // Or open "Model workshop" from the menu to edit any model with sliders; see MODEL_DATA below.
 const UMOD={
+  goat:()=>{const K=0x1a1716,H=0x8a7d66,f=[P(new C.BoxGeometry(.22,.2,.44),K,0,.33,0),P(new C.BoxGeometry(.05,.24,.05),K,.07,.12,.15),P(new C.BoxGeometry(.05,.24,.05),K,-.07,.12,.15),P(new C.BoxGeometry(.05,.24,.05),K,.07,.12,-.15),P(new C.BoxGeometry(.05,.24,.05),K,-.07,.12,-.15),
+    P(new C.BoxGeometry(.09,.16,.1),K,0,.47,.22,-.5),P(new C.BoxGeometry(.11,.11,.18),K,0,.55,.3,.35),P(new C.ConeGeometry(.025,.2,4),H,.04,.66,.24,-1.1),P(new C.ConeGeometry(.025,.2,4),H,-.04,.66,.24,-1.1),
+    P(new C.BoxGeometry(.04,.08,.03),0x2a2622,0,.45,.37),P(new C.BoxGeometry(.03,.03,.02),0xd8a020,.045,.58,.38),P(new C.BoxGeometry(.03,.03,.02),0xd8a020,-.045,.58,.38),P(new C.BoxGeometry(.04,.08,.04),K,0,.43,-.23,.6)];
+    return {t:[P(cyl(.065,.065,.035,8),WT,0,.46,.19,-.5)],f}},
+  chicken:()=>{const B=0x9a5a2e,f=[P(new C.SphereGeometry(.09,7,5),B,0,.15,0),P(new C.SphereGeometry(.05,6,4),B,0,.25,.07),P(new C.ConeGeometry(.018,.05,4),0xe0a030,0,.25,.13,Math.PI/2),P(new C.BoxGeometry(.015,.04,.05),0xc0302a,0,.3,.07),
+    P(new C.BoxGeometry(.06,.1,.03),0x6e3c1c,0,.22,-.09,-.5),P(new C.BoxGeometry(.012,.08,.012),0xd09030,.03,.04,0),P(new C.BoxGeometry(.012,.08,.012),0xd09030,-.03,.04,0)];
+    return {t:[P(new C.BoxGeometry(.001,.001,.001),WT,0,.1,0)],f}},
+  rabbit:()=>{const F=0x8a7a68,f=[P(new C.BoxGeometry(.11,.1,.17),F,0,.07,0),P(new C.SphereGeometry(.055,6,4),F,0,.14,.08),P(new C.BoxGeometry(.02,.12,.035),F,.022,.24,.06,-.2),P(new C.BoxGeometry(.02,.12,.035),F,-.022,.24,.06,-.2),
+    P(new C.SphereGeometry(.028,5,4),0xeee8dc,0,.09,-.09),P(new C.BoxGeometry(.015,.015,.01),0x111111,.03,.16,.125),P(new C.BoxGeometry(.015,.015,.01),0x111111,-.03,.16,.125)];
+    return {t:[P(new C.BoxGeometry(.001,.001,.001),WT,0,.05,0)],f}},
   brave:()=>({t:[P(cyl(.11,.2,.42),WT,0,.21,0)],f:[P(new C.SphereGeometry(.11,6,5),SKIN,0,.53,0),P(new C.SphereGeometry(.118,6,3,0,TAU,0,Math.PI/2),HAIR,0,.55,0)]}),
   warrior:()=>({t:[P(cyl(.14,.25,.5),WT,0,.25,0)],f:[P(new C.SphereGeometry(.12,6,5),SKIN,0,.62,0),P(new C.ConeGeometry(.14,.2,6),STEEL,0,.77,0),P(new C.BoxGeometry(.05,.46,.05),STEEL,.26,.38,.08),P(cyl(.17,.17,.05,8),WOOD,-.26,.3,.02,0,0,Math.PI/2)]}),
   queen:()=>{const f=[P(new C.ConeGeometry(.26,.62,8),0xf1ece0,0,.31,0),P(new C.SphereGeometry(.11,6,5),SKIN,0,.7,0),P(new C.SphereGeometry(.12,6,3,0,TAU,0,Math.PI/2),0x8a5a2a,0,.72,0),P(cyl(.07,.06,.35,5),0x8a5a2a,0,.55,-.06)];
@@ -1844,6 +1866,12 @@ const UMOD={
 UMOD.ghost=UMOD.warrior;
 UMOD.wild=()=>({t:[P(cyl(.1,.21,.4,5),WT,0,.2,0)],f:[P(new C.SphereGeometry(.11,6,5),0xb08868,0,.51,0),P(new C.SphereGeometry(.125,6,3,0,TAU,0,Math.PI/2),0x2a2018,0,.53,0),P(new C.ConeGeometry(.022,.24,4),BONE,.08,.7,0,0,0,-.5),P(new C.ConeGeometry(.022,.24,4),BONE,-.08,.7,0,0,0,.5)]});
 const BMOD={
+  hutch:()=>{const W=0x7a5a38,D=0x5c4430,f=[P(new C.BoxGeometry(.06,.42,.06),D,-.5,.21,-.22),P(new C.BoxGeometry(.06,.42,.06),D,.5,.21,-.22),P(new C.BoxGeometry(.06,.42,.06),D,-.5,.21,.22),P(new C.BoxGeometry(.06,.42,.06),D,.5,.21,.22),
+    P(new C.BoxGeometry(1.1,.42,.5),W,0,.63,0),P(new C.BoxGeometry(.5,.32,.02),0x2a241e,.22,.63,.26),P(new C.BoxGeometry(.4,.32,.02),0x6a4e32,-.27,.63,.26),P(new C.BoxGeometry(.3,.04,.32),D,.1,.2,.42,-.55),
+    P(new C.BoxGeometry(.04,.28,.04),D,-.55,.14,1.15),P(new C.BoxGeometry(.04,.28,.04),D,.55,.14,1.15),P(new C.BoxGeometry(.04,.28,.04),D,-.55,.14,.3),P(new C.BoxGeometry(.04,.28,.04),D,.55,.14,.3),
+    P(new C.BoxGeometry(1.14,.03,.03),D,0,.26,1.15),P(new C.BoxGeometry(1.14,.03,.03),D,0,.12,1.15),P(new C.BoxGeometry(.03,.03,.86),D,-.55,.26,.72),P(new C.BoxGeometry(.03,.03,.86),D,.55,.26,.72),P(new C.BoxGeometry(.03,.03,.86),D,-.55,.12,.72),P(new C.BoxGeometry(.03,.03,.86),D,.55,.12,.72),
+    P(new C.BoxGeometry(1.06,.02,.82),0x7d6a3e,0,.01,.72)];
+    return {t:[P(new C.BoxGeometry(1.24,.06,.66),WT,0,.9,-.04,.12)],f}},
   hut:()=>({t:[P(new C.ConeGeometry(1.4,1.15,8),WT,0,1.35,0)],f:[P(cyl(1,1.1,.85,8),MUD,0,.42,0),P(new C.BoxGeometry(.4,.55,.12),0x3a2a1c,0,.28,1.05)]}),
   camp:()=>{const w=0x8a6238,f=[P(new C.BoxGeometry(3.6,.2,3.6),0x6b4a2c,0,.1,0),P(new C.BoxGeometry(3.6,.8,.18),w,0,.5,-1.7),P(new C.BoxGeometry(.18,.8,3.6),w,-1.7,.5,0),P(new C.BoxGeometry(.18,.8,3.6),w,1.7,.5,0),P(new C.BoxGeometry(1.2,.8,.18),w,-1.2,.5,1.7),P(new C.BoxGeometry(1.2,.8,.18),w,1.2,.5,1.7),P(cyl(.04,.04,2.6,4),WOOD,1.3,1.3,-1.3)];
     return {t:[P(new C.ConeGeometry(1.25,1.5,4),WT,0,.95,0,0,Math.PI/4),P(new C.BoxGeometry(.5,.32,.03),WT,1.55,2.4,-1.3)],f}},
@@ -1919,7 +1947,7 @@ function inst(g,m,cap){const im=new C.InstancedMesh(g,m,cap);im.instanceMatrix.s
 // Tribe-coloured parts write alpha 254/255 so the film grade can find them and leave them out (invisible otherwise).
 matT.onBeforeCompile=sh=>{sh.fragmentShader=sh.fragmentShader.replace('#include <dithering_fragment>','#include <dithering_fragment>\n\tgl_FragColor.a=254./255.;')};
 function mkPair(def,cap,ghost){const d=def();return {t:inst(merge(d.t),ghost?gMatT:matT,cap),f:inst(merge(d.f),ghost?gMatF:matF,cap),n:0,cap}}
-const UCAP={queen:8,hunter:40,brave:700,warrior:360,oss:240,captive:120,archer:300,shaman:8,ghost:120,balloon:60,wild:200};
+const UCAP={goat:60,chicken:300,rabbit:200,queen:8,hunter:40,brave:700,warrior:360,oss:240,captive:120,archer:300,shaman:8,ghost:120,balloon:60,wild:200};
 // ---------------- MODEL EDITS ----------------
 // Models edited in the Model workshop (menu) are stored as lists of parts. Edits you export from the
 // workshop can be pasted into MODEL_DATA here so that they ship with the game for everyone; edits made
@@ -2839,6 +2867,9 @@ function drawEntities(){
       const rx=wd(x-cam.fx),rz=wd(z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2||!seenAt(x,z))continue;place(BOULDER,bn,rx,y-r2*K,rz,p.t*7+p.sc*9,p.sc);_c.setRGB(1,1,1);BOULDER.setColorAt(bn,_c);bn++}fin(BOULDER,bn)}
   {let gn=0;for(const bn of banners){if(gn>=60)break;const rx=wd(bn.x-cam.fx),rz=wd(bn.z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2||!seenAt(bn.x,bn.z))continue;const y=hAt(bn.x,bn.z)-r2*K,yw=Math.sin(gt*1.3+bn.id)*.08;
       place(GBP,gn,rx,y,rz,yw,1);_c.setRGB(1,1,1);GBP.setColorAt(gn,_c);place(GBC,gn,rx,y,rz,yw,1);_c.copy(tribes[bn.tribe].c);GBC.setColorAt(gn,_c);gn++}fin(GBP,gn);fin(GBC,gn)}
+  if(stockOn)for(const a of stock){const M=UM[a.kind];if(M.n>=M.cap)continue;const rx=wd(a.x-cam.fx),rz=wd(a.z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2*.75||!seenAt(a.x,a.z))continue;if(a.tribe!==0&&!isVis(a.x,a.z))continue;
+    let y=hAt(a.x,a.z)-r2*K,sy=1;if(a.moving)y+=Math.abs(Math.sin(gt*(a.kind==='rabbit'?9:a.kind==='chicken'?12:6)+a.anim))*(a.kind==='goat'?.03:.05);else if(a.kind==='chicken'){const pk=Math.max(0,Math.sin(gt*3+a.anim));sy=1-.25*pk*pk}
+    const i=M.n++;place(M.t,i,rx,y,rz,a.face,1,sy);place(M.f,i,rx,y,rz,a.face,1,sy);const fv=fogOn?Math.max(.42,vis[cidx(a.x,a.z)]):1;_c.copy(tribes[a.tribe].c).multiplyScalar(fv);M.t.setColorAt(i,_c);_c.setRGB(fv,fv,fv);M.f.setColorAt(i,_c)}
   drawDebris();
   fin(CM,cn);
   for(const k in UM){fin(UM[k].t,UM[k].n);fin(UM[k].f,UM[k].n)}
@@ -2854,6 +2885,8 @@ function drawEntities(){
       const sy=Math.min(b.done?1:.12+.88*b.prog,o.done?1:.12+.88*o.prog),L=dx&&dz?Math.SQRT2:1,i=HL.n++;
       _p.set(rx,hAt(mx,mz)-r2*K,rz);_q.setFromAxisAngle(UP,Math.atan2(-dz,dx));_s.set(L,sy,1);_m.compose(_p,_q,_s);HL.t.setMatrixAt(i,_m);HL.f.setMatrixAt(i,_m);
       _c.copy(tribes[b.tribe].c);HL.t.setColorAt(i,_c);_c.setRGB(1,1,1);if(!b.done||!o.done)_c.setRGB(.85,.8,.7);if((b.tribe!==0&&!isVis(b.x,b.z))||b.hp<b.mhp*.5)_c.multiplyScalar(.6);HL.f.setColorAt(i,_c)}}}
+  if(stockOn){const M=BM.hutch;for(const h of hutches){if(M.n>=M.cap)break;const rx=wd(h.x-cam.fx),rz=wd(h.z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2||!seenAt(h.x,h.z))continue;const i=M.n++,y=hAt(h.x,h.z)-r2*K,fv=fogOn?Math.max(.42,vis[cidx(h.x,h.z)]):1;
+    place(M.t,i,rx,y,rz,h.yaw,1);place(M.f,i,rx,y,rz,h.yaw,1);const T=tribes[h.tribe];_c.copy(T&&T.roof?T.roof:WHITE_C).multiplyScalar(fv);M.t.setColorAt(i,_c);_c.setRGB(fv,fv,fv);M.f.setColorAt(i,_c)}}
   for(const k in BM){fin(BM[k].t,BM[k].n);fin(BM[k].f,BM[k].n)}
   let tn=0;for(const t of trees){if(!t.alive)continue;const rx=wd(t.x-cam.fx),rz=wd(t.z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2||tn>=1800)continue;if(!seenAt(t.x,t.z))continue;const fv=fogOn?Math.max(.42,vis[cidx(t.x,t.z)]):1;
     const gr=t.born?Math.min(1,(gt-t.born)/30):1;const ty=hAt(t.x,t.z)-r2*K,tsc=t.sc*(.45+.55*clamp(t.wood/TUNE.woodPerTree,0,1))*(.3+.7*gr);place(TMK,tn,rx,ty,rz,t.tint*7,tsc);place(TMC,tn,rx,ty,rz,t.tint*7,tsc);_c.setRGB(t.tint*fv,t.tint*fv,t.tint*fv);TMK.setColorAt(tn,_c);_c.setHex(leafCol(t)).multiplyScalar(t.tint*fv);TMC.setColorAt(tn,_c);tn++}
@@ -3439,7 +3472,8 @@ window.addEventListener('pagehide',()=>saveGame());document.addEventListener('vi
 // gives a block of text that can be baked into MODEL_DATA so they ship with the game.
 let wsOn=false,galleryOn=false;
 const WS={multi:new Set(),addMode:false,scene:null,group:null,key:null,parts:[],sel:-1,undo:[],lastPush:0,yaw:.6,pitch:.42,dist:4,ty:.5,tribe:0,ref:true,refMesh:null,box:null,drag:null,pts:new Map(),dirty:new Set()};
-function wsLabel(k){const n=k.slice(2);if(k==='b:hedgelink')return 'Blackthorn Hedge (join)';return k[0]==='u'?(UT[n]?UT[n].label:n):(BT[n]?BT[n].label:n)}
+const ANIM_L={goat:'Black goat',chicken:'Chicken',rabbit:'Rabbit'};
+function wsLabel(k){const n=k.slice(2);if(k==='b:hedgelink')return 'Blackthorn Hedge (join)';if(k==='b:hutch')return 'Rabbit hutch';if(k[0]==='u'&&ANIM_L[n])return ANIM_L[n];return k[0]==='u'?(UT[n]?UT[n].label:n):(BT[n]?BT[n].label:n)}
 function wsKeys(){return Object.keys(ORIG_UMOD).filter(k=>k!=='ghost').map(k=>'u:'+k).concat(Object.keys(ORIG_BMOD).map(k=>'b:'+k))}
 function wsOrigParts(k){const n=k.slice(2);return captureDef(k[0]==='u'?ORIG_UMOD[n]:ORIG_BMOD[n])}
 function wsStore(){let loc={};try{loc=JSON.parse(localStorage.getItem(MODEL_KEY))||{}}catch(e){}return loc}
@@ -3467,7 +3501,7 @@ function wsOpen(){if(!WS.scene){const S=new C.Scene();S.background=new C.Color(0
     const grid=new C.GridHelper(12,12,0x5a4a35,0x3a2f24);S.add(grid);const disc=new C.Mesh(new C.CircleGeometry(7,40),new C.MeshLambertMaterial({color:0x221b14}));disc.rotation.x=-Math.PI/2;disc.position.y=-.01;S.add(disc);
     const rd=ORIG_UMOD.brave(),rg=new C.Group();rg.add(new C.Mesh(merge(rd.t),new C.MeshLambertMaterial({color:0x8a7a62,flatShading:true})));rg.add(new C.Mesh(merge(rd.f),matF));WS.refMesh=rg;S.add(rg);WS.scene=S}
   wsOn=true;inMenu=false;running=false;$('menu').hidden=true;for(const id of['top','mini','side','dock'])$(id).hidden=true;$('ws').hidden=false;
-  const sel=$('wsModel');sel.innerHTML='<optgroup label="People">'+wsKeys().filter(k=>k[0]==='u').map(k=>`<option value="${k}">${wsLabel(k)}</option>`).join('')+'</optgroup><optgroup label="Buildings">'+wsKeys().filter(k=>k[0]==='b').map(k=>`<option value="${k}">${wsLabel(k)}</option>`).join('')+'</optgroup>';
+  const sel=$('wsModel');sel.innerHTML='<optgroup label="People">'+wsKeys().filter(k=>k[0]==='u'&&!ANIM_L[k.slice(2)]).map(k=>`<option value="${k}">${wsLabel(k)}</option>`).join('')+'</optgroup><optgroup label="Animals">'+wsKeys().filter(k=>(k[0]==='u'&&ANIM_L[k.slice(2)])||k==='b:hutch').map(k=>`<option value="${k}">${wsLabel(k)}</option>`).join('')+'</optgroup><optgroup label="Buildings">'+wsKeys().filter(k=>k[0]==='b').map(k=>`<option value="${k}">${wsLabel(k)}</option>`).join('')+'</optgroup>';
   $('wsTribe').innerHTML=TRIBES.slice(0,4).map((t,i)=>`<button data-i="${i}" title="${t.name}" style="background:${t.css}" class="${i===WS.tribe?'on':''}"></button>`).join('');
   sel.value=WS.key||'u:brave';camera.near=.05;wsLoad(sel.value);wsStatus();resize();wsView()}
 function wsClose(){wsOn=false;$('ws').hidden=true;$('wsIO').hidden=true;camera.near=.5;camera.clearViewOffset();camera.updateProjectionMatrix();
@@ -3668,6 +3702,6 @@ document.querySelectorAll('.filmBox').forEach(box=>{box.addEventListener('click'
   box.addEventListener('input',e=>{const r=e.target.closest('input[data-fk]');if(!r)return;film[r.dataset.fk]=+r.value;filmSave();filmUI()})});
 filmUI();
 resize();buildWorld();showContinue();requestAnimationFrame(frame);
-window.__ws={get HUT_TOP(){return HUT_TOP},get wind(){return wind},get windOn(){return windOn},get lastFight(){return lastFight},windTick,get wildFl(){return wildFl},get season(){return season},endGame,destroyBld,crown,villagerCount,tokGet,keepsake,useKeepsake,walkReach,postAt,setSel,get banners(){return banners},get sel(){return sel},get world(){return world},light,memorial,get stats(){return stats},get cam(){return cam},get WS(){return WS},wsOpen,wsClose,captureDef,defFromData,merge,ORIG_UMOD,ORIG_BMOD,get UM(){return UM},get BM(){return BM},get wear(){return wear},get buntings(){return buntings},get patches(){return patches},get wells(){return wells},get units(){return units},get tribes(){return tribes},get blds(){return blds},sim,beginGame,get gt(){return gt},castSpell,tryCast,saveGame,loadGame,setSel,command,showLevel,SCEN,field,get walkA(){return walk},hAt,get water(){return water},findSpot,get allow(){return allowSets},get pass(){return pass},get swamps(){return swamps},get debris(){return debris},queenValue,invokeArma,startRitual,sendVehicle,get wildId(){return wildId},get armageddon(){return armageddon},placeBuilding,validSpot,orderMove,spawnUnit,command,get water(){return water},findSpot};
+window.__ws={get stock(){return stock},get hutches(){return hutches},get HUT_TOP(){return HUT_TOP},get wind(){return wind},get windOn(){return windOn},get lastFight(){return lastFight},windTick,get wildFl(){return wildFl},get season(){return season},endGame,destroyBld,crown,villagerCount,tokGet,keepsake,useKeepsake,walkReach,postAt,setSel,get banners(){return banners},get sel(){return sel},get world(){return world},light,memorial,get stats(){return stats},get cam(){return cam},get WS(){return WS},wsOpen,wsClose,captureDef,defFromData,merge,ORIG_UMOD,ORIG_BMOD,get UM(){return UM},get BM(){return BM},get wear(){return wear},get buntings(){return buntings},get patches(){return patches},get wells(){return wells},get units(){return units},get tribes(){return tribes},get blds(){return blds},sim,beginGame,get gt(){return gt},castSpell,tryCast,saveGame,loadGame,setSel,command,showLevel,SCEN,field,get walkA(){return walk},hAt,get water(){return water},findSpot,get allow(){return allowSets},get pass(){return pass},get swamps(){return swamps},get debris(){return debris},queenValue,invokeArma,startRitual,sendVehicle,get wildId(){return wildId},get armageddon(){return armageddon},placeBuilding,validSpot,orderMove,spawnUnit,command,get water(){return water},findSpot};
 })();
 </script>

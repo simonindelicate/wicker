@@ -24,7 +24,9 @@ A place to keep design ideas between sessions. Nothing here is built yet. Each e
 - How big should the palette be?
 - Is Extreme available in the new mode as well?
 
-## Livestock (Decided)
+## Livestock (Decided; cosmetic version built in v126, test mode only)
+
+- **Built so far.** Each settled cluster (wherever a well appears) gets a black goat, three to five chickens and a rabbit hutch with a run holding two or three rabbits. Goat and chickens wander around the well; rabbits stay in their run. Visible only while test mode is ticked. The models are in the workshop under Animals.
 
 - **What appears.** A black goat and a few chickens appear procedurally as a village grows. They bring villages to life, as the flowers and bunting did.
 - **Offering animals.** Animals can be given to the wicker in place of villagers. They yield less but add no dread, which gives a gentler path that spares morale.
