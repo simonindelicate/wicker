@@ -1857,6 +1857,13 @@ function aiFaith(T){const S=T.stats,ai=T.ai;if(armageddon)return;
   const caps=captivesOf(T.id);
   if(caps>0){const tg=god||wm||altar;if(tg){const room=tg.bt==='altar'?(tg.cq>0?0:1):BT[tg.bt].holdN-tg.inside.length-tg.cq-tg.sq;if(room>0)tg.cq+=Math.min(room,caps)}}
   const want=settings.diff==='hard'||settings.diff==='extreme'?700:settings.diff==='normal'?450:300;
+  if(stockOn&&gt>(ai.aniT||0)){ai.aniT=gt+6+R()*6;const small=()=>{const r=aniAvail(T.id,'rabbit').length,c=aniAvail(T.id,'chicken').length;return r||c?(r>=c?'rabbit':'chicken'):null},beasts=T.name==='Ash'?1:.6;
+    // small stock goes to the altar before a villager does, and into a wicker figure before villagers are walked in
+    if(altar&&T.mana<want+150&&!(altar.aq>0)&&R()<beasts){const k=small();if(k)sendAnimal(altar,k)}
+    const fig=god||wm;if(fig&&T.dread<20){let room=BT[fig.bt].holdN-fig.inside.length-fig.cq-fig.sq-(fig.aq||0),n=0;
+      while(room>0&&n<3){const k=small();if(!k||!sendAnimal(fig,k))break;room--;n++}
+      // a goat is kept for Black Phillip or a familiar unless the herd is large, or the tribe has neither spell
+      const goats=aniAvail(T.id,'goat').length,keep=aiPalOK(T,'phillip')||aiPalOK(T,'familiar')?3:1;if(room>0&&goats>keep&&R()<.3)sendAnimal(fig,'goat')}}
   if(altar&&T.mana<want&&T.dread<25&&S.braves>(ai.treeStarved?8:12)&&!altar.sq)altar.sq=1;
   if(wm&&T.dread<15&&S.braves>24&&wm.inside.length+wm.sq+wm.cq<5&&R()<.25)wm.sq=5-wm.inside.length-wm.cq;
   if(god&&T.dread<8&&S.braves>40&&god.inside.length+god.sq+god.cq<12&&R()<.15)god.sq=12-god.inside.length-god.cq}
