@@ -101,6 +101,7 @@ Tokens are earned only in live play: never in "Watch the tribes fight", and neve
 | `d_skytomb` |  | Win Fire from the Sky from inside a hollow hill |  |
 | `d_threefolds` |  | Have three Thrall Folds full at once |  |
 | `d_threefires` |  | Have three wicker men burning close together at once |  |
+| `d_phillip` |  | Black Phillip survives his whole rampage (Grimoire) |  |
 
 ## Curiosities
 
