@@ -79,6 +79,27 @@ Charms are positive spells, to sit alongside the curses.
 - **The Witch Trial (Candidate).** Your Osses capture a rival Cunning Woman and bring her to your altar. She's burned, and you gain her most powerful spell for the rest of the game.
 - **The Willing Sacrifice (Candidate).** From *The Wicker Man*. An outsider (a stranger, a constable, a fool) occasionally wanders onto the map. He's worth a great deal of mana, but only if he's lured, not captured, and every tribe competes for him.
 
+## Quality of life: late-game automation
+
+The problem: late in a game you forget to train Osses, and sending them out after broken rivals, deserters and wild men becomes a chore.
+
+- **Training menu (Liked).** A Train tab, like the Tribe tab. It has one row per unit type that you have a working building for. Each row shows how many you have, how many are queued and the mana cost, with buttons for one and for five.
+  - Queued training goes to whichever building of that type is least busy, so you don't need to select buildings.
+  - **Keep N (Candidate).** A standing order on each row: "keep 4 Osses". Training queues automatically whenever the count drops below N and you have mana above a small reserve. Combined with roaming, this handles the late-game Oss cycle entirely.
+- **Roaming Osses (Liked).** Osses idle at home go out on their own and capture without being told. They respond to:
+  - wild men nearby;
+  - a rival tribe breaking (its stragglers at the stone circle);
+  - deserters fleeing a village;
+  - captives freed when a fold falls;
+  - sleepers from Briar Sleep, and stragglers from Keening Wail.
+
+  They should avoid targets with enemy fighters close by, and come home when their target is gone. The AI already has Oss-hunt logic (its `ossHunt` behaviour) that this could share.
+- **Default or command? (Open.)** My suggestion is a **Roam** toggle on the Oss House, in the same spirit as the Post command for guards. It covers every Oss from that house plus idle Osses at home.
+  - Making roaming the default would send Osses into danger early in a game, where you want them under control.
+  - A toggle keeps that control, but once it's set you never need to think about it again.
+  - An alternative is for it to switch on by itself once a rival breaks, since that's the moment the chore begins.
+- **Unlock or always available? (Open.)** These are quality-of-life features rather than power, so they could be available from the start of the campaign, or at least from the level that introduces Osses, instead of being gated behind level 20.
+
 ## Other post-campaign directions
 
 - **Multiplayer (Candidate).**
