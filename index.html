@@ -230,10 +230,12 @@ details.help summary{cursor:pointer;color:var(--text);font:14px var(--f-display)
       <button data-tab="spells" class="on" role="tab">Spells</button>
       <button data-tab="build" role="tab">Build</button>
       <button data-tab="tribe" role="tab">Tribe</button>
+      <button data-tab="train" role="tab">Train</button>
     </div>
     <div id="pSpells" class="row"></div>
     <div id="pBuild" class="row" hidden></div>
     <div id="pTribe" class="row" hidden></div>
+    <div id="pTrain" class="row" hidden></div>
   </footer>
 
   <div id="menu" class="scrim">
@@ -1595,7 +1597,7 @@ const target=Math.floor(S.pop*(ai.milR+(T.mana>1500?.15:0)));if(armyN+S.queued>=
   const w=ai.queenHunt?{camp:.35,range:.2,osshouse:.45,balloon:.05}:ai.airRaid?{camp:.35,range:.15,osshouse:.1,balloon:.4}:(TRIBES[T.id].pers||{}).train||{camp:.4,range:.3,osshouse:.22,balloon:.1};let tot=0;for(const b of opts)tot+=w[b.bt];let r=R()*tot,pick=opts[0];for(const b of opts){r-=w[b.bt];if(r<=0){pick=b;break}}
   if(pick.bt==='balloon'&&ai.balCap!=null){let n=0;for(const u of units)if(u.alive&&u.tribe===T.id&&u.type==='balloon')n++;for(const b of blds)if(b.alive&&b.tribe===T.id&&b.bt==='balloon')n+=b.q;if(n>=ai.balCap)return}
   const cost=BT[pick.bt].mana;if(T.mana>=cost+ai.res){T.mana-=cost;pick.q++}}
-function orderUnit(u,x,z,am,fx,fz){if(u.type==='oss'){u.rcx=wrap(x);u.rcz=wrap(z)}u.st=am?'amove':'move';setTarget(u,x,z,fx,fz);u.order=am?'amove':null;u.otx=u.tx;u.otz=u.tz;u.ofx=u.fx;u.ofz=u.fz;u.gx=u.tx;u.gz=u.tz;u.tgt=null;u.scan=0}
+function orderUnit(u,x,z,am,fx,fz){u.auto=false;if(u.type==='oss'){u.rcx=wrap(x);u.rcz=wrap(z)}u.st=am?'amove':'move';setTarget(u,x,z,fx,fz);u.order=am?'amove':null;u.otx=u.tx;u.otz=u.tz;u.ofx=u.fx;u.ofz=u.fz;u.gx=u.tx;u.gz=u.tz;u.tgt=null;u.scan=0}
 function aiAttack(T,army){const ai=T.ai,base=ai.base;const foes=tribes.filter(o=>o.alive&&o.id!==T.id&&!o.wild);if(!foes.length)return;
   const others=watching?foes:foes.filter(o=>o.id!==0);let pick=(!watching&&tribes[0].alive&&(R()<ai.D.pTarget||!others.length))?tribes[0]:others[(R()*others.length)|0];
   if(settings.diff==='hard'||settings.diff==='extreme'||watching){const avg=foes.reduce((a,o)=>a+o.stats.pop,0)/foes.length;let tot=0;const gr=(TRIBES[T.id].pers||{}).grudge||{};const w=foes.map(o=>{let x=1;if(o.stats.pop>avg*1.3)x+=1.5;x*=gr[o.name]||1;if(tribes.some(t=>t.ai&&t!==T&&t.ai.wave&&t.ai.wave.tgt===o.id))x*=.4;tot+=x;return x});let r=R()*tot;pick=foes[0];for(let i=0;i<foes.length;i++){r-=w[i];if(r<=0){pick=foes[i];break}}}
@@ -1730,7 +1732,7 @@ function sim(dt){gt+=dt;
   statT-=dt;if(statT<=0){statT=.5;computeStats()}
   hazT-=dt;if(hazT<=0){hazT=.5;hazardTick()}
   decorTick(dt);
-  secT-=dt;if(secT<=0){secT=1;for(const T of tribes){if(!T.alive||T.wild)continue;tribeUpkeep(T);if(T.ai)aiThink(T)}checkEnd();regrow();wildTick()}
+  secT-=dt;if(secT<=0){secT=1;for(const T of tribes){if(!T.alive||T.wild)continue;tribeUpkeep(T);if(T.ai)aiThink(T);else if(T.id===0&&!watching)playerAuto(T)}checkEnd();regrow();wildTick()}
   ferryTick(dt);
   fogT-=dt;if(fogT<=0){fogT=.25;updFog()}
   cleanT-=dt;if(cleanT<=0){cleanT=2;units=units.filter(u=>u.alive);for(const b of blds)if(!b.alive)bById.delete(b.id);blds=blds.filter(b=>b.alive);if(trees.length>treeCap*1.6)trees=trees.filter(t=>t.alive)}}
@@ -3094,8 +3096,8 @@ function unplace(){placing=null;hedgeStart=null;hint(null)}
 function hint(t,go){$('hint').hidden=!t;$('hintGo').hidden=!go;if(t)$('hintT').textContent=t}
 $('hintGo').addEventListener('click',()=>{if(armed==='arma'){invokeArma(0)}disarm()});
 $('hintX').addEventListener('click',()=>{disarm();unplace()});
-let tab='spells';const tabEls={spells:$('pSpells'),build:$('pBuild'),tribe:$('pTribe')};
-function setTab(t){tab=t;for(const k in tabEls)tabEls[k].hidden=k!==t;document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.tab===t));if(t==='tribe')renderTribe(true)}
+let tab='spells';const tabEls={spells:$('pSpells'),build:$('pBuild'),tribe:$('pTribe'),train:$('pTrain')};
+function setTab(t){tab=t;for(const k in tabEls)tabEls[k].hidden=k!==t;document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.tab===t));if(t==='tribe')renderTribe(true);if(t==='train')renderTrain(true)}
 $('tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(b)setTab(b.dataset.tab)});
 function updTiles(){const T=tribes[0];if(!T)return;const att=T.attainUntil>gt;for(const t of spTiles){const s=SPK[t.dataset.k],cost=s.k==='arma'?MANA_MAX:spellCost(T,s.k);t.classList.toggle('poor',T.mana<cost);if(s.k!=='arma'){const ce=t.querySelector('.cost'),txt=String(cost);if(ce.textContent!==txt)ce.textContent=txt}t.classList.toggle('armed',armed===s.k);const cd=Math.max(0,((T.cd[s.k]||0)-gt)/s.cd);t.lastChild.style.height=(cd*100)+'%'}
   for(const t of bTiles)t.classList.toggle('poor',T.wood<BT[t.dataset.b].wood)}
@@ -3103,6 +3105,39 @@ let dockDirty=true,lastTribeHTML='';
 function plural(n,t){return n+' '+(n===1?UT[t].label.toLowerCase():UT[t].pl)}
 function selSummary(){if(!sel.length)return 'Nothing selected';if(sel[0].bt){const b=sel[0];return `<b>${BT[b.bt].label}</b>`+(b.tribe!==0&&b.tribe!==wildId?' (enemy)':'')}
   const c={};for(const u of sel)c[u.type]=(c[u.type]||0)+1;return Object.keys(c).map(t=>`<b>${plural(c[t],t)}</b>`).join(' · ')}
+// ---- Train tab, standing orders and roaming osses (player only) ----
+const TRAIN_BT=['camp','range','osshouse','balloon'],KEEP_STEPS=[0,2,4,6,8,10,15,20],KEEP_RES=100;
+function trainBlds(bt){return blds.filter(b=>b.alive&&b.done&&b.tribe===0&&b.bt===bt)}
+function queueType(T,bt,n){const D=BT[bt];let k=0;for(;k<n;k++){const bs=trainBlds(bt);if(!bs.length||T.mana<D.mana)break;bs.sort((a,b)=>a.q-b.q);T.mana-=D.mana;bs[0].q++}dockDirty=true;return k}
+function ownCount(ty){let n=0;for(const u of units)if(u.alive&&u.tribe===0&&u.type===ty)n++;return n}
+let lastTrainHTML='';
+function renderTrain(force){const T=tribes[0];if(!T)return;T.keep=T.keep||{};let h='';
+  for(const bt of TRAIN_BT){if(!allowB(bt))continue;const bs=trainBlds(bt);if(!bs.length)continue;const D=BT[bt],ty=D.train,have=ownCount(ty),q=bs.reduce((a,b)=>a+b.q,0),kp=T.keep[bt]||0;
+    h+=`<div class="card"><b>${UT[ty].pl[0].toUpperCase()+UT[ty].pl.slice(1)}</b><span>${have} now${q?' · '+q+' queued':''}${kp?' · keeping '+kp:''}</span></div>`;
+    h+=`<button class="qs go" data-tr="one:${bt}" ${T.mana<D.mana||armageddon?'disabled':''}><span>${D.mana} mana</span><b>Train one</b></button><button class="qs" data-tr="five:${bt}" ${T.mana<D.mana||armageddon?'disabled':''}><span>${D.mana*5} mana</span><b>Train five</b></button>`;
+    h+=`<button class="qs${kp?' go':''}" data-tr="keep:${bt}"><span>${kp?'Tap to raise; tops up while mana allows':'Off · tap to keep a number ready'}</span><b>Keep ${kp||'—'}</b></button>`;
+    if(bt==='osshouse')h+=`<button class="qs${T.ossRoam?' go':''}" data-tr="roam:${bt}"><span>${T.ossRoam?'On: idle osses hunt by themselves':'Off: osses wait for orders'}</span><b>Roam</b></button>`}
+  if(!h)h='<div class="card"><b>Nothing to train yet</b><span>Build a Warrior Camp, Archery Range, Oss House or Balloon Works</span></div>';
+  if(force||h!==lastTrainHTML){$('pTrain').innerHTML=h;lastTrainHTML=h}}
+$('pTrain').addEventListener('click',e=>{const t=e.target.closest('[data-tr]');if(!t||t.disabled)return;audio();sfx('select',.6);const T=tribes[0];T.keep=T.keep||{};const [a,bt]=t.dataset.tr.split(':'),D=BT[bt];
+  if(a==='one'||a==='five'){const n=queueType(T,bt,a==='one'?1:5);toast(n?`${n} ${n===1?UT[D.train].label.toLowerCase():UT[D.train].pl} queued.`:'Not enough mana')}
+  else if(a==='keep'){const i=KEEP_STEPS.indexOf(T.keep[bt]||0);T.keep[bt]=KEEP_STEPS[(i+1)%KEEP_STEPS.length];const k=T.keep[bt];toast(k?`Keeping ${k} ${UT[D.train].pl} ready. More are trained whenever you fall short and have mana to spare.`:`No longer keeping ${UT[D.train].pl} topped up.`)}
+  else if(a==='roam'){T.ossRoam=!T.ossRoam;toast(T.ossRoam?'Idle osses will go out by themselves after wild men, deserters and broken tribes.':'Osses will wait for your orders.')}
+  renderTrain(true)});
+let autoT=0;
+function playerAuto(T){if(armageddon)return;T.keep=T.keep||{};
+  for(const bt of TRAIN_BT){const k=T.keep[bt]||0;if(!k||!allowB(bt))continue;const D=BT[bt],bs=trainBlds(bt);if(!bs.length)continue;const have=ownCount(D.train)+bs.reduce((a,b)=>a+b.q,0);if(have<k&&T.mana>=D.mana+KEEP_RES)queueType(T,bt,1)}
+  if(!T.ossRoam||(autoT=(autoT+1)%2))return;const home=blds.find(b=>b.alive&&b.bt==='reinc'&&b.tribe===0);if(!home)return;
+  const os=units.filter(u=>u.alive&&u.tribe===0&&u.type==='oss'&&!u.inV&&!u.air&&!u.carry&&!u.post&&(u.st==='idle'||u.st==='roam')&&(u.auto||d2(u.x,u.z,home.x,home.z)<22*22));if(!os.length)return;
+  const f=field(home.x,home.z,false),taken=new Set();for(const u of units)if(u.alive&&u.tribe===0&&u.type==='oss'&&u.st==='preach'&&u.tgt)taken.add(u.tgt);
+  const guarded=o=>units.some(e=>e.alive&&e.tribe!==0&&e.tribe!==wildId&&e.tribe!==o.tribe&&MIL[e.type]&&d2(e.x,e.z,o.x,o.z)<9*9)||units.some(e=>e.alive&&e.tribe===o.tribe&&o.tribe!==wildId&&MIL[e.type]&&d2(e.x,e.z,o.x,o.z)<9*9);
+  const prey=[];for(const o of units){if(!o.alive||o.inV||o.air||o.carry||taken.has(o)||o.tribe===0)continue;const Tt=tribes[o.tribe];if(!Tt)continue;
+    const wild=o.tribe===wildId&&o.type==='wild',broke=Tt.broken&&!Tt.wild&&(o.type==='brave'||o.type==='queen');if(!wild&&!broke)continue;
+    const d=d2(home.x,home.z,o.x,o.z);if(wild&&d>48*48)continue;if(f[cidx(o.x,o.z)]<0)continue;if(guarded(o))continue;prey.push(o)}
+  for(const u of os){if(u.auto&&u.st==='roam'&&findPreyNear(u))continue;let best=null,bd=1e18;for(const o of prey){if(o._claim===gt)continue;const d=d2(u.x,u.z,o.x,o.z);if(d<bd){bd=d;best=o}}
+    if(best){best._claim=gt;u.auto=true;u.rcx=best.x;u.rcz=best.z;u.st='roam';setTarget(u,best.x,best.z)}
+    else if(u.auto){u.auto=false;u.rcx=home.x;u.rcz=home.z;u.st='roam';setTarget(u,home.x+(R()-.5)*6,home.z+(R()-.5)*6)}}}
+function findPreyNear(u){const cx=u.rcx??u.gx,cz=u.rcz??u.gz;let hit=false;query(grid,cx,cz,TUNE.ossRoam,o=>{if(!hit&&o.alive&&o.tribe!==0&&!o.inV&&(o.tribe===wildId||(tribes[o.tribe]&&tribes[o.tribe].broken))&&o.type!=='shaman'&&!UT[o.type].veh)hit=true});return hit}
 function myUnits(pred){return units.filter(u=>u.alive&&!u.inV&&u.tribe===0&&pred(u))}
 function renderTribe(force){const T=tribes[0];if(!T)return;let h='';const b=sel.length===1&&sel[0].bt&&(sel[0].tribe===0||sel[0].tribe===wildId)?sel[0]:null;
   if(b&&b.tribe===wildId){const D=BT[b.bt];if(b.bt==='barrow'){const busy=b.rite&&b.rite.tribe!==0,can=T.shaman&&!T.tomb&&T.stats.pop>20&&T.mana>=TUNE.entombMana&&!busy;h+=`<div class="card"><b>${D.label}</b><span>${busy?'Another Cunning Woman is at the hill':b.rite?'Your rite is under way':'Seal your Cunning Woman inside with twenty followers'}</span></div><button class="qs go" data-act="rite" ${can&&!b.rite?'':'disabled'}><span>She becomes a god, for good</span><b>Begin the entombment</b></button>`}
@@ -3110,6 +3145,7 @@ function renderTribe(force){const T=tribes[0];if(!T)return;let h='';const b=sel.
   if(b){const D=BT[b.bt];let st=b.done?(b.bt==='hut'?`${b.occ} of 5 villagers inside`:D.info):`Being built · ${Math.floor(b.prog*100)}%`;
     if(b.done&&D.train&&b.q>0)st=b.trainee?`Training ${UT[D.train].label.toLowerCase()} · ${Math.ceil(b.tt)}s · ${b.q} queued`:(b.held?`Waiting · your last ${TRAIN_KEEP} villagers will not be trained · ${b.q} queued`:`Waiting for a villager · ${b.q} queued`);
     h+=`<div class="card"><b>${D.label}</b><span>${st}</span></div>`;
+    if(b.done&&b.bt==='osshouse')h+=`<button class="qs${T.ossRoam?' go':''}" data-act="roam"><span>${T.ossRoam?'On: idle osses hunt by themselves':'Off: osses wait for orders'}</span><b>Roam</b></button>`;
     if(b.done&&D.train)h+=`<button class="qs go" data-act="train" ${T.mana<D.mana?'disabled':''}><span>${D.mana} mana</span><b>Train ${UT[D.train].label.toLowerCase()}</b></button><button class="qs" data-act="cancel" ${b.q-(b.trainee?1:0)<=0?'disabled':''}><span>Refund mana</span><b>Cancel one</b></button>`;
     const caps=captivesOf(0);
     if(b.done&&D.site){const y=YIELD[D.site];let st2;
@@ -3140,6 +3176,7 @@ $('pTribe').addEventListener('click',e=>{const t=e.target.closest('[data-act]');
   pulseAct={a:t.dataset.act,t:performance.now()};t.classList.remove('pulse');void t.offsetWidth;t.classList.add('pulse');sfx('select',.6);const nm=b&&b.bt?BT[b.bt].label.toLowerCase():'';
   const pick=pred=>{const out=myUnits(pred);setSel(out);if(out.length)centerOn(out);sfx('select',.4)};
   if(a==='train'){const D=BT[b.bt];if(T.mana<D.mana){toast('Not enough mana');return}T.mana-=D.mana;b.q++;toast(`${UT[D.train].label} queued. ${b.q} in line; a villager will walk in to be trained.`)}
+  else if(a==='roam'){T.ossRoam=!T.ossRoam;toast(T.ossRoam?'Idle osses will go out by themselves after wild men, deserters and broken tribes.':'Osses will wait for your orders.');renderTribe(true)}
   else if(a==='cancel'){if(b.q-(b.trainee?1:0)>0){b.q--;T.mana+=BT[b.bt].mana;toast(`One cancelled. ${BT[b.bt].mana} mana returned.`)}}
   else if(a==='sac'){b.sq++;toast(`A villager will walk to the ${nm}. ${b.sq+b.cq} offering${b.sq+b.cq===1?'':'s'} on the way.`)}
   else if(a==='cap'){if(captivesOf(0)>b.cq){b.cq++;toast(`A captive will be led from the fold to the ${nm}.`)}}
@@ -3179,7 +3216,7 @@ function updHUD(){const T=tribes[0];if(!T)return;$('rMana').textContent=Math.flo
   $('rDreadBar').style.width=Math.min(100,T.dread||0)+'%';$('rCap').textContent=T.stats.caps||0;
   let ch='';{const SC=scen();if(SC){const g=SC.goal;let t=`Level ${settings.campaign+1}`;if(g.type==='survive'){const left=Math.max(0,g.n-gt);t+=` · Hold on ${Math.floor(left/60)}:${String(Math.floor(left%60)).padStart(2,'0')}`}else if(g.type==='captives')t+=` · Captives ${T.stats.caps||0}/${g.n}`;else if(g.type==='queen')t+=' · Offer a May Queen';else if(g.type==='mana')t+=` · Mana ${Math.floor(T.mana)}/${g.n}`;else t+=' · Conquer';ch+=`<span class="chip">${t}</span>`}}if(T.tomb)ch+='<span class="chip att">Entombed</span>';if((T.dread||0)>40)ch+='<span class="chip ar">Your people are fleeing</span>';if(T.frenzyUntil>gt&&!over&&!celebrating)ch+=`<span class="chip fr">Frenzy ${Math.ceil(T.frenzyUntil-gt)}s</span>`;if(armageddon)ch+='<span class="chip ar">All-against-all</span>';if($('chips').innerHTML!==ch)$('chips').innerHTML=ch;$('rWood').textContent=Math.floor(T.wood);$('rPop').textContent=T.stats.pop+' / '+T.stats.cap;
   $('foes').innerHTML=tribes.slice(watching?0:1).filter(o=>!o.wild).map(o=>watching?`<button class="foe${o.alive?'':' dead'}" data-t="${o.id}"><i style="background:${o.css}"></i>${o.name} ${o.alive?o.stats.pop+' · '+Math.floor(o.mana)+' mana'+(o.tomb?' · entombed':''):''}</button>`:`<button class="foe${o.alive?'':' dead'}${o.broken?' broken':''}" data-t="${o.id}" title="Tap to find the ${o.name} folk"><i style="background:${o.css}"></i>${o.alive?o.stats.pop:o.name}</button>`).join('');
-  updTiles();$('selT').innerHTML=selSummary();$('selX').hidden=!sel.length;$('selPost').hidden=!sel.some(u=>!u.bt&&u.tribe===0&&(u.type==='warrior'||u.type==='archer'));if(tab==='tribe')renderTribe(dockDirty);dockDirty=false}
+  updTiles();$('selT').innerHTML=selSummary();$('selX').hidden=!sel.length;$('selPost').hidden=!sel.some(u=>!u.bt&&u.tribe===0&&(u.type==='warrior'||u.type==='archer'));if(tab==='tribe')renderTribe(dockDirty);if(tab==='train')renderTrain(dockDirty);dockDirty=false}
 
 // menu
 function segs(id,key,num){const el=$(id);el.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;el.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));settings[key]=num?+b.dataset.v:b.dataset.v;buildWorld()})}
