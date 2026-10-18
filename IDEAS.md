@@ -42,7 +42,12 @@ A place to keep design ideas between sessions. Nothing here is built yet. Each e
 5. **Extreme is available in the Grimoire.**
 6. **Finishing the challenge campaign** earns a token and unlocks **NG+**: the original campaign replayed with the Grimoire mechanic. NG+ is a victory lap: rivals stay classic.
 
-Draft season plan (level identities still to be agreed, intros the user's):
+**Built in v150**, ten seasons (titles and intros are placeholders):
+1. The Humbling: survive five minutes.
+2. The Herd (Black Phillip, Familiar), 3. May Eve (Beltane Fire, Sword Dance; grow to 70 people), 4. The Fair (Glamour, Pricking), 5. The Sickness (Murrain, Cradle Blight; a far stronger rival), 6. Harvest (Changeling), 7. The Long Nights (Keening Wail, Briar Sleep), 8. The Hunt (the Fetch; take a rival Cunning Woman), 9. The Flood (Seas of Blood; you start on a raised mountain, the rivals low).
+10. The Answer: the Humbling's rivals, winnable, every spell yours.
+
+Earlier draft season plan:
 
 - Spring: the herd (livestock, Black Phillip, Familiar); May Eve (Beltane Fire, Sword Dance).
 - Summer: the fair (Glamour, Pricking, against a rival that pricks); the sickness (Murrain, Cradle Blight).
