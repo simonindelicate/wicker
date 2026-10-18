@@ -65,10 +65,7 @@ A place to keep design ideas between sessions. Nothing here is built yet. Each e
   - It should be limited to once per game, for everyone.
   - Rival AIs must move uphill during the countdown.
   - **Open:** is the rise permanent, or does it recede after a few minutes?
-- **The familiar (Liked; reframed).** It's now seen as the counterpart to Black Phillip: a spell you can only cast on your own goat, which binds it to your Cunning Woman as her familiar. What the familiar does is still open:
-  - run the Pyewacket errand below, sneaking out to steal mana;
-  - guard her;
-  - sniff out changelings near your village.
+- **The familiar (Liked; reframed).** It's now seen as the counterpart to Black Phillip: a spell you can only cast on your own goat, which binds it to your Cunning Woman as her familiar. Decided: it steals mana from rival altars (the Pyewacket errand below) and lifts the fog wherever it walks.
 - **Pyewacket (earlier version of the familiar).** It summons a familiar, a hare or a black cat, named after the imps recorded by Matthew Hopkins (*Discovery of Witches*, 1647). It slips unseen into a rival village and drinks mana from their altar on every visit, until someone kills it. It slows the more it has drunk.
 - **The Devil's Skin (Candidate).** From *The Blood on Satan's Claw*. A curse that spreads by touch: the marked villagers pass it on, and anyone carrying it long enough turns wild. Need-fire cures it.
 - **The Poppet (Candidate).** A clay doll of a rival's Cunning Woman, placed in your village. While it stands, she takes damage from time to time. She has to find it and destroy it, so she's drawn into your territory.
