@@ -248,7 +248,7 @@ details.help summary{cursor:pointer;color:var(--text);font:14px var(--f-display)
           <fieldset><legend>Rival villages</legend><div class="seg" id="oEn"><button data-v="1">One</button><button data-v="2" class="on">Two</button><button data-v="3">Three</button></div></fieldset>
           <fieldset><legend>World</legend><div class="seg" id="oSt"><button data-v="islands" class="on">Archipelago</button><button data-v="continent">Continent</button><button data-v="highlands">Highlands</button></div></fieldset>
           <fieldset><legend>Rival skill</legend><div class="seg" id="oDf"><button data-v="easy">Easy</button><button data-v="normal" class="on">Normal</button><button data-v="hard">Hard</button><button data-v="extreme" id="oDfX" hidden>Extreme</button></div></fieldset>
-          <fieldset id="oModeF" hidden><legend>Spells</legend><div class="seg" id="oMode"><button data-v="classic" class="on">All</button><button data-v="grimoire">Grimoire<small class="segCap">test mode: choose eight</small></button></div></fieldset>
+          <fieldset id="oModeF" hidden><legend>Spells</legend><div class="seg" id="oMode"><button data-v="classic" class="on">All</button><button data-v="grimoire">Grimoire<small class="segCap">test mode: choose nine</small></button></div></fieldset>
           <fieldset><legend>Fog of war</legend><div class="seg" id="oFog"><button data-v="1" class="on">On</button><button data-v="0">Off</button></div></fieldset>
           <fieldset><legend>World seed</legend><div class="seedrow"><input id="oSeed" inputmode="numeric" aria-label="World seed"><button class="btn" id="oReroll">New world</button></div></fieldset>
           <fieldset class="filmBox"><legend>Film</legend><div class="seg"><button data-fl="0">Off</button><button data-fl="1">35mm<small class="segCap">higher performance devices</small></button></div><div class="filmS"><label class="fs"><span>Grain</span><input type="range" min="0" max="1" step="0.05" data-fk="grain"></label><label class="fs"><span>Dust and scratches</span><input type="range" min="0" max="1" step="0.05" data-fk="dust"></label><button class="tuneBtn" type="button">Advanced film grade settings</button></div></fieldset>
@@ -679,11 +679,11 @@ function scenSets(i){const b=new Set(['hut']),sp=new Set();let tomb=false;for(le
 const allowB=t=>!allowSets||(t==='tomb'?allowSets.tomb:allowSets.b.has(t));
 const allowS=k=>!allowSets||allowSets.s.has(k);
 // Grimoire mode (test mode for now): the player casts only the spells chosen before the game; rivals keep every spell. All-against-all is always to hand.
-const GRIM_N=8,GRIM_KEY='wicker-grimoire-v1';
+const GRIM_N=9,GRIM_KEY='wicker-grimoire-v1';
 const NEW_SP=['changeling','murrain','phillip','familiar','fetch','glamour','pricking','beltane','sworddance','blight','keening','briar'];
-// Grimoire: each rival tribe carries its own eight spells, which set its style
-const GRIM_PAL={Blood:['blast','lightning','fire','quake','whirl','volcano','ghost','fetch'],Forest:['blast','lightning','shield','glamour','hypno','swamp','familiar','changeling'],
-  Ash:['blast','lightning','swarm','angel','erode','murrain','phillip','familiar'],Ochre:['blast','lightning','pricking','shield','hypno','fire','changeling','fetch']};
+// Grimoire: each rival tribe carries its own nine spells, which set its style
+const GRIM_PAL={Blood:['blast','lightning','fire','quake','whirl','volcano','ghost','fetch','sworddance'],Forest:['blast','lightning','shield','glamour','hypno','swamp','familiar','changeling','beltane'],
+  Ash:['blast','lightning','swarm','angel','erode','murrain','phillip','familiar','blight'],Ochre:['blast','lightning','pricking','shield','hypno','fire','changeling','fetch','keening']};
 const grimOn=()=>settings.mode==='grimoire'&&settings.campaign==null&&devMode();
 const aiPalOK=(T,k)=>T.pal?T.pal.includes(k):!NEW_SP.includes(k);
 const palOK=k=>{const g=settings.mode==='grimoire'&&settings.campaign==null&&settings.palette;if(!g)return !NEW_SP.includes(k);return k==='arma'||settings.palette.includes(k)};
@@ -863,7 +863,7 @@ function swampKill(c){const g=hazGrp[c],sw=swamps[g];if(!sw)return;sw.kills++;if
   delete swamps[g];if(x0<1e9)recompute(x0,z0,x1,z1);if(sw.owner===0&&!watching)toast(`Your bog has drowned ${TUNE.swampLives} and drains away, sated.`)}
 function setHedge(b,on){const c=wi(b.cz0)*N+wi(b.cx0);hedgeA[c]=on?1:0;recompute(b.cx0,b.cz0,b.cx0,b.cz0)}
 // ---- village colour: worn paths and flowers (cosmetic only) ----
-const FLOWER_C=[0xd85a7a,0xe7c84a,0xf1ece0,0xd85a7a,0xe7c84a,0xf1ece0],FLAG_C=[0xb8322a,0xe0b440,0xeee6d2,0x35629e,0x4f7a38];let buntings=[],patches=[],wells=[],tombBeds=[],stock=[],hutches=[],stains=[],stockOn=false,fetches=[];
+const FLOWER_C=[0xd85a7a,0xe7c84a,0xf1ece0,0xd85a7a,0xe7c84a,0xf1ece0],FLAG_C=[0xb8322a,0xe0b440,0xeee6d2,0x35629e,0x4f7a38];let buntings=[],patches=[],wells=[],tombBeds=[],stock=[],hutches=[],stains=[],stockOn=false,fetches=[],pits=[];
 // the fixed places around a building where flowers grow, nearest the walls first; the door side of a hut is left clear
 const FSPOTS=new WeakMap(),_fq=new C.Quaternion(),_fe=new C.Euler();
 const PALE_C=[0xeee6d2,0xd8c9a8,0xb8322a,0x9a6a4a,0xe9ddc3];
@@ -1623,10 +1623,10 @@ function castSpell(ti,k,px,pz,cu){atk=ti;let sx=cu?cu.x:px,sz=cu?cu.z:pz,sy=cu?u
     for(const a of stock)if(a.fam&&a.tribe!==ti&&d2(px,pz,a.x,a.z)<36){a.fam.home=true;a.fam.revealed=gt+40;f++;if(a.tribe===0&&!watching)toast('Your familiar has been pricked and runs for home.')}
     if(ti===0)toast(f?`Pricking finds the Devil's mark on ${f} ${f===1?'thing':'things'}.`:'Pricking finds no mark here.');break}
   case 'beltane':{const T=tribes[ti];T.beltaneUntil=gt+60;
-    {const home=blds.find(b=>b.alive&&b.bt==='reinc'&&b.tribe===ti);if(home){let pit=null;for(let r=4;r<9&&!pit;r+=1)for(let k=0;k<12;k++){const a=k/12*TAU+r,x=wrap(home.x+Math.cos(a)*r),z=wrap(home.z+Math.sin(a)*r),c=cidx(x,z);if(pass[c]&&!bOcc[c]&&pass[cidx(x+2,z)]&&pass[cidx(x-2,z)]){pit={x,z};break}}
+    {const home=blds.find(b=>b.alive&&b.bt==='reinc'&&b.tribe===ti);if(home){let pit=null;const open=(x,z)=>{for(let dz=-3;dz<=3;dz++)for(let dx=-3;dx<=3;dx++){const c=cidx(x+dx,z+dz);if(!pass[c]||bOcc[c])return false}return !trees.some(t=>t.alive&&d2(t.x,t.z,x,z)<3.2*3.2)};for(let r=9;r<17&&!pit;r+=1)for(let k=0;k<16;k++){const a=k/16*TAU+r*.7,x=wrap(home.x+Math.cos(a)*r),z=wrap(home.z+Math.sin(a)*r);if(open(x,z)){pit={x,z,tribe:ti,end:gt+60};break}}if(pit)pits.push(pit);
       if(pit){const vs=units.filter(u=>u.alive&&u.tribe===ti&&u.type==='brave'&&!u.inV&&u.chg==null&&u.st!=='enter'&&u.st!=='build').sort((a,b)=>d2(a.x,a.z,pit.x,pit.z)-d2(b.x,b.z,pit.x,pit.z)).slice(0,14);
         vs.forEach((u,i)=>{u.bel={pit,stage:0,side:i%2?1:-1,t:gt+45};u.cmd=true;u.st='move';setTarget(u,pit.x-2*u.bel.side,pit.z+(R()-.5)*.6)});
-        effects.push({t:60,up(e,dt){e.t-=dt;const y=Math.max(0,hAt(pit.x,pit.z));for(let i=0;i<3;i++)PA.emit(pit.x+(R()-.5)*.7,y+.2,pit.z+(R()-.5)*.7,(R()-.5)*.3,1.6+R()*2,(R()-.5)*.3,.5+R()*.4,1,.5+R()*.3,.12,1,.6,-1);
+        effects.push({t:60,up(e,dt){e.t-=dt;const y=Math.max(0,hAt(pit.x,pit.z));if(R()<dt*16)PA.emit(pit.x+(R()-.5)*.3,y+.1,pit.z+(R()-.5)*.3,(R()-.5)*.1,.5+R()*.4,(R()-.5)*.1,.3+R()*.2,1,.5+R()*.3,.12,1,.15,-1);if(R()<dt*2)PN.emit(pit.x,y+.6,pit.z,(R()-.5)*.2,.6,(R()-.5)*.2,2.5,.25,.22,.2,.4,.7,-.05);if(e.t<=dt)pits.splice(pits.indexOf(pit),1);
           for(const u of vs){const B=u.bel;if(!u.alive||!B)continue;if(gt>B.t){u.bel=null;u.cmd=false;continue}
             if(B.stage===0&&d2(u.x,u.z,pit.x-2*B.side,pit.z)<1.2){B.stage=1;u.st='move';setTarget(u,pit.x+2.2*B.side,pit.z)}
             else if(B.stage===1&&d2(u.x,u.z,pit.x+2.2*B.side,pit.z)<1.2){B.stage=2;let h=null,hd=1e18;for(const b of blds)if(b.alive&&b.done&&b.tribe===ti&&b.bt==='hut'&&b.occ<5){const d=d2(u.x,u.z,b.x,b.z);if(d<hd){hd=d;h=b}}u.bel=null;u.cmd=false;if(h){u.st='enter';u.bld=h;u.purpose='house';setTarget(u,h.dx,h.dz)}else u.st='idle'}
@@ -1859,6 +1859,10 @@ function aiCast(T){const ai=T.ai,sh=casterOf(T);if(!sh||sh.sleep>gt||sh.hanging|
     if(ok('shield')&&en.length>=4){let own=0;query(grid,sh.x,sh.z,4.5,o=>{if(o.alive&&o.tribe===T.id&&MIL[o.type])own++});if(own>=4)opts.push(['shield',sh.x,sh.z,3])}
     if(ok('changeling')&&!units.some(u=>u.alive&&u.chg===T.id)){const v=en.find(o=>o.type==='brave'&&o.chg==null&&!o.inV);if(v)opts.push(['changeling',v.x,v.z,3])}}
   if(ok('glamour')&&en.length>=3&&!(sh.glam>gt))opts.push(['glamour',sh.x,sh.z,3]);
+  if(ok('beltane')&&!(T.beltaneUntil>gt)&&T.stats.pop<T.stats.cap*.6&&gt>(ai.belT||0)){opts.push(['beltane',sh.x,sh.z,3]);ai.belT=gt+150}
+  if(ok('sworddance')&&!(T.swordUntil>gt)&&blds.reduce((a,b)=>a+(b.alive&&b.tribe===T.id&&BT[b.bt].train?b.q:0),0)>=3)opts.push(['sworddance',sh.x,sh.z,3]);
+  if(ok('blight')&&gt>(ai.blT||0)){const hb=blds.find(b=>b.alive&&b.bt==='hut'&&b.tribe!==T.id&&tribes[b.tribe]&&!tribes[b.tribe].wild&&!(tribes[b.tribe].blightUntil>gt)&&d2(cx,cz,b.x,b.z)<14*14);if(hb){opts.push(['blight',hb.x,hb.z,3]);ai.blT=gt+90}}
+  if(ok('keening')&&gt>(ai.keenT||0)){const hb=blds.find(b=>b.alive&&b.bt==='hut'&&b.tribe!==T.id&&tribes[b.tribe]&&!tribes[b.tribe].wild&&d2(cx,cz,b.x,b.z)<50*50);if(hb){opts.push(['keening',hb.x,hb.z,3]);ai.keenT=gt+75}}
   // pricking needs a suspicion: a villager who will not go indoors, mana going missing from an altar, or a stranger in their own colours close to her
   if(ok('pricking')&&gt>(ai.prickT||0)&&T.susp&&gt-T.susp.t<30&&d2(cx,cz,T.susp.x,T.susp.z)<14*14){opts.push(['pricking',T.susp.x,T.susp.z,6]);ai.prickT=gt+({easy:120,normal:90,hard:60,extreme:30}[settings.diff]||90);T.susp=null}
   if(!sh.tomb){
@@ -2058,6 +2062,8 @@ const UMOD={
 UMOD.ghost=UMOD.warrior;
 UMOD.wild=()=>({t:[P(cyl(.1,.21,.4,5),WT,0,.2,0)],f:[P(new C.SphereGeometry(.11,6,5),0xb08868,0,.51,0),P(new C.SphereGeometry(.125,6,3,0,TAU,0,Math.PI/2),0x2a2018,0,.53,0),P(new C.ConeGeometry(.022,.24,4),BONE,.08,.7,0,0,0,-.5),P(new C.ConeGeometry(.022,.24,4),BONE,-.08,.7,0,0,0,.5)]});
 const BMOD={
+  firepit:()=>{const f=[P(cyl(.62,.66,.04,14),0x2a1a12,0,.02,0),P(cyl(.4,.45,.03,10),0x7a2a10,0,.05,0)];for(let i=0;i<11;i++){const a=i/11*TAU,r=.72+(i%3)*.03;f.push(P(new C.DodecahedronGeometry(.13+(i%4)*.02,0),i%2?0x8c877c:0x77736a,Math.cos(a)*r,.08,Math.sin(a)*r))}
+    f.push(P(cyl(.05,.06,.7,5),0x4a3322,-.12,.12,0,0,.5,Math.PI/2),P(cyl(.05,.06,.7,5),0x3e2b1c,.1,.15,.05,0,-.6,Math.PI/2),P(cyl(.045,.05,.6,5),0x523826,0,.2,-.08,0,1.4,Math.PI/2));return {t:[P(new C.BoxGeometry(.001,.001,.001),WT,0,.01,0)],f}},
   hutch:()=>{const W=0x7a5a38,D=0x5c4430,f=[P(new C.BoxGeometry(.06,.42,.06),D,-.5,.21,-.22),P(new C.BoxGeometry(.06,.42,.06),D,.5,.21,-.22),P(new C.BoxGeometry(.06,.42,.06),D,-.5,.21,.22),P(new C.BoxGeometry(.06,.42,.06),D,.5,.21,.22),
     P(new C.BoxGeometry(1.1,.42,.5),W,0,.63,0),P(new C.BoxGeometry(.5,.32,.02),0x2a241e,.22,.63,.26),P(new C.BoxGeometry(.4,.32,.02),0x6a4e32,-.27,.63,.26),P(new C.BoxGeometry(.3,.04,.32),D,.1,.2,.42,-.55),
     P(new C.BoxGeometry(.04,.28,.04),D,-.55,.14,1.15),P(new C.BoxGeometry(.04,.28,.04),D,.55,.14,1.15),P(new C.BoxGeometry(.04,.28,.04),D,-.55,.14,.3),P(new C.BoxGeometry(.04,.28,.04),D,.55,.14,.3),
@@ -3181,6 +3187,7 @@ function drawEntities(){
       const sy=Math.min(b.done?1:.12+.88*b.prog,o.done?1:.12+.88*o.prog),L=dx&&dz?Math.SQRT2:1,i=HL.n++;
       _p.set(rx,hAt(mx,mz)-r2*K,rz);_q.setFromAxisAngle(UP,Math.atan2(-dz,dx));_s.set(L,sy,1);_m.compose(_p,_q,_s);HL.t.setMatrixAt(i,_m);HL.f.setMatrixAt(i,_m);
       _c.copy(tribes[b.tribe].c);HL.t.setColorAt(i,_c);_c.setRGB(1,1,1);if(!b.done||!o.done)_c.setRGB(.85,.8,.7);if((b.tribe!==0&&!isVis(b.x,b.z))||b.hp<b.mhp*.5)_c.multiplyScalar(.6);HL.f.setColorAt(i,_c)}}}
+  {const M=BM.firepit;for(const q of pits){if(M.n>=M.cap)break;const rx=wd(q.x-cam.fx),rz=wd(q.z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2||!seenAt(q.x,q.z))continue;const i=M.n++,y=hAt(q.x,q.z)-r2*K;place(M.t,i,rx,y,rz,0,1);place(M.f,i,rx,y,rz,0,1);_c.setRGB(1,1,1);M.t.setColorAt(i,_c);M.f.setColorAt(i,_c)}}
   if(stockOn){const M=BM.hutch;for(const h of hutches){if(M.n>=M.cap)break;const rx=wd(h.x-cam.fx),rz=wd(h.z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2||!seenAt(h.x,h.z))continue;const i=M.n++,y=hAt(h.x,h.z)-r2*K,fv=fogOn?Math.max(.42,vis[cidx(h.x,h.z)]):1;
     place(M.t,i,rx,y,rz,h.yaw,1);place(M.f,i,rx,y,rz,h.yaw,1);const T=tribes[h.tribe];_c.copy(T&&T.roof?T.roof:WHITE_C).multiplyScalar(fv);M.t.setColorAt(i,_c);_c.setRGB(fv,fv,fv);M.f.setColorAt(i,_c)}}
   for(const k in BM){fin(BM[k].t,BM[k].n);fin(BM[k].f,BM[k].n)}
@@ -3572,7 +3579,7 @@ $('bStart').addEventListener('click',()=>{audio();if(settings.mode==='grimoire'&
 let grimSel=[];
 function openGrim(){try{grimSel=JSON.parse(localStorage.getItem(GRIM_KEY))||[]}catch(e){grimSel=[]}grimSel=grimSel.filter(k=>SPK[k]&&k!=='arma').slice(0,GRIM_N);$('menu').hidden=true;$('grim').hidden=false;drawGrim()}
 function drawGrim(){const full=grimSel.length>=GRIM_N;$('grimList').innerHTML=SP.filter(sp=>sp.k!=='arma').map(sp=>{const on=grimSel.includes(sp.k);return `<button class="lvl${on?' pick':''}" data-g="${sp.k}" ${!on&&full?'disabled':''}><b>${sp.n}</b><span>${sp.c} mana</span></button>`}).join('');
-  $('grimSub').textContent=`Choose ${GRIM_N} spells to carry into this game. All-against-all is always yours. Each rival carries its own eight: Blood for war, Forest for magic and defence, Ash for beasts and disease, Ochre a little of everything. ${grimSel.length} of ${GRIM_N} chosen.`;$('grimGo').disabled=grimSel.length!==GRIM_N}
+  $('grimSub').textContent=`Choose ${GRIM_N} spells to carry into this game. All-against-all is always yours. Each rival carries its own nine: Blood for war, Forest for magic and defence, Ash for beasts and disease, Ochre a little of everything. ${grimSel.length} of ${GRIM_N} chosen.`;$('grimGo').disabled=grimSel.length!==GRIM_N}
 $('grimList').addEventListener('click',e=>{const b=e.target.closest('[data-g]');if(!b||b.disabled)return;const k=b.dataset.g,i=grimSel.indexOf(k);if(i>=0)grimSel.splice(i,1);else if(grimSel.length<GRIM_N)grimSel.push(k);sfx('select',.4);drawGrim()});
 $('grimBack').addEventListener('click',()=>{$('grim').hidden=true;$('menu').hidden=false});
 $('grimGo').addEventListener('click',()=>{if(grimSel.length!==GRIM_N)return;audio();try{localStorage.setItem(GRIM_KEY,JSON.stringify(grimSel))}catch(e){}settings.palette=grimSel.slice();$('grim').hidden=true;beginGame()});
@@ -3785,7 +3792,7 @@ window.addEventListener('pagehide',()=>saveGame());document.addEventListener('vi
 let wsOn=false,galleryOn=false;
 const WS={multi:new Set(),addMode:false,scene:null,group:null,key:null,parts:[],sel:-1,undo:[],lastPush:0,yaw:.6,pitch:.42,dist:4,ty:.5,tribe:0,ref:true,refMesh:null,box:null,drag:null,pts:new Map(),dirty:new Set()};
 const ANIM_L={goat:'Black goat',chicken:'Chicken',rabbit:'Rabbit'};
-function wsLabel(k){const n=k.slice(2);if(k==='b:hedgelink')return 'Blackthorn Hedge (join)';if(k==='b:hutch')return 'Rabbit hutch';if(k[0]==='u'&&ANIM_L[n])return ANIM_L[n];return k[0]==='u'?(UT[n]?UT[n].label:n):(BT[n]?BT[n].label:n)}
+function wsLabel(k){const n=k.slice(2);if(k==='b:hedgelink')return 'Blackthorn Hedge (join)';if(k==='b:hutch')return 'Rabbit hutch';if(k==='b:firepit')return 'Beltane fire pit';if(k[0]==='u'&&ANIM_L[n])return ANIM_L[n];return k[0]==='u'?(UT[n]?UT[n].label:n):(BT[n]?BT[n].label:n)}
 function wsKeys(){return Object.keys(ORIG_UMOD).filter(k=>k!=='ghost'&&k!=='phillip').map(k=>'u:'+k).concat(Object.keys(ORIG_BMOD).map(k=>'b:'+k))}
 function wsOrigParts(k){const n=k.slice(2);return captureDef(k[0]==='u'?ORIG_UMOD[n]:ORIG_BMOD[n])}
 function wsStore(){let loc={};try{loc=JSON.parse(localStorage.getItem(MODEL_KEY))||{}}catch(e){}return loc}
