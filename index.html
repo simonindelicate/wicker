@@ -519,10 +519,12 @@ const SP=[
   {k:'phillip',n:'Black Phillip',c:350,cd:45,r:14,rad:1.5,s:0},
   {k:'familiar',n:'Familiar',c:250,cd:30,r:14,rad:1.5,s:1},
   {k:'fetch',n:'The Fetch',c:900,cd:60,r:999,rad:1,s:0},
+  {k:'glamour',n:'Glamour',c:220,cd:30,r:14,rad:4,s:1},
+  {k:'pricking',n:'Pricking',c:150,cd:20,r:14,rad:6,s:1},
   {k:'arma',n:'All-against-all',c:TUNE.manaMax,cd:1,r:0,rad:0,s:0},
 ];
 const SPK={};SP.forEach(s=>SPK[s.k]=s);
-const SPDESC={fetch:'Thy Cunning Woman gives birth to her fetch. It walks slowly and straight for a rival Cunning Woman, over sea and hill, and cannot be stopped. It can only be outrun, and it fades after ninety seconds.',phillip:'Cast on a rival\'s black goat. It goes about unnoticed until it kicks, killing the first it strikes, then rampages through their village for thirty seconds.',familiar:'Cast on your own black goat. Unseen by any rival, it goes from altar to altar drinking their mana and sending it home, and lifts the fog wherever it walks.',changeling:'Swap a rival villager for a changeling. It goes home unsuspected; kindle it (or wait three minutes) and it sets fire to where it stands.',murrain:'A cattle plague. Rival livestock in the area sicken and die, and their carcasses spread dread.',torch:'Scry where e\'re the beacon burns. For it shalbe thine eyes.',blast:'Thy will readily done upon thine enemies.',lightning:'The strike of thunder is a blow no man or woman can survive.',swarm:'Calls forth a cloud o’ wicked horseflies to bite and sting and scatter thy assailants for ten seconds.',convert:'Turns wandering wildmen within the circle into your villagers.',shield:'A ward against harm for those within its ‘fluence.',ghost:'Raise the shades of dead men. Brief candles who make war, draw the eye and melt away come striking.',bridge:'Raise up a causeway towards heights and across water.',flatten:'From crags and cliffsides spring forth green and level fields. Cannot be cast upon the water.',hypno:'Witch them to thy cause - they’ll fight for you for twenty-five seconds.',whirl:'A twisting wind that tears walls from their foundations afore wand’ring in search of new victims.',swamp:'A sucking mire that offers safe passage to those who know the way - and clammy death to those who do not. Will remain until ten are claimed.',erode:'Creates a dyke within the downs to drown thy foes and their works.',quake:'Behold, the very earth shall shake and rupture.',fire:'A bitter rain of stoney death. Watch as they flee their collapsing homes.',angel:'Engender a plague of paroxysms, contagion and a bloody demise.',volcano:'Nature’s cruellest vengeance at the command.',arma:'There shalbe a moot at the world’s end and every living souls shalbe a soldier in the battle of all against all. So hath it been and so mote it be.'};
+const SPDESC={glamour:'For ninety seconds, everyone of yours in the circle wears the colours of the nearest rival folk and no rival sees them for what they are. Striking a blow breaks it; casting does not.',pricking:'Find the Devil\'s mark. Glamours, changelings and familiars within the circle are laid bare.',fetch:'Thy Cunning Woman gives birth to her fetch. It walks slowly and straight for a rival Cunning Woman, over sea and hill, and cannot be stopped. It can only be outrun, and it fades after ninety seconds.',phillip:'Cast on a rival\'s black goat. It goes about unnoticed until it kicks, killing the first it strikes, then rampages through their village for thirty seconds.',familiar:'Cast on your own black goat. Unseen by any rival, it goes from altar to altar drinking their mana and sending it home, and lifts the fog wherever it walks.',changeling:'Swap a rival villager for a changeling. It goes home unsuspected; kindle it (or wait three minutes) and it sets fire to where it stands.',murrain:'A cattle plague. Rival livestock in the area sicken and die, and their carcasses spread dread.',torch:'Scry where e\'re the beacon burns. For it shalbe thine eyes.',blast:'Thy will readily done upon thine enemies.',lightning:'The strike of thunder is a blow no man or woman can survive.',swarm:'Calls forth a cloud o’ wicked horseflies to bite and sting and scatter thy assailants for ten seconds.',convert:'Turns wandering wildmen within the circle into your villagers.',shield:'A ward against harm for those within its ‘fluence.',ghost:'Raise the shades of dead men. Brief candles who make war, draw the eye and melt away come striking.',bridge:'Raise up a causeway towards heights and across water.',flatten:'From crags and cliffsides spring forth green and level fields. Cannot be cast upon the water.',hypno:'Witch them to thy cause - they’ll fight for you for twenty-five seconds.',whirl:'A twisting wind that tears walls from their foundations afore wand’ring in search of new victims.',swamp:'A sucking mire that offers safe passage to those who know the way - and clammy death to those who do not. Will remain until ten are claimed.',erode:'Creates a dyke within the downs to drown thy foes and their works.',quake:'Behold, the very earth shall shake and rupture.',fire:'A bitter rain of stoney death. Watch as they flee their collapsing homes.',angel:'Engender a plague of paroxysms, contagion and a bloody demise.',volcano:'Nature’s cruellest vengeance at the command.',arma:'There shalbe a moot at the world’s end and every living souls shalbe a soldier in the battle of all against all. So hath it been and so mote it be.'};
 const ICON={
   blast:'<circle cx="12" cy="12" r="4"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l3 3M16 16l3 3M5 19l3-3M16 8l3-3"/>',
   lightning:'<path d="M13 2L5 14h6l-2 8 8-12h-6l2-8z"/>',
@@ -537,6 +539,8 @@ const ICON={
   phillip:'<path d="M5 10l3-6M19 10l-3-6M7 10h10l-1 7H8z"/><path d="M10 21l2-4 2 4"/>',
   familiar:'<path d="M7 10l2-6M17 10l-2-6M8 10h8l-1 6H9z"/><circle cx="12" cy="20" r="1.5"/>',
   fetch:'<path d="M12 3c-3 0-5 3-5 7v11l2-2 2 2 1-2 1 2 2-2 2 2V10c0-4-2-7-5-7z"/><path d="M10 10h.01M14 10h.01"/>',
+  glamour:'<path d="M12 3l2 5 5 .5-4 3.5 1.5 5-4.5-3-4.5 3 1.5-5-4-3.5 5-.5z"/>',
+  pricking:'<path d="M5 19L17 7M15 5l4 4M4 20l1-1"/><circle cx="18" cy="6" r="1"/>',
   hypno:'<path d="M12 12a1 1 0 0 1 1 1 2 2 0 0 1-2 2 3 3 0 0 1-3-3 4 4 0 0 1 4-4 5 5 0 0 1 5 5 6 6 0 0 1-6 6 7 7 0 0 1-7-7"/>',
   whirl:'<path d="M3 5h18M5 9h14M7 13h10M9 17h6M11 21h2"/>',
   torch:'<path d="M12 22v-9M9 13h6l-1 2h-4z"/><path d="M12 11c-2-1-2-3-1-5 0 2 2 2 2 0 1 2 1 4-1 5z"/>',
@@ -666,10 +670,10 @@ const allowB=t=>!allowSets||(t==='tomb'?allowSets.tomb:allowSets.b.has(t));
 const allowS=k=>!allowSets||allowSets.s.has(k);
 // Grimoire mode (test mode for now): the player casts only the spells chosen before the game; rivals keep every spell. All-against-all is always to hand.
 const GRIM_N=8,GRIM_KEY='wicker-grimoire-v1';
-const NEW_SP=['changeling','murrain','phillip','familiar','fetch'];
+const NEW_SP=['changeling','murrain','phillip','familiar','fetch','glamour','pricking'];
 // Grimoire: each rival tribe carries its own eight spells, which set its style
-const GRIM_PAL={Blood:['blast','lightning','fire','quake','whirl','volcano','ghost','fetch'],Forest:['blast','lightning','shield','ghost','hypno','swamp','familiar','changeling'],
-  Ash:['blast','lightning','swarm','angel','erode','murrain','phillip','familiar'],Ochre:['blast','lightning','swarm','shield','hypno','fire','changeling','fetch']};
+const GRIM_PAL={Blood:['blast','lightning','fire','quake','whirl','volcano','ghost','fetch'],Forest:['blast','lightning','shield','glamour','hypno','swamp','familiar','changeling'],
+  Ash:['blast','lightning','swarm','angel','erode','murrain','phillip','familiar'],Ochre:['blast','lightning','pricking','shield','hypno','fire','changeling','fetch']};
 const grimOn=()=>settings.mode==='grimoire'&&settings.campaign==null&&devMode();
 const aiPalOK=(T,k)=>T.pal?T.pal.includes(k):!NEW_SP.includes(k);
 const palOK=k=>{const g=settings.mode==='grimoire'&&settings.campaign==null&&settings.palette;if(!g)return !NEW_SP.includes(k);return k==='arma'||settings.palette.includes(k)};
@@ -957,8 +961,8 @@ function rebuildTGrid(){for(const g of tgrid)g.length=0;for(const t of trees)if(
 function query(g,x,z,r,fn){const b0x=Math.floor((x-r)/8),b1x=Math.min(b0x+15,Math.floor((x+r)/8)),b0z=Math.floor((z-r)/8),b1z=Math.min(b0z+15,Math.floor((z+r)/8));
   for(let bz=b0z;bz<=b1z;bz++)for(let bx=b0x;bx<=b1x;bx++){const arr=g[(((bz%16)+16)%16)*16+(((bx%16)+16)%16)];for(let i=0;i<arr.length;i++)fn(arr[i])}}
 const beingTaken=(o,ti)=>o.listen>gt&&o.takenBy===ti;
-function nearestEnemy(u,r,pred,wildOk){let best=null,bd=r*r;query(grid,u.x,u.z,r,o=>{if(o.tribe===u.tribe||!o.alive||o.air)return;if(u.type!=='oss'&&beingTaken(o,u.tribe))return;if(o.type==='queen'&&u.type!=='hunter'&&u.type!=='oss')return;if(o.tribe===wildId&&!wildOk)return;if(pred&&!pred(o))return;const dd=d2(u.x,u.z,o.x,o.z);if(dd<bd){bd=dd;best=o}});return best}
-function enemyNear(x,z,ti,r,ok){let best=null,bd=r*r;query(grid,x,z,r,o=>{if(o.tribe===ti||!o.alive||o.type==='ghost'||o.tribe===wildId||(ok&&!ok(o)))return;const dd=d2(x,z,o.x,o.z);if(dd<bd){bd=dd;best=o}});return best}
+function nearestEnemy(u,r,pred,wildOk){let best=null,bd=r*r;query(grid,u.x,u.z,r,o=>{if(o.tribe===u.tribe||!o.alive||o.air||o.glam>gt)return;if(u.type!=='oss'&&beingTaken(o,u.tribe))return;if(o.type==='queen'&&u.type!=='hunter'&&u.type!=='oss')return;if(o.tribe===wildId&&!wildOk)return;if(pred&&!pred(o))return;const dd=d2(u.x,u.z,o.x,o.z);if(dd<bd){bd=dd;best=o}});return best}
+function enemyNear(x,z,ti,r,ok){let best=null,bd=r*r;query(grid,x,z,r,o=>{if(o.tribe===ti||!o.alive||o.glam>gt||o.type==='ghost'||o.tribe===wildId||(ok&&!ok(o)))return;const dd=d2(x,z,o.x,o.z);if(dd<bd){bd=dd;best=o}});return best}
 function nearestEnemyBld(x,z,ti,r){let best=null,bd=r*r;for(const b of blds){if(!b.alive||b.tribe===ti||BT[b.bt].inv)continue;const dd=d2(x,z,b.x,b.z);if(dd<bd){bd=dd;best=b}}return best}
 function nearestTree(x,z,r){let best=null,bd=r*r;query(tgrid,x,z,r,t=>{if(!t.alive)return;const dd=d2(x,z,t.x,t.z);if(dd<bd){bd=dd;best=t}});return best}
 function killTree(t){if(!t.alive)return;t.alive=false;tGridDirty=true}
@@ -985,7 +989,8 @@ function moveStep(u,dt){const D=UT[u.type];const fz=tribes[u.tribe]&&tribes[u.tr
     if(nx===u.x&&nz===u.z){u.stuck=(u.stuck||0)+dt;if(dd<=10&&u.useField<=gt)u.useField=gt+4;if(u.stuck>1.4){u.stuck=0;return 2}}else u.stuck=0}
   u.x=wrap(nx);u.z=wrap(nz);u.face=Math.atan2(wx,wz);u.moving=true;return 0}
 
-function attack(u,t){u.st='attack';u.tgt=t}
+let inCommand=false;
+function attack(u,t){if(u.glam>gt&&!inCommand)return;u.st='attack';u.tgt=t}
 function canHit(u,t){if(t.bt)return !BT[t.bt].inv;if(UT[t.type].fly)return !!UT[u.type].bomb;return true}
 function resumeAfter(u){u.tgt=null;if(u.order==='amove'){u.st='amove';setTarget(u,u.otx,u.otz,u.ofx,u.ofz)}else{u.st='idle';u.gx=u.x;u.gz=u.z}}
 let atk=-1;
@@ -1140,6 +1145,7 @@ function fetchTick(dt){if(!fetches.length)return;for(const f of fetches){if(f.do
     const c=cidx(f.x,f.z);if(c!==f.lc){f.lc=c;if(hAt(f.x,f.z)>.3&&!bOcc[c]){let s2=0,n=0;forVerts(f.x,f.z,1.6,q=>{if(H[q]>.25){s2+=H[q];n++}});if(n){const tg=Math.max(.45,s2/n);const bb=forVerts(f.x,f.z,1.6,(q,d)=>{if(H[q]>.25&&!bOcc[q])H[q]=lerp(H[q],tg,1-sstep(1,1.6,d))});postTerrain(...bb);for(const tr of trees)if(tr.alive&&d2(tr.x,tr.z,f.x,f.z)<1.2)killTree(tr)}}}
     if(R()<dt*20){const y=Math.max(0,hAt(f.x,f.z));PN.emit(f.x+(R()-.5)*.5,y+.2+R()*1.4,f.z+(R()-.5)*.5,(R()-.5)*.3,.3+R()*.5,(R()-.5)*.3,1+R(),.04,.04,.04,.6,.8,-.05)}}
   fetches=fetches.filter(f=>!f.done)}
+function unmaskBy(u,ti){if(ti===0){unmask(u);return}const by=u.chg;u.chg=null;u.unmaskT=gt;if(u.sel)deselect(u);u.tribe=by;u.order=null;u.tgt=null;u.cmd=false;const hs=tribes[ti].shaman||u,dx=wd(u.x-hs.x),dz=wd(u.z-hs.z),l=Math.hypot(dx,dz)||1;u.st='flee';u.ft=3;setTarget(u,u.x+dx/l*6,u.z+dz/l*6);if(by===0&&!watching)toast(`The ${tribes[ti].name} folk have found your changeling. It runs for home.`)}
 function chgTick(){phillipTick();
   for(const u of units){if(!u.alive||u.chg==null)continue;
     if(u.chg!==0&&gt-(u.chgBorn||0)>40){let n=0;for(const b of blds)if(b.alive&&b.tribe===u.tribe&&!BT[b.bt].inv&&b.bt!=='hedge'&&d2(b.x,b.z,u.x,u.z)<25)n++;if(n>=2){kindle(u);continue}}
@@ -1332,9 +1338,9 @@ function updUnit(u,dt){const D=UT[u.type],T=tribes[u.tribe];if(season==='winter'
     if(r===1||r===2||r===3){u.st='idle';u.gx=u.x;u.gz=u.z;u.order=null;if(u.cmd&&u.type==='queen'){u.hx=u.x;u.hz=u.z}if(u.cmd){u.cmd=false;u.think=u.type==='brave'?8:.5}if(D.veh)u.unloadArrive=false}
     break}
   case 'attack':{const t=u.tgt;
-    if(!t||!t.alive||t.tribe===u.tribe||t.inV||(!t.bt&&!canHit(u,t))||(!t.bt&&!u.cmdAtk&&beingTaken(t,u.tribe))){resumeAfter(u);break}
+    if(!t||!t.alive||t.tribe===u.tribe||t.inV||(t.glam>gt)||(!t.bt&&!canHit(u,t))||(!t.bt&&!u.cmdAtk&&beingTaken(t,u.tribe))){resumeAfter(u);break}
     const isB=!!t.bt,rr=(D.rng||1)+(isB?BT[t.bt].s*.5:.3),dd=Math.sqrt(d2(u.x,u.z,t.x,t.z));
-    if(dd<=rr){u.face=Math.atan2(wd(t.x-u.x),wd(t.z-u.z));if(u.cd<=0){u.cd=D.cd*(T.frenzyUntil>gt?TUNE.frenzyAttack:1)*(u.cold?COLD_CD:1);if(D.bomb)fireCharge(u,t);else if(D.ranged)fireArrow(u,t);else{hit(t,D.dmg*(0.8+R()*.4),u);u.swing=gt;if(R()<.5)sfx('hit',.25,u.x,u.z)}}}
+    if(dd<=rr){u.face=Math.atan2(wd(t.x-u.x),wd(t.z-u.z));if(u.cd<=0){if(u.glam>gt){u.glam=0;if(u.tribe===0&&!watching&&gt>(glamToastT||0)){glamToastT=gt+5;toast('A blow is struck, and the glamour falls away.')}}u.cd=D.cd*(T.frenzyUntil>gt?TUNE.frenzyAttack:1)*(u.cold?COLD_CD:1);if(D.bomb)fireCharge(u,t);else if(D.ranged)fireArrow(u,t);else{hit(t,D.dmg*(0.8+R()*.4),u);u.swing=gt;if(R()<.5)sfx('hit',.25,u.x,u.z)}}}
     else{if(!u.order&&!u.cmdAtk&&d2(u.gx,u.gz,u.x,u.z)>(u.post?TUNE.guardLeash*TUNE.guardLeash:18*18)){resumeAfter(u);break}
       if(isB){const a=Math.atan2(wd(u.z-t.z),wd(u.x-t.x));setTarget(u,t.x+Math.cos(a)*(rr-.2),t.z+Math.sin(a)*(rr-.2),t.x,t.z)}else{u.tx=t.x;u.tz=t.z;u.fx=t.x;u.fz=t.z}
       if(moveStep(u,dt)===2)resumeAfter(u)}
@@ -1411,7 +1417,8 @@ function enemyShamanNear(u,x,z,r){let f=null;for(const T of tribes){if(T.wild||T
 function hunterThink(u){const es=enemyShamanNear(u,u.x,u.z,15);if(es){const dx=wd(u.x-es.x),dz=wd(u.z-es.z),l=Math.hypot(dx,dz)||1;u.st='move';setTarget(u,u.x+dx/l*14,u.z+dz/l*14);return}
   if(scanFight(u,UT.hunter))return;
   for(let t=0;t<12;t++){const x=u.x+(R()-.5)*70,z=u.z+(R()-.5)*70;if(pass[cidx(x,z)]&&!enemyShamanNear(u,x,z,14)){orderUnit(u,x,z,true);u.cmd=false;return}}}
-function scanFight(u,D){if(u.type==='phillip'){const e=u.tribe===wildId?nearestEnemy(u,1.6,o=>!UT[o.type].veh&&!o.air,true):nearestEnemy(u,14,o=>o.tribe===u.vt&&!UT[o.type].veh&&o.type!=='captive'&&!o.air);if(e){attack(u,e);u.order=null;return true}return false}
+function scanFight(u,D){if(u.glam>gt)return false; // a glamoured unit keeps its disguise: it strikes only when ordered to
+if(u.type==='phillip'){const e=u.tribe===wildId?nearestEnemy(u,1.6,o=>!UT[o.type].veh&&!o.air,true):nearestEnemy(u,14,o=>o.tribe===u.vt&&!UT[o.type].veh&&o.type!=='captive'&&!o.air);if(e){attack(u,e);u.order=null;return true}return false}
   if(u.type==='hunter'){const e=nearestEnemy(u,10,o=>!UT[o.type].veh&&o.type!=='shaman'&&o.type!=='captive'&&!o.air&&!enemyShamanNear(u,o.x,o.z,12),true);if(e){attack(u,e);u.order=null;return true}return false}if(u.type==='oss'){if(u.carry)return false;const e=nearestEnemy(u,u.tribe===0?7:10,o=>o.type!=='shaman'&&!UT[o.type].veh&&o.type!=='ghost'&&o.type!=='captive'&&!o.carry,true);if(e){u.st='preach';u.tgt=e;u.pt=0;return true}return false}
   if(u.type==='wild'||(u.type==='brave'&&!armageddon))return false;
   if(u.fireRaid){const b=nearestEnemyBld(u.x,u.z,u.tribe,9);if(b){attack(u,b);return true}}
@@ -1440,7 +1447,7 @@ function idleThink(u,D,T){if(D.veh&&!D.bomb)return;if(u.ferryJ&&inFerry(u))retur
   if(armageddon&&d2(u.x,u.z,moot.x,moot.z)>64){mootPull(u);orderUnit(u,moot.x+(R()-.5)*6,moot.z+(R()-.5)*6,true,moot.x,moot.z);return}
   if(d2(u.x,u.z,u.gx,u.gz)>6){u.st='move';setTarget(u,u.gx,u.gz)}}
 function findPrey(u){const cx=u.rcx??u.gx,cz=u.rcz??u.gz;let best=null,bd=1e18;
-  query(grid,cx,cz,TUNE.ossRoam,o=>{if(!o.alive||o.tribe===u.tribe||o.inV||o.air||o.carry||o.type==='shaman'||o.type==='captive'||o.type==='ghost'||UT[o.type].veh)return;if(d2(cx,cz,o.x,o.z)>TUNE.ossRoam*TUNE.ossRoam)return;
+  query(grid,cx,cz,TUNE.ossRoam,o=>{if(!o.alive||o.glam>gt||o.tribe===u.tribe||o.inV||o.air||o.carry||o.type==='shaman'||o.type==='captive'||o.type==='ghost'||UT[o.type].veh)return;if(d2(cx,cz,o.x,o.z)>TUNE.ossRoam*TUNE.ossRoam)return;
     if(o.listen>gt&&o.capBy&&o.capBy!==u)return;const d=d2(u.x,u.z,o.x,o.z)*(o.type==='queen'?.1:1);if(d<bd){bd=d;best=o}});if(best)best.capBy=u;return best}
 function wildThink(u){if(u.lastAtk&&u.lastAtk.alive&&u.lastAtkT>gt-3){const a=u.lastAtk,dx=wd(u.x-a.x),dz=wd(u.z-a.z),l=Math.hypot(dx,dz)||1;u.st='flee';u.ft=3;setTarget(u,u.x+dx/l*6,u.z+dz/l*6);return}
   if(R()<.35){const x=u.hx+(R()-.5)*9,z=u.hz+(R()-.5)*9;if(pass[cidx(x,z)]){u.st='move';setTarget(u,x,z)}}}
@@ -1593,6 +1600,15 @@ function castSpell(ti,k,px,pz,cu){atk=ti;let sx=cu?cu.x:px,sz=cu?cu.z:pz,sy=cu?u
     const src=cu||T.shaman||T.tomb||{x:px,z:pz};const f={ti,tt:best.id,tgt:best.shaman&&best.shaman.alive?best.shaman:null,x:src.x,z:src.z,face:0,end:gt+90,born:gt,lc:-1};fetches.push(f);
     {const y=Math.max(0,hAt(f.x,f.z));for(let i=0;i<30;i++)PN.emit(f.x+(R()-.5),y+.3+R()*1.6,f.z+(R()-.5),(R()-.5)*.8,.4+R()*.8,(R()-.5)*.8,1.6+R(),.03,.03,.03,.8,1.2,-.05)}
     if(ti===0)toast(`Your Cunning Woman gives birth to her fetch. It walks for the ${best.name} Cunning Woman.`);else if(best.id===0&&!watching)toast(`The ${T.name} Cunning Woman has given birth to her fetch, and it walks for yours. Run.`);break}
+  case 'glamour':{let as=null,bd=1e18;for(const o of tribes){if(o.wild||o.id===ti||!o.alive)continue;const h=blds.find(b=>b.alive&&b.bt==='reinc'&&b.tribe===o.id)||o.shaman;if(!h)continue;const d=d2(px,pz,h.x,h.z);if(d<bd){bd=d;as=o.id}}
+    let n=0;if(as!=null)query(grid,px,pz,4.5,u=>{if(u.alive&&u.tribe===ti&&d2(px,pz,u.x,u.z)<16){u.glam=gt+90;u.glamAs=as;n++;for(const o of units)if(o.alive&&o.tgt===u&&o.st==='attack')resumeAfter(o)}});
+    {const y=Math.max(0,hAt(px,pz));for(let i=0;i<30;i++){const a=R()*TAU,r=R()*4;PN.emit(px+Math.cos(a)*r,y+.3+R(),pz+Math.sin(a)*r,0,.5+R()*.5,0,1.2,.85,.8,1,.5,.5,-.1)}}
+    if(ti===0)toast(n?`${n} of your people wear the ${tribes[as].name} colours now. Strike no blow and no rival will know them.`:'No one of yours stood in the circle');break}
+  case 'pricking':{let f=0;ring(px,pz,6,.9,.9,.95);
+    for(const u of units){if(!u.alive||d2(px,pz,u.x,u.z)>36)continue;if(u.glam>gt&&u.tribe!==ti){u.glam=0;f++;const y=unitY(u);for(let i=0;i<10;i++)PN.emit(u.x,y+.5,u.z,(R()-.5),.8+R(),(R()-.5),.9,.95,.95,1,.8,.3,0)}
+      if(u.chg!=null&&u.chg!==ti&&u.tribe===ti){unmaskBy(u,ti);f++}}
+    for(const a of stock)if(a.fam&&a.tribe!==ti&&d2(px,pz,a.x,a.z)<36){a.fam.home=true;a.fam.revealed=gt+40;f++;if(a.tribe===0&&!watching)toast('Your familiar has been pricked and runs for home.')}
+    if(ti===0)toast(f?`Pricking finds the Devil's mark on ${f} ${f===1?'thing':'things'}.`:'Pricking finds no mark here.');break}
   case 'murrain':{{const y=Math.max(0,hAt(px,pz));for(let i=0;i<40;i++){const a=R()*TAU,r=R()*6;PN.emit(px+Math.cos(a)*r,y+.2+R()*.6,pz+Math.sin(a)*r,(R()-.5)*.4,.25+R()*.5,(R()-.5)*.4,2.5+R()*1.5,.5,.62,.22,.4,1.4,-.05)}}let n=0;for(const a of stock)if(!a.dead&&!a.sick&&a.tribe!==ti&&d2(px,pz,a.x,a.z)<36){a.sick=gt+6+R()*4;n++}ring(px,pz,6,.45,.55,.2);if(ti===0)toast(n?`Murrain takes ${n} beast${n===1?'':'s'}.`:'No rival beasts there');break}
   case 'hypno':query(grid,px,pz,3.5,u=>{if(u.tribe!==ti&&u.alive&&u.type!=='shaman'&&!UT[u.type].veh&&u.type!=='ghost'&&d2(px,pz,u.x,u.z)<9){const o=u.hyp?u.hyp.orig:u.tribe;convertUnit(u,ti);u.hyp={orig:o,until:gt+25}}});ring(px,pz,3,.85,.5,1);break;
   case 'whirl':{let aim=null,ad=1e9;for(const b of blds){if(!b.alive||b.tribe===ti||BT[b.bt].inv||b.bt==='tomb'||b.bt==='god'||b.bt==='oak')continue;const d=Math.sqrt(d2(px,pz,b.x,b.z));if(d<BT[b.bt].s*.6+.4&&d<ad){ad=d;aim=b}}
@@ -1794,7 +1810,7 @@ function aiFaith(T){const S=T.stats,ai=T.ai;if(armageddon)return;
 function aiCast(T){const ai=T.ai,sh=casterOf(T);if(!sh||sh.hanging||sh.st==='cast'||gt<ai.castT||sh.air)return;
   const ok=k=>(!armageddon||k==='lightning'||k==='shield'||k==='blast')&&allowS(k)&&aiPalOK(T,k)&&SPK[k].c<=ai.D.maxSpell&&T.mana>=spellCost(T,k)+(k==='blast'?0:30)&&(T.cd[k]||0)<=gt;
   let cx=sh.x,cz=sh.z;if(sh.tomb){const eb=blds.filter(b=>b.alive&&b.tribe!==T.id&&b.tribe!==wildId&&!BT[b.bt].inv);if(!eb.length)return;const t=eb[(R()*eb.length)|0];cx=t.x;cz=t.z}
-  const rr=14;const en=[];query(grid,cx,cz,rr,o=>{if(o.alive&&o.tribe!==T.id&&o.tribe!==wildId&&!o.inV&&o.type!=='ghost'&&d2(cx,cz,o.x,o.z)<rr*rr)en.push(o)});
+  const rr=14;const en=[];query(grid,cx,cz,rr,o=>{if(o.alive&&o.tribe!==T.id&&o.tribe!==wildId&&!o.inV&&!(o.glam>gt)&&o.type!=='ghost'&&d2(cx,cz,o.x,o.z)<rr*rr)en.push(o)});
   const opts=[];
   if(en.length){const es=en.find(o=>o.type==='shaman');if(es&&ok('lightning')&&gt>(ai.boltT||0)&&!(es.shield>gt))opts.push(['lightning',es.x,es.z,settings.diff==='easy'?1:settings.diff==='normal'?3:settings.diff==='extreme'?8:6,'sh']);
     let best=en[0],bc=0;for(let i=0;i<Math.min(8,en.length);i++){const e=en[(R()*en.length)|0];let c=0;for(const o of en)if(d2(e.x,e.z,o.x,o.z)<9)c++;if(c>bc){bc=c;best=e}}
@@ -1805,6 +1821,10 @@ function aiCast(T){const ai=T.ai,sh=casterOf(T);if(!sh||sh.hanging||sh.st==='cas
   if(en.length&&!sh.tomb){
     if(ok('shield')&&en.length>=4){let own=0;query(grid,sh.x,sh.z,4.5,o=>{if(o.alive&&o.tribe===T.id&&MIL[o.type])own++});if(own>=4)opts.push(['shield',sh.x,sh.z,3])}
     if(ok('changeling')&&!units.some(u=>u.alive&&u.chg===T.id)){const v=en.find(o=>o.type==='brave'&&o.chg==null&&!o.inV);if(v)opts.push(['changeling',v.x,v.z,3])}}
+  if(ok('glamour')&&en.length>=3&&!(sh.glam>gt))opts.push(['glamour',sh.x,sh.z,3]);
+  if(ok('pricking')&&gt>(ai.prickT||0)){let p=null;for(const u of units)if(u.alive&&u.chg!=null&&u.chg!==T.id&&u.tribe===T.id&&d2(cx,cz,u.x,u.z)<14*14){p=u;break}
+    if(!p)for(const a of stock)if(a.fam&&a.tribe!==T.id&&d2(cx,cz,a.x,a.z)<14*14){p=a;break}if(!p)for(const u of units)if(u.alive&&u.glam>gt&&u.tribe!==T.id&&d2(cx,cz,u.x,u.z)<14*14){p=u;break}
+    if(p){opts.push(['pricking',p.x,p.z,6]);ai.prickT=gt+20}}
   if(!sh.tomb){
     if(ok('phillip')){const g=stock.find(a=>a.kind==='goat'&&a.tribe!==T.id&&!a.dead&&!a.sick&&!a.offer&&!a.fam&&!a.bp&&!(a.kid&&gt-a.born<120)&&d2(cx,cz,a.x,a.z)<14*14);if(g)opts.push(['phillip',g.x,g.z,4])}
     if(ok('murrain')){const a=stock.find(q=>q.tribe!==T.id&&!q.dead&&!q.sick&&!q.fam&&d2(cx,cz,q.x,q.z)<14*14);if(a&&stock.filter(q=>q.tribe===a.tribe&&!q.dead&&!q.sick&&d2(q.x,q.z,a.x,a.z)<36).length>=2)opts.push(['murrain',a.x,a.z,3])}
@@ -3048,7 +3068,7 @@ function drawEntities(){
     if(u.hanging){const b=u.hanging,rx=wd(b.x-cam.fx),rz=wd(b.z-cam.fz),r2=rx*rx+rz*rz,M=UM.shaman;if(r2>VR2||M.n>=M.cap||(!visB(b)))continue;const y=hAt(b.x,b.z)-r2*K+1.15,i=M.n++,yaw=(b.yaw||0)+Math.sin(gt*.7)*.5,[ox,oz]=byaw(b,2.1,0);
       place(M.t,i,rx+ox,y,rz+oz,yaw,1.6);place(M.f,i,rx+ox,y,rz+oz,yaw,1.6);_c.copy(tribes[u.tribe].c).multiplyScalar(.7);M.t.setColorAt(i,_c);M.f.setColorAt(i,WHITE_C);continue}
     if(u.inV)continue;const rx=wd(u.x-cam.fx),rz=wd(u.z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2)continue;if(!visU(u))continue;
-    const M=UM[u.type];if(M.n>=M.cap)continue;let y=unitY(u)-r2*K,ox=0,oz=0,yaw=u.face;const god=false;const sc=u.type==='shaman'?1.6:1;if(u.type==='shaman'&&HALO.n<HALO.max){const tc=tribes[u.tribe].c;HALO.emit(u.x,unitY(u)+1.05,u.z,0,0,0,1,.55+tc.r*.45,.5+tc.g*.45,.4+tc.b*.45,.38+.08*Math.sin(gt*3+u.anim),3.4,0);HALO.emit(u.x,unitY(u)+1.85,u.z,0,0,0,1,1,.9,.6,.5,.9,0)}if(god)y+=.9+Math.sin(gt*2)*.15;
+    const M=UM[u.type];if(M.n>=M.cap)continue;let y=unitY(u)-r2*K,ox=0,oz=0,yaw=u.face;const god=false;const sc=u.type==='shaman'?1.6:1;if(u.type==='shaman'&&HALO.n<HALO.max){const tc=tribes[u.glam>gt&&tribes[u.glamAs]?u.glamAs:u.tribe].c;HALO.emit(u.x,unitY(u)+1.05,u.z,0,0,0,1,.55+tc.r*.45,.5+tc.g*.45,.4+tc.b*.45,.38+.08*Math.sin(gt*3+u.anim),3.4,0);HALO.emit(u.x,unitY(u)+1.85,u.z,0,0,0,1,1,.9,.6,.5,.9,0)}if(god)y+=.9+Math.sin(gt*2)*.15;
     if(u.moving)y+=Math.abs(Math.sin(gt*11+u.anim))*.07;
     if(u.chop)y+=Math.abs(Math.sin(gt*8+u.anim))*.05;
     if(gt-u.swing<.18){ox=Math.sin(u.face)*.13;oz=Math.cos(u.face)*.13}
@@ -3058,7 +3078,7 @@ function drawEntities(){
     if(u.chg===0&&!watching&&HALO.n<HALO.max&&Math.sin(gt*2.2+u.anim)>.55)HALO.emit(u.x,unitY(u)+.55,u.z,0,0,0,1,1,.85,.35,.55,.9,0);
     else if(u.unmaskT&&gt-u.unmaskT<40&&!watching&&HALO.n<HALO.max&&Math.sin(gt*4+u.anim)>.2)HALO.emit(u.x,unitY(u)+.55,u.z,0,0,0,1,1,.25,.15,.6,1,0);
     const i=M.n++;if(u.type==='phillip'){const kp=(gt-u.swing)/.35,lean=kp>=0&&kp<1?Math.sin(kp*Math.PI)*.75:0;const t=u.tgt&&u.tgt.alive&&u.st==='attack'?u.tgt:null,yw=t?Math.atan2(wd(t.x-u.x),wd(t.z-u.z))+Math.PI:yaw;placeTilt(M.t,i,rx,y+lean*.12,rz,yw,lean,-yw,sc,sy);placeTilt(M.f,i,rx,y+lean*.12,rz,yw,lean,-yw,sc,sy)}else{place(M.t,i,rx+ox,y,rz+oz,yaw,sc,sy);place(M.f,i,rx+ox,y,rz+oz,yaw,sc,sy)}
-    _c.copy(tribes[u.tribe].c);if(gt-u.hitT<.12)_c.setRGB(1,1,1);else if(tribes[u.tribe].frenzyUntil>gt)_c.lerp(FRENZY_C,.25+.15*Math.sin(gt*9+u.anim));else if(u.shield>gt)_c.lerp(SHIELD_C,.5+.15*Math.sin(gt*5));if(u.hyp)_c.lerp(WHITE_C,.3+.3*Math.sin(gt*7));
+    _c.copy(tribes[u.glam>gt&&tribes[u.glamAs]?u.glamAs:u.tribe].c);if(u.glam>gt&&u.tribe===0&&!watching&&Math.sin(gt*3+u.anim)>.75)_c.lerp(WHITE_C,.3);if(gt-u.hitT<.12)_c.setRGB(1,1,1);else if(tribes[u.tribe].frenzyUntil>gt)_c.lerp(FRENZY_C,.25+.15*Math.sin(gt*9+u.anim));else if(u.shield>gt)_c.lerp(SHIELD_C,.5+.15*Math.sin(gt*5));if(u.hyp)_c.lerp(WHITE_C,.3+.3*Math.sin(gt*7));
     M.t.setColorAt(i,_c);M.f.setColorAt(i,WHITE_C);
     if(u.carry&&cn<240){place(CM,cn,rx+ox-Math.sin(yaw)*.32,y+.42,rz+oz-Math.cos(yaw)*.32,yaw+Math.PI/2,1);CM.setColorAt(cn,WHITE_C);cn++}}
   {const M=UM.captive;for(const b of blds){if(!b.alive||!b.done||b.bt!=='fold'||!b.capt.length)continue;if(b.tribe!==0&&!isVis(b.x,b.z))continue;const rx=wd(b.x-cam.fx),rz=wd(b.z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2)continue;
@@ -3075,7 +3095,7 @@ function drawEntities(){
       const rx=wd(x-cam.fx),rz=wd(z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2||!seenAt(x,z))continue;place(BOULDER,bn,rx,y-r2*K,rz,p.t*7+p.sc*9,p.sc);_c.setRGB(1,1,1);BOULDER.setColorAt(bn,_c);bn++}fin(BOULDER,bn)}
   {let gn=0;for(const bn of banners){if(gn>=60)break;const rx=wd(bn.x-cam.fx),rz=wd(bn.z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2||!seenAt(bn.x,bn.z))continue;const y=hAt(bn.x,bn.z)-r2*K,yw=Math.sin(gt*1.3+bn.id)*.08;
       place(GBP,gn,rx,y,rz,yw,1);_c.setRGB(1,1,1);GBP.setColorAt(gn,_c);place(GBC,gn,rx,y,rz,yw,1);_c.copy(tribes[bn.tribe].c);GBC.setColorAt(gn,_c);gn++}fin(GBP,gn);fin(GBC,gn)}
-  if(stockOn)for(const a of stock){const M=UM[a.kind];if(M.n>=M.cap)continue;const rx=wd(a.x-cam.fx),rz=wd(a.z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2*.75||(!seenAt(a.x,a.z)&&!(a.fam&&a.tribe===0)))continue;if(a.tribe!==0&&!isVis(a.x,a.z))continue;if(a.fam&&a.tribe!==0)continue;
+  if(stockOn)for(const a of stock){const M=UM[a.kind];if(M.n>=M.cap)continue;const rx=wd(a.x-cam.fx),rz=wd(a.z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2*.75||(!seenAt(a.x,a.z)&&!(a.fam&&a.tribe===0)))continue;if(a.tribe!==0&&!isVis(a.x,a.z))continue;if(a.fam&&a.tribe!==0&&!(a.fam.revealed>gt))continue;
     let y=hAt(a.x,a.z)-r2*K,sy=1;if(a.moving)y+=Math.abs(Math.sin(gt*(a.kind==='rabbit'?9:a.kind==='chicken'?12:6)+a.anim))*(a.kind==='goat'?.03:.05);else if(a.kind==='chicken'){const pk=Math.max(0,Math.sin(gt*3+a.anim));sy=1-.25*pk*pk}
     const sc=a.kid?Math.min(1,.55+(gt-a.born)/180*.45):1;if(a.dead){sy=.3;y-=.04}const i=M.n++;place(M.t,i,rx,y,rz,a.face,sc,sy);place(M.f,i,rx,y,rz,a.face,sc,sy);const fv=fogOn?Math.max(.42,vis[cidx(a.x,a.z)]):1;_c.copy(tribes[a.tribe].c).multiplyScalar(fv);M.t.setColorAt(i,_c);if(a.dead)_c.setRGB(.42*fv,.5*fv,.3*fv);else if(a.sick)_c.setRGB(.75*fv,.95*fv,.55*fv);else if(a.fam)_c.setRGB(.6,.45,.8);else _c.setRGB(fv,fv,fv);M.f.setColorAt(i,_c);if(a.fam&&a.tribe===0&&HALO.n<HALO.max&&Math.sin(gt*1.6+a.anim)>.3)HALO.emit(a.x,hAt(a.x,a.z)+.5,a.z,0,0,0,1,.6,.4,.9,.35,1.2,0)}
   {let qn=0;for(const q of stains){if(qn>=120)break;const rx=wd(q.x-cam.fx),rz=wd(q.z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2||!seenAt(q.x,q.z))continue;const age=gt-q.t,g=Math.min(1,age/4)*Math.min(1,(150-age)/30),fv=fogOn?Math.max(.42,vis[cidx(q.x,q.z)]):1;
@@ -3202,7 +3222,7 @@ function drawMini(){if(mmVer!==tver){mbx.putImageData(paintMap(mbx),0,0);mmVer=t
   if(fogOn){const d=fogImg.data;for(let c=0;c<N*N;c++){d[c*4]=8;d[c*4+1]=6;d[c*4+2]=5;d[c*4+3]=visNow[c]?0:seen[c]?120:245}fgx.putImageData(fogImg,0,0);mctx.drawImage(fogC,0,0,S,S)}
   for(const b of blds)if(b.alive&&b.lit&&b.bt==='god'){mctx.fillStyle=`rgba(255,${120+Math.random()*80|0},40,.95)`;mctx.beginPath();mctx.arc(b.x*sc,b.z*sc,4+Math.sin(gt*8)*1.5,0,TAU);mctx.fill()}
   for(const b of blds){if(!b.alive)continue;if(!visB(b))continue;mctx.fillStyle=tribes[b.tribe].css;const s=BT[b.bt].s*sc;mctx.fillRect(b.cx0*sc,b.cz0*sc,s,s)}
-  const pulse=.55+.45*Math.sin(gt*6);for(const u of units){if(!u.alive||u.inV)continue;if(!visU(u)){if(u.raidT>gt){mctx.globalAlpha=pulse;mctx.fillStyle=tribes[u.tribe].css;mctx.fillRect(u.x*sc-1.3,u.z*sc-1.3,2.6,2.6);mctx.globalAlpha=1}continue}if(u.type==='shaman')continue;mctx.fillStyle=tribes[u.tribe].css;mctx.fillRect(u.x*sc-.8,u.z*sc-.8,1.6,1.6)}
+  const pulse=.55+.45*Math.sin(gt*6);for(const u of units){if(!u.alive||u.inV)continue;if(!visU(u)){if(u.raidT>gt){mctx.globalAlpha=pulse;mctx.fillStyle=tribes[u.tribe].css;mctx.fillRect(u.x*sc-1.3,u.z*sc-1.3,2.6,2.6);mctx.globalAlpha=1}continue}if(u.type==='shaman')continue;mctx.fillStyle=tribes[u.glam>gt&&tribes[u.glamAs]?u.glamAs:u.tribe].css;mctx.fillRect(u.x*sc-.8,u.z*sc-.8,1.6,1.6)}
   for(const u of units){if(!u.alive||u.type!=='shaman'||u.inV)continue;if(!visU(u))continue;const x=u.x*sc,z=u.z*sc,r=4.5;mctx.lineCap='round';for(const [w,c] of [[4,'#0d0a08'],[2,tribes[u.tribe].css]]){mctx.strokeStyle=c;mctx.lineWidth=w;mctx.beginPath();mctx.moveTo(x-r,z-r);mctx.lineTo(x+r,z+r);mctx.moveTo(x+r,z-r);mctx.lineTo(x-r,z+r);mctx.stroke()}}
   for(const f of fetches){if(f.ti!==0&&f.tt!==0&&!isVis(f.x,f.z))continue;const t=fetchTarget(f);if(t){mctx.strokeStyle='rgba(10,8,8,.75)';mctx.setLineDash([2,2]);mctx.lineWidth=1;mctx.beginPath();mctx.moveTo(f.x*sc,f.z*sc);mctx.lineTo(f.x*sc+wd(t.x-f.x)*sc,f.z*sc+wd(t.z-f.z)*sc);mctx.stroke();mctx.setLineDash([])}mctx.fillStyle='#050404';mctx.beginPath();mctx.arc(f.x*sc,f.z*sc,3,0,TAU);mctx.fill();mctx.strokeStyle='rgba(255,255,255,.6)';mctx.stroke()}
   const cx=cam.fx*sc,cz=cam.fz*sc,rr=cam.dist*.55*sc;mctx.strokeStyle='rgba(255,255,255,.85)';mctx.lineWidth=1;mctx.beginPath();mctx.arc(cx,cz,rr,0,TAU);mctx.stroke();
@@ -3291,7 +3311,8 @@ function onTap(sx,sy,right,shift){if(over||watching)return;const T=tribes[0],g=p
   if(!grp.length){if(!right&&!hu&&!hb&&sel.length)setSel([]);return}
   command(grp,g,hu,hb,ht)}
 function mark(x,z,r,g,b){const y=Math.max(0,hAt(x,z))+.2;for(let i=0;i<16;i++){const a=i/16*TAU;PA.emit(x+Math.cos(a)*.6,y,z+Math.sin(a)*.6,Math.cos(a)*.6,.6,Math.sin(a)*.6,.45,r,g,b,1,.3,0)}}
-function command(grp,g,hu,hb,ht){if(grp.filter(u=>u.type==='balloon'&&u.tribe===0).length>=30)earn('x_balloons30');grp=grp.filter(u=>!u.carry);if(!grp.length){toast('The osses will not listen until their captives are home');return}for(const u of grp)if(u.ferryJ){u.ferryJ=0;u.fs=null}
+function command(...a){inCommand=true;try{return command0(...a)}finally{inCommand=false}}
+function command0(grp,g,hu,hb,ht){if(grp.filter(u=>u.type==='balloon'&&u.tribe===0).length>=30)earn('x_balloons30');grp=grp.filter(u=>!u.carry);if(!grp.length){toast('The osses will not listen until their captives are home');return}for(const u of grp)if(u.ferryJ){u.ferryJ=0;u.fs=null}
   for(const u of grp){u.post=null;u.postSpot=false}
   const guardable=hb&&(hb.bt==='barrow'||((hb.bt==='tomb'||hb.bt==='oak')&&hb.tribe===0));
   if(guardable){const sh=grp.find(u=>u.type==='shaman');let rest=grp.filter(u=>u!==sh);
@@ -3348,7 +3369,7 @@ function unplace(){placing=null;hedgeStart=null;hint(null)}
 function hint(t,go){$('hint').hidden=!t;$('hintGo').hidden=!go;if(t)$('hintT').textContent=t}
 $('hintGo').addEventListener('click',()=>{if(armed==='arma'){invokeArma(0)}disarm()});
 $('hintX').addEventListener('click',()=>{disarm();unplace()});
-let tab='spells',chgIdx=-1;const tabEls={spells:$('pSpells'),build:$('pBuild'),tribe:$('pTribe'),train:$('pTrain')};
+let tab='spells',chgIdx=-1,glamToastT=0;const tabEls={spells:$('pSpells'),build:$('pBuild'),tribe:$('pTribe'),train:$('pTrain')};
 function setTab(t){tab=t;for(const k in tabEls)tabEls[k].hidden=k!==t;document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.tab===t));if(t==='tribe')renderTribe(true);if(t==='train')renderTrain(true)}
 $('tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(b)setTab(b.dataset.tab)});
 function updTiles(){const T=tribes[0];if(!T)return;const att=T.attainUntil>gt;for(const t of spTiles){const s=SPK[t.dataset.k],cost=s.k==='arma'?MANA_MAX:spellCost(T,s.k);t.classList.toggle('poor',T.mana<cost);if(s.k!=='arma'){const ce=t.querySelector('.cost'),txt=String(cost);if(ce.textContent!==txt)ce.textContent=txt}t.classList.toggle('armed',armed===s.k);const cd=Math.max(0,((T.cd[s.k]||0)-gt)/s.cd);t.lastChild.style.height=(cd*100)+'%'}

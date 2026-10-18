@@ -21,7 +21,8 @@ A place to keep design ideas between sessions. Nothing here is built yet. Each e
   - **Ochre (a bit of everything):** Blast, Lightning, Plague of Flies, Shield, Hypnotise, Day o'the Stones, Changeling, the Fetch.
 
   Rival Cunning Women also unmask your changelings.
-- **Next:** teaching rivals to offer animals; Pricking to reveal familiars; Glamour.
+- **Built in v138:** Glamour and Pricking. Forest carries Glamour in place of Ghost Army, and Ochre carries Pricking in place of Plague of Flies.
+- **Next:** teaching rivals to offer animals.
 - **Later:** the challenge levels, one per proven spell; then the unlock wiring (finishing the campaign opens the challenge campaign, and challenge levels open spells); then charms and counters as gaps appear.
 
 ## Structure (Decided)
