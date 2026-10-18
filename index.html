@@ -1093,7 +1093,11 @@ function kindle(u){if(!u.alive||u.chg==null)return;const by=u.chg,T=tribes[u.tri
   u.chg=null;if(b0){burnBld(b0,0,by);let b1=null,bd1=4.5*4.5;for(const b of blds){if(!b.alive||b===b0||b.tribe!==b0.tribe||BT[b.bt].inv||b.bt==='hedge'||b.bt==='reinc')continue;const d=d2(b0.x,b0.z,b.x,b.z);if(d<bd1){bd1=d;b1=b}}if(b1)burnBld(b1,2.5,by)}
   if(by===0&&!watching)toast(b0?`The changeling kindles the ${T?T.name+' ':''}${BT[b0.bt].label.toLowerCase()} and runs for the wilds.`:'The changeling found nothing to burn and runs for the wilds.');
   if(u.sel)deselect(u);u.type='wild';u.tribe=wildId;u.mhp=UT.wild.hp;u.hp=Math.min(u.hp,u.mhp);u.order=null;u.tgt=null;u.cmd=false;const a=R()*TAU;u.st='flee';u.ft=5;setTarget(u,u.x+Math.cos(a)*10,u.z+Math.sin(a)*10)}
-function chgTick(){for(const T of tribes)if(T&&!T.wild&&T.murrainUntil>gt)T.dread=Math.max(T.dread||0,TUNE.desertAt-DREAD.altar);
+// a changeling planted among your people shows itself when your Cunning Woman comes within a few paces; it is then a rival villager in your midst, to be cut down or taken by your osses
+function unmask(u){const by=u.chg;u.chg=null;u.unmaskT=gt;if(u.sel)deselect(u);u.tribe=by;u.order=null;u.tgt=null;u.cmd=false;const sh=tribes[0].shaman;if(sh){const dx=wd(u.x-sh.x),dz=wd(u.z-sh.z),l=Math.hypot(dx,dz)||1;u.st='flee';u.ft=3;setTarget(u,u.x+dx/l*6,u.z+dz/l*6)}
+  const y=unitY(u);for(let i=0;i<14;i++)PN.emit(u.x,y+.4,u.z,(R()-.5)*.8,.6+R(),(R()-.5)*.8,1.2,.12,.1,.1,.7,.8,-.2);if(!watching)toast(`Your Cunning Woman has found a changeling among your people. It is ${tribes[by]?'a '+tribes[by].name:'a rival'} creature: cut it down, or send an oss to take it for the fire.`)}
+function chgTick(){{const sh=tribes[0]&&tribes[0].shaman;if(sh&&sh.alive&&!sh.inV&&!watching)for(const u of units)if(u.alive&&u.tribe===0&&u.chg!=null&&u.chg!==0&&d2(u.x,u.z,sh.x,sh.z)<6*6)unmask(u)}
+for(const T of tribes)if(T&&!T.wild&&T.murrainUntil>gt)T.dread=Math.max(T.dread||0,TUNE.desertAt-DREAD.altar);
 for(const u of units)if(u.alive&&u.chg!=null&&gt>=u.chgAt)kindle(u)}
 // ---- offering livestock (test mode) ----
 const ANI_FRAC={chicken:.3,rabbit:.2}; // a chicken breeds back in 90 s, a rabbit in 60 s: the same mana a minute
@@ -2909,6 +2913,7 @@ function drawEntities(){
     if(u.air)yaw+=gt*9;
     let sy=1;if(u.past&&u.st==='idle'&&u.pastT>gt){const ph=gt*2+u.anim;if(u.past==='sit'){y-=.13;sy=.76;yaw+=Math.sin(ph*.4)*.08}else if(u.past==='tend'){const b=Math.max(0,Math.sin(ph*1.5));y-=.09*b;sy=1-.22*b}else if(u.past==='chat'){yaw+=Math.sin(ph*1.7)*.2;if(Math.sin(ph*.8)>.92)y+=.05}}
     if(u.chg===0&&!watching&&HALO.n<HALO.max&&Math.sin(gt*2.2+u.anim)>.55)HALO.emit(u.x,unitY(u)+.55,u.z,0,0,0,1,1,.85,.35,.55,.9,0);
+    else if(u.unmaskT&&gt-u.unmaskT<40&&!watching&&HALO.n<HALO.max&&Math.sin(gt*4+u.anim)>.2)HALO.emit(u.x,unitY(u)+.55,u.z,0,0,0,1,1,.25,.15,.6,1,0);
     const i=M.n++;place(M.t,i,rx+ox,y,rz+oz,yaw,sc,sy);place(M.f,i,rx+ox,y,rz+oz,yaw,sc,sy);
     _c.copy(tribes[u.tribe].c);if(gt-u.hitT<.12)_c.setRGB(1,1,1);else if(tribes[u.tribe].frenzyUntil>gt)_c.lerp(FRENZY_C,.25+.15*Math.sin(gt*9+u.anim));else if(u.shield>gt)_c.lerp(SHIELD_C,.5+.15*Math.sin(gt*5));if(u.hyp)_c.lerp(WHITE_C,.3+.3*Math.sin(gt*7));
     M.t.setColorAt(i,_c);M.f.setColorAt(i,WHITE_C);
