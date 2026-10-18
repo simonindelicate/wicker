@@ -890,7 +890,7 @@ function decorTick(dt){
   // livestock (test mode only for now): each settled well keeps a black goat, a few chickens and a hutch of rabbits
   stockOn=devMode();for(const a of stock)if(!wells.includes(a.w)&&a.offer&&a.offer.aq)a.offer.aq--;stock=stock.filter(a=>wells.includes(a.w));hutches=hutches.filter(h=>wells.includes(h.w));if(!stockOn)return;
   // carcasses of murrain spread dread, then rot away; flocks breed back when no carcass lies near
-  for(const a of stock)if(a.dead){const T=tribes[a.tribe];if(T&&!T.wild)T.dread=Math.min(100,(T.dread||0)+1.5)}stock=stock.filter(a=>!(a.dead&&gt-a.dead>60));
+stock=stock.filter(a=>!(a.dead&&gt-a.dead>60));
   for(const w of wells){if(!w.want||stock.some(a=>a.w===w&&a.dead))continue;w.nx=w.nx||{};for(const kind of ['goat','chicken','rabbit']){const have=stock.filter(a=>a.w===w&&a.kind===kind).length;if(have>=(w.want[kind]||0)){w.nx[kind]=0;continue}
       if(!w.nx[kind]){w.nx[kind]=gt+(kind==='goat'?200:kind==='chicken'?90:60);continue}if(gt<w.nx[kind])continue;w.nx[kind]=0;
       if(kind==='rabbit'){const h=hutches.find(o=>o.w===w);if(!h)continue;const r={kind:'rabbit',w,hutch:h,tribe:w.tribe,lx:(R()-.5)*.8,lz:.4+R()*.6,wait:1,anim:R()*9,face:R()*TAU,born:gt};r.tlx=r.lx;r.tlz=r.lz;stock.push(r)}
@@ -900,7 +900,7 @@ function decorTick(dt){
     mk('goat',at(2,5,0));const nc=3+(R()*3|0);for(let k=0;k<nc;k++)mk('chicken',at(1.5,4,0));w.want={goat:1,chicken:nc,rabbit:0};
     const hp=at(3,6,1);if(hp&&!patches.some(q=>d2(q.x,q.z,hp.x,hp.z)<2.5*2.5)){const h={w,tribe:w.tribe,x:hp.x,z:hp.z,yaw:Math.atan2(wd(w.x-hp.x),wd(w.z-hp.z))};hutches.push(h);const nr=2+(R()*2|0);w.want.rabbit=nr;for(let k=0;k<nr;k++){const r={kind:'rabbit',w,hutch:h,tribe:w.tribe,lx:(R()-.5)*.8,lz:.4+R()*.6,wait:R()*2,anim:R()*9,face:R()*TAU};r.tlx=r.lx;r.tlz=r.lz;stock.push(r)}}}}
 function stockTick(dt){if(!stockOn)return;let gone=false;for(const a of stock){if(a.dead)continue;
-    if(a.sick&&gt>=a.sick){a.dead=gt;a.moving=false;if(a.offer){if(a.offer.aq)a.offer.aq--;a.offer=null}continue}
+    if(a.sick&&gt>=a.sick){a.dead=gt;a.moving=false;{const T=tribes[a.tribe];if(T)T.murrainUntil=Math.max(T.murrainUntil||0,gt+60)}if(a.offer){if(a.offer.aq)a.offer.aq--;a.offer=null}continue}
     if(a.offer){const b=a.offer;if(!b.alive||b.lit||b.tribe!==a.tribe){if(b.aq)b.aq--;a.offer=null;continue}if(a.wait>0){a.wait-=dt;continue}const dx=wd(b.dx-a.x),dz=wd(b.dz-a.z),l=Math.hypot(dx,dz),sp=(a.kind==='goat'?1.4:1.7)*dt;
       if(l<.5){if(offerAnimal(a,b)){a.gone=true;gone=true}continue}a.x=wrap(a.x+dx/l*Math.min(l,sp));a.z=wrap(a.z+dz/l*Math.min(l,sp));a.face=Math.atan2(dx,dz);a.moving=true;continue}
     if(a.kind==='rabbit'&&a.hutch){const h=a.hutch;if(a.wait>0){a.wait-=dt;a.moving=false}else{const dx=a.tlx-a.lx,dz=a.tlz-a.lz,l=Math.hypot(dx,dz),sp=.9*dt;
@@ -1093,9 +1093,10 @@ function kindle(u){if(!u.alive||u.chg==null)return;const by=u.chg,T=tribes[u.tri
   u.chg=null;if(b0){burnBld(b0,0,by);let b1=null,bd1=4.5*4.5;for(const b of blds){if(!b.alive||b===b0||b.tribe!==b0.tribe||BT[b.bt].inv||b.bt==='hedge'||b.bt==='reinc')continue;const d=d2(b0.x,b0.z,b.x,b.z);if(d<bd1){bd1=d;b1=b}}if(b1)burnBld(b1,2.5,by)}
   if(by===0&&!watching)toast(b0?`The changeling kindles the ${T?T.name+' ':''}${BT[b0.bt].label.toLowerCase()} and runs for the wilds.`:'The changeling found nothing to burn and runs for the wilds.');
   if(u.sel)deselect(u);u.type='wild';u.tribe=wildId;u.mhp=UT.wild.hp;u.hp=Math.min(u.hp,u.mhp);u.order=null;u.tgt=null;u.cmd=false;const a=R()*TAU;u.st='flee';u.ft=5;setTarget(u,u.x+Math.cos(a)*10,u.z+Math.sin(a)*10)}
-function chgTick(){for(const u of units)if(u.alive&&u.chg!=null&&gt>=u.chgAt)kindle(u)}
+function chgTick(){for(const T of tribes)if(T&&!T.wild&&T.murrainUntil>gt)T.dread=Math.max(T.dread||0,TUNE.desertAt-DREAD.altar);
+for(const u of units)if(u.alive&&u.chg!=null&&gt>=u.chgAt)kindle(u)}
 // ---- offering livestock (test mode) ----
-const ANI_FRAC={chicken:.25,rabbit:.25};
+const ANI_FRAC={chicken:.3,rabbit:.2}; // a chicken breeds back in 90 s, a rabbit in 60 s: the same mana a minute
 function aniValue(b,kind){const y=YIELD[BT[b.bt].site];let v=kind==='goat'?y[1]:y[0]*ANI_FRAC[kind];if(b.bt==='altar')v*=grove(b);return v}
 function aniAvail(ti,kind){return stock.filter(a=>a.tribe===ti&&a.kind===kind&&!a.dead&&!a.sick&&!a.offer&&!(a.kid&&gt-a.born<120))}
 function sendAnimal(b,kind){const c=aniAvail(b.tribe,kind);if(!c.length)return false;let a=c[0],bd=1e18;for(const o of c){const d=d2(o.x,o.z,b.x,b.z);if(d<bd){bd=d;a=o}}if(a.hutch){a.hutch=null;a.free=true}a.offer=b;a.wait=0;if(b.bt!=='altar')b.aq=(b.aq||0)+1;return true}
@@ -2811,6 +2812,7 @@ const BM={};for(const k in BMOD)BM[k]=mkPair(BMOD[k],k==='reinc'||k==='barrow'||
 BM.barrow.t.material=new C.MeshLambertMaterial({color:0xffffff,flatShading:true});
 // where hut bunting is tied: just under the roof peak of whatever the hut model is now
 let HUT_TOP=1.78;function measureHut(){let y=0;for(const m of[BM.hut.t,BM.hut.f]){m.geometry.computeBoundingBox();y=Math.max(y,m.geometry.boundingBox.max.y)}HUT_TOP=Math.max(.8,y-.06)}measureHut();
+const SILA={};for(const k of ['goat','chicken','rabbit']){const d=UMOD[k]();SILA[k]=inst(merge(d.t.concat(d.f).map(q=>({g:q.g,c:0xffffff}))),new C.MeshBasicMaterial({vertexColors:true}),40)}
 const SIL=inst(merge([P(cyl(.09,.15,.42,5),0xffffff,0,.21,0),P(new C.SphereGeometry(.1,6,5),0xffffff,0,.53,0)]),new C.MeshBasicMaterial({vertexColors:true}),200);
 const CM=inst(merge([P(cyl(.1,.1,.42,5),0xa59d8c,0,0,0,0,0,Math.PI/2),P(new C.SphereGeometry(.1,6,5),0xc49a7c,.26,.02,0)]),matF,240);
 const FLAG=(()=>{const g=new C.BufferGeometry(),v=new Float32Array([-.06,0,0,.06,0,0,0,-.14,0]);g.setAttribute('position',new C.BufferAttribute(v,3));g.computeVertexNormals();return inst(g,new C.MeshLambertMaterial({color:0xffffff,side:C.DoubleSide}),900)})();
@@ -2914,11 +2916,13 @@ function drawEntities(){
   {const M=UM.captive;for(const b of blds){if(!b.alive||!b.done||b.bt!=='fold'||!b.capt.length)continue;if(b.tribe!==0&&!isVis(b.x,b.z))continue;const rx=wd(b.x-cam.fx),rz=wd(b.z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2)continue;
     const by=hAt(b.x,b.z)-drop(r2);for(let k=0;k<b.capt.length&&M.n<M.cap;k++){const a=k*2.4+b.id,rr=.25+.8*Math.sqrt((k+.5)/15),px=rx+Math.cos(a)*rr,pz=rz+Math.sin(a)*rr,i=M.n++,yy=by+Math.abs(Math.sin(gt*1.3+k*1.7))*.03,yaw=Math.atan2(-Math.cos(a),-Math.sin(a))+Math.sin(gt*.4+k)*.6;
       place(M.t,i,px,yy,pz,yaw,.95);place(M.f,i,px,yy,pz,yaw,.95);const o=tribes[b.capt[k]];_c.copy(o?o.c:WHITE_C);M.t.setColorAt(i,_c);M.f.setColorAt(i,WHITE_C)}}}
-  {let sn=0;for(const b of blds){if(!b.alive||!b.done||!(b.bt==='wicker'||b.bt==='god')||!b.inside.length)continue;if(b.tribe!==0&&!isVis(b.x,b.z))continue;const rx=wd(b.x-cam.fx),rz=wd(b.z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2)continue;
+  {let sn=0;const an={goat:0,chicken:0,rabbit:0};for(const b of blds){if(!b.alive||!b.done||!(b.bt==='wicker'||b.bt==='god')||!b.inside.length)continue;if(b.tribe!==0&&!isVis(b.x,b.z))continue;const rx=wd(b.x-cam.fx),rz=wd(b.z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2)continue;
     const by=hAt(b.x,b.z)-r2*K,god=b.bt==='god',n=Math.min(b.inside.length,god?12:5),lit=b.lit,burnK=lit?clamp((gt-(b.litT??gt))/6,0,1):0;
     for(let k=0;k<n&&sn<200;k++){let px,py,pz;if(god){px=((k%4)-1.5)*.55;pz=(Math.floor(k/4)-1)*.5;py=3.68}else{px=((k%3)-1)*.32;pz=k<3?.08:-.12;py=1.78+(k<3?0:.35)}
-      const sway=Math.sin(gt*(lit?9:2)+k*1.7)*(lit?.12:.04);[px,pz]=byaw(b,px+sway,pz);place(SIL,sn,rx+px,by+py,rz+pz,k+(b.yaw||0),.85);const gl=lit?.2+burnK*.8*(.6+.4*Math.sin(gt*11+k)):.15;_c.setRGB(gl,gl*.45,gl*.15);SIL.setColorAt(sn,_c);sn++}}
-    fin(SIL,sn)}
+      const sway=Math.sin(gt*(lit?9:2)+k*1.7)*(lit?.12:.04);[px,pz]=byaw(b,px+sway,pz);const gl=lit?.2+burnK*.8*(.6+.4*Math.sin(gt*11+k)):.15;_c.setRGB(gl,gl*.45,gl*.15);const o=b.inside[k];
+      if(o&&o.ani){const M=SILA[o.ani];if(an[o.ani]<40){place(M,an[o.ani],rx+px,by+py,rz+pz,k+(b.yaw||0),o.ani==='goat'?1.1:1.5);M.setColorAt(an[o.ani],_c);an[o.ani]++}continue}
+      place(SIL,sn,rx+px,by+py,rz+pz,k+(b.yaw||0),.85);SIL.setColorAt(sn,_c);sn++}}
+    fin(SIL,sn);for(const k in SILA)fin(SILA[k],an[k])}
   {let bn=0;for(const p of projs){if(p.kind!=='boulder'||bn>=90)continue;const f=Math.min(1,p.t/p.dur),x=wrap(p.sx+wd(p.tx-p.sx)*f),z=wrap(p.sz+wd(p.tz-p.sz)*f),y=lerp(p.sy,p.ty,f);
       const rx=wd(x-cam.fx),rz=wd(z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2||!seenAt(x,z))continue;place(BOULDER,bn,rx,y-r2*K,rz,p.t*7+p.sc*9,p.sc);_c.setRGB(1,1,1);BOULDER.setColorAt(bn,_c);bn++}fin(BOULDER,bn)}
   {let gn=0;for(const bn of banners){if(gn>=60)break;const rx=wd(bn.x-cam.fx),rz=wd(bn.z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2||!seenAt(bn.x,bn.z))continue;const y=hAt(bn.x,bn.z)-r2*K,yw=Math.sin(gt*1.3+bn.id)*.08;
