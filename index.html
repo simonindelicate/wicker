@@ -477,7 +477,7 @@ const BT={
   torch:{s:1,wood:0,time:1,hp:1400,label:'Scrying Torch',info:'A burning beacon; the land around it stays in sight while it stands'},
   tomb:{s:3,wood:0,time:1,hp:5000,label:'Tomb Fortress',info:'Your Cunning Woman lies sealed here'},
   oak:{s:4,wood:300,time:50,hp:1500,label:"Herne's Oak",info:'Hang your Cunning Woman from it for two minutes and the Wild Hunt rides'},
-  cottage:{s:3,wood:80,bmana:300,time:20,hp:450,label:"Cunning Woman's Cottage",info:'Opens the Train tab: train any fighter from one place, keep numbers topped up, and send idle osses roaming. One per village'},
+  cottage:{s:3,wood:80,bmana:300,time:20,hp:450,label:'Cottage',info:'Opens the Train tab: train any fighter from one place, keep numbers topped up, and send idle osses roaming. One per village'},
   balloon:{s:4,wood:80,time:26,hp:400,label:'Balloon Works',train:'balloon',mana:60,tt:14,info:'Builds balloons'},
   wicker:{s:3,wood:80,time:20,hp:300,label:'Wicker Man',site:'wicker',holdN:5,burnT:8,info:'Holds five; burns for mana and a frenzy'},
   reinc:{s:3,wood:0,time:1,hp:1e9,label:'Stone Circle',info:'Your Cunning Woman is reborn here',inv:true},
@@ -572,7 +572,7 @@ const SCEN=[
   me:{mana:250,wood:150,huts:2,manaMult:1.5},ai:{first:720,breed:.6,cap:40,mil:.25,gap:2},
   intro:'‘tis time to keep thy appointment with the wicker man. An offering in the flames is far more prized by the land, but such a rite cannot be wasted on fewer than five of… the right kind of adult.'},
  {title:'Hobby Horse',season:'spring',seed:3313,style:'continent',enemies:1,diff:'easy',fog:true,goal:{type:'captives',n:10},
-  addB:['osshouse','fold','cottage'],addS:['swarm','torch'],news:['Oss House','Thrall Fold',"Cunning Woman's Cottage",'Plague of Flies','Scrying Torch'],wild:1.8,
+  addB:['osshouse','fold','cottage'],addS:['swarm','torch'],news:['Oss House','Thrall Fold','Cottage','Plague of Flies','Scrying Torch'],wild:1.8,
   me:{mana:250,wood:180,huts:2},ai:{first:900,cap:50},
   intro:'Behold the Oss, O Cunning Woman - send them out amidst the wilds to seek those poor lost hearthless folk. Would not their lives be better returned to the fecund soil wherein all life gestates? The Osses shall capture them beneath their oilskin capes and return them happily to thy thrall folds. From thence - renewal!'},
  {title:'Bowmen',season:'summer',seed:4421,style:'continent',enemies:1,diff:'normal',fog:true,goal:{type:'conquer'},
@@ -3107,7 +3107,7 @@ let tab='spells';const tabEls={spells:$('pSpells'),build:$('pBuild'),tribe:$('pT
 function setTab(t){tab=t;for(const k in tabEls)tabEls[k].hidden=k!==t;document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.tab===t));if(t==='tribe')renderTribe(true);if(t==='train')renderTrain(true)}
 $('tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(b)setTab(b.dataset.tab)});
 function updTiles(){const T=tribes[0];if(!T)return;const att=T.attainUntil>gt;for(const t of spTiles){const s=SPK[t.dataset.k],cost=s.k==='arma'?MANA_MAX:spellCost(T,s.k);t.classList.toggle('poor',T.mana<cost);if(s.k!=='arma'){const ce=t.querySelector('.cost'),txt=String(cost);if(ce.textContent!==txt)ce.textContent=txt}t.classList.toggle('armed',armed===s.k);const cd=Math.max(0,((T.cd[s.k]||0)-gt)/s.cd);t.lastChild.style.height=(cd*100)+'%'}
-  for(const t of bTiles){const D=BT[t.dataset.b];t.classList.toggle('poor',T.wood<D.wood||(D.bmana&&T.mana<D.bmana))}
+  for(const t of bTiles){const D=BT[t.dataset.b];t.classList.toggle('poor',!!(T.wood<D.wood||(D.bmana&&T.mana<D.bmana)))}
   {const hc=hasCottage(),tb=$('tabTrain');if(tb.hidden===hc){tb.hidden=!hc;if(!hc&&tab==='train')setTab('tribe')}}}
 let dockDirty=true,lastTribeHTML='';
 function plural(n,t){return n+' '+(n===1?UT[t].label.toLowerCase():UT[t].pl)}
