@@ -218,7 +218,7 @@ details.help summary{cursor:pointer;color:var(--text);font:14px var(--f-display)
     <div class="wsBar wsSmall"><span>Preview in</span><span id="wsTribe" class="wsTribe"></span><label class="wsChk"><input type="checkbox" id="wsRef" checked> Villager for scale</label></div>
     <div id="wsParts" class="wsParts"></div>
     <div class="wsBar wsSmall" id="wsAddRow"><span>Add</span><button class="btn" data-s="box">Box</button><button class="btn" data-s="cyl">Cylinder</button><button class="btn" data-s="cone">Cone</button><button class="btn" data-s="sphere">Ball</button><button class="btn" data-s="ring">Ring</button></div>
-    <div class="wsBar wsSmall"><span>Part</span><button class="btn" id="wsDup">Copy</button><button class="btn" id="wsMirror" title="Copy to the other side, mirrored">Mirror</button><button class="btn" id="wsDel">Delete</button></div>
+    <div class="wsBar wsSmall"><span>Part</span><button class="btn" id="wsDup">Copy</button><button class="btn" id="wsMirror" title="Copy to the other side (left and right), mirrored">Mirror X</button><button class="btn" id="wsMirrorZ" title="Copy to the other end (front and back), mirrored">Mirror Z</button><button class="btn" id="wsDel">Delete</button></div>
     <div class="wsBar wsSmall"><span>Several</span><button class="btn" id="wsAddSel" aria-pressed="false" title="While on, taps add to the selection (same as shift-click)">Add</button><button class="btn" id="wsGroup" title="Keep the selected parts together">Group</button><button class="btn" id="wsUngroup">Ungroup</button></div>
     <div id="wsProps"></div>
     <div class="wsBar wsSmall wsFoot"><button class="btn" id="wsReset">Back to original</button><button class="btn" id="wsExport">Export</button><button class="btn" id="wsImport">Import</button></div>
@@ -518,10 +518,11 @@ const SP=[
   {k:'murrain',n:'Murrain',c:200,cd:30,r:14,rad:6,s:0},
   {k:'phillip',n:'Black Phillip',c:350,cd:45,r:14,rad:1.5,s:0},
   {k:'familiar',n:'Familiar',c:250,cd:30,r:14,rad:1.5,s:1},
+  {k:'fetch',n:'The Fetch',c:900,cd:60,r:999,rad:1,s:0},
   {k:'arma',n:'All-against-all',c:TUNE.manaMax,cd:1,r:0,rad:0,s:0},
 ];
 const SPK={};SP.forEach(s=>SPK[s.k]=s);
-const SPDESC={phillip:'Cast on a rival\'s black goat. It goes about unnoticed until it kicks, killing the first it strikes, then rampages through their village for thirty seconds.',familiar:'Cast on your own black goat. Unseen by any rival, it goes from altar to altar drinking their mana and sending it home, and lifts the fog wherever it walks.',changeling:'Swap a rival villager for a changeling. It goes home unsuspected; kindle it (or wait three minutes) and it sets fire to where it stands.',murrain:'A cattle plague. Rival livestock in the area sicken and die, and their carcasses spread dread.',torch:'Scry where e\'re the beacon burns. For it shalbe thine eyes.',blast:'Thy will readily done upon thine enemies.',lightning:'The strike of thunder is a blow no man or woman can survive.',swarm:'Calls forth a cloud o’ wicked horseflies to bite and sting and scatter thy assailants for ten seconds.',convert:'Turns wandering wildmen within the circle into your villagers.',shield:'A ward against harm for those within its ‘fluence.',ghost:'Raise the shades of dead men. Brief candles who make war, draw the eye and melt away come striking.',bridge:'Raise up a causeway towards heights and across water.',flatten:'From crags and cliffsides spring forth green and level fields. Cannot be cast upon the water.',hypno:'Witch them to thy cause - they’ll fight for you for twenty-five seconds.',whirl:'A twisting wind that tears walls from their foundations afore wand’ring in search of new victims.',swamp:'A sucking mire that offers safe passage to those who know the way - and clammy death to those who do not. Will remain until ten are claimed.',erode:'Creates a dyke within the downs to drown thy foes and their works.',quake:'Behold, the very earth shall shake and rupture.',fire:'A bitter rain of stoney death. Watch as they flee their collapsing homes.',angel:'Engender a plague of paroxysms, contagion and a bloody demise.',volcano:'Nature’s cruellest vengeance at the command.',arma:'There shalbe a moot at the world’s end and every living souls shalbe a soldier in the battle of all against all. So hath it been and so mote it be.'};
+const SPDESC={fetch:'Thy Cunning Woman gives birth to her fetch. It walks slowly and straight for a rival Cunning Woman, over sea and hill, and cannot be stopped. It can only be outrun, and it fades after ninety seconds.',phillip:'Cast on a rival\'s black goat. It goes about unnoticed until it kicks, killing the first it strikes, then rampages through their village for thirty seconds.',familiar:'Cast on your own black goat. Unseen by any rival, it goes from altar to altar drinking their mana and sending it home, and lifts the fog wherever it walks.',changeling:'Swap a rival villager for a changeling. It goes home unsuspected; kindle it (or wait three minutes) and it sets fire to where it stands.',murrain:'A cattle plague. Rival livestock in the area sicken and die, and their carcasses spread dread.',torch:'Scry where e\'re the beacon burns. For it shalbe thine eyes.',blast:'Thy will readily done upon thine enemies.',lightning:'The strike of thunder is a blow no man or woman can survive.',swarm:'Calls forth a cloud o’ wicked horseflies to bite and sting and scatter thy assailants for ten seconds.',convert:'Turns wandering wildmen within the circle into your villagers.',shield:'A ward against harm for those within its ‘fluence.',ghost:'Raise the shades of dead men. Brief candles who make war, draw the eye and melt away come striking.',bridge:'Raise up a causeway towards heights and across water.',flatten:'From crags and cliffsides spring forth green and level fields. Cannot be cast upon the water.',hypno:'Witch them to thy cause - they’ll fight for you for twenty-five seconds.',whirl:'A twisting wind that tears walls from their foundations afore wand’ring in search of new victims.',swamp:'A sucking mire that offers safe passage to those who know the way - and clammy death to those who do not. Will remain until ten are claimed.',erode:'Creates a dyke within the downs to drown thy foes and their works.',quake:'Behold, the very earth shall shake and rupture.',fire:'A bitter rain of stoney death. Watch as they flee their collapsing homes.',angel:'Engender a plague of paroxysms, contagion and a bloody demise.',volcano:'Nature’s cruellest vengeance at the command.',arma:'There shalbe a moot at the world’s end and every living souls shalbe a soldier in the battle of all against all. So hath it been and so mote it be.'};
 const ICON={
   blast:'<circle cx="12" cy="12" r="4"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l3 3M16 16l3 3M5 19l3-3M16 8l3-3"/>',
   lightning:'<path d="M13 2L5 14h6l-2 8 8-12h-6l2-8z"/>',
@@ -535,6 +536,7 @@ const ICON={
   murrain:'<path d="M4 14c0-3 3-5 8-5s8 2 8 5-3 4-8 4-8-1-8-4z"/><path d="M7 18v3M17 18v3M6 9l-2-3M18 9l2-3"/>',
   phillip:'<path d="M5 10l3-6M19 10l-3-6M7 10h10l-1 7H8z"/><path d="M10 21l2-4 2 4"/>',
   familiar:'<path d="M7 10l2-6M17 10l-2-6M8 10h8l-1 6H9z"/><circle cx="12" cy="20" r="1.5"/>',
+  fetch:'<path d="M12 3c-3 0-5 3-5 7v11l2-2 2 2 1-2 1 2 2-2 2 2V10c0-4-2-7-5-7z"/><path d="M10 10h.01M14 10h.01"/>',
   hypno:'<path d="M12 12a1 1 0 0 1 1 1 2 2 0 0 1-2 2 3 3 0 0 1-3-3 4 4 0 0 1 4-4 5 5 0 0 1 5 5 6 6 0 0 1-6 6 7 7 0 0 1-7-7"/>',
   whirl:'<path d="M3 5h18M5 9h14M7 13h10M9 17h6M11 21h2"/>',
   torch:'<path d="M12 22v-9M9 13h6l-1 2h-4z"/><path d="M12 11c-2-1-2-3-1-5 0 2 2 2 2 0 1 2 1 4-1 5z"/>',
@@ -664,7 +666,7 @@ const allowB=t=>!allowSets||(t==='tomb'?allowSets.tomb:allowSets.b.has(t));
 const allowS=k=>!allowSets||allowSets.s.has(k);
 // Grimoire mode (test mode for now): the player casts only the spells chosen before the game; rivals keep every spell. All-against-all is always to hand.
 const GRIM_N=8,GRIM_KEY='wicker-grimoire-v1';
-const NEW_SP=['changeling','murrain','phillip','familiar'];
+const NEW_SP=['changeling','murrain','phillip','familiar','fetch'];
 const palOK=k=>{const g=settings.mode==='grimoire'&&settings.campaign==null&&settings.palette;if(!g)return !NEW_SP.includes(k);return k==='arma'||settings.palette.includes(k)};
 const allowPB=t=>allowB(t)&&!((scen()||{}).lockB||[]).includes(t);
 const CAMP_KEY='wicker-campaign-v1',DEV_KEY='wicker-dev';
@@ -842,7 +844,7 @@ function swampKill(c){const g=hazGrp[c],sw=swamps[g];if(!sw)return;sw.kills++;if
   delete swamps[g];if(x0<1e9)recompute(x0,z0,x1,z1);if(sw.owner===0&&!watching)toast(`Your bog has drowned ${TUNE.swampLives} and drains away, sated.`)}
 function setHedge(b,on){const c=wi(b.cz0)*N+wi(b.cx0);hedgeA[c]=on?1:0;recompute(b.cx0,b.cz0,b.cx0,b.cz0)}
 // ---- village colour: worn paths and flowers (cosmetic only) ----
-const FLOWER_C=[0xd85a7a,0xe7c84a,0xf1ece0,0xd85a7a,0xe7c84a,0xf1ece0],FLAG_C=[0xb8322a,0xe0b440,0xeee6d2,0x35629e,0x4f7a38];let buntings=[],patches=[],wells=[],tombBeds=[],stock=[],hutches=[],stains=[],stockOn=false;
+const FLOWER_C=[0xd85a7a,0xe7c84a,0xf1ece0,0xd85a7a,0xe7c84a,0xf1ece0],FLAG_C=[0xb8322a,0xe0b440,0xeee6d2,0x35629e,0x4f7a38];let buntings=[],patches=[],wells=[],tombBeds=[],stock=[],hutches=[],stains=[],stockOn=false,fetches=[];
 // the fixed places around a building where flowers grow, nearest the walls first; the door side of a hut is left clear
 const FSPOTS=new WeakMap(),_fq=new C.Quaternion(),_fe=new C.Euler();
 const PALE_C=[0xeee6d2,0xd8c9a8,0xb8322a,0x9a6a4a,0xe9ddc3];
@@ -1122,6 +1124,17 @@ function famTick(a,dt){const F=a.fam,me=tribes[a.tribe];if(F.home){const r=famSt
   if(!F.at||!F.at.alive){const alts=blds.filter(b=>b.alive&&b.done&&b.bt==='altar'&&b.tribe!==a.tribe&&tribes[b.tribe]&&!tribes[b.tribe].wild&&famCell(a,field(b.dx,b.dz))>=0);if(!alts.length){F.home=true;return}
     let pool=alts.filter(b=>!F.seen.has(b.id));if(!pool.length){F.seen.clear();pool=alts.filter(b=>b.id!==F.last)}if(!pool.length)pool=alts;let best=pool[0],bd=1e18;for(const b of pool){const d=d2(a.x,a.z,b.x,b.z);if(d<bd){bd=d;best=b}}F.at=best;F.last=best.id}
   const r=famStep(a,F.at.dx,F.at.dz,1.8*dt*F.spd);if(r===1)F.drink=3;else if(r<0){F.seen.add(F.at.id);F.at=null}}
+// ---- the fetch: a pursuer in black smoke that cannot be stopped, only outrun ----
+function fetchTarget(f){if(f.tgt&&f.tgt.alive)return f.tgt;const T=tribes[f.tt];if(T&&T.tomb&&T.tomb.alive)return T.tomb;return null}
+function fetchEnd(f,why){f.done=true;const y=Math.max(0,hAt(f.x,f.z));for(let i=0;i<40;i++)PN.emit(f.x+(R()-.5)*.6,y+.3+R()*1.8,f.z+(R()-.5)*.6,(R()-.5)*2,.3+R()*1.2,(R()-.5)*2,1.4+R(),.03,.03,.03,.8,1.3,-.05);
+  if(!watching&&f.ti===0&&why)toast(why);else if(!watching&&f.tt===0&&why)toast(why==='fed'?'The fetch has taken your Cunning Woman.':'The fetch fades.')}
+function fetchTick(dt){if(!fetches.length)return;for(const f of fetches){if(f.done)continue;const t=fetchTarget(f);if(!t){fetchEnd(f,'The fetch has nothing left to walk for, and fades.');continue}if(gt>=f.end){fetchEnd(f,f.tt===0?'The fetch fades.':'Your fetch fades before it reached her.');continue}
+    const dx=wd(t.x-f.x),dz=wd(t.z-f.z),l=Math.hypot(dx,dz)||1,stop=t.bt?4:.8;
+    if(l<=stop){if(!t.bt){atk=f.ti;const y=unitY(t);for(let i=0;i<24;i++)PN.emit(t.x,y+.5,t.z,(R()-.5)*2,1+R()*2,(R()-.5)*2,1.5,.03,.03,.03,.9,1.2,-.1);flash(.3);killUnit(t,null);fetchEnd(f,f.ti===0?`Your fetch has taken the ${tribes[f.tt].name} Cunning Woman.`:'fed')}continue}
+    const sp=1.5*dt;f.x=wrap(f.x+dx/l*sp);f.z=wrap(f.z+dz/l*sp);f.face=Math.atan2(dx,dz);
+    const c=cidx(f.x,f.z);if(c!==f.lc){f.lc=c;if(hAt(f.x,f.z)>.3&&!bOcc[c]){let s2=0,n=0;forVerts(f.x,f.z,1.6,q=>{if(H[q]>.25){s2+=H[q];n++}});if(n){const tg=Math.max(.45,s2/n);const bb=forVerts(f.x,f.z,1.6,(q,d)=>{if(H[q]>.25&&!bOcc[q])H[q]=lerp(H[q],tg,1-sstep(1,1.6,d))});postTerrain(...bb);for(const tr of trees)if(tr.alive&&d2(tr.x,tr.z,f.x,f.z)<1.2)killTree(tr)}}}
+    if(R()<dt*20){const y=Math.max(0,hAt(f.x,f.z));PN.emit(f.x+(R()-.5)*.5,y+.2+R()*1.4,f.z+(R()-.5)*.5,(R()-.5)*.3,.3+R()*.5,(R()-.5)*.3,1+R(),.04,.04,.04,.6,.8,-.05)}}
+  fetches=fetches.filter(f=>!f.done)}
 function chgTick(){phillipTick();{const sh=tribes[0]&&tribes[0].shaman;if(sh&&sh.alive&&!sh.inV&&!watching)for(const u of units)if(u.alive&&u.tribe===0&&u.chg!=null&&u.chg!==0&&d2(u.x,u.z,sh.x,sh.z)<6*6)unmask(u)}
 for(const T of tribes)if(T&&!T.wild&&T.murrainUntil>gt)T.dread=Math.max(T.dread||0,TUNE.desertAt-DREAD.altar);
 for(const u of units)if(u.alive&&u.chg!=null&&gt>=u.chgAt)kindle(u)}
@@ -1566,6 +1579,11 @@ function castSpell(ti,k,px,pz,cu){atk=ti;let sx=cu?cu.x:px,sz=cu?cu.z:pz,sy=cu?u
   case 'familiar':{let g=null,bd=3*3;for(const a of stock){if(a.kind!=='goat'||a.tribe!==ti||a.dead||a.sick||a.offer||a.fam||(a.kid&&gt-a.born<120))continue;const d=d2(px,pz,a.x,a.z);if(d<bd){bd=d;g=a}}
     if(!g||stock.some(a=>a.fam&&a.tribe===ti)){const T=tribes[ti];T.mana+=spellCost(T,'familiar');T.cd.familiar=0;if(ti===0)toast(g?'You already have a familiar abroad':'The familiar must be cast on your own grown black goat');break}
     g.fam={visits:0,spd:1,drink:0,at:null,seen:new Set(),got:0,home:false};if(ti===0)toast('Your goat becomes your familiar. No rival will see it.');break}
+  case 'fetch':{const T=tribes[ti];let best=null,bd=1e18;if(!fetches.some(f=>f.ti===ti))for(const o of tribes){if(o.wild||o.id===ti||!o.alive)continue;const t=o.shaman&&o.shaman.alive?o.shaman:o.tomb&&o.tomb.alive?o.tomb:null;if(!t)continue;const d=d2(px,pz,t.x,t.z);if(d<bd){bd=d;best=o}}
+    if(!best){T.mana+=spellCost(T,'fetch');T.cd.fetch=0;if(ti===0)toast(fetches.some(f=>f.ti===ti)?'Your fetch already walks':'There is no rival Cunning Woman for it to walk to');break}
+    const src=cu||T.shaman||T.tomb||{x:px,z:pz};const f={ti,tt:best.id,tgt:best.shaman&&best.shaman.alive?best.shaman:null,x:src.x,z:src.z,face:0,end:gt+90,born:gt,lc:-1};fetches.push(f);
+    {const y=Math.max(0,hAt(f.x,f.z));for(let i=0;i<30;i++)PN.emit(f.x+(R()-.5),y+.3+R()*1.6,f.z+(R()-.5),(R()-.5)*.8,.4+R()*.8,(R()-.5)*.8,1.6+R(),.03,.03,.03,.8,1.2,-.05)}
+    if(ti===0)toast(`Your Cunning Woman gives birth to her fetch. It walks for the ${best.name} Cunning Woman.`);else if(best.id===0&&!watching)toast(`The ${T.name} Cunning Woman has given birth to her fetch, and it walks for yours. Run.`);break}
   case 'murrain':{{const y=Math.max(0,hAt(px,pz));for(let i=0;i<40;i++){const a=R()*TAU,r=R()*6;PN.emit(px+Math.cos(a)*r,y+.2+R()*.6,pz+Math.sin(a)*r,(R()-.5)*.4,.25+R()*.5,(R()-.5)*.4,2.5+R()*1.5,.5,.62,.22,.4,1.4,-.05)}}let n=0;for(const a of stock)if(!a.dead&&!a.sick&&a.tribe!==ti&&d2(px,pz,a.x,a.z)<36){a.sick=gt+6+R()*4;n++}ring(px,pz,6,.45,.55,.2);if(ti===0)toast(n?`Murrain takes ${n} beast${n===1?'':'s'}.`:'No rival beasts there');break}
   case 'hypno':query(grid,px,pz,3.5,u=>{if(u.tribe!==ti&&u.alive&&u.type!=='shaman'&&!UT[u.type].veh&&u.type!=='ghost'&&d2(px,pz,u.x,u.z)<9){const o=u.hyp?u.hyp.orig:u.tribe;convertUnit(u,ti);u.hyp={orig:o,until:gt+25}}});ring(px,pz,3,.85,.5,1);break;
   case 'whirl':{let aim=null,ad=1e9;for(const b of blds){if(!b.alive||b.tribe===ti||BT[b.bt].inv||b.bt==='tomb'||b.bt==='god'||b.bt==='oak')continue;const d=Math.sqrt(d2(px,pz,b.x,b.z));if(d<BT[b.bt].s*.6+.4&&d<ad){ad=d;aim=b}}
@@ -1637,7 +1655,10 @@ function forceRaid(T,n){const ai=T.ai,base=ai.base;if(!tribes[0].alive||armagedd
   let tgt=null,bd=1e18;for(const b of blds)if(b.alive&&b.tribe===0&&!BT[b.bt].inv&&b.bt!=='hedge'){const d=d2(base.x,base.z,b.x,b.z);if(d<bd){bd=d;tgt=b}}if(!tgt)return;
   for(const u of army){const a=R()*TAU,r=R()*3;orderUnit(u,tgt.x+Math.cos(a)*r,tgt.z+Math.sin(a)*r,true,tgt.x,tgt.z);u.raidT=gt+150}
   ai.wave={ids:army.map(u=>u.id),n0:army.length,tgt:0,t:gt};if(!watching){toast(`A horn sounds from the ${T.name} lands: ${army.length} of their fighters are marching on you. Watch the map.`);sfx('horn',1)}}
-function aiThink(T){const ai=T.ai,S=T.stats,base=ai.base,sh=T.shaman;{const SC=scen(),r=SC&&SC.raids&&SC.raids[T.id-1];if(r&&!T.raided&&gt>=r.t&&!T.broken){T.raided=true;if(!ai.wave)forceRaid(T,r.n)}}if(T.broken&&!armageddon){if(sh&&sh.st==='idle'&&d2(sh.x,sh.z,base.x,base.z)>10*10)orderUnit(sh,base.x,base.z+2,true);return}
+function fetchFlee(T,sh){if(!sh||!sh.alive||sh.inV||sh.hanging||sh.leap)return false;const f=fetches.find(q=>!q.done&&q.tgt===sh);if(!f)return false;const d=Math.sqrt(d2(sh.x,sh.z,f.x,f.z));if(d>24)return false;
+  if(sh.st==='move'&&gt<(sh.fleeT||0))return true;let best=null,bs=-1;const ff=field(sh.x,sh.z);for(let i=0;i<12;i++){const a=i/12*TAU,x=wrap(sh.x+Math.cos(a)*12),z=wrap(sh.z+Math.sin(a)*12),c=cidx(x,z);if(!pass[c]||ff[c]<0)continue;const sc2=d2(x,z,f.x,f.z);if(sc2>bs){bs=sc2;best={x,z}}}
+  if(best){orderUnit(sh,best.x,best.z,false);sh.fleeT=gt+2.5}return true}
+function aiThink(T){const ai=T.ai,S=T.stats,base=ai.base,sh=T.shaman;if(fetchFlee(T,sh))return;{const SC=scen(),r=SC&&SC.raids&&SC.raids[T.id-1];if(r&&!T.raided&&gt>=r.t&&!T.broken){T.raided=true;if(!ai.wave)forceRaid(T,r.n)}}if(T.broken&&!armageddon){if(sh&&sh.st==='idle'&&d2(sh.x,sh.z,base.x,base.z)>10*10)orderUnit(sh,base.x,base.z+2,true);return}
   // a villager or May Queen merely passing through is given a pass; one who stops near our buildings (to stand, chop, build) is not
   let threat=null;for(const b of blds)if(b.alive&&b.tribe===T.id){const e=enemyNear(b.x,b.z,T.id,11,o=>o.type!=='captive'&&!((o.type==='brave'||o.type==='queen')&&(o.st==='move'||o.st==='flee')));if(e){threat=e;break}}
   const army=[];for(const u of units)if(u.alive&&u.tribe===T.id&&!u.inV&&MIL[u.type])army.push(u);
@@ -1838,7 +1859,7 @@ function sim(dt){gt+=dt;
   updProjs(dt);updDebris(dt);
   statT-=dt;if(statT<=0){statT=.5;computeStats()}
   hazT-=dt;if(hazT<=0){hazT=.5;hazardTick()}
-  decorTick(dt);stockTick(dt);
+  decorTick(dt);stockTick(dt);fetchTick(dt);
   secT-=dt;if(secT<=0){secT=1;for(const T of tribes){if(!T.alive||T.wild)continue;tribeUpkeep(T);if(T.ai)aiThink(T);else if(T.id===0&&!watching)playerAuto(T)}checkEnd();regrow();wildTick();chgTick()}
   ferryTick(dt);
   fogT-=dt;if(fogT<=0){fogT=.25;updFog()}
@@ -1867,11 +1888,12 @@ function updFog(){if(!fogOn)return;visNow.fill(0);const T=tribes[0];if(T&&T.tomb
   const mark=(x,z,r)=>{const cx=Math.floor(x),cz=Math.floor(z),r2=r*r;for(let dz=-r;dz<=r;dz++){const w=Math.floor(Math.sqrt(r2-dz*dz)),row=wi(cz+dz)*N;for(let dx=-w;dx<=w;dx++){const c=row+wi(cx+dx);visNow[c]=1;seen[c]=1}}};
   for(const u of units)if(u.alive&&u.tribe===0&&!u.inV)mark(u.x,u.z,u.type==='shaman'?11:u.type==='balloon'?13:7);
   for(const a of stock)if(a.fam&&a.tribe===0)mark(a.x,a.z,7);
+  for(const f of fetches)if(f.ti===0)mark(f.x,f.z,7);
   for(const b of blds)if(b.alive&&b.tribe===0)mark(b.x,b.z,b.bt==='nest'&&b.done?TUNE.nestSight:b.bt==='torch'?TUNE.torchSight:8);
   // openVillages: every people's home ground is always in sight; only the land between is fogged
   {const SC=scen();if(SC&&SC.openVillages)for(const b of blds)if(b.alive&&b.bt==='reinc'&&tribes[b.tribe]&&!tribes[b.tribe].wild)mark(b.x,b.z,18)}}
 const isVis=(x,z)=>!fogOn||visNow[cidx(x,z)]===1,seenAt=(x,z)=>!fogOn||seen[cidx(x,z)]===1;
-const visU=u=>u.tribe===0||isVis(u.x,u.z)||!!(tribes[u.tribe]&&tribes[u.tribe].broken),visB=b=>b.tribe===0||seenAt(b.x,b.z)||!!(tribes[b.tribe]&&tribes[b.tribe].broken);
+const visU=u=>u.tribe===0||isVis(u.x,u.z)||(armed==='fetch'&&u.type==='shaman')||!!(tribes[u.tribe]&&tribes[u.tribe].broken),visB=b=>b.tribe===0||seenAt(b.x,b.z)||!!(tribes[b.tribe]&&tribes[b.tribe].broken);
 function invokeArma(ti){const T=tribes[ti];if(!allowS('arma'))return false;if(armageddon){if(ti===0)toast('The battle of all-against-all has already begun');return false}
   const wm=blds.find(b=>b.alive&&b.done&&b.bt==='wicker'&&b.tribe===ti&&!b.lit);if(!wm){if(ti===0)toast('All-against-all needs a finished, unlit wicker man');return false}
   if(T.mana<MANA_MAX-.5){if(ti===0)toast('All-against-all needs a full bar of mana');return false}
@@ -2856,6 +2878,7 @@ const SIL=inst(merge([P(cyl(.09,.15,.42,5),0xffffff,0,.21,0),P(new C.SphereGeome
 const CM=inst(merge([P(cyl(.1,.1,.42,5),0xa59d8c,0,0,0,0,0,Math.PI/2),P(new C.SphereGeometry(.1,6,5),0xc49a7c,.26,.02,0)]),matF,240);
 const FLAG=(()=>{const g=new C.BufferGeometry(),v=new Float32Array([-.06,0,0,.06,0,0,0,-.14,0]);g.setAttribute('position',new C.BufferAttribute(v,3));g.computeVertexNormals();return inst(g,new C.MeshLambertMaterial({color:0xffffff,side:C.DoubleSide}),900)})();
 const CORD=inst(new C.BoxGeometry(1,.02,.02),new C.MeshBasicMaterial({color:0xffffff}),900);
+const FETCHM=(()=>{const d=UMOD.shaman();return inst(merge(d.t.concat(d.f).map(q=>({g:q.g,c:0x0a0909}))),new C.MeshBasicMaterial({vertexColors:true,transparent:true,opacity:.55,depthWrite:false}),8)})();
 const STAIN=inst(merge([P(cyl(1,1,.02,12),0xffffff,0,.01,0)]),new C.MeshLambertMaterial({vertexColors:true}),120);
 const BOULDER=inst(merge([P(new C.DodecahedronGeometry(.3,0),0x7d776b)]),matF,90);
 const PEBBLE=inst(merge([P(new C.DodecahedronGeometry(.13,0),0xb9b3a4,0,.05,0)]),matF,500);
@@ -2973,6 +2996,7 @@ function drawEntities(){
     const sc=a.kid?Math.min(1,.55+(gt-a.born)/180*.45):1;if(a.dead){sy=.3;y-=.04}const i=M.n++;place(M.t,i,rx,y,rz,a.face,sc,sy);place(M.f,i,rx,y,rz,a.face,sc,sy);const fv=fogOn?Math.max(.42,vis[cidx(a.x,a.z)]):1;_c.copy(tribes[a.tribe].c).multiplyScalar(fv);M.t.setColorAt(i,_c);if(a.dead)_c.setRGB(.42*fv,.5*fv,.3*fv);else if(a.sick)_c.setRGB(.75*fv,.95*fv,.55*fv);else if(a.fam)_c.setRGB(.6,.45,.8);else _c.setRGB(fv,fv,fv);M.f.setColorAt(i,_c);if(a.fam&&a.tribe===0&&HALO.n<HALO.max&&Math.sin(gt*1.6+a.anim)>.3)HALO.emit(a.x,hAt(a.x,a.z)+.5,a.z,0,0,0,1,.6,.4,.9,.35,1.2,0)}
   {let qn=0;for(const q of stains){if(qn>=120)break;const rx=wd(q.x-cam.fx),rz=wd(q.z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2||!seenAt(q.x,q.z))continue;const age=gt-q.t,g=Math.min(1,age/4)*Math.min(1,(150-age)/30),fv=fogOn?Math.max(.42,vis[cidx(q.x,q.z)]):1;
     place(STAIN,qn,rx,hAt(q.x,q.z)-r2*K+.03,rz,q.yaw,q.r*(.4+.6*g),1);_c.setRGB((.2+.25*(1-g))*fv,(.22+.3*(1-g))*fv,(.1+.2*(1-g))*fv);STAIN.setColorAt(qn,_c);qn++}fin(STAIN,qn)}
+  {let fn2=0;for(const f of fetches){if(fn2>=8)break;const rx=wd(f.x-cam.fx),rz=wd(f.z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2)continue;if(f.ti!==0&&f.tt!==0&&!isVis(f.x,f.z))continue;const y=Math.max(0,hAt(f.x,f.z))-r2*K+Math.sin(gt*1.3+f.born)*.06;place(FETCHM,fn2,rx,y,rz,f.face,1.6,1);_c.setRGB(1,1,1);FETCHM.setColorAt(fn2,_c);fn2++}fin(FETCHM,fn2)}
   drawDebris();
   fin(CM,cn);
   for(const k in UM){fin(UM[k].t,UM[k].n);fin(UM[k].f,UM[k].n)}
@@ -3060,7 +3084,7 @@ function drawIndicators(){rangeRing.visible=false;tgtRing.visible=false;placeGho
   if(!running||over)return;
   const sh=tribes[0]&&tribes[0].shaman;let hp=null;
   if(armed||placing){const r=glc.getBoundingClientRect();hp=hoverMouse&&hoverSX>=0?pickGround(hoverSX,hoverSY):pickGround(r.left+r.width/2,r.top+r.height*.45)}
-  if(armed&&armed!=='arma'&&sh){const s=SPK[armed];const rx=wd(sh.x-cam.fx),rz=wd(sh.z-cam.fz);rangeRing.position.set(rx,unitY(sh)-(rx*rx+rz*rz)*K+.1,rz);rangeRing.scale.setScalar(s.r);rangeRing.visible=true;
+  if(armed&&armed!=='arma'&&armed!=='fetch'&&sh){const s=SPK[armed];const rx=wd(sh.x-cam.fx),rz=wd(sh.z-cam.fz);rangeRing.position.set(rx,unitY(sh)-(rx*rx+rz*rz)*K+.1,rz);rangeRing.scale.setScalar(s.r);rangeRing.visible=true;
     if(hp&&hoverMouse){tgtRing.position.set(hp.rx,Math.max(0,hAt(hp.x,hp.z))-(hp.rx*hp.rx+hp.rz*hp.rz)*K+.15,hp.rz);tgtRing.scale.setScalar(s.rad);tgtRing.visible=true}}
   if(placing&&hp){const v=validSpot(0,placing,hp.x,hp.z),s=BT[placing].s;let x=hp.x,z=hp.z;if(!v.err){x=v.x;z=v.z}const rx=wd(x-cam.fx),rz=wd(z-cam.fz);
     placeGhost.position.set(rx,Math.max(0,hAt(x,z))-(rx*rx+rz*rz)*K,rz);placeGhost.scale.set(s,1.2,s);ghostMat.color.setHex(v.err?0xff5544:0x66ff88);placeGhost.visible=true}}
@@ -3096,6 +3120,7 @@ function drawMini(){if(mmVer!==tver){mbx.putImageData(paintMap(mbx),0,0);mmVer=t
   for(const b of blds){if(!b.alive)continue;if(!visB(b))continue;mctx.fillStyle=tribes[b.tribe].css;const s=BT[b.bt].s*sc;mctx.fillRect(b.cx0*sc,b.cz0*sc,s,s)}
   const pulse=.55+.45*Math.sin(gt*6);for(const u of units){if(!u.alive||u.inV)continue;if(!visU(u)){if(u.raidT>gt){mctx.globalAlpha=pulse;mctx.fillStyle=tribes[u.tribe].css;mctx.fillRect(u.x*sc-1.3,u.z*sc-1.3,2.6,2.6);mctx.globalAlpha=1}continue}if(u.type==='shaman')continue;mctx.fillStyle=tribes[u.tribe].css;mctx.fillRect(u.x*sc-.8,u.z*sc-.8,1.6,1.6)}
   for(const u of units){if(!u.alive||u.type!=='shaman'||u.inV)continue;if(!visU(u))continue;const x=u.x*sc,z=u.z*sc,r=4.5;mctx.lineCap='round';for(const [w,c] of [[4,'#0d0a08'],[2,tribes[u.tribe].css]]){mctx.strokeStyle=c;mctx.lineWidth=w;mctx.beginPath();mctx.moveTo(x-r,z-r);mctx.lineTo(x+r,z+r);mctx.moveTo(x+r,z-r);mctx.lineTo(x-r,z+r);mctx.stroke()}}
+  for(const f of fetches){if(f.ti!==0&&f.tt!==0&&!isVis(f.x,f.z))continue;const t=fetchTarget(f);if(t){mctx.strokeStyle='rgba(10,8,8,.75)';mctx.setLineDash([2,2]);mctx.lineWidth=1;mctx.beginPath();mctx.moveTo(f.x*sc,f.z*sc);mctx.lineTo(f.x*sc+wd(t.x-f.x)*sc,f.z*sc+wd(t.z-f.z)*sc);mctx.stroke();mctx.setLineDash([])}mctx.fillStyle='#050404';mctx.beginPath();mctx.arc(f.x*sc,f.z*sc,3,0,TAU);mctx.fill();mctx.strokeStyle='rgba(255,255,255,.6)';mctx.stroke()}
   const cx=cam.fx*sc,cz=cam.fz*sc,rr=cam.dist*.55*sc;mctx.strokeStyle='rgba(255,255,255,.85)';mctx.lineWidth=1;mctx.beginPath();mctx.arc(cx,cz,rr,0,TAU);mctx.stroke();
   mctx.beginPath();mctx.moveTo(cx,cz);mctx.lineTo(cx-Math.sin(cam.yaw)*rr*1.4,cz-Math.cos(cam.yaw)*rr*1.4);mctx.stroke()}
 
@@ -3383,6 +3408,8 @@ $('grimBack').addEventListener('click',()=>{$('grim').hidden=true;$('menu').hidd
 $('grimGo').addEventListener('click',()=>{if(grimSel.length!==GRIM_N)return;audio();try{localStorage.setItem(GRIM_KEY,JSON.stringify(grimSel))}catch(e){}settings.palette=grimSel.slice();$('grim').hidden=true;beginGame()});
 $('bWatch').addEventListener('click',()=>{audio();beginWatch()});
 $('foes').addEventListener('click',e=>{const b=e.target.closest('[data-t]');if(!b)return;const T=tribes[+b.dataset.t];if(!T||!T.alive)return;
+  if(armed==='fetch'&&!watching){const P=tribes[0],t=T.shaman&&T.shaman.alive?T.shaman:T.tomb;if(!t){toast('Their Cunning Woman is not in the world');return}if(P.mana<spellCost(P,'fetch')){toast('Not enough mana for The Fetch');return}if((P.cd.fetch||0)>gt){toast('The Fetch is still gathering power');return}
+    if(P.tomb&&!P.shaman)tryCast(0,'fetch',t.x,t.z,casterOf(P));else if(P.shaman){const sh=P.shaman;sh.st='cast';sh.spell='fetch';sh.px=t.x;sh.pz=t.z}disarm();return}
   if(watching){const f=T.shaman||T.tomb||blds.find(x=>x.alive&&x.tribe===T.id);if(f){cam.fx=f.x;cam.fz=f.z}return}
   const L=[];for(const x of blds)if(x.alive&&x.tribe===T.id&&!BT[x.bt].inv&&x.bt!=='hedge'&&visB(x))L.push(x);for(const u of units)if(u.alive&&u.tribe===T.id&&!u.inV&&visU(u)&&u.type!=='captive')L.push(u);
   if(!L.length){toast(`None of the ${T.name} folk are in sight. Explore, or wait for them to show themselves.`);return}
@@ -3683,8 +3710,9 @@ $('wsAddRow').addEventListener('click',e=>{const b=e.target.closest('[data-s]');
 const wsCopySel=fn=>{const ids=wsSelIdx();if(!ids.length)return toast('Select a part first');wsPush(true);const ng=ids.some(i=>WS.parts[i].g)?Date.now()%1e6:0,map={};const made=[];
   for(const i of ids){const c=JSON.parse(JSON.stringify(WS.parts[i]));fn(c);if(c.g){map[c.g]=map[c.g]||(ng+Object.keys(map).length+1);c.g=map[c.g]}WS.parts.push(c);made.push(WS.parts.length-1)}
   WS.multi=new Set(made.slice(0,-1));WS.sel=made[made.length-1];wsChanged(true)};
-$('wsDup').addEventListener('click',()=>wsCopySel(c=>{c.p[0]=r4(c.p[0]+.1)}));
+$('wsDup').addEventListener('click',()=>wsCopySel(c=>{}));
 $('wsMirror').addEventListener('click',()=>wsCopySel(c=>{c.p[0]=r4(-c.p[0]);c.r[1]=-c.r[1];c.r[2]=-c.r[2]}));
+$('wsMirrorZ').addEventListener('click',()=>wsCopySel(c=>{c.p[2]=r4(-c.p[2]);c.r[0]=-c.r[0];c.r[1]=-c.r[1]}));
 $('wsDel').addEventListener('click',()=>{const ids=wsSelIdx();if(!ids.length)return toast('Select a part first');wsPush(true);for(const i of ids.slice().reverse())WS.parts.splice(i,1);WS.multi.clear();WS.sel=-1;wsChanged(true)});
 $('wsGroup').addEventListener('click',()=>{const ids=wsSelIdx();if(ids.length<2)return toast('Shift-click (or turn on Add) to pick two or more parts first');wsPush(true);const g=1+Math.max(0,...WS.parts.map(p=>p.g||0));for(const i of ids)WS.parts[i].g=g;wsChanged(true);toast(`${ids.length} parts grouped. Tapping any of them in the picture now picks up the whole group.`)});
 $('wsUngroup').addEventListener('click',()=>{const ids=wsSelIdx();if(!ids.some(i=>WS.parts[i].g))return toast('Nothing selected is grouped');wsPush(true);for(const i of ids)delete WS.parts[i].g;wsChanged(true)});
@@ -3817,6 +3845,6 @@ document.querySelectorAll('.filmBox').forEach(box=>{box.addEventListener('click'
   box.addEventListener('input',e=>{const r=e.target.closest('input[data-fk]');if(!r)return;film[r.dataset.fk]=+r.value;filmSave();filmUI()})});
 filmUI();
 resize();buildWorld();showContinue();requestAnimationFrame(frame);
-window.__ws={get stains(){return stains},sendAnimal,kindle,get stock(){return stock},get hutches(){return hutches},get HUT_TOP(){return HUT_TOP},get wind(){return wind},get windOn(){return windOn},get lastFight(){return lastFight},windTick,get wildFl(){return wildFl},get season(){return season},endGame,destroyBld,crown,villagerCount,tokGet,keepsake,useKeepsake,walkReach,postAt,setSel,get banners(){return banners},get sel(){return sel},get world(){return world},light,memorial,get stats(){return stats},get cam(){return cam},get WS(){return WS},wsOpen,wsClose,captureDef,defFromData,merge,ORIG_UMOD,ORIG_BMOD,get UM(){return UM},get BM(){return BM},get wear(){return wear},get buntings(){return buntings},get patches(){return patches},get wells(){return wells},get units(){return units},get tribes(){return tribes},get blds(){return blds},sim,beginGame,get gt(){return gt},castSpell,tryCast,saveGame,loadGame,setSel,command,showLevel,SCEN,field,get walkA(){return walk},hAt,get water(){return water},findSpot,get allow(){return allowSets},get pass(){return pass},get swamps(){return swamps},get debris(){return debris},queenValue,invokeArma,startRitual,sendVehicle,get wildId(){return wildId},get armageddon(){return armageddon},placeBuilding,validSpot,orderMove,spawnUnit,command,get water(){return water},findSpot};
+window.__ws={get fetches(){return fetches},get stains(){return stains},sendAnimal,kindle,get stock(){return stock},get hutches(){return hutches},get HUT_TOP(){return HUT_TOP},get wind(){return wind},get windOn(){return windOn},get lastFight(){return lastFight},windTick,get wildFl(){return wildFl},get season(){return season},endGame,destroyBld,crown,villagerCount,tokGet,keepsake,useKeepsake,walkReach,postAt,setSel,get banners(){return banners},get sel(){return sel},get world(){return world},light,memorial,get stats(){return stats},get cam(){return cam},get WS(){return WS},wsOpen,wsClose,captureDef,defFromData,merge,ORIG_UMOD,ORIG_BMOD,get UM(){return UM},get BM(){return BM},get wear(){return wear},get buntings(){return buntings},get patches(){return patches},get wells(){return wells},get units(){return units},get tribes(){return tribes},get blds(){return blds},sim,beginGame,get gt(){return gt},castSpell,tryCast,saveGame,loadGame,setSel,command,showLevel,SCEN,field,get walkA(){return walk},hAt,get water(){return water},findSpot,get allow(){return allowSets},get pass(){return pass},get swamps(){return swamps},get debris(){return debris},queenValue,invokeArma,startRitual,sendVehicle,get wildId(){return wildId},get armageddon(){return armageddon},placeBuilding,validSpot,orderMove,spawnUnit,command,get water(){return water},findSpot};
 })();
 </script>
