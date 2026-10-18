@@ -44,7 +44,7 @@ A place to keep design ideas between sessions. Nothing here is built yet. Each e
 
 **Built in v150**, ten seasons (titles and intros are placeholders):
 1. The Humbling: survive five minutes.
-2. The Herd (Black Phillip, Familiar), 3. May Eve (Beltane Fire, Sword Dance; grow to 70 people), 4. The Fair (Glamour, Pricking), 5. The Sickness (Murrain, Cradle Blight; a far stronger rival), 6. Harvest (Changeling), 7. The Long Nights (Keening Wail, Briar Sleep), 8. The Hunt (the Fetch; take a rival Cunning Woman), 9. The Flood (Seas of Blood; you start on a raised mountain, the rivals low).
+2. The Herd (Black Phillip, Familiar), 3. May Eve (Beltane Fire, Sword Dance; grow to 70 people), 4. The Fair (Glamour, Pricking), 5. The Sickness (Murrain, Cradle Blight; a far stronger rival), 6. Harvest (Changeling), 7. The Long Nights (Keening Wail, Briar Sleep), 8. The Hunt (the Fetch; bring down a rival Cunning Woman while your fetch hunts her, by any means), 9. The Flood (Seas of Blood; you start on a raised mountain, the rivals low).
 10. The Answer: the Humbling's rivals, winnable, every spell yours.
 
 Earlier draft season plan:
