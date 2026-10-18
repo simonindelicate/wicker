@@ -30,17 +30,26 @@ A place to keep design ideas between sessions. Nothing here is built yet. Each e
 
 **The base game stays as it is.** The current campaign and procedural games are left untouched by everything in this file, apart from the Oss quality-of-life features. The new spells, charms, livestock and the spell palette all belong to a separate mode.
 
-**Progression:**
+**Progression (Decided, 18 October):**
 
 1. **From the start:** the campaign and the base procedural games.
-2. **Finishing the campaign unlocks a challenge campaign** (working title *Seasons of the Witch*). Each of its levels forces one new spell into the palette in place of an existing one and teaches it. That spell is then unlocked for good.
-3. **The new mode.** Alongside the base procedural games sits a new procedural mode with the spell palette, where you choose a set number of spells before each game, probably eight. Its pool holds the base spells plus every new spell unlocked so far. Livestock and the other additions would live here too.
+2. **Finishing the campaign unlocks the challenge campaign** (working title *Seasons of the Witch*), eight levels through the four seasons.
+3. **Challenge level 1, the humbling.** Three fully stocked rivals bombard you with every new spell. You cannot win in the ordinary sense; the level is won by being humbled. From level 2 onwards rivals are back on even terms with you.
+4. **Spells unlock as they are encountered** in the challenge levels, and join the Grimoire pool for good. The Grimoire opens alongside the challenge campaign and grows as you go.
+5. **Extreme is available in the Grimoire.**
+6. **Finishing the challenge campaign** earns a token and unlocks **NG+**: the original campaign replayed with the Grimoire mechanic.
+
+Draft season plan (level identities still to be agreed, intros the user's):
+
+- Spring: the herd (livestock, Black Phillip, Familiar); May Eve (Beltane Fire, Sword Dance).
+- Summer: the fair (Glamour, Pricking, against a rival that pricks); the sickness (Murrain, Cradle Blight).
+- Autumn: harvest (Changeling); the long nights (Keening Wail, Briar Sleep).
+- Winter: the hunt (the Fetch); the end of the year (Seas of Blood, from a mountaintop).
 
 **Open questions:**
 
-- How many challenge levels should there be? One per new spell, or some levels introducing two?
-- How big should the palette be?
-- Is Extreme available in the new mode as well?
+- What counts as being humbled in level 1?
+- In NG+, which spells are in the palette for each campaign level, and do rivals carry Grimoire palettes too?
 
 ## Livestock (Decided; cosmetic version built in v126, test mode only)
 
