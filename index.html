@@ -842,7 +842,7 @@ function swampKill(c){const g=hazGrp[c],sw=swamps[g];if(!sw)return;sw.kills++;if
   delete swamps[g];if(x0<1e9)recompute(x0,z0,x1,z1);if(sw.owner===0&&!watching)toast(`Your bog has drowned ${TUNE.swampLives} and drains away, sated.`)}
 function setHedge(b,on){const c=wi(b.cz0)*N+wi(b.cx0);hedgeA[c]=on?1:0;recompute(b.cx0,b.cz0,b.cx0,b.cz0)}
 // ---- village colour: worn paths and flowers (cosmetic only) ----
-const FLOWER_C=[0xd85a7a,0xe7c84a,0xf1ece0,0xd85a7a,0xe7c84a,0xf1ece0],FLAG_C=[0xb8322a,0xe0b440,0xeee6d2,0x35629e,0x4f7a38];let buntings=[],patches=[],wells=[],tombBeds=[],stock=[],hutches=[],stockOn=false;
+const FLOWER_C=[0xd85a7a,0xe7c84a,0xf1ece0,0xd85a7a,0xe7c84a,0xf1ece0],FLAG_C=[0xb8322a,0xe0b440,0xeee6d2,0x35629e,0x4f7a38];let buntings=[],patches=[],wells=[],tombBeds=[],stock=[],hutches=[],stains=[],stockOn=false;
 // the fixed places around a building where flowers grow, nearest the walls first; the door side of a hut is left clear
 const FSPOTS=new WeakMap(),_fq=new C.Quaternion(),_fe=new C.Euler();
 const PALE_C=[0xeee6d2,0xd8c9a8,0xb8322a,0x9a6a4a,0xe9ddc3];
@@ -904,8 +904,11 @@ stock=stock.filter(a=>!(a.dead&&gt-a.dead>60));
     const mk=(kind,p)=>{if(p)stock.push({kind,w,tribe:w.tribe,x:p.x,z:p.z,tx:p.x,tz:p.z,face:R()*TAU,wait:R()*3,anim:R()*9})};
     mk('goat',at(2,5,0));const nc=3+(R()*3|0);for(let k=0;k<nc;k++)mk('chicken',at(1.5,4,0));w.want={goat:1,chicken:nc,rabbit:0};
     const hp=at(3,6,1);if(hp&&!patches.some(q=>d2(q.x,q.z,hp.x,hp.z)<2.5*2.5)){const h={w,tribe:w.tribe,x:hp.x,z:hp.z,yaw:Math.atan2(wd(w.x-hp.x),wd(w.z-hp.z))};hutches.push(h);const nr=2+(R()*2|0);w.want.rabbit=nr;for(let k=0;k<nr;k++){const r={kind:'rabbit',w,hutch:h,tribe:w.tribe,lx:(R()-.5)*.8,lz:.4+R()*.6,wait:R()*2,anim:R()*9,face:R()*TAU};r.tlx=r.lx;r.tlz=r.lz;stock.push(r)}}}}
-function stockTick(dt){if(!stockOn)return;let gone=false;for(const a of stock){if(a.dead)continue;
-    if(a.sick&&gt>=a.sick){a.dead=gt;a.moving=false;{const T=tribes[a.tribe];if(T)T.murrainUntil=Math.max(T.murrainUntil||0,gt+60)}if(a.offer){if(a.offer.aq)a.offer.aq--;a.offer=null}continue}
+function stockTick(dt){if(!stockOn)return;let gone=false;if(stains.length&&gt-stains[0].t>150)stains=stains.filter(q=>gt-q.t<=150);for(const a of stock){
+    if(a.dead){const y=hAt(a.x,a.z);if(R()<dt*16)PN.emit(a.x+(R()-.5)*.5,y+.15+R()*.35,a.z+(R()-.5)*.5,(R()-.5)*2.4,(R()-.3)*1.2,(R()-.5)*2.4,.5+R()*.4,.04,.04,.03,.9,.1,0);
+      if(R()<dt*1.5)PN.emit(a.x,y+.1,a.z,(R()-.5)*.3,.35,(R()-.5)*.3,2.5,.45,.55,.2,.35,.9,-.05);continue}
+    if(a.sick&&R()<dt*8){const y=hAt(a.x,a.z);PN.emit(a.x+(R()-.5)*.3,y+.25+R()*.3,a.z+(R()-.5)*.3,(R()-.5)*.2,.5+R()*.4,(R()-.5)*.2,1.1,.55,.85,.25,.55,.35,-.1)}
+    if(a.sick&&gt>=a.sick){a.dead=gt;a.moving=false;stains.push({x:a.x,z:a.z,t:gt,r:a.kind==='goat'?1:.6+R()*.15,yaw:R()*TAU});{const T=tribes[a.tribe];if(T)T.murrainUntil=Math.max(T.murrainUntil||0,gt+60)}if(a.offer){if(a.offer.aq)a.offer.aq--;a.offer=null}continue}
     if(a.fam){famTick(a,dt);continue}
     if(a.bp){let v=null,bd=14*14;query(grid,a.x,a.z,14,o=>{if(o.alive&&o.tribe===a.bp.vt&&!o.inV&&!o.air&&!UT[o.type].veh&&o.type!=='shaman'){const d=d2(a.x,a.z,o.x,o.z);if(d<bd){bd=d;v=o}}});
       if(!v){a.wait=1;continue}const dx=wd(v.x-a.x),dz=wd(v.z-a.z),l=Math.hypot(dx,dz);if(l<.8){phillipBirth(a,v);gone=true;continue}const sp=1.3*dt;a.x=wrap(a.x+dx/l*sp);a.z=wrap(a.z+dz/l*sp);a.face=Math.atan2(dx,dz);a.moving=true;continue}
@@ -1110,12 +1113,13 @@ function unmask(u){const by=u.chg;u.chg=null;u.unmaskT=gt;if(u.sel)deselect(u);u
 function phillipBirth(a,victim){const by=a.bp.by,vt=a.bp.vt;a.gone=true;atk=by;killUnit(victim,null);const u=spawnUnit('phillip',by,a.x,a.z);u.vt=vt;u.rampEnd=gt+30;u.swing=gt;u.face=a.face;u.hp=u.mhp=UT.phillip.hp;
   if(by===0&&!watching)toast('Black Phillip kicks out, and the rampage begins.');else if(vt===0&&!watching)toast('A black goat has turned on your people!')}
 function phillipTick(){for(const u of units)if(u.alive&&u.type==='phillip'&&u.rampEnd&&gt>=u.rampEnd){u.rampEnd=0;if(u.tribe===0&&!watching)earn('d_phillip');u.tribe=wildId;u.tgt=null;u.order=null;const a=R()*TAU;u.st='move';setTarget(u,u.x+Math.cos(a)*16,u.z+Math.sin(a)*16);if(!watching)toast('Black Phillip breaks away and runs for the wilds.')}}
-function famStep(a,tx,tz,sp){const f=field(tx,tz),c=cidx(a.x,a.z);if(f[c]<0)return -1;if(f[c]<=1||d2(a.x,a.z,tx,tz)<1)return 1;const cx=Math.floor(a.x),cz=Math.floor(a.z);let bc=-1,bv=f[c],bx=0,bz=0;
-  for(let dz=-1;dz<=1;dz++)for(let dx=-1;dx<=1;dx++){if(!dx&&!dz)continue;const n=cidx(cx+dx,cz+dz),v=f[n];if(v>=0&&v<bv){bv=v;bc=n;bx=cx+dx+.5;bz=cz+dz+.5}}
+function famCell(a,f){const c=cidx(a.x,a.z);if(f[c]>=0)return c;const nc=nearestCell(a.x,a.z,2,q=>f[q]>=0);return nc?nc.c:-1}
+function famStep(a,tx,tz,sp){const f=field(tx,tz),c0=cidx(a.x,a.z),c=famCell(a,f);if(c<0)return -1;if(c!==c0){const bx=(c%N)+.5,bz=((c/N)|0)+.5,ddx=wd(bx-a.x),ddz=wd(bz-a.z),l=Math.hypot(ddx,ddz)||1;a.x=wrap(a.x+ddx/l*Math.min(l,sp));a.z=wrap(a.z+ddz/l*Math.min(l,sp));a.face=Math.atan2(ddx,ddz);a.moving=true;return 0}if(f[c]<=1||d2(a.x,a.z,tx,tz)<1)return 1;const cx=Math.floor(a.x),cz=Math.floor(a.z);let bc=-1,bv=f[c],bx=0,bz=0;
+  for(let dz=-1;dz<=1;dz++)for(let dx=-1;dx<=1;dx++){if(!dx&&!dz)continue;const n=cidx(cx+dx,cz+dz),v=f[n];if(dx&&dz&&(f[cidx(cx+dx,cz)]<0||f[cidx(cx,cz+dz)]<0))continue;if(v>=0&&v<bv){bv=v;bc=n;bx=cx+dx+.5;bz=cz+dz+.5}}
   if(bc<0)return -1;const ddx=wd(bx-a.x),ddz=wd(bz-a.z),l=Math.hypot(ddx,ddz)||1;a.x=wrap(a.x+ddx/l*Math.min(l,sp));a.z=wrap(a.z+ddz/l*Math.min(l,sp));a.face=Math.atan2(ddx,ddz);a.moving=true;return 0}
-function famTick(a,dt){const F=a.fam,me=tribes[a.tribe];if(F.home){const r=famStep(a,a.w.x,a.w.z,1.6*dt*F.spd);if(r!==0){a.fam=null;a.tx=a.x;a.tz=a.z;a.wait=2;if(a.tribe===0&&!watching)toast(`Your familiar is home. It drank ${Math.round(F.got)} mana from the rival altars.`)}return}
+function famTick(a,dt){const F=a.fam,me=tribes[a.tribe];if(F.home){const r=famStep(a,a.w.x,a.w.z,1.6*dt*F.spd);if(r===1||(r<0&&(F.lost=(F.lost||0)+dt)>3)){a.fam=null;a.tx=a.x;a.tz=a.z;a.wait=2;if(a.tribe===0&&!watching)toast(`Your familiar is home. It drank ${Math.round(F.got)} mana from the rival altars.`)}return}
   if(F.drink>0){F.drink-=dt;const T=tribes[F.at.tribe];if(T&&F.at.alive){const v=Math.min(T.mana,16*dt);T.mana-=v;me.mana=Math.min(MANA_MAX,me.mana+v);F.got+=v}a.moving=false;if(F.drink<=0){F.visits++;F.spd=Math.max(.45,F.spd*.92);F.seen.add(F.at.id);F.at=null;if(F.visits>=8)F.home=true}return}
-  if(!F.at||!F.at.alive){const alts=blds.filter(b=>b.alive&&b.done&&b.bt==='altar'&&b.tribe!==a.tribe&&tribes[b.tribe]&&!tribes[b.tribe].wild&&field(b.dx,b.dz)[cidx(a.x,a.z)]>=0);if(!alts.length){F.home=true;return}
+  if(!F.at||!F.at.alive){const alts=blds.filter(b=>b.alive&&b.done&&b.bt==='altar'&&b.tribe!==a.tribe&&tribes[b.tribe]&&!tribes[b.tribe].wild&&famCell(a,field(b.dx,b.dz))>=0);if(!alts.length){F.home=true;return}
     let pool=alts.filter(b=>!F.seen.has(b.id));if(!pool.length){F.seen.clear();pool=alts.filter(b=>b.id!==F.last)}if(!pool.length)pool=alts;let best=pool[0],bd=1e18;for(const b of pool){const d=d2(a.x,a.z,b.x,b.z);if(d<bd){bd=d;best=b}}F.at=best;F.last=best.id}
   const r=famStep(a,F.at.dx,F.at.dz,1.8*dt*F.spd);if(r===1)F.drink=3;else if(r<0){F.seen.add(F.at.id);F.at=null}}
 function chgTick(){phillipTick();{const sh=tribes[0]&&tribes[0].shaman;if(sh&&sh.alive&&!sh.inV&&!watching)for(const u of units)if(u.alive&&u.tribe===0&&u.chg!=null&&u.chg!==0&&d2(u.x,u.z,sh.x,sh.z)<6*6)unmask(u)}
@@ -1562,7 +1566,7 @@ function castSpell(ti,k,px,pz,cu){atk=ti;let sx=cu?cu.x:px,sz=cu?cu.z:pz,sy=cu?u
   case 'familiar':{let g=null,bd=3*3;for(const a of stock){if(a.kind!=='goat'||a.tribe!==ti||a.dead||a.sick||a.offer||a.fam||(a.kid&&gt-a.born<120))continue;const d=d2(px,pz,a.x,a.z);if(d<bd){bd=d;g=a}}
     if(!g||stock.some(a=>a.fam&&a.tribe===ti)){const T=tribes[ti];T.mana+=spellCost(T,'familiar');T.cd.familiar=0;if(ti===0)toast(g?'You already have a familiar abroad':'The familiar must be cast on your own grown black goat');break}
     g.fam={visits:0,spd:1,drink:0,at:null,seen:new Set(),got:0,home:false};if(ti===0)toast('Your goat becomes your familiar. No rival will see it.');break}
-  case 'murrain':{let n=0;for(const a of stock)if(!a.dead&&!a.sick&&a.tribe!==ti&&d2(px,pz,a.x,a.z)<36){a.sick=gt+6+R()*4;n++}ring(px,pz,6,.45,.55,.2);if(ti===0)toast(n?`Murrain takes ${n} beast${n===1?'':'s'}.`:'No rival beasts there');break}
+  case 'murrain':{{const y=Math.max(0,hAt(px,pz));for(let i=0;i<40;i++){const a=R()*TAU,r=R()*6;PN.emit(px+Math.cos(a)*r,y+.2+R()*.6,pz+Math.sin(a)*r,(R()-.5)*.4,.25+R()*.5,(R()-.5)*.4,2.5+R()*1.5,.5,.62,.22,.4,1.4,-.05)}}let n=0;for(const a of stock)if(!a.dead&&!a.sick&&a.tribe!==ti&&d2(px,pz,a.x,a.z)<36){a.sick=gt+6+R()*4;n++}ring(px,pz,6,.45,.55,.2);if(ti===0)toast(n?`Murrain takes ${n} beast${n===1?'':'s'}.`:'No rival beasts there');break}
   case 'hypno':query(grid,px,pz,3.5,u=>{if(u.tribe!==ti&&u.alive&&u.type!=='shaman'&&!UT[u.type].veh&&u.type!=='ghost'&&d2(px,pz,u.x,u.z)<9){const o=u.hyp?u.hyp.orig:u.tribe;convertUnit(u,ti);u.hyp={orig:o,until:gt+25}}});ring(px,pz,3,.85,.5,1);break;
   case 'whirl':{let aim=null,ad=1e9;for(const b of blds){if(!b.alive||b.tribe===ti||BT[b.bt].inv||b.bt==='tomb'||b.bt==='god'||b.bt==='oak')continue;const d=Math.sqrt(d2(px,pz,b.x,b.z));if(d<BT[b.bt].s*.6+.4&&d<ad){ad=d;aim=b}}
     if(aim)whirlTake(aim,ti)}
@@ -2852,6 +2856,7 @@ const SIL=inst(merge([P(cyl(.09,.15,.42,5),0xffffff,0,.21,0),P(new C.SphereGeome
 const CM=inst(merge([P(cyl(.1,.1,.42,5),0xa59d8c,0,0,0,0,0,Math.PI/2),P(new C.SphereGeometry(.1,6,5),0xc49a7c,.26,.02,0)]),matF,240);
 const FLAG=(()=>{const g=new C.BufferGeometry(),v=new Float32Array([-.06,0,0,.06,0,0,0,-.14,0]);g.setAttribute('position',new C.BufferAttribute(v,3));g.computeVertexNormals();return inst(g,new C.MeshLambertMaterial({color:0xffffff,side:C.DoubleSide}),900)})();
 const CORD=inst(new C.BoxGeometry(1,.02,.02),new C.MeshBasicMaterial({color:0xffffff}),900);
+const STAIN=inst(merge([P(cyl(1,1,.02,12),0xffffff,0,.01,0)]),new C.MeshLambertMaterial({vertexColors:true}),120);
 const BOULDER=inst(merge([P(new C.DodecahedronGeometry(.3,0),0x7d776b)]),matF,90);
 const PEBBLE=inst(merge([P(new C.DodecahedronGeometry(.13,0),0xb9b3a4,0,.05,0)]),matF,500);
 const GBP=inst(merge([P(cyl(.035,.045,1.6,5),0x5b4632,0,.8,0),P(new C.BoxGeometry(.5,.04,.04),0x5b4632,.2,1.5,0),P(new C.SphereGeometry(.06,5,4),0xd9cfb6,0,1.62,0)]),matF,60);
@@ -2918,10 +2923,7 @@ const PN=new PSys(3500,false),PA=new PSys(5000,true,'fire'),HALO=new PSys(16,tru
 // ---------------- render ----------------
 function updCam(dt){const fh=Math.max(hAt(cam.fx,cam.fz),0);cam.fh+=(fh-cam.fh)*Math.min(1,dt*4);
   const zt=clamp((cam.dist-14)/(MAXD-14),0,1);K=lerp(TUNE.curveNear,TUNE.curveFar,zt*zt);const p=lerp(.62,1.08,zt),cp=Math.cos(p),sp=Math.sin(p);
-  // keep the camera out of hills that rise between it and what it looks at (it used to end up inside them on steep ground by the water)
-  {const hd=cp*cam.dist,sx=Math.sin(cam.yaw),sz=Math.cos(cam.yaw);let need=sp*cam.dist+cam.fh;for(const f of [.35,.55,.75,.9,1,1.1]){const hx=hd*f,h=Math.max(hAt(wrap(cam.fx+sx*hx),wrap(cam.fz+sz*hx)),0)-hx*hx*K+1.2;const req=cam.fh+(h-cam.fh)/f;if(req>need)need=req}
-    cam.lift=cam.lift==null?need:cam.lift+(need-cam.lift)*Math.min(1,dt*(need>cam.lift?8:2))}
-  camera.position.set(Math.sin(cam.yaw)*cp*cam.dist,cam.lift,Math.cos(cam.yaw)*cp*cam.dist);
+  camera.position.set(Math.sin(cam.yaw)*cp*cam.dist,sp*cam.dist+cam.fh,Math.cos(cam.yaw)*cp*cam.dist);
   camera.lookAt(0,cam.fh,0);
   if(cam.shake>0){camera.position.x+=(R()-.5)*cam.shake;camera.position.y+=(R()-.5)*cam.shake;cam.shake=Math.max(0,cam.shake-dt*1.4)}
   scene.fog.near=cam.dist*.75+zt*20;scene.fog.far=cam.dist+44+zt*50}
@@ -2948,7 +2950,7 @@ function drawEntities(){
     let sy=1;if(u.past&&u.st==='idle'&&u.pastT>gt){const ph=gt*2+u.anim;if(u.past==='sit'){y-=.13;sy=.76;yaw+=Math.sin(ph*.4)*.08}else if(u.past==='tend'){const b=Math.max(0,Math.sin(ph*1.5));y-=.09*b;sy=1-.22*b}else if(u.past==='chat'){yaw+=Math.sin(ph*1.7)*.2;if(Math.sin(ph*.8)>.92)y+=.05}}
     if(u.chg===0&&!watching&&HALO.n<HALO.max&&Math.sin(gt*2.2+u.anim)>.55)HALO.emit(u.x,unitY(u)+.55,u.z,0,0,0,1,1,.85,.35,.55,.9,0);
     else if(u.unmaskT&&gt-u.unmaskT<40&&!watching&&HALO.n<HALO.max&&Math.sin(gt*4+u.anim)>.2)HALO.emit(u.x,unitY(u)+.55,u.z,0,0,0,1,1,.25,.15,.6,1,0);
-    const i=M.n++;if(u.type==='phillip'){const kp=(gt-u.swing)/.35,lean=kp>=0&&kp<1?Math.sin(kp*Math.PI)*.75:0;placeTilt(M.t,i,rx,y+lean*.12,rz,yaw,lean,-yaw,sc,sy);placeTilt(M.f,i,rx,y+lean*.12,rz,yaw,lean,-yaw,sc,sy)}else{place(M.t,i,rx+ox,y,rz+oz,yaw,sc,sy);place(M.f,i,rx+ox,y,rz+oz,yaw,sc,sy)}
+    const i=M.n++;if(u.type==='phillip'){const kp=(gt-u.swing)/.35,lean=kp>=0&&kp<1?Math.sin(kp*Math.PI)*.75:0;const t=u.tgt&&u.tgt.alive&&u.st==='attack'?u.tgt:null,yw=t?Math.atan2(wd(t.x-u.x),wd(t.z-u.z))+Math.PI:yaw;placeTilt(M.t,i,rx,y+lean*.12,rz,yw,lean,-yw,sc,sy);placeTilt(M.f,i,rx,y+lean*.12,rz,yw,lean,-yw,sc,sy)}else{place(M.t,i,rx+ox,y,rz+oz,yaw,sc,sy);place(M.f,i,rx+ox,y,rz+oz,yaw,sc,sy)}
     _c.copy(tribes[u.tribe].c);if(gt-u.hitT<.12)_c.setRGB(1,1,1);else if(tribes[u.tribe].frenzyUntil>gt)_c.lerp(FRENZY_C,.25+.15*Math.sin(gt*9+u.anim));else if(u.shield>gt)_c.lerp(SHIELD_C,.5+.15*Math.sin(gt*5));if(u.hyp)_c.lerp(WHITE_C,.3+.3*Math.sin(gt*7));
     M.t.setColorAt(i,_c);M.f.setColorAt(i,WHITE_C);
     if(u.carry&&cn<240){place(CM,cn,rx+ox-Math.sin(yaw)*.32,y+.42,rz+oz-Math.cos(yaw)*.32,yaw+Math.PI/2,1);CM.setColorAt(cn,WHITE_C);cn++}}
@@ -2969,6 +2971,8 @@ function drawEntities(){
   if(stockOn)for(const a of stock){const M=UM[a.kind];if(M.n>=M.cap)continue;const rx=wd(a.x-cam.fx),rz=wd(a.z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2*.75||(!seenAt(a.x,a.z)&&!(a.fam&&a.tribe===0)))continue;if(a.tribe!==0&&!isVis(a.x,a.z))continue;if(a.fam&&a.tribe!==0)continue;
     let y=hAt(a.x,a.z)-r2*K,sy=1;if(a.moving)y+=Math.abs(Math.sin(gt*(a.kind==='rabbit'?9:a.kind==='chicken'?12:6)+a.anim))*(a.kind==='goat'?.03:.05);else if(a.kind==='chicken'){const pk=Math.max(0,Math.sin(gt*3+a.anim));sy=1-.25*pk*pk}
     const sc=a.kid?Math.min(1,.55+(gt-a.born)/180*.45):1;if(a.dead){sy=.3;y-=.04}const i=M.n++;place(M.t,i,rx,y,rz,a.face,sc,sy);place(M.f,i,rx,y,rz,a.face,sc,sy);const fv=fogOn?Math.max(.42,vis[cidx(a.x,a.z)]):1;_c.copy(tribes[a.tribe].c).multiplyScalar(fv);M.t.setColorAt(i,_c);if(a.dead)_c.setRGB(.42*fv,.5*fv,.3*fv);else if(a.sick)_c.setRGB(.75*fv,.95*fv,.55*fv);else if(a.fam)_c.setRGB(.6,.45,.8);else _c.setRGB(fv,fv,fv);M.f.setColorAt(i,_c);if(a.fam&&a.tribe===0&&HALO.n<HALO.max&&Math.sin(gt*1.6+a.anim)>.3)HALO.emit(a.x,hAt(a.x,a.z)+.5,a.z,0,0,0,1,.6,.4,.9,.35,1.2,0)}
+  {let qn=0;for(const q of stains){if(qn>=120)break;const rx=wd(q.x-cam.fx),rz=wd(q.z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2||!seenAt(q.x,q.z))continue;const age=gt-q.t,g=Math.min(1,age/4)*Math.min(1,(150-age)/30),fv=fogOn?Math.max(.42,vis[cidx(q.x,q.z)]):1;
+    place(STAIN,qn,rx,hAt(q.x,q.z)-r2*K+.03,rz,q.yaw,q.r*(.4+.6*g),1);_c.setRGB((.2+.25*(1-g))*fv,(.22+.3*(1-g))*fv,(.1+.2*(1-g))*fv);STAIN.setColorAt(qn,_c);qn++}fin(STAIN,qn)}
   drawDebris();
   fin(CM,cn);
   for(const k in UM){fin(UM[k].t,UM[k].n);fin(UM[k].f,UM[k].n)}
@@ -3813,6 +3817,6 @@ document.querySelectorAll('.filmBox').forEach(box=>{box.addEventListener('click'
   box.addEventListener('input',e=>{const r=e.target.closest('input[data-fk]');if(!r)return;film[r.dataset.fk]=+r.value;filmSave();filmUI()})});
 filmUI();
 resize();buildWorld();showContinue();requestAnimationFrame(frame);
-window.__ws={sendAnimal,kindle,get stock(){return stock},get hutches(){return hutches},get HUT_TOP(){return HUT_TOP},get wind(){return wind},get windOn(){return windOn},get lastFight(){return lastFight},windTick,get wildFl(){return wildFl},get season(){return season},endGame,destroyBld,crown,villagerCount,tokGet,keepsake,useKeepsake,walkReach,postAt,setSel,get banners(){return banners},get sel(){return sel},get world(){return world},light,memorial,get stats(){return stats},get cam(){return cam},get WS(){return WS},wsOpen,wsClose,captureDef,defFromData,merge,ORIG_UMOD,ORIG_BMOD,get UM(){return UM},get BM(){return BM},get wear(){return wear},get buntings(){return buntings},get patches(){return patches},get wells(){return wells},get units(){return units},get tribes(){return tribes},get blds(){return blds},sim,beginGame,get gt(){return gt},castSpell,tryCast,saveGame,loadGame,setSel,command,showLevel,SCEN,field,get walkA(){return walk},hAt,get water(){return water},findSpot,get allow(){return allowSets},get pass(){return pass},get swamps(){return swamps},get debris(){return debris},queenValue,invokeArma,startRitual,sendVehicle,get wildId(){return wildId},get armageddon(){return armageddon},placeBuilding,validSpot,orderMove,spawnUnit,command,get water(){return water},findSpot};
+window.__ws={get stains(){return stains},sendAnimal,kindle,get stock(){return stock},get hutches(){return hutches},get HUT_TOP(){return HUT_TOP},get wind(){return wind},get windOn(){return windOn},get lastFight(){return lastFight},windTick,get wildFl(){return wildFl},get season(){return season},endGame,destroyBld,crown,villagerCount,tokGet,keepsake,useKeepsake,walkReach,postAt,setSel,get banners(){return banners},get sel(){return sel},get world(){return world},light,memorial,get stats(){return stats},get cam(){return cam},get WS(){return WS},wsOpen,wsClose,captureDef,defFromData,merge,ORIG_UMOD,ORIG_BMOD,get UM(){return UM},get BM(){return BM},get wear(){return wear},get buntings(){return buntings},get patches(){return patches},get wells(){return wells},get units(){return units},get tribes(){return tribes},get blds(){return blds},sim,beginGame,get gt(){return gt},castSpell,tryCast,saveGame,loadGame,setSel,command,showLevel,SCEN,field,get walkA(){return walk},hAt,get water(){return water},findSpot,get allow(){return allowSets},get pass(){return pass},get swamps(){return swamps},get debris(){return debris},queenValue,invokeArma,startRitual,sendVehicle,get wildId(){return wildId},get armageddon(){return armageddon},placeBuilding,validSpot,orderMove,spawnUnit,command,get water(){return water},findSpot};
 })();
 </script>
