@@ -8,13 +8,21 @@ A place to keep design ideas between sessions. Nothing here is built yet. Each e
 
 ---
 
-## Structure
+## Structure (Decided)
 
-- **Spell palette (Decided).** Winning level 20 unlocks a limited palette: you choose a set number of spells before each game, probably eight. This is needed before new spells are added, and it matters for PvP balance.
-- **Campaign levels 21–25 (Liked).** Each level forces one new spell into the palette in place of an existing one. The new spell stays available from then on. Each level should be built around teaching its spell.
-- **Open questions.**
-  - Which existing spells are the weakest, and so should make way?
-  - How big should the palette be?
+**The base game stays as it is.** The current campaign and procedural games are left untouched by everything in this file, apart from the Oss quality-of-life features. The new spells, charms, livestock and the spell palette all belong to a separate mode.
+
+**Progression:**
+
+1. **From the start:** the campaign and the base procedural games.
+2. **Finishing the campaign unlocks a challenge campaign** (working title *Seasons of the Witch*). Each of its levels forces one new spell into the palette in place of an existing one and teaches it. That spell is then unlocked for good.
+3. **The new mode.** Alongside the base procedural games sits a new procedural mode with the spell palette, where you choose a set number of spells before each game, probably eight. Its pool holds the base spells plus every new spell unlocked so far. Livestock and the other additions would live here too.
+
+**Open questions:**
+
+- How many challenge levels should there be? One per new spell, or some levels introducing two?
+- How big should the palette be?
+- Is Extreme available in the new mode as well?
 
 ## Livestock (Decided)
 
@@ -83,10 +91,10 @@ Charms are positive spells, to sit alongside the curses.
 
 The problem: late in a game you forget to train Osses, and sending them out after broken rivals, deserters and wild men becomes a chore.
 
-- **Training menu (Liked).** A Train tab, like the Tribe tab. It has one row per unit type that you have a working building for. Each row shows how many you have, how many are queued and the mana cost, with buttons for one and for five.
+- **Training menu (Decided; base game).** A Train tab, like the Tribe tab. It has one row per unit type that you have a working building for. Each row shows how many you have, how many are queued and the mana cost, with buttons for one and for five.
   - Queued training goes to whichever building of that type is least busy, so you don't need to select buildings.
   - **Keep N (Candidate).** A standing order on each row: "keep 4 Osses". Training queues automatically whenever the count drops below N and you have mana above a small reserve. Combined with roaming, this handles the late-game Oss cycle entirely.
-- **Roaming Osses (Liked).** Osses idle at home go out on their own and capture without being told. They respond to:
+- **Roaming Osses (Decided; base game).** Osses idle at home go out on their own and capture without being told. They respond to:
   - wild men nearby;
   - a rival tribe breaking (its stragglers at the stone circle);
   - deserters fleeing a village;
