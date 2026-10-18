@@ -64,7 +64,7 @@ button.foe{background:var(--panel);border:1px solid var(--line);border-radius:99
 body.watch #top .res,body.watch #chips{display:none}
 .ctl{margin-left:auto;display:flex;gap:6px}
 
-#mini{position:absolute;right:12px;top:calc(56px + env(safe-area-inset-top,0px));width:118px;height:118px;border-radius:8px;border:1px solid var(--line);background:#0a1018;touch-action:none;image-rendering:pixelated}
+#mini{position:absolute;right:12px;top:calc(var(--topH,56px) + 6px);width:118px;height:118px;border-radius:8px;border:1px solid var(--line);background:#0a1018;touch-action:none;image-rendering:pixelated}
 #side{position:absolute;left:10px;top:42%;display:flex;flex-direction:column;gap:8px}
 #hint{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(178px + env(safe-area-inset-bottom,0px));display:flex;align-items:center;gap:10px;background:var(--panel2);border:1px solid var(--mana);border-radius:10px;padding:6px 6px 6px 12px;max-width:calc(100% - 32px);font-size:14px}
 #hint span{min-width:0}
@@ -230,7 +230,7 @@ details.help summary{cursor:pointer;color:var(--text);font:14px var(--f-display)
       <button data-tab="spells" class="on" role="tab">Spells</button>
       <button data-tab="build" role="tab">Build</button>
       <button data-tab="tribe" role="tab">Tribe</button>
-      <button data-tab="train" role="tab">Train</button>
+      <button data-tab="train" role="tab" id="tabTrain" hidden>Train</button>
     </div>
     <div id="pSpells" class="row"></div>
     <div id="pBuild" class="row" hidden></div>
@@ -477,13 +477,14 @@ const BT={
   torch:{s:1,wood:0,time:1,hp:1400,label:'Scrying Torch',info:'A burning beacon; the land around it stays in sight while it stands'},
   tomb:{s:3,wood:0,time:1,hp:5000,label:'Tomb Fortress',info:'Your Cunning Woman lies sealed here'},
   oak:{s:4,wood:300,time:50,hp:1500,label:"Herne's Oak",info:'Hang your Cunning Woman from it for two minutes and the Wild Hunt rides'},
+  cottage:{s:3,wood:80,bmana:300,time:20,hp:450,label:"Cunning Woman's Cottage",info:'Opens the Train tab: train any fighter from one place, keep numbers topped up, and send idle osses roaming. One per village'},
   balloon:{s:4,wood:80,time:26,hp:400,label:'Balloon Works',train:'balloon',mana:60,tt:14,info:'Builds balloons'},
   wicker:{s:3,wood:80,time:20,hp:300,label:'Wicker Man',site:'wicker',holdN:5,burnT:8,info:'Holds five; burns for mana and a frenzy'},
   reinc:{s:3,wood:0,time:1,hp:1e9,label:'Stone Circle',info:'Your Cunning Woman is reborn here',inv:true},
   barrow:{s:3,wood:0,time:1,hp:1e9,label:'Hollow Hill',info:'Seal your Cunning Woman inside with twenty followers and 1,500 mana',inv:true},
   moot:{s:5,wood:0,time:1,hp:1e9,label:'The Moot',info:'Where every people gathers at the end',inv:true}
 };
-const BUILDABLE=['hut','altar','camp','range','osshouse','fold','nest','hedge','maypole','wicker','god','oak','balloon'];
+const BUILDABLE=['hut','altar','camp','range','osshouse','cottage','fold','nest','hedge','maypole','wicker','god','oak','balloon'];
 const SP=[
   {k:'blast',n:'Blast',c:25,cd:1.5,r:11,rad:1.8,s:0},
   {k:'lightning',n:'Lightning',c:90,cd:6,r:14,rad:1.2,s:0},
@@ -529,6 +530,7 @@ const ICON={
   hut:'<path d="M3 13L12 4l9 9M5 11v9h14v-9"/><path d="M10 20v-5h4v5"/>',
   camp:'<path d="M2 20L12 4l10 16z"/><path d="M12 4v16M9 20l3-5 3 5"/>',
   range:'<path d="M8 21V9h8v12M6 9l6-6 6 6"/><circle cx="12" cy="14" r="2"/>',
+  cottage:'<path d="M3 12l9-7 9 7M5 10v10h14V10"/><path d="M15 7V4h2.5v5"/><path d="M10 20v-5h4v5"/>',
   osshouse:'<path d="M7 21v-6l-3-3 3-7 5-2 3 3 2 6-3 2v7"/><circle cx="10" cy="8" r="1"/>',
   hedge:'<path d="M2 18c2-5 4-5 6 0 2-5 4-5 6 0 2-5 4-5 6 0"/><path d="M5 13l-1-2M9 12l1-2M15 12l-1-2M19 13l1-2M2 18h20"/>',
   maypole:'<path d="M12 22V4"/><circle cx="12" cy="4" r="2"/><path d="M12 6L5 20M12 6l7 14M12 6l-3 15M12 6l3 15"/>',
@@ -570,7 +572,7 @@ const SCEN=[
   me:{mana:250,wood:150,huts:2,manaMult:1.5},ai:{first:720,breed:.6,cap:40,mil:.25,gap:2},
   intro:'‘tis time to keep thy appointment with the wicker man. An offering in the flames is far more prized by the land, but such a rite cannot be wasted on fewer than five of… the right kind of adult.'},
  {title:'Hobby Horse',season:'spring',seed:3313,style:'continent',enemies:1,diff:'easy',fog:true,goal:{type:'captives',n:10},
-  addB:['osshouse','fold'],addS:['swarm','torch'],news:['Oss House','Thrall Fold','Plague of Flies','Scrying Torch'],wild:1.8,
+  addB:['osshouse','fold','cottage'],addS:['swarm','torch'],news:['Oss House','Thrall Fold',"Cunning Woman's Cottage",'Plague of Flies','Scrying Torch'],wild:1.8,
   me:{mana:250,wood:180,huts:2},ai:{first:900,cap:50},
   intro:'Behold the Oss, O Cunning Woman - send them out amidst the wilds to seek those poor lost hearthless folk. Would not their lives be better returned to the fecund soil wherein all life gestates? The Osses shall capture them beneath their oilskin capes and return them happily to thy thrall folds. From thence - renewal!'},
  {title:'Bowmen',season:'summer',seed:4421,style:'continent',enemies:1,diff:'normal',fog:true,goal:{type:'conquer'},
@@ -944,7 +946,7 @@ function toss(u,x,z,vh,vu){if(UT[u.type].veh||u.inV||!u.alive)return;const dx=wd
   u.ay=u.air?u.ay:hAt(u.x,u.z);u.air=true;u.avx=dx/l*vh+(R()-.5);u.avz=dz/l*vh+(R()-.5);u.avy=vu;u.st='idle';u.tgt=null}
 
 // buildings
-function validSpot(ti,type,x,z){if(type==='hedge'){const cx=Math.floor(x),cz=Math.floor(z),c=wi(cz)*N+wi(cx);if(bOcc[c])return {err:'Something is already there'};if(water[c]||!walk[c])return {err:'A hedge needs firm, level ground'};if(hazU[c]>gt)return {err:'The ground there is cursed'};return {cx0:wi(cx),cz0:wi(cz),x:wrap(cx+.5),z:wrap(cz+.5)}}
+function validSpot(ti,type,x,z){if(type==='cottage'&&blds.some(b=>b.alive&&b.tribe===ti&&b.bt==='cottage'))return {err:'Your village already has a cottage'};if(type==='hedge'){const cx=Math.floor(x),cz=Math.floor(z),c=wi(cz)*N+wi(cx);if(bOcc[c])return {err:'Something is already there'};if(water[c]||!walk[c])return {err:'A hedge needs firm, level ground'};if(hazU[c]>gt)return {err:'The ground there is cursed'};return {cx0:wi(cx),cz0:wi(cz),x:wrap(cx+.5),z:wrap(cz+.5)}}
 const s=BT[type].s;const cx0=Math.floor(x-s/2+.5),cz0=Math.floor(z-s/2+.5);let mn=1e9,mx=-1e9,why=null;
   for(let dz=-1;dz<=s;dz++)for(let dx=-1;dx<=s;dx++){const c=wi(cz0+dz)*N+wi(cx0+dx);if(bOcc[c])return {err:'Too close to another building'};
     if(dx>=0&&dz>=0&&dx<s&&dz<s){if(water[c])return {err:'Cannot build on water'};if(hazU[c]>gt)return {err:'The ground there is cursed'};if(saltU[c]>gt&&saltOwner[c]===ti)return {err:'This ground has been salted. Nothing of yours will stand here for a while'}}}
@@ -1012,7 +1014,7 @@ function placeBuilding(ti,type,spot,instant){const D=BT[type],s=D.s,{cx0,cz0}=sp
   b.dx=b.x;b.dz=wrap(b.z+s/2+.6);faceBuilding(b);
   for(let dz=0;dz<s;dz++)for(let dx=0;dx<s;dx++)bOcc[wi(cz0+dz)*N+wi(cx0+dx)]=b.id;
   blds.push(b);bById.set(b.id,b);
-  if(!instant){tribes[ti].wood-=D.wood;for(let k=0;k<(type==='hedge'?1:3);k++){const br=getFreeBrave(tribes[ti],b.x,b.z);if(!br)break;assignBuild(br,b)}}
+  if(!instant){tribes[ti].wood-=D.wood;if(D.bmana)tribes[ti].mana-=D.bmana;for(let k=0;k<(type==='hedge'?1:3);k++){const br=getFreeBrave(tribes[ti],b.x,b.z);if(!br)break;assignBuild(br,b)}}
   return b}
 function destroyBld(b){if(!b.alive||BT[b.bt].inv)return;if(b.tribe===0&&b.bt!=='hedge'&&b.bt!=='torch'&&!b.burnt)A().lostBld=true;b.alive=false;const s=BT[b.bt].s;if(b.bt!=='hedge'&&b.bt!=='torch'&&!armageddon&&!b.burnt&&atk>=0&&atk!==b.tribe&&tribes[atk]&&!tribes[atk].wild&&tribes[b.tribe]&&!tribes[b.tribe].wild)saltGround(b,b.tribe);if(b.bt==='hedge'){if(b.done)setHedge(b,0)}
   for(let dz=0;dz<s;dz++)for(let dx=0;dx<s;dx++){const c=wi(b.cz0+dz)*N+wi(b.cx0+dx);if(bOcc[c]===b.id)bOcc[c]=0}
@@ -1846,6 +1848,11 @@ const BMOD={
   camp:()=>{const w=0x8a6238,f=[P(new C.BoxGeometry(3.6,.2,3.6),0x6b4a2c,0,.1,0),P(new C.BoxGeometry(3.6,.8,.18),w,0,.5,-1.7),P(new C.BoxGeometry(.18,.8,3.6),w,-1.7,.5,0),P(new C.BoxGeometry(.18,.8,3.6),w,1.7,.5,0),P(new C.BoxGeometry(1.2,.8,.18),w,-1.2,.5,1.7),P(new C.BoxGeometry(1.2,.8,.18),w,1.2,.5,1.7),P(cyl(.04,.04,2.6,4),WOOD,1.3,1.3,-1.3)];
     return {t:[P(new C.ConeGeometry(1.25,1.5,4),WT,0,.95,0,0,Math.PI/4),P(new C.BoxGeometry(.5,.32,.03),WT,1.55,2.4,-1.3)],f}},
   range:()=>({t:[P(new C.ConeGeometry(1.05,1,8),WT,0,2.95,0)],f:[P(new C.BoxGeometry(3.4,.25,3.4),0x7d776c,0,.12,0),P(cyl(.75,.9,2.3,8),STONE,0,1.3,0),P(cyl(.36,.36,.06,10),WHITE,1.2,.75,1.15,Math.PI/2),P(cyl(.2,.2,.07,10),0xc23b2b,1.2,.75,1.17,Math.PI/2)]}),
+  cottage:()=>{const W=0xd6c9ab,f=[P(new C.BoxGeometry(2.3,1,1.5),W,0,.5,0),P(cyl(.5,.5,2.3,3),W,0,1.25,0,-Math.PI/2,Math.PI/2),P(new C.BoxGeometry(.42,.64,.08),0x3a2a1c,0,.32,.76),P(new C.BoxGeometry(.32,.26,.06),0x2a2018,.66,.62,.76),P(new C.BoxGeometry(.3,1,.3),STONE,-.85,1.5,-.25,0,0,.06),
+    P(new C.BoxGeometry(.05,.5,.05),0xc9b38a,-.4,.55,.8,0,0,.1),P(new C.BoxGeometry(.05,.46,.05),0xbfa77c,-.5,.53,.8,0,0,-.06),P(new C.BoxGeometry(.05,.52,.05),0xc9b38a,-.6,.56,.8,0,0,.04),
+    P(new C.BoxGeometry(.14,.2,.1),0x6d7a3c,.25,.86,.82),P(new C.BoxGeometry(.12,.18,.1),0x8a6a3c,.45,.86,.82),P(new C.BoxGeometry(.14,.2,.1),0x5e6e38,.95,.86,.82),
+    P(new C.BoxGeometry(.3,.16,.14),0x151312,.5,.08,1.05),P(new C.BoxGeometry(.13,.13,.12),0x151312,.68,.2,1.05)];
+    return {t:[P(new C.BoxGeometry(2.6,.16,1.15),WT,0,1.38,.4,.72),P(new C.BoxGeometry(2.6,.16,1.15),WT,0,1.38,-.4,-.72)],f}},
   osshouse:()=>{const rf1=new C.BoxGeometry(3.6,.14,1.7);rf1.rotateX(.62);const rf2=new C.BoxGeometry(3.6,.14,1.7);rf2.rotateX(-.62);
     return {t:[P(rf1,WT,0,1.62,.62),P(rf2,WT,0,1.62,-.62)],f:[P(new C.BoxGeometry(3.4,1.1,2.2),0x5b4632,0,.55,0),P(new C.BoxGeometry(.5,.8,.1),0x15100c,0,.4,1.12),P(new C.BoxGeometry(.3,.34,.6),BONE,1.85,2.0,0,0,0,-.3),P(new C.BoxGeometry(.22,.2,.32),BONE,2.05,1.88,0),P(new C.ConeGeometry(.05,.2,4),BONE,1.8,2.24,.1),P(new C.ConeGeometry(.05,.2,4),BONE,1.8,2.24,-.1),P(new C.BoxGeometry(3.4,.2,.2),0x3e2f22,0,2.1,0)]}},
   hedge:()=>{let sd=11;const r=()=>(sd=(sd*16807)%2147483647)/2147483647,f=[],sq=(g,y)=>{g.scale(1.2,y,1.2);return g};
@@ -3023,7 +3030,7 @@ function onTap(sx,sy,right,shift){if(over||watching)return;const T=tribes[0],g=p
     const dx=wd(g.x-hedgeStart.x),dz=wd(g.z-hedgeStart.z),L=Math.hypot(dx,dz),n=Math.min(TUNE.hedgeMax,Math.max(1,Math.round(L)+1));let made=0,seen=new Set();
     for(let i=0;i<n;i++){const f=n>1?i/(n-1):0,x=hedgeStart.x+dx*f,z=hedgeStart.z+dz*f,c=cidx(x,z);if(seen.has(c))continue;seen.add(c);if(T.wood<BT.hedge.wood)break;const v=validSpot(0,'hedge',x,z);if(v.err)continue;placeBuilding(0,'hedge',v);made++}
     toast(made?`${made} lengths of hedge laid out. Villagers will plant them.${L+1>TUNE.hedgeMax?' (A hedge is at most '+TUNE.hedgeMax+' long.)':''}`:'No hedge could be laid there');sfx('select',.6);hedgeStart=null;unplace();return}
-  if(placing){if(right){unplace();return}if(!g)return;if(!seenAt(g.x,g.z)){toast('You cannot build on land you have not explored');return}const v=validSpot(0,placing,g.x,g.z);if(v.err){toast(v.err);return}if(T.wood<BT[placing].wood){toast('Not enough wood');return}
+  if(placing){if(right){unplace();return}if(!g)return;if(!seenAt(g.x,g.z)){toast('You cannot build on land you have not explored');return}const v=validSpot(0,placing,g.x,g.z);if(v.err){toast(v.err);return}if(T.wood<BT[placing].wood){toast('Not enough wood');return}if(BT[placing].bmana&&T.mana<BT[placing].bmana){toast('Not enough mana');return}
     placeBuilding(0,placing,v);sfx('select',.6);unplace();return}
   const hu=pickUnit(sx,sy);let hb=null,ht=null;
   if(!hu&&g){const id=bOcc[cidx(g.x,g.z)];if(id)hb=bById.get(id)||null;if(hb&&(!hb.alive||!seenAt(hb.x,hb.z)))hb=null;if(!hb)ht=nearestTree(g.x,g.z,1.1)}
@@ -3084,10 +3091,10 @@ function toast(msg){if(!msg)return;if(watching&&/\b[Yy]our\b|\+\d|^You /.test(ms
 function flash(a){const f=$('flash');f.style.transition='none';f.style.opacity=a;requestAnimationFrame(()=>{f.style.transition='';f.style.opacity=0})}
 const svg=p=>`<svg viewBox="0 0 24 24" aria-hidden="true">${p}</svg>`;
 $('pSpells').innerHTML=SP.map((s,i)=>`<button class="tile sp s${s.s}" data-k="${s.k}" title="${s.n}${i<10?' ('+(i+1)%10+')':''}: ${SPDESC[s.k]}">${svg(ICON[s.k])}<span class="nm">${s.n}</span><span class="cost">${s.k==='arma'?'Full + 10':s.c}</span><i class="cdm"></i></button>`).join('');
-$('pBuild').innerHTML=BUILDABLE.map(k=>`<button class="tile bt" data-b="${k}" title="${BT[k].label} — ${BT[k].info}">${svg(ICON[k==='balloon'?'balloonB':k])}<span class="nm">${BT[k].label}</span><span class="cost wood">${BT[k].wood} wood</span></button>`).join('');
+$('pBuild').innerHTML=BUILDABLE.map(k=>`<button class="tile bt" data-b="${k}" title="${BT[k].label} — ${BT[k].info}">${svg(ICON[k==='balloon'?'balloonB':k])}<span class="nm">${BT[k].label}</span><span class="cost wood">${BT[k].wood} wood${BT[k].bmana?' · '+BT[k].bmana+' mana':''}</span></button>`).join('');
 const spTiles=[...document.querySelectorAll('#pSpells .tile')],bTiles=[...document.querySelectorAll('#pBuild .tile')];
 $('pSpells').addEventListener('click',e=>{const t=e.target.closest('.tile');if(!t)return;audio();t.classList.remove('pulse');void t.offsetWidth;t.classList.add('pulse');sfx('select',.5);const k=t.dataset.k;if(armed===k)disarm();else arm(k)});
-$('pBuild').addEventListener('click',e=>{const t=e.target.closest('.tile');if(!t)return;audio();t.classList.remove('pulse');void t.offsetWidth;t.classList.add('pulse');sfx('select',.5);const k=t.dataset.b;if(armageddon){toast('Nothing can be built while the world ends');return}if(tribes[0].wood<BT[k].wood){tribes[0].woodGoal=Math.max(tribes[0].woodGoal,BT[k].wood+20);toast(`Your villagers will gather wood for it. ${BT[k].label} needs ${BT[k].wood} wood`);return}placing=k;armed=null;hedgeStart=null;hint(k==='hedge'?`Tap where the hedge begins. Each length costs ${BT.hedge.wood} wood.`:`Tap where to build the ${BT[k].label}`)});
+$('pBuild').addEventListener('click',e=>{const t=e.target.closest('.tile');if(!t)return;audio();t.classList.remove('pulse');void t.offsetWidth;t.classList.add('pulse');sfx('select',.5);const k=t.dataset.b;if(armageddon){toast('Nothing can be built while the world ends');return}if(k==='cottage'&&blds.some(b=>b.alive&&b.tribe===0&&b.bt==='cottage')){toast('Your village already has a cottage');return}if(BT[k].bmana&&tribes[0].mana<BT[k].bmana){toast(`The ${BT[k].label} needs ${BT[k].bmana} mana as well as wood`);return}if(tribes[0].wood<BT[k].wood){tribes[0].woodGoal=Math.max(tribes[0].woodGoal,BT[k].wood+20);toast(`Your villagers will gather wood for it. ${BT[k].label} needs ${BT[k].wood} wood`);return}placing=k;armed=null;hedgeStart=null;hint(k==='hedge'?`Tap where the hedge begins. Each length costs ${BT.hedge.wood} wood.`:`Tap where to build the ${BT[k].label}`)});
 function arm(k){if(!allowS(k))return;if(k!=='arma'&&!tribes[0].shaman&&tribes[0].tomb){armed=k;placing=null;hint(`${SPK[k].n}: tap anywhere. ${SPDESC[k]}`);updTiles();return}
   if(k==='arma'){armed=k;placing=null;hint('All-against-all: ten followers burn in your wicker man and your mana is spent. Every hut falls and the last tribe standing wins. This cannot be undone.',true);updTiles();return}
   if(!tribes[0].shaman){toast('Your Cunning Woman is waiting to be reborn');return}armed=k;placing=null;const s=SPK[k];hint(`${s.n}: tap a target. ${SPDESC[k]}`);updTiles()}
@@ -3100,7 +3107,8 @@ let tab='spells';const tabEls={spells:$('pSpells'),build:$('pBuild'),tribe:$('pT
 function setTab(t){tab=t;for(const k in tabEls)tabEls[k].hidden=k!==t;document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.tab===t));if(t==='tribe')renderTribe(true);if(t==='train')renderTrain(true)}
 $('tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(b)setTab(b.dataset.tab)});
 function updTiles(){const T=tribes[0];if(!T)return;const att=T.attainUntil>gt;for(const t of spTiles){const s=SPK[t.dataset.k],cost=s.k==='arma'?MANA_MAX:spellCost(T,s.k);t.classList.toggle('poor',T.mana<cost);if(s.k!=='arma'){const ce=t.querySelector('.cost'),txt=String(cost);if(ce.textContent!==txt)ce.textContent=txt}t.classList.toggle('armed',armed===s.k);const cd=Math.max(0,((T.cd[s.k]||0)-gt)/s.cd);t.lastChild.style.height=(cd*100)+'%'}
-  for(const t of bTiles)t.classList.toggle('poor',T.wood<BT[t.dataset.b].wood)}
+  for(const t of bTiles){const D=BT[t.dataset.b];t.classList.toggle('poor',T.wood<D.wood||(D.bmana&&T.mana<D.bmana))}
+  {const hc=hasCottage(),tb=$('tabTrain');if(tb.hidden===hc){tb.hidden=!hc;if(!hc&&tab==='train')setTab('tribe')}}}
 let dockDirty=true,lastTribeHTML='';
 function plural(n,t){return n+' '+(n===1?UT[t].label.toLowerCase():UT[t].pl)}
 function selSummary(){if(!sel.length)return 'Nothing selected';if(sel[0].bt){const b=sel[0];return `<b>${BT[b.bt].label}</b>`+(b.tribe!==0&&b.tribe!==wildId?' (enemy)':'')}
@@ -3124,8 +3132,9 @@ $('pTrain').addEventListener('click',e=>{const t=e.target.closest('[data-tr]');i
   else if(a==='keep'){const i=KEEP_STEPS.indexOf(T.keep[bt]||0);T.keep[bt]=KEEP_STEPS[(i+1)%KEEP_STEPS.length];const k=T.keep[bt];toast(k?`Keeping ${k} ${UT[D.train].pl} ready. More are trained whenever you fall short and have mana to spare.`:`No longer keeping ${UT[D.train].pl} topped up.`)}
   else if(a==='roam'){T.ossRoam=!T.ossRoam;toast(T.ossRoam?'Idle osses will go out by themselves after wild men, deserters and broken tribes.':'Osses will wait for your orders.')}
   renderTrain(true)});
+function hasCottage(){return blds.some(b=>b.alive&&b.done&&b.tribe===0&&b.bt==='cottage')}
 let autoT=0;
-function playerAuto(T){if(armageddon)return;T.keep=T.keep||{};
+function playerAuto(T){if(armageddon||!hasCottage())return;T.keep=T.keep||{};
   for(const bt of TRAIN_BT){const k=T.keep[bt]||0;if(!k||!allowB(bt))continue;const D=BT[bt],bs=trainBlds(bt);if(!bs.length)continue;const have=ownCount(D.train)+bs.reduce((a,b)=>a+b.q,0);if(have<k&&T.mana>=D.mana+KEEP_RES)queueType(T,bt,1)}
   if(!T.ossRoam||(autoT=(autoT+1)%2))return;const home=blds.find(b=>b.alive&&b.bt==='reinc'&&b.tribe===0);if(!home)return;
   const os=units.filter(u=>u.alive&&u.tribe===0&&u.type==='oss'&&!u.inV&&!u.air&&!u.carry&&!u.post&&(u.st==='idle'||u.st==='roam')&&(u.auto||d2(u.x,u.z,home.x,home.z)<22*22));if(!os.length)return;
@@ -3145,7 +3154,7 @@ function renderTribe(force){const T=tribes[0];if(!T)return;let h='';const b=sel.
   if(b){const D=BT[b.bt];let st=b.done?(b.bt==='hut'?`${b.occ} of 5 villagers inside`:D.info):`Being built · ${Math.floor(b.prog*100)}%`;
     if(b.done&&D.train&&b.q>0)st=b.trainee?`Training ${UT[D.train].label.toLowerCase()} · ${Math.ceil(b.tt)}s · ${b.q} queued`:(b.held?`Waiting · your last ${TRAIN_KEEP} villagers will not be trained · ${b.q} queued`:`Waiting for a villager · ${b.q} queued`);
     h+=`<div class="card"><b>${D.label}</b><span>${st}</span></div>`;
-    if(b.done&&b.bt==='osshouse')h+=`<button class="qs${T.ossRoam?' go':''}" data-act="roam"><span>${T.ossRoam?'On: idle osses hunt by themselves':'Off: osses wait for orders'}</span><b>Roam</b></button>`;
+    if(b.done&&b.bt==='osshouse'&&hasCottage())h+=`<button class="qs${T.ossRoam?' go':''}" data-act="roam"><span>${T.ossRoam?'On: idle osses hunt by themselves':'Off: osses wait for orders'}</span><b>Roam</b></button>`;
     if(b.done&&D.train)h+=`<button class="qs go" data-act="train" ${T.mana<D.mana?'disabled':''}><span>${D.mana} mana</span><b>Train ${UT[D.train].label.toLowerCase()}</b></button><button class="qs" data-act="cancel" ${b.q-(b.trainee?1:0)<=0?'disabled':''}><span>Refund mana</span><b>Cancel one</b></button>`;
     const caps=captivesOf(0);
     if(b.done&&D.site){const y=YIELD[D.site];let st2;
