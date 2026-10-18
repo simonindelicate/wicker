@@ -11,7 +11,8 @@ A place to keep design ideas between sessions. Nothing here is built yet. Each e
 ## Now / Next / Later
 
 - **Now:** Grimoire mode, built in v127 in test mode only. It's a procedural game where you choose eight spells before you start; rivals keep every spell, and All-against-all is always available. Play it to settle the palette size and find which spells feel essential and which feel weak.
-- **Next:** new spells, one at a time, in Grimoire mode only. In order: the changeling; then offering livestock together with Black Phillip and the familiar; then the fetch, which needs rival AI that flees.
+- **Built in v128, test mode or Grimoire only:** offering livestock (chickens, rabbits and the goat, at altars and wicker figures, with no dread; animals breed back), the changeling, and Murrain.
+- **Next:** Black Phillip and the familiar; then the fetch, which needs rival AI that flees; and teaching rivals to offer animals.
 - **Later:** the challenge levels, one per proven spell; then the unlock wiring (finishing the campaign opens the challenge campaign, and challenge levels open spells); then charms and counters as gaps appear.
 
 ## Structure (Decided)

@@ -513,10 +513,12 @@ const SP=[
   {k:'fire',n:"Day o'the Stones",c:550,cd:30,r:14,rad:4.5,s:0},
   {k:'angel',n:"St. Anthony's Fire",c:650,cd:40,r:12,rad:2,s:0},
   {k:'volcano',n:'Volcano',c:1100,cd:45,r:15,rad:8,s:2},
+  {k:'changeling',n:'Changeling',c:300,cd:40,r:12,rad:.9,s:1},
+  {k:'murrain',n:'Murrain',c:200,cd:30,r:14,rad:6,s:0},
   {k:'arma',n:'All-against-all',c:TUNE.manaMax,cd:1,r:0,rad:0,s:0},
 ];
 const SPK={};SP.forEach(s=>SPK[s.k]=s);
-const SPDESC={torch:'Scry where e\'re the beacon burns. For it shalbe thine eyes.',blast:'Thy will readily done upon thine enemies.',lightning:'The strike of thunder is a blow no man or woman can survive.',swarm:'Calls forth a cloud o’ wicked horseflies to bite and sting and scatter thy assailants for ten seconds.',convert:'Turns wandering wildmen within the circle into your villagers.',shield:'A ward against harm for those within its ‘fluence.',ghost:'Raise the shades of dead men. Brief candles who make war, draw the eye and melt away come striking.',bridge:'Raise up a causeway towards heights and across water.',flatten:'From crags and cliffsides spring forth green and level fields. Cannot be cast upon the water.',hypno:'Witch them to thy cause - they’ll fight for you for twenty-five seconds.',whirl:'A twisting wind that tears walls from their foundations afore wand’ring in search of new victims.',swamp:'A sucking mire that offers safe passage to those who know the way - and clammy death to those who do not. Will remain until ten are claimed.',erode:'Creates a dyke within the downs to drown thy foes and their works.',quake:'Behold, the very earth shall shake and rupture.',fire:'A bitter rain of stoney death. Watch as they flee their collapsing homes.',angel:'Engender a plague of paroxysms, contagion and a bloody demise.',volcano:'Nature’s cruellest vengeance at the command.',arma:'There shalbe a moot at the world’s end and every living souls shalbe a soldier in the battle of all against all. So hath it been and so mote it be.'};
+const SPDESC={changeling:'Swap a rival villager for a changeling. It goes home unsuspected; kindle it (or wait three minutes) and it sets fire to where it stands.',murrain:'A cattle plague. Rival livestock in the area sicken and die, and their carcasses spread dread.',torch:'Scry where e\'re the beacon burns. For it shalbe thine eyes.',blast:'Thy will readily done upon thine enemies.',lightning:'The strike of thunder is a blow no man or woman can survive.',swarm:'Calls forth a cloud o’ wicked horseflies to bite and sting and scatter thy assailants for ten seconds.',convert:'Turns wandering wildmen within the circle into your villagers.',shield:'A ward against harm for those within its ‘fluence.',ghost:'Raise the shades of dead men. Brief candles who make war, draw the eye and melt away come striking.',bridge:'Raise up a causeway towards heights and across water.',flatten:'From crags and cliffsides spring forth green and level fields. Cannot be cast upon the water.',hypno:'Witch them to thy cause - they’ll fight for you for twenty-five seconds.',whirl:'A twisting wind that tears walls from their foundations afore wand’ring in search of new victims.',swamp:'A sucking mire that offers safe passage to those who know the way - and clammy death to those who do not. Will remain until ten are claimed.',erode:'Creates a dyke within the downs to drown thy foes and their works.',quake:'Behold, the very earth shall shake and rupture.',fire:'A bitter rain of stoney death. Watch as they flee their collapsing homes.',angel:'Engender a plague of paroxysms, contagion and a bloody demise.',volcano:'Nature’s cruellest vengeance at the command.',arma:'There shalbe a moot at the world’s end and every living souls shalbe a soldier in the battle of all against all. So hath it been and so mote it be.'};
 const ICON={
   blast:'<circle cx="12" cy="12" r="4"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l3 3M16 16l3 3M5 19l3-3M16 8l3-3"/>',
   lightning:'<path d="M13 2L5 14h6l-2 8 8-12h-6l2-8z"/>',
@@ -526,6 +528,8 @@ const ICON={
   ghost:'<path d="M5 21V10a7 7 0 0 1 14 0v11l-2.3-2-2.3 2-2.4-2-2.3 2-2.4-2z"/><circle cx="9.5" cy="10" r="1"/><circle cx="14.5" cy="10" r="1"/>',
   bridge:'<path d="M2 16h20M4 16c2-6 14-6 16 0M8 13v3M12 12v4M16 13v3"/><path d="M2 21c2-1 4-1 6 0s4 1 6 0 4-1 6 0"/>',
   flatten:'<path d="M3 8l4-3 4 4 4-4 6 3"/><path d="M3 15h18M3 19h18"/>',
+  changeling:'<path d="M12 4a4 4 0 1 0 0 8 4 4 0 1 0 0-8M6 21c0-4 3-6 6-6s6 2 6 6"/><path d="M10 8h.01M14 8h.01"/>',
+  murrain:'<path d="M4 14c0-3 3-5 8-5s8 2 8 5-3 4-8 4-8-1-8-4z"/><path d="M7 18v3M17 18v3M6 9l-2-3M18 9l2-3"/>',
   hypno:'<path d="M12 12a1 1 0 0 1 1 1 2 2 0 0 1-2 2 3 3 0 0 1-3-3 4 4 0 0 1 4-4 5 5 0 0 1 5 5 6 6 0 0 1-6 6 7 7 0 0 1-7-7"/>',
   whirl:'<path d="M3 5h18M5 9h14M7 13h10M9 17h6M11 21h2"/>',
   torch:'<path d="M12 22v-9M9 13h6l-1 2h-4z"/><path d="M12 11c-2-1-2-3-1-5 0 2 2 2 2 0 1 2 1 4-1 5z"/>',
@@ -655,7 +659,8 @@ const allowB=t=>!allowSets||(t==='tomb'?allowSets.tomb:allowSets.b.has(t));
 const allowS=k=>!allowSets||allowSets.s.has(k);
 // Grimoire mode (test mode for now): the player casts only the spells chosen before the game; rivals keep every spell. All-against-all is always to hand.
 const GRIM_N=8,GRIM_KEY='wicker-grimoire-v1';
-const palOK=k=>settings.mode!=='grimoire'||settings.campaign!=null||k==='arma'||!settings.palette||settings.palette.includes(k);
+const NEW_SP=['changeling','murrain'];
+const palOK=k=>{const g=settings.mode==='grimoire'&&settings.campaign==null&&settings.palette;if(!g)return !NEW_SP.includes(k);return k==='arma'||settings.palette.includes(k)};
 const allowPB=t=>allowB(t)&&!((scen()||{}).lockB||[]).includes(t);
 const CAMP_KEY='wicker-campaign-v1',DEV_KEY='wicker-dev';
 
@@ -883,17 +888,30 @@ function decorTick(dt){
     const cx=b.x+sx/n,cz=b.z+sz/n;let spot=null;for(let rr=0;rr<6&&!spot;rr+=.7)for(let t=0;t<12;t++){const a=t/12*TAU,x=wrap(cx+Math.cos(a)*rr),z=wrap(cz+Math.sin(a)*rr);if(clear(x,z,1)){spot={x,z};break}}
     if(spot){wells.push({x:spot.x,z:spot.z,tribe:b.tribe,born:gt});break}}
   // livestock (test mode only for now): each settled well keeps a black goat, a few chickens and a hutch of rabbits
-  stockOn=devMode();stock=stock.filter(a=>wells.includes(a.w));hutches=hutches.filter(h=>wells.includes(h.w));if(!stockOn)return;
-  for(const w of wells){if(gt-w.born<15||stock.some(a=>a.w===w))continue;const at=(r0,r1,pad)=>{for(let k=0;k<20;k++){const a=R()*TAU,r=r0+R()*(r1-r0),x=wrap(w.x+Math.cos(a)*r),z=wrap(w.z+Math.sin(a)*r);if(clear(x,z,pad))return {x,z}}return null};
+  stockOn=devMode();for(const a of stock)if(!wells.includes(a.w)&&a.offer&&a.offer.aq)a.offer.aq--;stock=stock.filter(a=>wells.includes(a.w));hutches=hutches.filter(h=>wells.includes(h.w));if(!stockOn)return;
+  // carcasses of murrain spread dread, then rot away; flocks breed back when no carcass lies near
+  for(const a of stock)if(a.dead){const T=tribes[a.tribe];if(T&&!T.wild)T.dread=Math.min(100,(T.dread||0)+1.5)}stock=stock.filter(a=>!(a.dead&&gt-a.dead>60));
+  for(const w of wells){if(!w.want||stock.some(a=>a.w===w&&a.dead))continue;w.nx=w.nx||{};for(const kind of ['goat','chicken','rabbit']){const have=stock.filter(a=>a.w===w&&a.kind===kind).length;if(have>=(w.want[kind]||0)){w.nx[kind]=0;continue}
+      if(!w.nx[kind]){w.nx[kind]=gt+(kind==='goat'?200:kind==='chicken'?90:60);continue}if(gt<w.nx[kind])continue;w.nx[kind]=0;
+      if(kind==='rabbit'){const h=hutches.find(o=>o.w===w);if(!h)continue;const r={kind:'rabbit',w,hutch:h,tribe:w.tribe,lx:(R()-.5)*.8,lz:.4+R()*.6,wait:1,anim:R()*9,face:R()*TAU,born:gt};r.tlx=r.lx;r.tlz=r.lz;stock.push(r)}
+      else{const a=R()*TAU,x=wrap(w.x+Math.cos(a)*2),z=wrap(w.z+Math.sin(a)*2);if(clear(x,z,0))stock.push({kind,w,tribe:w.tribe,x,z,tx:x,tz:z,face:a,wait:2,anim:R()*9,born:gt,kid:kind==='goat'})}}}
+  for(const w of wells){if(gt-w.born<15||w.want)continue;const at=(r0,r1,pad)=>{for(let k=0;k<20;k++){const a=R()*TAU,r=r0+R()*(r1-r0),x=wrap(w.x+Math.cos(a)*r),z=wrap(w.z+Math.sin(a)*r);if(clear(x,z,pad))return {x,z}}return null};
     const mk=(kind,p)=>{if(p)stock.push({kind,w,tribe:w.tribe,x:p.x,z:p.z,tx:p.x,tz:p.z,face:R()*TAU,wait:R()*3,anim:R()*9})};
-    mk('goat',at(2,5,0));const nc=3+(R()*3|0);for(let k=0;k<nc;k++)mk('chicken',at(1.5,4,0));
-    const hp=at(3,6,1);if(hp&&!patches.some(q=>d2(q.x,q.z,hp.x,hp.z)<2.5*2.5)){const h={w,tribe:w.tribe,x:hp.x,z:hp.z,yaw:Math.atan2(wd(w.x-hp.x),wd(w.z-hp.z))};hutches.push(h);const nr=2+(R()*2|0);for(let k=0;k<nr;k++){const r={kind:'rabbit',w,hutch:h,tribe:w.tribe,lx:(R()-.5)*.8,lz:.4+R()*.6,wait:R()*2,anim:R()*9,face:R()*TAU};r.tlx=r.lx;r.tlz=r.lz;stock.push(r)}}}}
-function stockTick(dt){if(!stockOn)return;for(const a of stock){if(a.kind==='rabbit'){const h=a.hutch;if(a.wait>0){a.wait-=dt;a.moving=false}else{const dx=a.tlx-a.lx,dz=a.tlz-a.lz,l=Math.hypot(dx,dz),sp=.9*dt;
+    mk('goat',at(2,5,0));const nc=3+(R()*3|0);for(let k=0;k<nc;k++)mk('chicken',at(1.5,4,0));w.want={goat:1,chicken:nc,rabbit:0};
+    const hp=at(3,6,1);if(hp&&!patches.some(q=>d2(q.x,q.z,hp.x,hp.z)<2.5*2.5)){const h={w,tribe:w.tribe,x:hp.x,z:hp.z,yaw:Math.atan2(wd(w.x-hp.x),wd(w.z-hp.z))};hutches.push(h);const nr=2+(R()*2|0);w.want.rabbit=nr;for(let k=0;k<nr;k++){const r={kind:'rabbit',w,hutch:h,tribe:w.tribe,lx:(R()-.5)*.8,lz:.4+R()*.6,wait:R()*2,anim:R()*9,face:R()*TAU};r.tlx=r.lx;r.tlz=r.lz;stock.push(r)}}}}
+function stockTick(dt){if(!stockOn)return;let gone=false;for(const a of stock){if(a.dead)continue;
+    if(a.sick&&gt>=a.sick){a.dead=gt;a.moving=false;if(a.offer){if(a.offer.aq)a.offer.aq--;a.offer=null}continue}
+    if(a.offer){const b=a.offer;if(!b.alive||b.lit||b.tribe!==a.tribe){if(b.aq)b.aq--;a.offer=null;continue}if(a.wait>0){a.wait-=dt;continue}const dx=wd(b.dx-a.x),dz=wd(b.dz-a.z),l=Math.hypot(dx,dz),sp=(a.kind==='goat'?1.4:1.7)*dt;
+      if(l<.5){if(offerAnimal(a,b)){a.gone=true;gone=true}continue}a.x=wrap(a.x+dx/l*Math.min(l,sp));a.z=wrap(a.z+dz/l*Math.min(l,sp));a.face=Math.atan2(dx,dz);a.moving=true;continue}
+    if(a.kind==='rabbit'&&a.hutch){const h=a.hutch;if(a.wait>0){a.wait-=dt;a.moving=false}else{const dx=a.tlx-a.lx,dz=a.tlz-a.lz,l=Math.hypot(dx,dz),sp=.9*dt;
       if(l<=sp){a.lx=a.tlx;a.lz=a.tlz;a.wait=1+R()*4;a.tlx=(R()-.5)*.9;a.tlz=.35+R()*.75;a.moving=false}else{a.lx+=dx/l*sp;a.lz+=dz/l*sp;a.lf=Math.atan2(dx,dz);a.moving=true}}
       const c=Math.cos(h.yaw),sn=Math.sin(h.yaw);a.x=wrap(h.x+a.lx*c+a.lz*sn);a.z=wrap(h.z-a.lx*sn+a.lz*c);a.face=(a.lf||0)+h.yaw;continue}
+    if(a.kind==='rabbit'&&!a.tx){a.tx=a.x;a.tz=a.z}
+    if(a.sick){a.face+=Math.sin(gt*7+a.anim)*dt*2;continue}
     if(a.wait>0){a.wait-=dt;a.moving=false;continue}const dx=wd(a.tx-a.x),dz=wd(a.tz-a.z),l=Math.hypot(dx,dz),sp=(a.kind==='goat'?.7:1.1)*dt;
     if(l<=sp){a.x=a.tx;a.z=a.tz;a.moving=false;a.wait=a.kind==='goat'?3+R()*7:1+R()*4;const rr=a.kind==='goat'?7:4.5;for(let k=0;k<8;k++){const t=R()*TAU,r=1+R()*rr,x=wrap(a.w.x+Math.cos(t)*r),z=wrap(a.w.z+Math.sin(t)*r),c=cidx(x,z);if(!bOcc[c]&&!water[c]&&walk[c]){a.tx=x;a.tz=z;break}}}
-    else{const nx=wrap(a.x+dx/l*sp),nz=wrap(a.z+dz/l*sp),c=cidx(nx,nz);if(bOcc[c]||water[c]){a.tx=a.x;a.tz=a.z;continue}a.x=nx;a.z=nz;a.face=Math.atan2(dx,dz);a.moving=true}}}
+    else{const nx=wrap(a.x+dx/l*sp),nz=wrap(a.z+dz/l*sp),c=cidx(nx,nz);if(bOcc[c]||water[c]){a.tx=a.x;a.tz=a.z;continue}a.x=nx;a.z=nz;a.face=Math.atan2(dx,dz);a.moving=true}}
+  if(gone)stock=stock.filter(a=>!a.gone)}
 function hazardTick(){let ch=false;for(const c of hazList)if(hazU[c]<=gt){hazList.delete(c);const x=c%N,z=(c/N)|0;recompute(x,z,x,z);ch=true}for(const c of saltList)if(saltU[c]<=gt){saltList.delete(c);const x=c%N,z=(c/N)|0;recompute(x,z,x,z);ch=true}return ch}
 function saltGround(b,owner){const s=BT[b.bt].s,p=TUNE.saltPad;for(let dz=-p;dz<s+p;dz++)for(let dx=-p;dx<s+p;dx++){const ex=Math.max(0,-dx,dx-s+1),ez=Math.max(0,-dz,dz-s+1);if(ex*ex+ez*ez>p*p)continue;const c=wi(b.cz0+dz)*N+wi(b.cx0+dx);saltU[c]=gt+TUNE.saltTime;saltOwner[c]=owner;saltList.add(c)}recompute(b.cx0-p-1,b.cz0-p-1,b.cx0+s+p,b.cz0+s+p)}
 
@@ -1056,7 +1074,7 @@ function grove(b){let n=0;for(const t of trees)if(t.alive&&d2(b.x,b.z,t.x,t.z)<4
 function offerValue(b,cap,wild){const y=YIELD[BT[b.bt].site];let v=cap?y[1]*(wild?.8:1):y[0];if(b.bt==='altar')v*=grove(b);return v}
 function captivesOf(ti){let n=0;for(const b of blds)if(b.alive&&b.tribe===ti&&isHold(b))n+=b.capt.length;return n}
 function nearestHolder(ti,x,z,needCaps){let best=null,bd=1e18;for(const b of blds){if(!b.alive||!b.done||b.tribe!==ti||!isHold(b))continue;if(needCaps?!b.capt.length:b.capt.length>=BT[b.bt].hold)continue;const d=d2(x,z,b.x,b.z);if(d<bd){bd=d;best=b}}return best}
-function sacrifice(u,b){const T=tribes[u.tribe];if(b.claim===u)b.claim=null;const cap=!!u.capt,wild=cap&&u.capt.tribe===wildId;removeUnit(u);
+function sacrifice(u,b){const T=tribes[u.tribe];if(b.claim===u)b.claim=null;const cap=!!u.capt,wild=cap&&u.capt.tribe===wildId;if(u.chg!=null&&!b.lit){const by=u.chg;removeUnit(u);if(b.bt==='altar')burnBld(b,0,by);else{b.spoil=true;light(b)}return}removeUnit(u);
   if(u.type==='queen'){offerQueen(T,b,u);return}
   if(b.lit)return;
   if(b.bt==='altar'){const v=Math.round(offerValue(b,cap,wild)*T.manaMult);T.mana=Math.min(MANA_MAX,T.mana+v);if(!cap)T.dread=Math.min(100,T.dread+DREAD.altar);b.busy=gt+2.5;
@@ -1067,8 +1085,26 @@ function sacrifice(u,b){const T=tribes[u.tribe];if(b.claim===u)b.claim=null;cons
 function memorial(kind,x,z,tribe){const M=stats.mem||(stats.mem=[]);if(M.length>=60)return;
   if(kind==='doll'){const near=M.filter(m=>m.k==='doll'&&d2(m.cx,m.cz,x,z)<5*5);const c=near[0]||{cx:x,cz:z};const i=near.length,a=i*2.39996+.5,r=2.4+(i>=8?.7:0);M.push({k:'doll',cx:c.cx,cz:c.cz,x:wrap(c.cx+Math.cos(a)*r),z:wrap(c.cz+Math.sin(a)*r),tribe,t:gt})}
   else M.push({k:kind,x,z,tribe,t:gt})}
+// ---- changeling fires ----
+function burnBld(b,delay,by){if(!b||!b.alive)return;if((b.bt==='wicker'||b.bt==='god')&&!b.lit){b.spoil=true;light(b);return}
+  effects.push({t:delay+7,d:delay,up(e,dt){e.t-=dt;if(!b.alive)return false;if(e.d>0){e.d-=dt;return true}const s=BT[b.bt].s,y=hAt(b.x,b.z);for(let i=0;i<3;i++)PA.emit(b.x+(R()-.5)*s*.8,y+.3+R()*1.6,b.z+(R()-.5)*s*.8,(R()-.5)*.4,1.5+R()*2.5,(R()-.5)*.4,.6+R()*.5,1,.45+R()*.3,.1,1,.7,-1);
+    if(R()<dt*4)PN.emit(b.x,y+2,b.z,(R()-.5)*.5,1.6,(R()-.5)*.5,3,.14,.11,.1,.6,1.4,-.2);atk=by;dmgBld(b,b.mhp/6*dt);return e.t>0}})}
+function kindle(u){if(!u.alive||u.chg==null)return;const by=u.chg,T=tribes[u.tribe];let b0=null,bd=6*6;for(const b of blds){if(!b.alive||b.tribe!==u.tribe||BT[b.bt].inv||b.bt==='hedge'||b.bt==='reinc')continue;const d=d2(u.x,u.z,b.x,b.z)-(BT[b.bt].s*.5)**2;if(d<bd){bd=d;b0=b}}
+  u.chg=null;if(b0){burnBld(b0,0,by);let b1=null,bd1=4.5*4.5;for(const b of blds){if(!b.alive||b===b0||b.tribe!==b0.tribe||BT[b.bt].inv||b.bt==='hedge'||b.bt==='reinc')continue;const d=d2(b0.x,b0.z,b.x,b.z);if(d<bd1){bd1=d;b1=b}}if(b1)burnBld(b1,2.5,by)}
+  if(by===0&&!watching)toast(b0?`The changeling kindles the ${T?T.name+' ':''}${BT[b0.bt].label.toLowerCase()} and runs for the wilds.`:'The changeling found nothing to burn and runs for the wilds.');
+  if(u.sel)deselect(u);u.type='wild';u.tribe=wildId;u.mhp=UT.wild.hp;u.hp=Math.min(u.hp,u.mhp);u.order=null;u.tgt=null;u.cmd=false;const a=R()*TAU;u.st='flee';u.ft=5;setTarget(u,u.x+Math.cos(a)*10,u.z+Math.sin(a)*10)}
+function chgTick(){for(const u of units)if(u.alive&&u.chg!=null&&gt>=u.chgAt)kindle(u)}
+// ---- offering livestock (test mode) ----
+const ANI_FRAC={chicken:.25,rabbit:.25};
+function aniValue(b,kind){const y=YIELD[BT[b.bt].site];let v=kind==='goat'?y[1]:y[0]*ANI_FRAC[kind];if(b.bt==='altar')v*=grove(b);return v}
+function aniAvail(ti,kind){return stock.filter(a=>a.tribe===ti&&a.kind===kind&&!a.dead&&!a.sick&&!a.offer&&!(a.kid&&gt-a.born<120))}
+function sendAnimal(b,kind){const c=aniAvail(b.tribe,kind);if(!c.length)return false;let a=c[0],bd=1e18;for(const o of c){const d=d2(o.x,o.z,b.x,b.z);if(d<bd){bd=d;a=o}}if(a.hutch){a.hutch=null;a.free=true}a.offer=b;a.wait=0;if(b.bt!=='altar')b.aq=(b.aq||0)+1;return true}
+function offerAnimal(a,b){const T=tribes[b.tribe];if(b.bt==='altar'){if(b.busy>gt){a.wait=.6;return false}const v=Math.round(aniValue(b,a.kind)*T.manaMult);T.mana=Math.min(MANA_MAX,T.mana+v);b.busy=gt+2.5;
+    const y=hAt(b.x,b.z);for(let i=0;i<12;i++)PA.emit(b.x+(R()-.5)*.6,y+.9,b.z+(R()-.5)*.6,(R()-.5)*1.2,1+R()*2,(R()-.5)*1.2,.7,.75,.08,.06,1,.4,2);sfx('die',.35,b.x,b.z);if(b.tribe===0)toast(`The ${a.kind==='goat'?'black goat':a.kind} is given to the grove. +${v} mana`);return true}
+  b.aq=Math.max(0,(b.aq||0)-1);if(b.lit||b.inside.length>=BT[b.bt].holdN)return true;b.inside.push({cap:false,ani:a.kind});dockDirty=true;if(b.inside.length>=BT[b.bt].holdN)light(b);return true}
 function light(b){const T=tribes[b.tribe],D=BT[b.bt];if(b.lit)return;b.lit=true;sacN(b.tribe,b.inside.length);if(b.tribe===0){earn(b.bt==='god'?'r_burngod':'r_burnman');if(b.bt==='god'&&b.inside.length>=12&&b.inside.every(o=>o.cap))earn('d_godcaps')}if(!armageddon)memorial('doll',b.x,b.z,b.tribe);b.litT=gt;b.burnEnd=gt+D.burnT;if(b.bt==='god')b.burnEnd+=3;let v=0,own=0;
-  for(const o of b.inside){v+=offerValue(b,o.cap,o.wild);if(!o.cap)own++}
+  for(const o of b.inside){v+=o.ani?aniValue(b,o.ani):offerValue(b,o.cap,o.wild);if(!o.cap&&!o.ani)own++}
+  if(b.spoil){v=0;if(b.tribe===0)toast('A changeling was among the offerings. The fire took early and gave nothing.');else if(!watching&&tribes[b.tribe])toast(`The ${tribes[b.tribe].name} fire took early. Their offering is wasted.`)}
   v=Math.round(v*T.manaMult);T.mana=Math.min(MANA_MAX,T.mana+v);T.dread=Math.min(100,T.dread+own*DREAD[D.site]);
   if(b.bt==='wicker')T.frenzyUntil=Math.min(gt+TUNE.frenzyMax,Math.max(gt,T.frenzyUntil||0)+TUNE.frenzyPerHead*b.inside.length);
   if(b.bt==='god'){for(const o of tribes){if(o.wild||o.id===T.id||!o.alive)continue;let near=false;for(const u of units)if(u.alive&&u.tribe===o.id&&d2(u.x,u.z,b.x,b.z)<900){near=true;break}if(near)o.dread=Math.min(100,(o.dread||0)+TUNE.godDreadOnEnemies)}flash(.4);cam.shake=Math.max(cam.shake,.5)}
@@ -1271,6 +1307,7 @@ function updUnit(u,dt){const D=UT[u.type],T=tribes[u.tribe];if(season==='winter'
     if(u.purpose==='entomb'){if(!b||!b.alive||!b.rite||b.rite.tribe!==u.tribe){u.st='idle';break}if(d2(u.x,u.z,b.x,b.z)<4.6*4.6){u.st='wait';u.riteB=b;break}const r=moveStep(u,dt);if(r){if(d2(u.x,u.z,b.x,b.z)<6.5*6.5){u.st='wait';u.riteB=b}else u.st='idle'}break}
     if(!b||!b.alive||!b.done||b.tribe!==u.tribe||b.lit){u.st='idle';if(b&&b.claim===u)b.claim=null;break}
     if(d2(u.x,u.z,b.dx,b.dz)>.5){const r=moveStep(u,dt);if(r===2){u.st='idle';if(b.claim===u)b.claim=null}else if(r===1)setTarget(u,b.dx,b.dz)}
+    else if(u.chg!=null&&u.purpose!=='sac'){u.st='idle';u.think=2+R()*3;if(b.claim===u)b.claim=null}
     else if(u.purpose==='house'){if(b.occ<5){b.occ++;removeUnit(u)}else u.st='idle'}
     else if(u.purpose==='sac'){sacrifice(u,b)}
     else if(u.purpose==='pen'){if(isHold(b)&&b.capt.length<BT[b.bt].hold){b.capt.push(u.capt?u.capt.tribe:wildId);removeUnit(u)}else u.st='idle'}
@@ -1426,7 +1463,7 @@ function updBld(b,dt){const D=BT[b.bt],T=tribes[b.tribe];if(D.inv)return;
         if(R()<dt*2)sfx('chop',.25,b.x,b.z)}
       if(gt>=b.burnEnd){collapse(b);b.burnt=true;destroyBld(b)}return}
     if(!armageddon){b.claimT=(b.claimT||0)-dt;if(b.claimT<=0){b.claimT=.5;let walking=0;for(const u of units)if(u.alive&&u.st==='enter'&&u.bld===b&&u.purpose==='sac')walking++;
-      const room=b.bt==='altar'?((b.busy>gt||walking)?0:1):D.holdN-b.inside.length-walking;
+      const room=b.bt==='altar'?((b.busy>gt||walking)?0:1):D.holdN-b.inside.length-walking-(b.aq||0);
       if(room>0){if(b.cq>0){const h=nearestHolder(T.id,b.x,b.z,true);if(h){const o=h.capt.pop();b.cq--;const c=spawnUnit('captive',T.id,h.dx,h.dz);c.capt={tribe:o};c.st='enter';c.bld=b;c.purpose='sac';setTarget(c,b.dx,b.dz);if(T.id===0)mark(c.x,c.z,.9,.85,.7)}else b.cq=0}
         else if(b.sq>0){const br=getFreeBrave(T,b.x,b.z);if(br){br.st='enter';br.bld=b;br.purpose='sac';br.cmd=false;setTarget(br,b.dx,b.dz);b.sq--;if(T.id===0)mark(br.x,br.z,1,.55,.2)}}}}}
     return}
@@ -1488,6 +1525,10 @@ function castSpell(ti,k,px,pz,cu){atk=ti;let sx=cu?cu.x:px,sz=cu?cu.z:pz,sy=cu?u
       const w=d<1.4?1:1-sstep(1.4,3,d),c=wi(vz)*N+wi(vx),tg=lerp(H[c],lerp(h0,h1,t),w);if(tg>H[c]){H[c]=tg;if(d<1.6){const a=A();(a.br||(a.br=[])).push(c)}}}
     postTerrain(x0,z0,x1,z1);for(let i=0;i<30;i++){const t=R();dust(sx+ex*t,sz+ez*t)}cam.shake=Math.max(cam.shake,.15);break}
   case 'flatten':{let s=0,n=0;forVerts(px,pz,7,c=>{if(H[c]>-1.2){s+=H[c];n++}});let tg=n?s/n:.8;if(tg<.4)tg=.8;const bb=forVerts(px,pz,7,(c,d)=>{if(H[c]>-1.2)H[c]=lerp(H[c],tg,1-sstep(5,7,d))});postTerrain(...bb);for(let i=0;i<34;i++)dust(px+(R()-.5)*12,pz+(R()-.5)*12);break}
+  case 'changeling':{let best=null,bd=2.5*2.5;query(grid,px,pz,2.5,u=>{if(u.alive&&u.tribe!==ti&&u.tribe!==wildId&&u.type==='brave'&&!u.inV&&u.chg==null){const d=d2(px,pz,u.x,u.z);if(d<bd){bd=d;best=u}}});
+    if(!best){const T=tribes[ti];T.mana+=spellCost(T,'changeling');T.cd.changeling=0;if(ti===0)toast('The changeling must be cast on a rival villager');break}
+    best.chg=ti;best.chgAt=gt+180;const y=unitY(best);for(let i=0;i<16;i++)PN.emit(best.x,y+.4,best.z,(R()-.5)*.8,.6+R(),(R()-.5)*.8,1.2,.12,.1,.1,.7,.8,-.2);if(ti===0)toast('The swap is made. Select the changeling and Kindle it when it stands where you want a fire, or it will kindle by itself in three minutes.');break}
+  case 'murrain':{let n=0;for(const a of stock)if(!a.dead&&!a.sick&&a.tribe!==ti&&d2(px,pz,a.x,a.z)<36){a.sick=gt+6+R()*4;n++}ring(px,pz,6,.45,.55,.2);if(ti===0)toast(n?`Murrain takes ${n} beast${n===1?'':'s'}.`:'No rival beasts there');break}
   case 'hypno':query(grid,px,pz,3.5,u=>{if(u.tribe!==ti&&u.alive&&u.type!=='shaman'&&!UT[u.type].veh&&u.type!=='ghost'&&d2(px,pz,u.x,u.z)<9){const o=u.hyp?u.hyp.orig:u.tribe;convertUnit(u,ti);u.hyp={orig:o,until:gt+25}}});ring(px,pz,3,.85,.5,1);break;
   case 'whirl':{let aim=null,ad=1e9;for(const b of blds){if(!b.alive||b.tribe===ti||BT[b.bt].inv||b.bt==='tomb'||b.bt==='god'||b.bt==='oak')continue;const d=Math.sqrt(d2(px,pz,b.x,b.z));if(d<BT[b.bt].s*.6+.4&&d<ad){ad=d;aim=b}}
     if(aim)whirlTake(aim,ti)}
@@ -1760,7 +1801,7 @@ function sim(dt){gt+=dt;
   statT-=dt;if(statT<=0){statT=.5;computeStats()}
   hazT-=dt;if(hazT<=0){hazT=.5;hazardTick()}
   decorTick(dt);stockTick(dt);
-  secT-=dt;if(secT<=0){secT=1;for(const T of tribes){if(!T.alive||T.wild)continue;tribeUpkeep(T);if(T.ai)aiThink(T);else if(T.id===0&&!watching)playerAuto(T)}checkEnd();regrow();wildTick()}
+  secT-=dt;if(secT<=0){secT=1;for(const T of tribes){if(!T.alive||T.wild)continue;tribeUpkeep(T);if(T.ai)aiThink(T);else if(T.id===0&&!watching)playerAuto(T)}checkEnd();regrow();wildTick();chgTick()}
   ferryTick(dt);
   fogT-=dt;if(fogT<=0){fogT=.25;updFog()}
   cleanT-=dt;if(cleanT<=0){cleanT=2;units=units.filter(u=>u.alive);for(const b of blds)if(!b.alive)bById.delete(b.id);blds=blds.filter(b=>b.alive);if(trees.length>treeCap*1.6)trees=trees.filter(t=>t.alive)}}
@@ -2865,6 +2906,7 @@ function drawEntities(){
     if(u.type==='balloon'){y+=Math.sin(gt*1.5+u.anim)*.15}
     if(u.air)yaw+=gt*9;
     let sy=1;if(u.past&&u.st==='idle'&&u.pastT>gt){const ph=gt*2+u.anim;if(u.past==='sit'){y-=.13;sy=.76;yaw+=Math.sin(ph*.4)*.08}else if(u.past==='tend'){const b=Math.max(0,Math.sin(ph*1.5));y-=.09*b;sy=1-.22*b}else if(u.past==='chat'){yaw+=Math.sin(ph*1.7)*.2;if(Math.sin(ph*.8)>.92)y+=.05}}
+    if(u.chg===0&&!watching&&HALO.n<HALO.max&&Math.sin(gt*2.2+u.anim)>.55)HALO.emit(u.x,unitY(u)+.55,u.z,0,0,0,1,1,.85,.35,.55,.9,0);
     const i=M.n++;place(M.t,i,rx+ox,y,rz+oz,yaw,sc,sy);place(M.f,i,rx+ox,y,rz+oz,yaw,sc,sy);
     _c.copy(tribes[u.tribe].c);if(gt-u.hitT<.12)_c.setRGB(1,1,1);else if(tribes[u.tribe].frenzyUntil>gt)_c.lerp(FRENZY_C,.25+.15*Math.sin(gt*9+u.anim));else if(u.shield>gt)_c.lerp(SHIELD_C,.5+.15*Math.sin(gt*5));if(u.hyp)_c.lerp(WHITE_C,.3+.3*Math.sin(gt*7));
     M.t.setColorAt(i,_c);M.f.setColorAt(i,WHITE_C);
@@ -2883,7 +2925,7 @@ function drawEntities(){
       place(GBP,gn,rx,y,rz,yw,1);_c.setRGB(1,1,1);GBP.setColorAt(gn,_c);place(GBC,gn,rx,y,rz,yw,1);_c.copy(tribes[bn.tribe].c);GBC.setColorAt(gn,_c);gn++}fin(GBP,gn);fin(GBC,gn)}
   if(stockOn)for(const a of stock){const M=UM[a.kind];if(M.n>=M.cap)continue;const rx=wd(a.x-cam.fx),rz=wd(a.z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2*.75||!seenAt(a.x,a.z))continue;if(a.tribe!==0&&!isVis(a.x,a.z))continue;
     let y=hAt(a.x,a.z)-r2*K,sy=1;if(a.moving)y+=Math.abs(Math.sin(gt*(a.kind==='rabbit'?9:a.kind==='chicken'?12:6)+a.anim))*(a.kind==='goat'?.03:.05);else if(a.kind==='chicken'){const pk=Math.max(0,Math.sin(gt*3+a.anim));sy=1-.25*pk*pk}
-    const i=M.n++;place(M.t,i,rx,y,rz,a.face,1,sy);place(M.f,i,rx,y,rz,a.face,1,sy);const fv=fogOn?Math.max(.42,vis[cidx(a.x,a.z)]):1;_c.copy(tribes[a.tribe].c).multiplyScalar(fv);M.t.setColorAt(i,_c);_c.setRGB(fv,fv,fv);M.f.setColorAt(i,_c)}
+    const sc=a.kid?Math.min(1,.55+(gt-a.born)/180*.45):1;if(a.dead){sy=.3;y-=.04}const i=M.n++;place(M.t,i,rx,y,rz,a.face,sc,sy);place(M.f,i,rx,y,rz,a.face,sc,sy);const fv=fogOn?Math.max(.42,vis[cidx(a.x,a.z)]):1;_c.copy(tribes[a.tribe].c).multiplyScalar(fv);M.t.setColorAt(i,_c);if(a.dead)_c.setRGB(.42*fv,.5*fv,.3*fv);else if(a.sick)_c.setRGB(.75*fv,.95*fv,.55*fv);else _c.setRGB(fv,fv,fv);M.f.setColorAt(i,_c)}
   drawDebris();
   fin(CM,cn);
   for(const k in UM){fin(UM[k].t,UM[k].n);fin(UM[k].f,UM[k].n)}
@@ -3082,7 +3124,7 @@ function onTap(sx,sy,right,shift){if(over||watching)return;const T=tribes[0],g=p
   const hu=pickUnit(sx,sy);let hb=null,ht=null;
   if(!hu&&g){const id=bOcc[cidx(g.x,g.z)];if(id)hb=bById.get(id)||null;if(hb&&(!hb.alive||!seenAt(hb.x,hb.z)))hb=null;if(!hb)ht=nearestTree(g.x,g.z,1.1)}
   if(right&&!hu&&!hb&&!ht){clearSel();return}
-  const grp=sel.filter(e=>!e.bt&&e.alive);const hasBraves=grp.some(u=>u.type==='brave'),hasGround=grp.some(u=>!UT[u.type].veh);
+  const grp=sel.filter(e=>!e.bt&&e.alive&&e.tribe===0);const hasBraves=grp.some(u=>u.type==='brave'),hasGround=grp.some(u=>!UT[u.type].veh);
   if(!right){
     if(hu&&hu.tribe===0&&(hu.type==='queen'||hu.type==='shaman')&&!hu.sel&&grp.some(u=>MIL[u.type]&&u.type!=='oss'&&!UT[u.type].veh)){command(grp,g,hu,null,null);return}
     if(hu&&hu.tribe===0&&!(UT[hu.type].veh&&hasGround)){const now=performance.now();
@@ -3150,7 +3192,7 @@ function unplace(){placing=null;hedgeStart=null;hint(null)}
 function hint(t,go){$('hint').hidden=!t;$('hintGo').hidden=!go;if(t)$('hintT').textContent=t}
 $('hintGo').addEventListener('click',()=>{if(armed==='arma'){invokeArma(0)}disarm()});
 $('hintX').addEventListener('click',()=>{disarm();unplace()});
-let tab='spells';const tabEls={spells:$('pSpells'),build:$('pBuild'),tribe:$('pTribe'),train:$('pTrain')};
+let tab='spells',chgIdx=-1;const tabEls={spells:$('pSpells'),build:$('pBuild'),tribe:$('pTribe'),train:$('pTrain')};
 function setTab(t){tab=t;for(const k in tabEls)tabEls[k].hidden=k!==t;document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.tab===t));if(t==='tribe')renderTribe(true);if(t==='train')renderTrain(true)}
 $('tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(b)setTab(b.dataset.tab)});
 function updTiles(){const T=tribes[0];if(!T)return;const att=T.attainUntil>gt;for(const t of spTiles){const s=SPK[t.dataset.k],cost=s.k==='arma'?MANA_MAX:spellCost(T,s.k);t.classList.toggle('poor',T.mana<cost);if(s.k!=='arma'){const ce=t.querySelector('.cost'),txt=String(cost);if(ce.textContent!==txt)ce.textContent=txt}t.classList.toggle('armed',armed===s.k);const cd=Math.max(0,((T.cd[s.k]||0)-gt)/s.cd);t.lastChild.style.height=(cd*100)+'%'}
@@ -3208,13 +3250,15 @@ function renderTribe(force){const T=tribes[0];if(!T)return;let h='';const b=sel.
       if(b.lit)st2='Burning';else if(b.bt==='altar')st2=`Grove strength ×${grove(b).toFixed(2)} · a villager gives ${Math.round(y[0]*grove(b)*T.manaMult)}, a captive ${Math.round(y[1]*grove(b)*T.manaMult)}`;
       else st2=`${b.inside.length} of ${D.holdN} inside${b.sq+b.cq?' · '+(b.sq+b.cq)+' on their way':''} · ${y[0]} a villager, ${y[1]} a captive`;
       h=`<div class="card"><b>${D.label}</b><span>${st2}</span></div>`;
-      if(!b.lit&&!armageddon){const room=b.bt==='altar'?99:D.holdN-b.inside.length-b.sq-b.cq;
+      if(!b.lit&&!armageddon){const room=b.bt==='altar'?99:D.holdN-b.inside.length-b.sq-b.cq-(b.aq||0);
         h+=`<button class="qs go" data-act="cap" ${caps>b.cq&&room>0?'':'disabled'}><span>${caps} held · no dread</span><b>Offer a captive</b></button><button class="qs" data-act="sac" ${room>0?'':'disabled'}><span>Raises dread</span><b>Offer a villager</b></button>`;
-        if(b.bt!=='altar')h+=`<button class="qs" data-act="fillc" ${caps>b.cq&&room>0?'':'disabled'}><span>Captives first</span><b>Fill it</b></button>`}}
+        if(b.bt!=='altar')h+=`<button class="qs" data-act="fillc" ${caps>b.cq&&room>0?'':'disabled'}><span>Captives first</span><b>Fill it</b></button>`;
+        if(stockOn)for(const [kind,lab] of [['chicken','Offer a chicken'],['rabbit','Offer a rabbit'],['goat','Offer the goat']]){const n=aniAvail(0,kind).length;if(!n&&!stock.some(a=>a.tribe===0&&a.kind===kind))continue;h+=`<button class="qs" data-act="ani:${kind}" ${n&&room>0?'':'disabled'}><span>${n} ready · no dread · +${Math.round(aniValue(b,kind)*T.manaMult)}</span><b>${lab}</b></button>`}}}
     if(b.done&&isHold(b))h+=`<div class="card"><b>Captives</b><span>${b.capt.length} of ${D.hold} held here</span></div>`;
     if(b.bt==='oak'&&b.done){const riders=units.filter(u=>u.alive&&u.type==='hunter'&&u.tribe===0).length;h=`<div class="card"><b>${D.label}</b><span>${b.awake?`The Hunt rides · ${riders} abroad · each death they cause feeds you like a captive`:b.hangUntil?`Your Cunning Woman hangs here · ${Math.ceil(b.hangUntil-gt)}s`:'Dormant. Hang your Cunning Woman here for two minutes to wake the Wild Hunt'}</span></div>`;if(!b.awake&&!b.hangUntil)h+=`<button class="qs go" data-act="hang" ${T.shaman&&!T.shaman.hanging?'':'disabled'}><span>She is gone for two minutes</span><b>Hang your Cunning Woman</b></button>`}
     if(b.bt==='tomb')h=`<div class="card"><b>${D.label}</b><span>Your Cunning Woman lies here · ${Math.ceil(b.hp)} of ${b.mhp}</span></div>`;
     if(b.done&&b.bt==='hut')h+=`<button class="qs" data-act="callout" ${b.occ?'':'disabled'}><span>Send them to work</span><b>Call villagers out</b></button>`}
+  else if(sel.length===1&&sel[0].chg===0&&sel[0].alive){const u=sel[0],Tt=tribes[u.tribe];h+=`<div class="card"><b>Changeling</b><span>Living among the ${Tt?Tt.name:''} folk · kindles by itself in ${Math.max(0,Math.ceil(u.chgAt-gt))}s</span></div><button class="qs go" data-act="kindle"><span>Burns where it stands, and the next building over</span><b>Kindle</b></button>`}
   else if(sel.length===1&&sel[0].type==='queen'&&sel[0].tribe===0){const q=sel[0],g=units.filter(u=>u.alive&&u.postUnit&&u.post===q.id).length,ripe=gt-q.born>=TUNE.queenRipen;
     h+=`<div class="card"><b>${q.thrall?'Captured May Queen':'May Queen'}</b><span>${q.thrall?'Taken from the '+(tribes[q.orig]?tribes[q.orig].name:'')+' folk · ':''}Worth ${queenValue(q)} mana${ripe?', at her richest':', rising to '+TUNE.queenMax} · ${g} guard${g===1?'':'s'}</span></div><button class="qs go" data-act="offerq"><span>No dread</span><b>Offer her</b></button>`}
   else{const S=T.stats.cnt||{};const veh=sel.filter(u=>u.pass&&u.pass.length);
@@ -3226,7 +3270,7 @@ function renderTribe(force){const T=tribes[0];if(!T)return;let h='';const b=sel.
     const f5=k=>{const n=myUnits(u=>u.type===k&&!u.post&&!sel.includes(u)).length;return `<button class="qs" data-act="five:${k}" ${n?'':'disabled'}><span>nearest</span><b>+5</b></button>`};
     const fr=k=>myUnits(u=>u.type===k&&!u.post).length;h+=q('army','Army',army,army+' fighters')+q('warrior','Warriors',fr('warrior'),fr('warrior')+' ready')+f5('warrior')+q('archer','Archers',fr('archer'),fr('archer')+' ready')+f5('archer')+q('oss','Osses',fr('oss'),fr('oss')+' ready')+f5('oss')+q('guard','Guards',guards,guards+' posted');
     const br=T.stats.outB||0;h+=q('brave','Villagers',br,br+' outside, '+(T.stats.housed||0)+' in huts');
-    const vn=S.balloon||0;h+=q('veh','Balloons',vn,vn+' balloons')}
+    const vn=S.balloon||0;h+=q('veh','Balloons',vn,vn+' balloons');const cn=units.filter(u=>u.alive&&u.chg===0).length;if(cn)h+=q('chg','Changelings',cn,cn+' among the rivals')}
   if(force||h!==lastTribeHTML){$('pTribe').innerHTML=h;lastTribeHTML=h;if(performance.now()-pulseAct.t<450){const el=$('pTribe').querySelector(`[data-act="${pulseAct.a}"]`);if(el)el.classList.add('pulse')}}}
 $('pTribe').addEventListener('click',e=>{const t=e.target.closest('[data-act]');if(!t||t.disabled)return;audio();const T=tribes[0],a=t.dataset.act;const b=sel[0];
   pulseAct={a:t.dataset.act,t:performance.now()};t.classList.remove('pulse');void t.offsetWidth;t.classList.add('pulse');sfx('select',.6);const nm=b&&b.bt?BT[b.bt].label.toLowerCase():'';
@@ -3240,6 +3284,9 @@ $('pTribe').addEventListener('click',e=>{const t=e.target.closest('[data-act]');
   else if(a==='offerq'){const q=sel[0];let best=null,bd=1e18;for(const x of blds)if(x.alive&&x.done&&x.tribe===0&&BT[x.bt].site&&!x.lit){const d=d2(q.x,q.z,x.x,x.z);if(d<bd){bd=d;best=x}}if(!best){toast('You need an altar or a wicker figure to offer her at');return}q.st='enter';q.bld=best;q.purpose='sac';q.cmd=true;setTarget(q,best.dx,best.dz);toast(`The May Queen walks to the ${BT[best.bt].label.toLowerCase()}`)}
   else if(a==='hang'){if(T.shaman&&!b.awake&&!b.hangUntil&&b.done){const f=field(b.dx,b.dz,false);if(f[cidx(T.shaman.x,T.shaman.z)]<0)riteOrFerry(T.shaman,b,startHang);else if(startHang(T.shaman,b))toast('Your Cunning Woman walks to the oak')}}
   else if(a==='rite'){if(T.shaman)startRitual(T.shaman,b)}
+  else if(a==='kindle'){const u=sel[0];if(u&&u.chg===0)kindle(u);renderTribe(true)}
+  else if(a==='chg'){const cs=units.filter(u=>u.alive&&u.chg===0);if(cs.length){chgIdx=(chgIdx+1)%cs.length;setSel([cs[chgIdx]]);centerOn([cs[chgIdx]])}}
+  else if(a.startsWith('ani:')){if(!sendAnimal(b,a.slice(4)))toast('None ready');else{dockDirty=true;toast(`The ${a.slice(4)==='goat'?'black goat':a.slice(4)} is led to the ${nm}.`)}}
   else if(a==='callout'){const n=b.occ;while(b.occ>0){b.occ--;const u=spawnUnit('brave',0,b.dx+(R()-.5)*2,b.dz+R());u.think=1.5}toast(`${n} villager${n===1?'':'s'} come out to work.`)}
   else if(a==='unload'){for(const v of sel)if(v.pass&&v.pass.length)unload(v)}
   else if(a==='shaman')focusShaman();
@@ -3723,6 +3770,6 @@ document.querySelectorAll('.filmBox').forEach(box=>{box.addEventListener('click'
   box.addEventListener('input',e=>{const r=e.target.closest('input[data-fk]');if(!r)return;film[r.dataset.fk]=+r.value;filmSave();filmUI()})});
 filmUI();
 resize();buildWorld();showContinue();requestAnimationFrame(frame);
-window.__ws={get stock(){return stock},get hutches(){return hutches},get HUT_TOP(){return HUT_TOP},get wind(){return wind},get windOn(){return windOn},get lastFight(){return lastFight},windTick,get wildFl(){return wildFl},get season(){return season},endGame,destroyBld,crown,villagerCount,tokGet,keepsake,useKeepsake,walkReach,postAt,setSel,get banners(){return banners},get sel(){return sel},get world(){return world},light,memorial,get stats(){return stats},get cam(){return cam},get WS(){return WS},wsOpen,wsClose,captureDef,defFromData,merge,ORIG_UMOD,ORIG_BMOD,get UM(){return UM},get BM(){return BM},get wear(){return wear},get buntings(){return buntings},get patches(){return patches},get wells(){return wells},get units(){return units},get tribes(){return tribes},get blds(){return blds},sim,beginGame,get gt(){return gt},castSpell,tryCast,saveGame,loadGame,setSel,command,showLevel,SCEN,field,get walkA(){return walk},hAt,get water(){return water},findSpot,get allow(){return allowSets},get pass(){return pass},get swamps(){return swamps},get debris(){return debris},queenValue,invokeArma,startRitual,sendVehicle,get wildId(){return wildId},get armageddon(){return armageddon},placeBuilding,validSpot,orderMove,spawnUnit,command,get water(){return water},findSpot};
+window.__ws={sendAnimal,kindle,get stock(){return stock},get hutches(){return hutches},get HUT_TOP(){return HUT_TOP},get wind(){return wind},get windOn(){return windOn},get lastFight(){return lastFight},windTick,get wildFl(){return wildFl},get season(){return season},endGame,destroyBld,crown,villagerCount,tokGet,keepsake,useKeepsake,walkReach,postAt,setSel,get banners(){return banners},get sel(){return sel},get world(){return world},light,memorial,get stats(){return stats},get cam(){return cam},get WS(){return WS},wsOpen,wsClose,captureDef,defFromData,merge,ORIG_UMOD,ORIG_BMOD,get UM(){return UM},get BM(){return BM},get wear(){return wear},get buntings(){return buntings},get patches(){return patches},get wells(){return wells},get units(){return units},get tribes(){return tribes},get blds(){return blds},sim,beginGame,get gt(){return gt},castSpell,tryCast,saveGame,loadGame,setSel,command,showLevel,SCEN,field,get walkA(){return walk},hAt,get water(){return water},findSpot,get allow(){return allowSets},get pass(){return pass},get swamps(){return swamps},get debris(){return debris},queenValue,invokeArma,startRitual,sendVehicle,get wildId(){return wildId},get armageddon(){return armageddon},placeBuilding,validSpot,orderMove,spawnUnit,command,get water(){return water},findSpot};
 })();
 </script>
