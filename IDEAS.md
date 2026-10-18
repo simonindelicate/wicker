@@ -8,6 +8,12 @@ A place to keep design ideas between sessions. Nothing here is built yet. Each e
 
 ---
 
+## Now / Next / Later
+
+- **Now:** Grimoire mode, built in v127 in test mode only. It's a procedural game where you choose eight spells before you start; rivals keep every spell, and All-against-all is always available. Play it to settle the palette size and find which spells feel essential and which feel weak.
+- **Next:** new spells, one at a time, in Grimoire mode only. In order: the changeling; then offering livestock together with Black Phillip and the familiar; then the fetch, which needs rival AI that flees.
+- **Later:** the challenge levels, one per proven spell; then the unlock wiring (finishing the campaign opens the challenge campaign, and challenge levels open spells); then charms and counters as gaps appear.
+
 ## Structure (Decided)
 
 **The base game stays as it is.** The current campaign and procedural games are left untouched by everything in this file, apart from the Oss quality-of-life features. The new spells, charms, livestock and the spell palette all belong to a separate mode.
@@ -59,7 +65,11 @@ A place to keep design ideas between sessions. Nothing here is built yet. Each e
   - It should be limited to once per game, for everyone.
   - Rival AIs must move uphill during the countdown.
   - **Open:** is the rise permanent, or does it recede after a few minutes?
-- **Pyewacket (Liked as "something with familiars").** It summons a familiar, a hare or a black cat, named after the imps recorded by Matthew Hopkins (*Discovery of Witches*, 1647). It slips unseen into a rival village and drinks mana from their altar on every visit, until someone kills it. It slows the more it has drunk.
+- **The familiar (Liked; reframed).** It's now seen as the counterpart to Black Phillip: a spell you can only cast on your own goat, which binds it to your Cunning Woman as her familiar. What the familiar does is still open:
+  - run the Pyewacket errand below, sneaking out to steal mana;
+  - guard her;
+  - sniff out changelings near your village.
+- **Pyewacket (earlier version of the familiar).** It summons a familiar, a hare or a black cat, named after the imps recorded by Matthew Hopkins (*Discovery of Witches*, 1647). It slips unseen into a rival village and drinks mana from their altar on every visit, until someone kills it. It slows the more it has drunk.
 - **The Devil's Skin (Candidate).** From *The Blood on Satan's Claw*. A curse that spreads by touch: the marked villagers pass it on, and anyone carrying it long enough turns wild. Need-fire cures it.
 - **The Poppet (Candidate).** A clay doll of a rival's Cunning Woman, placed in your village. While it stands, she takes damage from time to time. She has to find it and destroy it, so she's drawn into your territory.
 - **The Mandrake (Candidate).** A planted trap. When an enemy pulls it up, the scream kills everyone within earshot. Good for passes and causeways.

@@ -140,6 +140,7 @@ details.help summary{cursor:pointer;color:var(--text);font:14px var(--f-display)
 .lvl b{font:15px var(--f-display);letter-spacing:.04em;font-weight:400}
 .lvl span{font-size:12px;color:var(--muted)}
 .lvl.done{border-color:rgba(211,155,60,.5)}
+.lvl.pick{border-color:var(--mana);background:rgba(211,155,60,.14)}.lvl:disabled{opacity:.45}
 .lvl.next{border-color:var(--ochre);background:rgba(211,155,60,.12)}
 .lvl:disabled{opacity:.35}
 .tokCat{font:14px var(--f-display);letter-spacing:.06em;color:var(--muted);margin:14px 0 6px;text-transform:uppercase}
@@ -247,6 +248,7 @@ details.help summary{cursor:pointer;color:var(--text);font:14px var(--f-display)
           <fieldset><legend>Rival villages</legend><div class="seg" id="oEn"><button data-v="1">One</button><button data-v="2" class="on">Two</button><button data-v="3">Three</button></div></fieldset>
           <fieldset><legend>World</legend><div class="seg" id="oSt"><button data-v="islands" class="on">Archipelago</button><button data-v="continent">Continent</button><button data-v="highlands">Highlands</button></div></fieldset>
           <fieldset><legend>Rival skill</legend><div class="seg" id="oDf"><button data-v="easy">Easy</button><button data-v="normal" class="on">Normal</button><button data-v="hard">Hard</button><button data-v="extreme" id="oDfX" hidden>Extreme</button></div></fieldset>
+          <fieldset id="oModeF" hidden><legend>Spells</legend><div class="seg" id="oMode"><button data-v="classic" class="on">All</button><button data-v="grimoire">Grimoire<small class="segCap">test mode: choose eight</small></button></div></fieldset>
           <fieldset><legend>Fog of war</legend><div class="seg" id="oFog"><button data-v="1" class="on">On</button><button data-v="0">Off</button></div></fieldset>
           <fieldset><legend>World seed</legend><div class="seedrow"><input id="oSeed" inputmode="numeric" aria-label="World seed"><button class="btn" id="oReroll">New world</button></div></fieldset>
           <fieldset class="filmBox"><legend>Film</legend><div class="seg"><button data-fl="0">Off</button><button data-fl="1">35mm<small class="segCap">higher performance devices</small></button></div><div class="filmS"><label class="fs"><span>Grain</span><input type="range" min="0" max="1" step="0.05" data-fk="grain"></label><label class="fs"><span>Dust and scratches</span><input type="range" min="0" max="1" step="0.05" data-fk="dust"></label><button class="tuneBtn" type="button">Advanced film grade settings</button></div></fieldset>
@@ -305,6 +307,15 @@ details.help summary{cursor:pointer;color:var(--text);font:14px var(--f-display)
     </div>
   </div>
 
+  <div id="grim" class="scrim" hidden>
+    <div class="sheet">
+      <h2>Grimoire</h2>
+      <p class="sub" id="grimSub"></p>
+      <div class="levels" id="grimList"></div>
+      <button class="primary" id="grimGo">Begin</button>
+      <button class="secondary" id="grimBack">Back</button>
+    </div>
+  </div>
   <div id="campaign" class="scrim" hidden>
     <div class="sheet">
       <h2>Campaign</h2>
@@ -642,6 +653,9 @@ function scen(){return settings.campaign!=null?SCEN[settings.campaign]:null}
 function scenSets(i){const b=new Set(['hut']),sp=new Set();let tomb=false;for(let k=0;k<=i;k++){const L=SCEN[k];(L.addB||[]).forEach(x=>b.add(x));(L.addS||[]).forEach(x=>sp.add(x));if(L.tomb===true)tomb=true;if(L.all){BUILDABLE.forEach(x=>b.add(x));SP.forEach(x=>sp.add(x.k));tomb=true}}if(SCEN[i].tombHere)tomb=true;for(const x of (SCEN[i].ban||[])){b.delete(x);sp.delete(x);if(x==='tomb')tomb=false}return {b,s:sp,tomb}}
 const allowB=t=>!allowSets||(t==='tomb'?allowSets.tomb:allowSets.b.has(t));
 const allowS=k=>!allowSets||allowSets.s.has(k);
+// Grimoire mode (test mode for now): the player casts only the spells chosen before the game; rivals keep every spell. All-against-all is always to hand.
+const GRIM_N=8,GRIM_KEY='wicker-grimoire-v1';
+const palOK=k=>settings.mode!=='grimoire'||settings.campaign!=null||k==='arma'||!settings.palette||settings.palette.includes(k);
 const allowPB=t=>allowB(t)&&!((scen()||{}).lockB||[]).includes(t);
 const CAMP_KEY='wicker-campaign-v1',DEV_KEY='wicker-dev';
 
@@ -697,7 +711,7 @@ let gt=0,tver=0,nextId=1,treeCap=0;
 const cam={fx:64,fz:64,yaw:.7,dist:34,fh:2,shake:0,orbit:false};
 let sel=[],armed=null,placing=null,boxMode=false,posting=false,banners=[];
 let running=false,paused=false,speed=1,inMenu=true,over=false,stats={casts:0,lost:0,killed:0,razed:0,burned:0,taken:0};
-const settings={campaign:null,enemies:2,style:'islands',diff:'normal',fog:1,seed:(Math.random()*1e6)|0};
+const settings={mode:'classic',palette:null,campaign:null,enemies:2,style:'islands',diff:'normal',fog:1,seed:(Math.random()*1e6)|0};
 let world=null;
 
 // ---------------- noise & generation ----------------
@@ -1420,7 +1434,7 @@ function updBld(b,dt){const D=BT[b.bt],T=tribes[b.tribe];if(D.inv)return;
 
 // ---------------- spells ----------------
 function spellCost(T,k){const c=SPK[k].c;return T.tomb?Math.ceil(c/2):c}
-function tryCast(ti,k,px,pz,cu){const T=tribes[ti],s=SPK[k],cost=spellCost(T,k);
+function tryCast(ti,k,px,pz,cu){const T=tribes[ti],s=SPK[k],cost=spellCost(T,k);if(ti===0&&!watching&&!palOK(k))return false;
   if((T.cd[k]||0)>gt){if(ti===0)toast(s.n+' is still gathering power');return false}
   const gift=k==='bridge'&&T.ai&&T.ai.freeBridge&&T.ai.bridge&&T.mana<cost; // Surrounded: an attacking rival is given its bridge
   if(T.mana<cost&&!gift){if(ti===0)toast('Not enough mana for '+s.n);return false}
@@ -3128,7 +3142,7 @@ $('pBuild').innerHTML=BUILDABLE.map(k=>`<button class="tile bt" data-b="${k}" ti
 const spTiles=[...document.querySelectorAll('#pSpells .tile')],bTiles=[...document.querySelectorAll('#pBuild .tile')];
 $('pSpells').addEventListener('click',e=>{const t=e.target.closest('.tile');if(!t)return;audio();t.classList.remove('pulse');void t.offsetWidth;t.classList.add('pulse');sfx('select',.5);const k=t.dataset.k;if(armed===k)disarm();else arm(k)});
 $('pBuild').addEventListener('click',e=>{const t=e.target.closest('.tile');if(!t)return;audio();t.classList.remove('pulse');void t.offsetWidth;t.classList.add('pulse');sfx('select',.5);const k=t.dataset.b;if(armageddon){toast('Nothing can be built while the world ends');return}if(k==='cottage'&&blds.some(b=>b.alive&&b.tribe===0&&b.bt==='cottage')){toast('Your village already has a cottage');return}if(BT[k].bmana&&tribes[0].mana<BT[k].bmana){toast(`The ${BT[k].label} needs ${BT[k].bmana} mana as well as wood`);return}if(tribes[0].wood<BT[k].wood){tribes[0].woodGoal=Math.max(tribes[0].woodGoal,BT[k].wood+20);toast(`Your villagers will gather wood for it. ${BT[k].label} needs ${BT[k].wood} wood`);return}placing=k;armed=null;hedgeStart=null;hint(k==='hedge'?`Tap where the hedge begins. Each length costs ${BT.hedge.wood} wood.`:`Tap where to build the ${BT[k].label}`)});
-function arm(k){if(!allowS(k))return;if(k!=='arma'&&!tribes[0].shaman&&tribes[0].tomb){armed=k;placing=null;hint(`${SPK[k].n}: tap anywhere. ${SPDESC[k]}`);updTiles();return}
+function arm(k){if(!allowS(k)||!palOK(k))return;if(k!=='arma'&&!tribes[0].shaman&&tribes[0].tomb){armed=k;placing=null;hint(`${SPK[k].n}: tap anywhere. ${SPDESC[k]}`);updTiles();return}
   if(k==='arma'){armed=k;placing=null;hint('All-against-all: ten followers burn in your wicker man and your mana is spent. Every hut falls and the last tribe standing wins. This cannot be undone.',true);updTiles();return}
   if(!tribes[0].shaman){toast('Your Cunning Woman is waiting to be reborn');return}armed=k;placing=null;const s=SPK[k];hint(`${s.n}: tap a target. ${SPDESC[k]}`);updTiles()}
 function disarm(){armed=null;posting=false;hint(null);updTiles()}
@@ -3262,10 +3276,17 @@ function updHUD(){const T=tribes[0];if(!T)return;$('rMana').textContent=Math.flo
 
 // menu
 function segs(id,key,num){const el=$(id);el.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;el.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));settings[key]=num?+b.dataset.v:b.dataset.v;buildWorld()})}
-segs('oEn','enemies',true);segs('oSt','style');segs('oDf','diff');segs('oFog','fog',true);
+segs('oEn','enemies',true);segs('oSt','style');segs('oDf','diff');segs('oFog','fog',true);segs('oMode','mode');
 $('oSeed').value=settings.seed;$('oSeed').addEventListener('change',()=>{settings.seed=(parseInt($('oSeed').value,10)||0)>>>0;$('oSeed').value=settings.seed;buildWorld()});
 $('oReroll').addEventListener('click',()=>{settings.seed=(Math.random()*1e6)|0;$('oSeed').value=settings.seed;buildWorld()});
-$('bStart').addEventListener('click',()=>{audio();beginGame()});
+$('bStart').addEventListener('click',()=>{audio();if(settings.mode==='grimoire'&&devMode())openGrim();else{settings.mode='classic';beginGame()}});
+let grimSel=[];
+function openGrim(){try{grimSel=JSON.parse(localStorage.getItem(GRIM_KEY))||[]}catch(e){grimSel=[]}grimSel=grimSel.filter(k=>SPK[k]&&k!=='arma').slice(0,GRIM_N);$('menu').hidden=true;$('grim').hidden=false;drawGrim()}
+function drawGrim(){const full=grimSel.length>=GRIM_N;$('grimList').innerHTML=SP.filter(sp=>sp.k!=='arma').map(sp=>{const on=grimSel.includes(sp.k);return `<button class="lvl${on?' pick':''}" data-g="${sp.k}" ${!on&&full?'disabled':''}><b>${sp.n}</b><span>${sp.c} mana</span></button>`}).join('');
+  $('grimSub').textContent=`Choose ${GRIM_N} spells to carry into this game. All-against-all is always yours. Rivals keep every spell. ${grimSel.length} of ${GRIM_N} chosen.`;$('grimGo').disabled=grimSel.length!==GRIM_N}
+$('grimList').addEventListener('click',e=>{const b=e.target.closest('[data-g]');if(!b||b.disabled)return;const k=b.dataset.g,i=grimSel.indexOf(k);if(i>=0)grimSel.splice(i,1);else if(grimSel.length<GRIM_N)grimSel.push(k);sfx('select',.4);drawGrim()});
+$('grimBack').addEventListener('click',()=>{$('grim').hidden=true;$('menu').hidden=false});
+$('grimGo').addEventListener('click',()=>{if(grimSel.length!==GRIM_N)return;audio();try{localStorage.setItem(GRIM_KEY,JSON.stringify(grimSel))}catch(e){}settings.palette=grimSel.slice();$('grim').hidden=true;beginGame()});
 $('bWatch').addEventListener('click',()=>{audio();beginWatch()});
 $('foes').addEventListener('click',e=>{const b=e.target.closest('[data-t]');if(!b)return;const T=tribes[+b.dataset.t];if(!T||!T.alive)return;
   if(watching){const f=T.shaman||T.tomb||blds.find(x=>x.alive&&x.tribe===T.id);if(f){cam.fx=f.x;cam.fz=f.z}return}
@@ -3279,7 +3300,7 @@ function drawPreview(){const pc=$('prev'),px=pc.getContext('2d');const tmp=docum
   for(const b of blds)if(b.alive&&b.tribe===wildId){px.fillStyle='#d9cfb6';px.strokeStyle='#0d0a08';px.lineWidth=1.5;px.beginPath();px.arc(b.x*sc,b.z*sc,b.bt==='moot'?5:4,0,TAU);px.fill();px.stroke()}
   const land=(()=>{let n=0;for(let c=0;c<N*N;c++)if(!water[c])n++;return Math.round(n/(N*N)*100)})();
   $('prevCap').textContent=`Your village is ochre. ${land}% land, ${settings.enemies} rival${settings.enemies>1?'s':''}. Pale marks are the Moot and the hollow hills.`}
-function openMenu(){setNoUI(false);{const pr=campProg(),ok=!!pr.complete||devMode();$('oDfX').hidden=!ok;if(!ok&&settings.diff==='extreme'){settings.diff='hard';$('oDf').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x.dataset.v==='hard'))}}if(settings.campaign!=null){if(skirmishSettings)Object.assign(settings,skirmishSettings);settings.campaign=null}allowSets=null;applyAllow();showContinue();scene.fog.near=30;scene.fog.far=80;watching=false;document.body.classList.remove('watch');running=false;droneLevel();over=false;inMenu=true;$('menu').hidden=false;for(const id of['top','mini','side','dock'])$(id).hidden=true;hint(null);armed=null;placing=null;$('oSeed').value=settings.seed;buildWorld()}
+function openMenu(){setNoUI(false);{const d=devMode();$('oModeF').hidden=!d;if(!d&&settings.mode!=='classic'){settings.mode='classic';$('oMode').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x.dataset.v==='classic'))}}{const pr=campProg(),ok=!!pr.complete||devMode();$('oDfX').hidden=!ok;if(!ok&&settings.diff==='extreme'){settings.diff='hard';$('oDf').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x.dataset.v==='hard'))}}if(settings.campaign!=null){if(skirmishSettings)Object.assign(settings,skirmishSettings);settings.campaign=null}allowSets=null;applyAllow();showContinue();scene.fog.near=30;scene.fog.far=80;watching=false;document.body.classList.remove('watch');running=false;droneLevel();over=false;inMenu=true;$('menu').hidden=false;for(const id of['top','mini','side','dock'])$(id).hidden=true;hint(null);armed=null;placing=null;$('oSeed').value=settings.seed;buildWorld()}
 function buildWorld(){const SC=scen();const w=genWorld(settings.seed,settings.style,settings.enemies+1,{centre:SC&&SC.centre,centreGap:SC&&SC.centreGap,keep:SC&&SC.keep,square:SC&&SC.square});world=w;H=w.h;TN=w.tn;
   walk=new Uint8Array(N*N);water=new Uint8Array(N*N);pass=new Uint8Array(N*N);hazU=new Float32Array(N*N);hazType=new Int8Array(N*N);hazOwner=new Int8Array(N*N).fill(-1);saltU=new Float32Array(N*N);saltOwner=new Int8Array(N*N);saltList.clear();wear=new Float32Array(N*N);wearShown=new Uint8Array(N*N);flowers=[];hazGrp=new Int32Array(N*N);swamps={};swampSeq=1;hedgeA=new Uint8Array(N*N);bOcc=new Int32Array(N*N);colW=new Float32Array(N*N*3);
   armageddon=false;$('app').classList.remove('arma');scene.fog.color.setHex(0x7f725b);fogOn=false;vis.fill(1);visNow.fill(0);seen.fill(0);wildT=40;
@@ -3317,7 +3338,7 @@ document.addEventListener('touchstart',e=>{if(e.touches.length>=3&&document.body
 function beginGame(){devUI();fogOn=!!settings.fog&&!window.__nofog;if(fogOn){vis.fill(.035);updFog()}startDrone();$('menu').hidden=true;inMenu=false;running=true;paused=false;over=false;speed=1;$('bSpeed').textContent='1×';$('bPause').textContent='Pause';
   for(const id of['top','mini','side','dock'])$(id).hidden=false;const p=tribes[0].shaman;cam.fx=p.x;cam.fz=p.z;cam.dist=30;setSel([]);setTab('spells');resize();
   droneLevel();applyAllow();const SC=scen();if(SC)toast(goalText(SC));else{const fm=Math.round(DIFF[settings.diff].first/60);toast(`Grow your tribe while you can. Rivals usually first attack after about ${fm} minutes.`)}}
-function applyAllow(){for(const t of spTiles)t.hidden=!allowS(t.dataset.k);for(const t of bTiles)t.hidden=!allowPB(t.dataset.b)}
+function applyAllow(){for(const t of spTiles)t.hidden=!allowS(t.dataset.k)||!palOK(t.dataset.k);for(const t of bTiles)t.hidden=!allowPB(t.dataset.b)}
 function goalText(SC){const g=SC.goal;return g.type==='mana'?`Gather ${g.n} mana.`:g.type==='survive'?`Hold fast for ${Math.round(g.n/60)} minutes.`:g.type==='captives'?`Hold ${g.n} captives in your folds at once.`:g.type==='queen'?((g.n||1)>1?`Crown ${g.n} May Queens and offer each to the fire.`:'Crown a May Queen and offer her to the fire.'):'Break every rival people.'}
 function beginWatch(){devUI();allowSets=null;if(settings.campaign!=null&&skirmishSettings){Object.assign(settings,skirmishSettings)}settings.campaign=null;watching=true;buildWorld();fogOn=false;startDrone();$('menu').hidden=true;inMenu=false;running=true;paused=false;over=false;speed=1;$('bSpeed').textContent='1×';$('bPause').textContent='Pause';
   document.body.classList.add('watch');for(const id of['top','mini'])$(id).hidden=false;for(const id of['side','dock'])$(id).hidden=true;cam.fx=moot.x;cam.fz=moot.z;cam.dist=52;setSel([]);hint(null);resize();droneLevel();
