@@ -102,6 +102,8 @@ Tokens are earned only in live play: never in "Watch the tribes fight", and neve
 | `d_threefolds` |  | Have three Thrall Folds full at once |  |
 | `d_threefires` |  | Have three wicker men burning close together at once |  |
 | `d_phillip` |  | Black Phillip survives his whole rampage (Grimoire) |  |
+| `d_fetch` |  | Made fetch happen: take a rival Cunning Woman with your fetch (Grimoire) |  |
+| `d_plagues` |  | Have Murrain, St Anthony's Fire and Cradle Blight at work on your rivals all at once (Grimoire) |  |
 
 ## Curiosities
 
