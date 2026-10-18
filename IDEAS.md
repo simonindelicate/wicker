@@ -14,7 +14,14 @@ A place to keep design ideas between sessions. Nothing here is built yet. Each e
 - **Built in v128, test mode or Grimoire only:** offering livestock (chickens, rabbits and the goat, at altars and wicker figures, with no dread; animals breed back), the changeling, and Murrain.
 - **Built in v131:** Black Phillip and the familiar.
 - **Built in v135:** the fetch, with rival Cunning Women fleeing from it.
-- **Next:** teaching rivals to offer animals and cast the new spells (including fetches aimed at you); Pricking to reveal familiars; Glamour.
+- **Built in v136:** in Grimoire games each rival casts its own eight spells:
+  - **Blood (war):** Blast, Lightning, Day o'the Stones, Earthquake, Whirlwind, Volcano, Ghost Army, the Fetch.
+  - **Forest (magic and defence):** Blast, Lightning, Shield, Ghost Army, Hypnotise, Bog, Familiar, Changeling.
+  - **Ash (beasts and disease):** Blast, Lightning, Plague of Flies, St Anthony's Fire, Erode, Murrain, Black Phillip, Familiar.
+  - **Ochre (a bit of everything):** Blast, Lightning, Plague of Flies, Shield, Hypnotise, Day o'the Stones, Changeling, the Fetch.
+
+  Rival Cunning Women also unmask your changelings.
+- **Next:** teaching rivals to offer animals; Pricking to reveal familiars; Glamour.
 - **Later:** the challenge levels, one per proven spell; then the unlock wiring (finishing the campaign opens the challenge campaign, and challenge levels open spells); then charms and counters as gaps appear.
 
 ## Structure (Decided)
