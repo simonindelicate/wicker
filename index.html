@@ -694,10 +694,10 @@ const CHAL=[
   me:{mana:400,wood:200,huts:3},them:{mana:600,huts:4,warriors:3},ai:{only0:true,first:150,int:85,need:4,needInc:1,war:1.4,mil:.4},news:['Beltane Fire','Sword Dance'],
   alien:{land:[1.12,.98,.92],sun:0xffc0a0,hemi:0xe8b8a8,ground:0x3a2420,fog:0x9a6a5a,water:[.24,.18,.16]},
   intro:'[Placeholder intro, to be written.] Light the fire and let them leap it; set the young men dancing with their blades. Grow, Cunning Woman. Grow until thy people number a hundred and sixty, though thy neighbours will blight thy cradles and burn thy roofs to stop thee.'},
- {title:'The Fair',season:'summer',seed:30443,style:'continent',enemies:1,diff:'normal',fog:true,all:true,goal:{type:'conquer'},teach:['glamour','pricking'],
-  me:{mana:500,wood:180,huts:3,warriors:2},them:{mana:600,huts:3,warriors:3},ai:{first:280},news:['Glamour','Pricking'],
+ {title:'The Fair',season:'summer',seed:30443,style:'continent',enemies:1,diff:'normal',fog:true,all:true,goal:{type:'conquer'},teach:['glamour'],
+  me:{mana:500,wood:180,huts:3,warriors:2},them:{mana:600,huts:3,warriors:3},ai:{first:280},news:['Glamour'],
   alien:{land:[.92,1.12,1.04],sun:0xb8ffe0,hemi:0xa8d8c8,ground:0x18342a,fog:0x5a8a78,water:[.1,.26,.24]},
-  intro:'[Placeholder intro, to be written.] At the fair no face is quite what it seems. Wear another\'s colours and walk among them; and keep a pin about thee, for they will be doing the same.'},
+  intro:'[Placeholder intro, to be written.] At the fair no face is quite what it seems. Wear another\'s colours and walk among them, and they will never know thee.'},
  {title:'The Sickness',season:'summer',seed:30557,style:'continent',enemies:1,diff:'hard',fog:true,all:true,goal:{type:'conquer'},teach:['murrain','blight'],herd:true,
   me:{mana:600,wood:180,huts:3,warriors:2},them:{mana:1200,wood:200,huts:6,warriors:8,archers:4},ai:{first:420,war:.8},news:['Murrain','Cradle Blight'],
   alien:{land:[1.04,1.12,.78],sun:0xe0ff90,hemi:0xc0d088,ground:0x2a3014,fog:0x7a8448,water:[.16,.22,.08]},
@@ -706,6 +706,10 @@ const CHAL=[
   me:{mana:500,wood:200,huts:3,warriors:2},them:{mana:500,huts:5,warriors:2},ai:{first:330},news:['The Changeling'],
   alien:{land:[1.16,.94,.76],sun:0xffb070,hemi:0xe0a070,ground:0x3a2410,fog:0x9a6a3a,water:[.26,.18,.08]},
   intro:'[Placeholder intro, to be written.] Their villages are crowded with the harvest in. Who would notice one more face at the hearth, until it burns?'},
+ {title:'The Pricking',season:'autumn',seed:30719,style:'continent',enemies:2,diff:'normal',fog:true,all:true,goal:{type:'conquer'},teach:['pricking'],rextra:['changeling','familiar','glamour'],herd:true,
+  me:{mana:400,wood:200,huts:3,warriors:2},them:{mana:900,huts:4,warriors:2},ai:{first:360},news:['Pricking'],
+  alien:{land:[.98,1.04,1.14],sun:0xc8e8ff,hemi:0xa8c0d0,ground:0x1a2430,fog:0x5a7080,water:[.1,.18,.24]},
+  intro:'[Placeholder intro, to be written.] There are strangers among thy people, Cunning Woman: changelings at thy hearths, a black goat drinking at thine altar, faces that are not what they seem. Take up the pin and find them out.'},
  {title:'The Long Nights',season:'autumn',seed:30773,style:'highlands',enemies:2,diff:'normal',fog:true,all:true,goal:{type:'conquer'},teach:['keening','briar'],
   me:{mana:600,wood:200,huts:3,warriors:3},them:{mana:600,huts:4,warriors:3},ai:{first:300},news:['Keening Wail','Briar Sleep'],
   alien:{land:[.9,.9,1.1],sun:0x9aa0ff,hemi:0x8890c0,ground:0x181a30,fog:0x484e70,water:[.08,.1,.22]},
@@ -1951,7 +1955,7 @@ function aiCast(T){const ai=T.ai,sh=casterOf(T);if(!sh||sh.sleep>gt||sh.hanging|
   if(ok('glamour')&&en.length>=3&&!(sh.glam>gt))opts.push(['glamour',sh.x,sh.z,3]);
   if(ok('beltane')&&!(T.beltaneUntil>gt)&&T.stats.pop<T.stats.cap*.6&&gt>(ai.belT||0)){opts.push(['beltane',sh.x,sh.z,3]);ai.belT=gt+150}
   if(ok('sworddance')&&!(T.swordUntil>gt)&&blds.reduce((a,b)=>a+(b.alive&&b.tribe===T.id&&BT[b.bt].train?b.q:0),0)>=3)opts.push(['sworddance',sh.x,sh.z,3]);
-  if(ok('blight')&&gt>(ai.blT||0)){const hb=blds.find(b=>b.alive&&b.bt==='hut'&&b.tribe!==T.id&&tribes[b.tribe]&&!tribes[b.tribe].wild&&!(tribes[b.tribe].blightUntil>gt)&&d2(cx,cz,b.x,b.z)<14*14);if(hb){opts.push(['blight',hb.x,hb.z,3]);ai.blT=gt+90}}
+  if(ok('blight')&&gt>(ai.blT||0)){const hb=blds.find(b=>b.alive&&b.bt==='hut'&&b.tribe!==T.id&&tribes[b.tribe]&&!tribes[b.tribe].wild&&!(tribes[b.tribe].blightUntil>gt)&&d2(cx,cz,b.x,b.z)<50*50);if(hb){opts.push(['blight',hb.x,hb.z,5]);ai.blT=gt+90}}
   if(ok('keening')&&gt>(ai.keenT||0)){const hb=blds.find(b=>b.alive&&b.bt==='hut'&&b.tribe!==T.id&&tribes[b.tribe]&&!tribes[b.tribe].wild&&d2(cx,cz,b.x,b.z)<50*50);if(hb){opts.push(['keening',hb.x,hb.z,3]);ai.keenT=gt+75}}
   // pricking needs a suspicion: a villager who will not go indoors, mana going missing from an altar, or a stranger in their own colours close to her
   if(ok('pricking')&&gt>(ai.prickT||0)&&T.susp&&gt-T.susp.t<30&&d2(cx,cz,T.susp.x,T.susp.z)<14*14){opts.push(['pricking',T.susp.x,T.susp.z,6]);ai.prickT=gt+({easy:120,normal:90,hard:60,extreme:30}[settings.diff]||90);T.susp=null}
@@ -3749,7 +3753,7 @@ function openCampaign(){const ch=campView==='chal',LS=ch?CHAL:SCEN,pr=ch?chalPro
 function showLevel(i){const ch=campView==='chal',sc=(ch?CHAL:SCEN)[i];if(settings.campaign==null)skirmishSettings=Object.assign({},settings);
   Object.assign(settings,{seed:sc.seed,style:sc.style,enemies:sc.enemies,diff:sc.diff,fog:sc.fog?1:0,campaign:i,chal:ch});allowSets=scenSets(i);buildWorld();
   $('liNum').textContent=`${ch?'Season':'Level'} ${i+1} of ${(ch?CHAL:SCEN).length} · ${sc.tier||DIFFNAME[sc.diff]} · ${sc.enemies} rival${sc.enemies>1?'s':''}`;$('liTitle').textContent=sc.title;$('liText').textContent=sc.intro;
-  $('liGoal').textContent=goalText(sc);$('liNews').textContent=sc.news&&sc.news.length?(ch?sc.news.join(' '):'New: '+sc.news.join(', ')+'.'):sc.all?'Everything is open to you.':'';
+  $('liGoal').textContent=goalText(sc);$('liNews').textContent=sc.news&&sc.news.length?(ch&&!(sc.teach&&sc.teach.length)?sc.news.join(' '):'New: '+sc.news.join(', ')+'.'):sc.all?'Everything is open to you.':'';
   $('campaign').hidden=true;$('menu').hidden=true;$('levelIntro').hidden=false}
 $('bCampaign').addEventListener('click',()=>{audio();campView='base';openCampaign()});
 $('bChal').addEventListener('click',()=>{audio();campView='chal';openCampaign()});

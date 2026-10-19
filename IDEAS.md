@@ -42,10 +42,10 @@ A place to keep design ideas between sessions. Nothing here is built yet. Each e
 5. **Extreme is available in the Grimoire.**
 6. **Finishing the challenge campaign** earns a token and unlocks **NG+**: the original campaign replayed with the Grimoire mechanic. NG+ is a victory lap: rivals stay classic.
 
-**Built in v150**, ten seasons (titles and intros are placeholders):
+**Built in v150**, now eleven seasons (titles and intros are placeholders):
 1. The Humbling: survive five minutes.
-2. The Herd (Black Phillip, Familiar), 3. May Eve (Beltane Fire, Sword Dance; grow to 160 people against two Normal rivals who raid only you and carry Cradle Blight), 4. The Fair (Glamour, Pricking), 5. The Sickness (Murrain, Cradle Blight; a far stronger rival), 6. Harvest (Changeling), 7. The Long Nights (Keening Wail, Briar Sleep), 8. The Hunt (the Fetch; bring down a rival Cunning Woman while your fetch hunts her, by any means), 9. The Flood (Seas of Blood; you start on a raised mountain, the rivals low).
-10. The Answer: the Humbling's rivals, winnable, every spell yours.
+2. The Herd (Black Phillip, Familiar), 3. May Eve (Beltane Fire, Sword Dance; grow to 160 people against two Normal rivals who raid only you and carry Cradle Blight), 4. The Fair (Glamour), 5. The Sickness (Murrain, Cradle Blight; a far stronger rival), 6. Harvest (Changeling), 7. The Pricking (Pricking; rivals send changelings, familiars and glamour), 8. The Long Nights (Keening Wail, Briar Sleep), 9. The Hunt (the Fetch; bring down a rival Cunning Woman while your fetch hunts her, by any means), 10. The Flood (Seas of Blood; you start on a raised mountain, the rivals low).
+11. The Answer: the Humbling's rivals, winnable, every spell yours.
 
 **v153:** in each teaching season you and the rivals carry only Blast, Lightning, Shield, Land Bridge, the season's new spells and All-against-all. The Herd and the Sickness start with livestock at every village; the Herd starts on 150 mana with one free Familiar.
 
