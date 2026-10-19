@@ -698,7 +698,7 @@ const CHAL=[
   me:{mana:300,wood:180,huts:1},them:{mana:300,wood:180,huts:1},ai:{first:420,war:.8},news:['Murrain','Cradle Blight'],
   alien:{land:[1.04,1.12,.78],sun:0xe0ff90,hemi:0xc0d088,ground:0x2a3014,fog:0x7a8448,water:[.16,.22,.08]},
   intro:'[Placeholder intro, to be written.] Thou art sealed in the hill, and so is she. Neither of you can walk abroad; so sicken their beasts, set their flesh afire and empty their cradles from where thou liest.'},
- {title:'Harvest',season:'autumn',seed:30661,style:'continent',enemies:2,diff:'normal',fog:true,all:true,goal:{type:'conquer'},teach:['changeling'],
+ {title:'Harvest',season:'autumn',seed:30661,style:'continent',enemies:2,diff:'normal',fog:true,all:true,goal:{type:'conquer'},teach:['changeling'],also:['swarm'],
   me:{mana:500,wood:200,huts:3,warriors:2},them:{mana:500,huts:5,warriors:2},ai:{first:330},news:['The Changeling'],
   alien:{land:[1.16,.94,.76],sun:0xffb070,hemi:0xe0a070,ground:0x3a2410,fog:0x9a6a3a,water:[.26,.18,.08]},
   intro:'[Placeholder intro, to be written.] Their villages are crowded with the harvest in. Who would notice one more face at the hearth, until it burns?'},
@@ -1684,7 +1684,9 @@ function castSpell(ti,k,px,pz,cu){atk=ti;let sx=cu?cu.x:px,sz=cu?cu.z:pz,sy=cu?u
   case 'swarm':effects.push({x:px,z:pz,t:10,tick:0,up(e,dt){e.t-=dt;e.x=wrap(e.x+(R()-.5)*dt*3);e.z=wrap(e.z+(R()-.5)*dt*3);const y=Math.max(0,hAt(e.x,e.z));
       for(let i=0;i<5;i++){const a=R()*TAU,r=R()*2.4;PN.emit(e.x+Math.cos(a)*r,y+.3+R()*1.6,e.z+Math.sin(a)*r,(R()-.5)*3,(R()-.5)*2,(R()-.5)*3,.3,.06,.05,.04,1,.16,0)}
       e.tick-=dt;if(e.tick<=0){e.tick=.5;sfx('swarm',.25,e.x,e.z);query(grid,e.x,e.z,3,u=>{if(u.tribe===ti||!u.alive||UT[u.type].veh||u.air)return;if(d2(e.x,e.z,u.x,u.z)>2.5*2.5)return;dmgUnit(u,4,null);
-        if(u.alive&&u.type!=='shaman'&&u.st!=='flee'){const a=R()*TAU;u.st='flee';u.ft=2;setTarget(u,u.x+Math.cos(a)*5,u.z+Math.sin(a)*5)}})}
+        if(u.alive&&u.type!=='shaman'&&u.st!=='flee'){const a=R()*TAU;u.st='flee';u.ft=2;setTarget(u,u.x+Math.cos(a)*5,u.z+Math.sin(a)*5)}});
+        // the flies get in under the thatch: everyone in a hut they settle on bolts out of the door
+        for(const b of blds){if(!b.alive||!b.done||b.bt!=='hut'||b.tribe===ti||!b.occ||d2(e.x,e.z,b.x,b.z)>3.5*3.5)continue;while(b.occ>0){b.occ--;const v=spawnUnit('brave',b.tribe,b.dx,b.dz),a=R()*TAU;v.st='flee';v.ft=2.5;setTarget(v,b.dx+Math.cos(a)*6,b.dz+Math.sin(a)*6)}}}
       return e.t>0}});break;
   case 'convert':{let n=0;query(grid,px,pz,5,u=>{if(u.tribe===wildId&&u.alive&&d2(px,pz,u.x,u.z)<16){convertUnit(u,ti);n++}});ring(px,pz,4,.95,.9,.55);if(ti===0&&!n)toast('There were no wildmen in the circle');break}
   case 'shield':query(grid,px,pz,4.5,u=>{if(u.tribe===ti&&u.alive&&d2(px,pz,u.x,u.z)<16)u.shield=gt+30});ring(px,pz,4,.5,.85,1);break;
@@ -1968,7 +1970,7 @@ function aiCast(T){const ai=T.ai,sh=casterOf(T);if(!sh||sh.sleep>gt||sh.hanging|
   if(en.length){const es=en.find(o=>o.type==='shaman');if(es&&ok('lightning')&&gt>(ai.boltT||0)&&!(es.shield>gt))opts.push(['lightning',es.x,es.z,settings.diff==='easy'?1:settings.diff==='normal'?3:settings.diff==='extreme'?8:6,'sh']);
     let best=en[0],bc=0;for(let i=0;i<Math.min(8,en.length);i++){const e=en[(R()*en.length)|0];let c=0;for(const o of en)if(d2(e.x,e.z,o.x,o.z)<9)c++;if(c>bc){bc=c;best=e}}
     if(bc>=7&&ok('fire'))opts.push(['fire',best.x,best.z,5]);if(bc>=6&&ok('angel')&&settings.diff!=='easy')opts.push(['angel',best.x,best.z,4]);
-    if(bc>=5&&ok('hypno'))opts.push(['hypno',best.x,best.z,3]);if(bc>=4&&ok('swarm'))opts.push(['swarm',best.x,best.z,3]);
+    if(bc>=5&&ok('hypno'))opts.push(['hypno',best.x,best.z,3]);if(bc>=4&&ok('swarm'))opts.push(['swarm',best.x,best.z,3]);if(ok('swarm')){const hb=blds.find(b=>b.alive&&b.done&&b.bt==='hut'&&b.tribe!==T.id&&b.tribe!==wildId&&b.occ>=3&&d2(cx,cz,b.x,b.z)<14*14);if(hb)opts.push(['swarm',hb.x,hb.z,2])}
     if(bc>=4&&ok('ghost')&&!sh.tomb)opts.push(['ghost',sh.x,sh.z,1.5]);if(bc>=4&&ok('swamp')&&blds.some(o=>o.alive&&o.tribe===T.id&&d2(o.x,o.z,best.x,best.z)<14*14))opts.push(['swamp',best.x,best.z,3]);if(ok('blast'))opts.push(['blast',best.x,best.z,1])}
   // the Grimoire spells and the defensive ones rivals now use
   if(en.length&&!sh.tomb){
