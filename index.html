@@ -3709,7 +3709,7 @@ function segs(id,key,num){const el=$(id);el.addEventListener('click',e=>{const b
 segs('oEn','enemies',true);segs('oSt','style');segs('oDf','diff');segs('oFog','fog',true);segs('oMode','mode');
 $('oSeed').value=settings.seed;$('oSeed').addEventListener('change',()=>{settings.seed=(parseInt($('oSeed').value,10)||0)>>>0;$('oSeed').value=settings.seed;buildWorld()});
 $('oReroll').addEventListener('click',()=>{settings.seed=(Math.random()*1e6)|0;$('oSeed').value=settings.seed;buildWorld()});
-$('bStart').addEventListener('click',()=>{audio();if(settings.mode==='grimoire'&&devMode())openGrim();else{settings.mode='classic';beginGame()}});
+$('bStart').addEventListener('click',()=>{audio();if(settings.mode==='grimoire'&&chalOpen())openGrim();else{settings.mode='classic';beginGame()}});
 let grimSel=[];
 function openGrim(){try{grimSel=JSON.parse(localStorage.getItem(GRIM_KEY))||[]}catch(e){grimSel=[]}grimSel=grimSel.filter(k=>SPK[k]&&k!=='arma'&&(devMode()||!NEW_SP.includes(k)||learnt().has(k))).slice(0,GRIM_N);$('menu').hidden=true;$('grim').hidden=false;drawGrim()}
 function drawGrim(){const full=grimSel.length>=GRIM_N;const lr=learnt(),dv=devMode();$('grimList').innerHTML=SP.filter(sp=>sp.k!=='arma'&&(dv||!NEW_SP.includes(sp.k)||lr.has(sp.k))).map(sp=>{const on=grimSel.includes(sp.k);return `<button class="lvl${on?' pick':''}" data-g="${sp.k}" ${!on&&full?'disabled':''}><b>${sp.n}</b><span>${sp.c} mana</span></button>`}).join('');
