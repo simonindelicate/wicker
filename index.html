@@ -702,7 +702,7 @@ const CHAL=[
   me:{mana:500,wood:200,huts:3,warriors:2},them:{mana:500,huts:5,warriors:2},ai:{first:330},news:['The Changeling'],
   alien:{land:[1.16,.94,.76],sun:0xffb070,hemi:0xe0a070,ground:0x3a2410,fog:0x9a6a3a,water:[.26,.18,.08]},
   intro:'[Placeholder intro, to be written.] Their villages are crowded with the harvest in. Who would notice one more face at the hearth, until it burns?'},
- {title:'The Fair',season:'autumn',seed:30443,style:'continent',enemies:1,diff:'normal',fog:true,all:true,goal:{type:'conquer'},teach:['glamour','pricking'],rextra:['changeling','familiar'],herd:true,
+ {title:'The Fair',season:'autumn',seed:30443,style:'continent',enemies:1,diff:'normal',fog:true,all:true,goal:{type:'conquer'},teach:['glamour','pricking'],also:['changeling','familiar'],herd:true,
   me:{mana:500,wood:180,huts:3,warriors:2},them:{mana:900,huts:3,warriors:3},ai:{first:280},news:['Glamour','Pricking'],
   alien:{land:[.92,1.12,1.04],sun:0xb8ffe0,hemi:0xa8d8c8,ground:0x18342a,fog:0x5a8a78,water:[.1,.26,.24]},
   intro:'[Placeholder intro, to be written.] At the fair no face is quite what it seems. Wear another\'s colours and walk among them; and keep a pin about thee, for their changelings and familiars are already among thine.'},
@@ -724,7 +724,7 @@ const CHAL=[
   alien:{land:[.92,.86,1.18],sun:0xb8a8ff,hemi:0xa89ccc,ground:0x221a38,fog:0x5a5078,water:[.12,.14,.3]},
   intro:'[Placeholder intro, to be written.] They came to humble thee in the spring. The year has turned, and thou hast learnt everything they knew. Answer them.'}
 ];
-// in a teaching season you carry only the basic spells, the season's new craft and All-against-all; the rivals carry the same
+// in a teaching season you carry the basic spells, the season's new craft, any earlier craft the season calls for (also) and All-against-all; the rivals carry the same, plus rextra
 const CHAL_BASIC=['blast','lightning','shield','bridge'];
 const CHAL_KEY='wicker-chal-v1';
 function chalProg(){try{const d=JSON.parse(localStorage.getItem(CHAL_KEY));if(d&&typeof d.unlocked==='number')return d}catch(e){}return {unlocked:0,best:{}}}
@@ -749,7 +749,7 @@ const GRIM_PAL={Blood:['blast','lightning','fire','quake','whirl','volcano','gho
   Ash:['blast','lightning','swarm','angel','erode','murrain','phillip','familiar','blight'],Ochre:['blast','lightning','pricking','shield','hypno','fire','changeling','fetch','keening']};
 const grimOn=()=>settings.mode==='grimoire'&&settings.campaign==null&&chalOpen();
 const aiPalOK=(T,k)=>T.pal?T.pal.includes(k):!NEW_SP.includes(k);
-const palOK=k=>{if(settings.chal&&settings.campaign!=null){const SC=scen()||{};if(SC.pall)return true;if(SC.teach&&SC.teach.length)return k==='arma'||CHAL_BASIC.includes(k)||SC.teach.includes(k);return !NEW_SP.includes(k)}const g=settings.mode==='grimoire'&&settings.campaign==null&&settings.palette;if(!g)return !NEW_SP.includes(k);return k==='arma'||settings.palette.includes(k)};
+const palOK=k=>{if(settings.chal&&settings.campaign!=null){const SC=scen()||{};if(SC.pall)return true;if(SC.teach&&SC.teach.length)return k==='arma'||CHAL_BASIC.includes(k)||SC.teach.includes(k)||(SC.also||[]).includes(k);return !NEW_SP.includes(k)}const g=settings.mode==='grimoire'&&settings.campaign==null&&settings.palette;if(!g)return !NEW_SP.includes(k);return k==='arma'||settings.palette.includes(k)};
 const allowPB=t=>allowB(t)&&!((scen()||{}).lockB||[]).includes(t);
 const CAMP_KEY='wicker-campaign-v1',DEV_KEY='wicker-dev';
 
@@ -3699,7 +3699,7 @@ function buildWorld(){const SC=scen();alien=SC&&SC.alien||null;applyAlien();well
   trees=w.trees.map(t=>({x:t.x,z:t.z,wood:TUNE.woodPerTree,alive:true,sc:.8+R()*.45,tint:.85+R()*.25}));treeCap=Math.round(trees.length*1.1);tGridDirty=true;
   tribes=[];
   for(let i=0;i<=settings.enemies;i++){const s=w.starts[i],D=DIFF[settings.diff];const ai=i||watching,ST=SC?(ai?SC.them||{}:SC.me||{}):{},SA=(SC&&SC.ai)||{};const T={dread:0,tomb:null,id:i,...TRIBES[i],c:new C.Color(TRIBES[i].col),mana:ST.mana??(ai?(D.aiMana0??150):D.pMana0),wood:ST.wood??(ai?(D.aiWood??40):D.pWood),woodGoal:ai?120:160,alive:true,shaman:null,reincT:0,cd:{},manaMult:ai?D.mana*((TRIBES[i].pers||{}).mana||1)*(SA.mana||1):(SC?(ST.manaMult||1):D.pMana),breedMult:(ai?D.breed:D.pBreed)*(ai&&SA.breed||1),capMax:ai?SA.cap:undefined,ai:ai?mkAI(i,s):null,stats:{pop:0,braves:0,outB:0,housed:0,others:0,mil:0,queued:0,huts:0,blds:0,sites:0,b:{},cap:25,cnt:{}}};
-    T.roof=T.c.clone().lerp(new C.Color(0xc9a55a),.3);if(ai&&grimOn())T.pal=(GRIM_PAL[T.name]||GRIM_PAL.Ochre).slice();else if(i&&SC&&settings.chal){T.pal=SC.teach&&SC.teach.length&&SC.rpal!=='all'?CHAL_BASIC.concat(SC.teach,SC.rextra||[]):SP.map(x=>x.k).filter(k=>k!=='arma'&&(SC.rpal==='all'||!NEW_SP.includes(k)))}tribes.push(T);
+    T.roof=T.c.clone().lerp(new C.Color(0xc9a55a),.3);if(ai&&grimOn())T.pal=(GRIM_PAL[T.name]||GRIM_PAL.Ochre).slice();else if(i&&SC&&settings.chal){T.pal=SC.teach&&SC.teach.length&&SC.rpal!=='all'?CHAL_BASIC.concat(SC.teach,SC.also||[],SC.rextra||[]):SP.map(x=>x.k).filter(k=>k!=='arma'&&(SC.rpal==='all'||!NEW_SP.includes(k)))}tribes.push(T);
     const rs=validSpot(i,'reinc',s.x,s.z);const sp=rs.err?{cx0:Math.floor(s.x-1),cz0:Math.floor(s.z-1)}:rs;const r=placeBuilding(i,'reinc',sp,true);
     if(T.ai){T.ai.base={x:r.x,z:r.z}}
     let huts=0;const want=ST.huts??(ai?(D.aiHuts??1):D.pHuts);for(let a=0;a<24&&huts<want;a++){const ang=a/12*TAU+.4,rr=a<12?5:7.5,v=validSpot(i,'hut',r.x+Math.cos(ang)*rr,r.z+Math.sin(ang)*rr);if(!v.err){const h=placeBuilding(i,'hut',v,true);h.occ=2;huts++}}
