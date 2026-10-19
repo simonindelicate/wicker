@@ -694,10 +694,10 @@ const CHAL=[
   me:{mana:400,wood:200,huts:3},them:{mana:600,huts:4,warriors:3},ai:{only0:true,first:150,int:85,need:4,needInc:1,war:1.4,mil:.4},news:['Beltane Fire','Sword Dance'],
   alien:{land:[1.12,.98,.92],sun:0xffc0a0,hemi:0xe8b8a8,ground:0x3a2420,fog:0x9a6a5a,water:[.24,.18,.16]},
   intro:'[Placeholder intro, to be written.] Light the fire and let them leap it; set the young men dancing with their blades. Grow, Cunning Woman. Grow until thy people number a hundred and sixty, though thy neighbours will blight thy cradles and burn thy roofs to stop thee.'},
- {title:'The Sickness',season:'summer',seed:30557,style:'continent',enemies:1,diff:'hard',fog:true,all:true,goal:{type:'conquer'},teach:['murrain','blight'],also:['angel'],herd:true,
-  me:{mana:600,wood:180,huts:3,warriors:2},them:{mana:1200,wood:200,huts:6,warriors:8,archers:4},ai:{first:420,war:.8},news:['Murrain','Cradle Blight'],
+ {title:'The Sickness',season:'summer',seed:30557,style:'continent',enemies:1,diff:'hard',fog:true,all:true,goal:{type:'conquer'},teach:['murrain','blight'],also:['angel'],drop:['blast','lightning'],herd:true,tombed:true,
+  me:{mana:300,wood:180,huts:1},them:{mana:300,wood:180,huts:1},ai:{first:420,war:.8},news:['Murrain','Cradle Blight'],
   alien:{land:[1.04,1.12,.78],sun:0xe0ff90,hemi:0xc0d088,ground:0x2a3014,fog:0x7a8448,water:[.16,.22,.08]},
-  intro:'[Placeholder intro, to be written.] They are too many to fight, my love. So do not fight them. Sicken their beasts and empty their cradles, and wait.'},
+  intro:'[Placeholder intro, to be written.] Thou art sealed in the hill, and so is she. Neither of you can walk abroad; so sicken their beasts, set their flesh afire and empty their cradles from where thou liest.'},
  {title:'Harvest',season:'autumn',seed:30661,style:'continent',enemies:2,diff:'normal',fog:true,all:true,goal:{type:'conquer'},teach:['changeling'],
   me:{mana:500,wood:200,huts:3,warriors:2},them:{mana:500,huts:5,warriors:2},ai:{first:330},news:['The Changeling'],
   alien:{land:[1.16,.94,.76],sun:0xffb070,hemi:0xe0a070,ground:0x3a2410,fog:0x9a6a3a,water:[.26,.18,.08]},
@@ -749,7 +749,7 @@ const GRIM_PAL={Blood:['blast','lightning','fire','quake','whirl','volcano','gho
   Ash:['blast','lightning','swarm','angel','erode','murrain','phillip','familiar','blight'],Ochre:['blast','lightning','pricking','shield','hypno','fire','changeling','fetch','keening']};
 const grimOn=()=>settings.mode==='grimoire'&&settings.campaign==null&&chalOpen();
 const aiPalOK=(T,k)=>T.pal?T.pal.includes(k):!NEW_SP.includes(k);
-const palOK=k=>{if(settings.chal&&settings.campaign!=null){const SC=scen()||{};if(SC.pall)return true;if(SC.teach&&SC.teach.length)return k==='arma'||CHAL_BASIC.includes(k)||SC.teach.includes(k)||(SC.also||[]).includes(k);return !NEW_SP.includes(k)}const g=settings.mode==='grimoire'&&settings.campaign==null&&settings.palette;if(!g)return !NEW_SP.includes(k);return k==='arma'||settings.palette.includes(k)};
+const palOK=k=>{if(settings.chal&&settings.campaign!=null){const SC=scen()||{};if(SC.pall)return true;if(SC.teach&&SC.teach.length)return k==='arma'||(SC.drop||[]).indexOf(k)<0&&CHAL_BASIC.includes(k)||SC.teach.includes(k)||(SC.also||[]).includes(k);return !NEW_SP.includes(k)}const g=settings.mode==='grimoire'&&settings.campaign==null&&settings.palette;if(!g)return !NEW_SP.includes(k);return k==='arma'||settings.palette.includes(k)};
 const allowPB=t=>allowB(t)&&!((scen()||{}).lockB||[]).includes(t);
 const CAMP_KEY='wicker-campaign-v1',DEV_KEY='wicker-dev';
 
@@ -1955,9 +1955,9 @@ function aiCast(T){const ai=T.ai,sh=casterOf(T);if(!sh||sh.sleep>gt||sh.hanging|
   if(ok('keening')&&gt>(ai.keenT||0)){const hb=blds.find(b=>b.alive&&b.bt==='hut'&&b.tribe!==T.id&&tribes[b.tribe]&&!tribes[b.tribe].wild&&d2(cx,cz,b.x,b.z)<50*50);if(hb){opts.push(['keening',hb.x,hb.z,3]);ai.keenT=gt+75}}
   // pricking needs a suspicion: a villager who will not go indoors, mana going missing from an altar, or a stranger in their own colours close to her
   if(ok('pricking')&&gt>(ai.prickT||0)&&T.susp&&gt-T.susp.t<30&&d2(cx,cz,T.susp.x,T.susp.z)<14*14){opts.push(['pricking',T.susp.x,T.susp.z,6]);ai.prickT=gt+({easy:120,normal:90,hard:60,extreme:30}[settings.diff]||90);T.susp=null}
+    if(ok('murrain')){const a=stock.find(q=>q.tribe!==T.id&&tribes[q.tribe]&&!tribes[q.tribe].wild&&!q.dead&&!q.sick&&!q.fam&&(sh.tomb||d2(cx,cz,q.x,q.z)<14*14));if(a&&stock.filter(q=>q.tribe===a.tribe&&!q.dead&&!q.sick&&d2(q.x,q.z,a.x,a.z)<36).length>=2)opts.push(['murrain',a.x,a.z,3])}
   if(!sh.tomb){
     if(ok('phillip')){const g=stock.find(a=>a.kind==='goat'&&a.tribe!==T.id&&!a.dead&&!a.sick&&!a.offer&&!a.fam&&!a.bp&&!(a.kid&&gt-a.born<120)&&d2(cx,cz,a.x,a.z)<14*14);if(g)opts.push(['phillip',g.x,g.z,4])}
-    if(ok('murrain')){const a=stock.find(q=>q.tribe!==T.id&&!q.dead&&!q.sick&&!q.fam&&d2(cx,cz,q.x,q.z)<14*14);if(a&&stock.filter(q=>q.tribe===a.tribe&&!q.dead&&!q.sick&&d2(q.x,q.z,a.x,a.z)<36).length>=2)opts.push(['murrain',a.x,a.z,3])}
     if(ok('familiar')&&gt>(ai.famT||0)&&T.mana>=spellCost(T,'familiar')+300&&!stock.some(a=>a.fam&&a.tribe===T.id)){const g=stock.find(a=>a.kind==='goat'&&a.tribe===T.id&&!a.dead&&!a.sick&&!a.offer&&!(a.kid&&gt-a.born<240)&&d2(cx,cz,a.x,a.z)<14*14);if(g){opts.push(['familiar',g.x,g.z,2]);ai.famT=gt+240+R()*120}}}
   if(ok('fetch')&&settings.diff!=='easy'&&!fetches.some(f=>f.ti===T.id)&&gt>(ai.fetchT||0)&&T.mana>=spellCost(T,'fetch')+250){let tgt=null;const wt=ai.wave&&tribes[ai.wave.tgt];if(wt&&wt.alive&&wt.shaman&&wt.shaman.alive)tgt=wt.shaman;else{let bp=-1;for(const o of tribes){if(o.wild||o.id===T.id||!o.alive||!o.shaman||!o.shaman.alive)continue;if(o.stats.pop>bp){bp=o.stats.pop;tgt=o.shaman}}}
     if(tgt){opts.push(['fetch',tgt.x,tgt.z,5]);ai.fetchT=gt+150}}
@@ -3699,7 +3699,7 @@ function buildWorld(){const SC=scen();alien=SC&&SC.alien||null;applyAlien();well
   trees=w.trees.map(t=>({x:t.x,z:t.z,wood:TUNE.woodPerTree,alive:true,sc:.8+R()*.45,tint:.85+R()*.25}));treeCap=Math.round(trees.length*1.1);tGridDirty=true;
   tribes=[];
   for(let i=0;i<=settings.enemies;i++){const s=w.starts[i],D=DIFF[settings.diff];const ai=i||watching,ST=SC?(ai?SC.them||{}:SC.me||{}):{},SA=(SC&&SC.ai)||{};const T={dread:0,tomb:null,id:i,...TRIBES[i],c:new C.Color(TRIBES[i].col),mana:ST.mana??(ai?(D.aiMana0??150):D.pMana0),wood:ST.wood??(ai?(D.aiWood??40):D.pWood),woodGoal:ai?120:160,alive:true,shaman:null,reincT:0,cd:{},manaMult:ai?D.mana*((TRIBES[i].pers||{}).mana||1)*(SA.mana||1):(SC?(ST.manaMult||1):D.pMana),breedMult:(ai?D.breed:D.pBreed)*(ai&&SA.breed||1),capMax:ai?SA.cap:undefined,ai:ai?mkAI(i,s):null,stats:{pop:0,braves:0,outB:0,housed:0,others:0,mil:0,queued:0,huts:0,blds:0,sites:0,b:{},cap:25,cnt:{}}};
-    T.roof=T.c.clone().lerp(new C.Color(0xc9a55a),.3);if(ai&&grimOn())T.pal=(GRIM_PAL[T.name]||GRIM_PAL.Ochre).slice();else if(i&&SC&&settings.chal){T.pal=SC.teach&&SC.teach.length&&SC.rpal!=='all'?CHAL_BASIC.concat(SC.teach,SC.also||[],SC.rextra||[]):SP.map(x=>x.k).filter(k=>k!=='arma'&&(SC.rpal==='all'||!NEW_SP.includes(k)))}tribes.push(T);
+    T.roof=T.c.clone().lerp(new C.Color(0xc9a55a),.3);if(ai&&grimOn())T.pal=(GRIM_PAL[T.name]||GRIM_PAL.Ochre).slice();else if(i&&SC&&settings.chal){T.pal=SC.teach&&SC.teach.length&&SC.rpal!=='all'?CHAL_BASIC.filter(k=>!(SC.drop||[]).includes(k)).concat(SC.teach,SC.also||[],SC.rextra||[]):SP.map(x=>x.k).filter(k=>k!=='arma'&&(SC.rpal==='all'||!NEW_SP.includes(k)))}tribes.push(T);
     const rs=validSpot(i,'reinc',s.x,s.z);const sp=rs.err?{cx0:Math.floor(s.x-1),cz0:Math.floor(s.z-1)}:rs;const r=placeBuilding(i,'reinc',sp,true);
     if(T.ai){T.ai.base={x:r.x,z:r.z}}
     let huts=0;const want=ST.huts??(ai?(D.aiHuts??1):D.pHuts);for(let a=0;a<24&&huts<want;a++){const ang=a/12*TAU+.4,rr=a<12?5:7.5,v=validSpot(i,'hut',r.x+Math.cos(ang)*rr,r.z+Math.sin(ang)*rr);if(!v.err){const h=placeBuilding(i,'hut',v,true);h.occ=2;huts++}}
@@ -3719,17 +3719,20 @@ function buildWorld(){const SC=scen();alien=SC&&SC.alien||null;applyAlien();well
     for(const b of blds)if(b.bt==='fold'&&b.tribe===0)while(b.capt.length<BT.fold.hold)b.capt.push(wildId)}
   const neutral=(type,pt)=>{const sz=BT[type].s,v=validSpot(wildId,type,pt.x,pt.z);return placeBuilding(wildId,type,v.err?{cx0:Math.floor(pt.x-sz/2+.5),cz0:Math.floor(pt.z-sz/2+.5)}:v,true)};
   const mb=neutral('moot',w.centre);moot={x:mb.x,z:wrap(mb.z+3.2)};for(const b of w.barrows)neutral('barrow',b);
+  // tombed seasons: every Cunning Woman starts sealed in the hollow hill nearest her village
+  if(SC&&SC.tombed){const used=new Set();for(const T of tribes){if(T.wild||!T.shaman)continue;let bb=null,bd=1e18;for(const b of blds)if(b.alive&&b.bt==='barrow'&&!used.has(b)){const d=d2(b.x,b.z,T.shaman.x,T.shaman.z);if(d<bd){bd=d;bb=b}}if(!bb)continue;used.add(bb);
+    removeUnit(T.shaman);T.shaman=null;bb.bt='tomb';bb.tribe=T.id;bb.hp=bb.mhp=BT.tomb.hp;bb.done=true;T.tomb=bb;bb.dx=bb.x;bb.dz=wrap(bb.z+BT.tomb.s/2+.6)}}
   stones=w.stones;
   for(let g=0;g<Math.round((7+2*settings.enemies)*((SC&&SC.wild)||1));g++){const p=wildSpot();if(!p)continue;const k=3+(R()*2|0);for(let i=0;i<k;i++)spawnWild(p.x+(R()-.5)*2,p.z+(R()-.5)*2)}
   computeStats();rebuildTGrid();rebuildGrid();
-  const p=tribes[0].shaman;cam.fx=p.x;cam.fz=p.z;cam.dist=36;drawPreview()}
+  const p=tribes[0].shaman||blds.find(b=>b.alive&&b.bt==='reinc'&&b.tribe===0)||tribes[0].tomb;cam.fx=p.x;cam.fz=p.z;cam.dist=36;drawPreview()}
 {const tp=$('top'),setTH=()=>{if(!tp.hidden)document.documentElement.style.setProperty('--topH',tp.getBoundingClientRect().bottom+'px')};if(window.ResizeObserver)new ResizeObserver(setTH).observe(tp);addEventListener('resize',setTH)}
 function devUI(){$('bHideUI').hidden=!devMode();setNoUI(false)}
 let uiNoteT=0;function setNoUI(on){document.body.classList.toggle('noui',on);const n=$('uiNote');clearTimeout(uiNoteT);if(on){n.hidden=false;n.style.opacity=1;uiNoteT=setTimeout(()=>{n.style.opacity=0;uiNoteT=setTimeout(()=>{n.hidden=true},700)},2500)}else n.hidden=true}
 $('bHideUI').addEventListener('click',()=>setNoUI(true));
 document.addEventListener('touchstart',e=>{if(e.touches.length>=3&&document.body.classList.contains('noui')){e.preventDefault();setNoUI(false)}},{passive:false,capture:true});
 function beginGame(){devUI();fogOn=!!settings.fog&&!window.__nofog;if(fogOn){vis.fill(.035);updFog()}startDrone();$('menu').hidden=true;inMenu=false;running=true;paused=false;over=false;speed=1;$('bSpeed').textContent='1×';$('bPause').textContent='Pause';
-  for(const id of['top','mini','side','dock'])$(id).hidden=false;const p=tribes[0].shaman;cam.fx=p.x;cam.fz=p.z;cam.dist=30;setSel([]);setTab('spells');resize();
+  for(const id of['top','mini','side','dock'])$(id).hidden=false;const p=tribes[0].shaman||blds.find(b=>b.alive&&b.bt==='reinc'&&b.tribe===0)||tribes[0].tomb;cam.fx=p.x;cam.fz=p.z;cam.dist=30;setSel([]);setTab('spells');resize();
   droneLevel();applyAllow();const SC=scen();if(SC)toast(goalText(SC));else{const fm=Math.round(DIFF[settings.diff].first/60);toast(`Grow your tribe while you can. Rivals usually first attack after about ${fm} minutes.`)}}
 function applyAllow(){for(const t of spTiles)t.hidden=!allowS(t.dataset.k)||!palOK(t.dataset.k);for(const t of bTiles)t.hidden=!allowPB(t.dataset.b)}
 function goalText(SC){const g=SC.goal;return g.type==='mana'?`Gather ${g.n} mana.`:g.type==='survive'?`Hold fast for ${Math.round(g.n/60)} minutes.`:g.type==='captives'?`Hold ${g.n} captives in your folds at once.`:g.type==='pop'?`Grow thy people to ${g.n}.`:g.type==='fetch'?'Bring down a rival Cunning Woman while thy fetch is hunting her, by the fetch or by any other means.':g.type==='queen'?((g.n||1)>1?`Crown ${g.n} May Queens and offer each to the fire.`:'Crown a May Queen and offer her to the fire.'):'Break every rival people.'}
