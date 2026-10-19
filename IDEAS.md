@@ -47,6 +47,8 @@ A place to keep design ideas between sessions. Nothing here is built yet. Each e
 2. The Herd (Black Phillip, Familiar), 3. May Eve (Beltane Fire, Sword Dance; grow to 70 people), 4. The Fair (Glamour, Pricking), 5. The Sickness (Murrain, Cradle Blight; a far stronger rival), 6. Harvest (Changeling), 7. The Long Nights (Keening Wail, Briar Sleep), 8. The Hunt (the Fetch; bring down a rival Cunning Woman while your fetch hunts her, by any means), 9. The Flood (Seas of Blood; you start on a raised mountain, the rivals low).
 10. The Answer: the Humbling's rivals, winnable, every spell yours.
 
+**v153:** in each teaching season you and the rivals carry only Blast, Lightning, Shield, Land Bridge, the season's new spells and All-against-all. The Herd and the Sickness start with livestock at every village; the Herd starts on 150 mana with one free Familiar.
+
 Earlier draft season plan:
 
 - Spring: the herd (livestock, Black Phillip, Familiar); May Eve (Beltane Fire, Sword Dance).
