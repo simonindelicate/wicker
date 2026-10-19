@@ -690,10 +690,10 @@ const CHAL=[
   me:{mana:150,wood:180,huts:3},them:{mana:400,huts:4,warriors:3},ai:{first:360,war:.9},news:['Black Phillip','The Familiar'],
   alien:{land:[1.08,1.1,.82],sun:0xfff09a,hemi:0xd8d49a,ground:0x34301a,fog:0x8a8250,water:[.2,.24,.12]},
   intro:'[Placeholder intro, to be written.] Thy goats have heard the old voice, Cunning Woman. Wake the black one among them and let him loose; or send a quieter creature to drink at thy neighbour\'s altar.'},
- {title:'May Eve',season:'spring',seed:30331,style:'twin',enemies:1,diff:'normal',fog:false,all:true,goal:{type:'pop',n:70},teach:['beltane','sworddance'],
-  me:{mana:500,wood:200,huts:3},them:{mana:400,huts:3,warriors:2},ai:{first:300},news:['Beltane Fire','Sword Dance'],
+ {title:'May Eve',season:'spring',seed:30331,style:'continent',enemies:2,diff:'hard',fog:true,all:true,goal:{type:'pop',n:160},teach:['beltane','sworddance'],rextra:['blight'],
+  me:{mana:400,wood:200,huts:3},them:{mana:600,huts:4,warriors:3},ai:{only0:true,first:150,int:85,need:4,needInc:1,war:1.4,mil:.4},news:['Beltane Fire','Sword Dance'],
   alien:{land:[1.12,.98,.92],sun:0xffc0a0,hemi:0xe8b8a8,ground:0x3a2420,fog:0x9a6a5a,water:[.24,.18,.16]},
-  intro:'[Placeholder intro, to be written.] Light the fire and let them leap it; set the young men dancing with their blades. Grow, Cunning Woman. Grow until thy people number seventy.'},
+  intro:'[Placeholder intro, to be written.] Light the fire and let them leap it; set the young men dancing with their blades. Grow, Cunning Woman. Grow until thy people number a hundred and sixty, though thy neighbours will blight thy cradles and burn thy roofs to stop thee.'},
  {title:'The Fair',season:'summer',seed:30443,style:'continent',enemies:1,diff:'normal',fog:true,all:true,goal:{type:'conquer'},teach:['glamour','pricking'],
   me:{mana:500,wood:180,huts:3,warriors:2},them:{mana:600,huts:3,warriors:3},ai:{first:280},news:['Glamour','Pricking'],
   alien:{land:[.92,1.12,1.04],sun:0xb8ffe0,hemi:0xa8d8c8,ground:0x18342a,fog:0x5a8a78,water:[.1,.26,.24]},
@@ -1702,6 +1702,8 @@ function castSpell(ti,k,px,pz,cu){atk=ti;let sx=cu?cu.x:px,sz=cu?cu.z:pz,sy=cu?u
   case 'beltane':{const T=tribes[ti];T.beltaneUntil=gt+60;
     {const home=blds.find(b=>b.alive&&b.bt==='reinc'&&b.tribe===ti);if(home){let pit=null;const open=(x,z)=>{for(let dz=-3;dz<=3;dz++)for(let dx=-3;dx<=3;dx++){const c=cidx(x+dx,z+dz);if(!pass[c]||bOcc[c])return false}return !trees.some(t=>t.alive&&d2(t.x,t.z,x,z)<3.2*3.2)};for(let r=9;r<17&&!pit;r+=1)for(let k=0;k<16;k++){const a=k/16*TAU+r*.7,x=wrap(home.x+Math.cos(a)*r),z=wrap(home.z+Math.sin(a)*r);if(open(x,z)){pit={x,z,tribe:ti,end:gt+60};break}}if(pit)pits.push(pit);
       if(pit){const vs=units.filter(u=>u.alive&&u.tribe===ti&&u.type==='brave'&&!u.inV&&u.chg==null&&u.st!=='enter'&&u.st!=='build').sort((a,b)=>d2(a.x,a.z,pit.x,pit.z)-d2(b.x,b.z,pit.x,pit.z)).slice(0,14);
+        // most villagers are indoors: call couples out of the huts to make up the line
+        while(vs.length<14){let hb=null,hd=1e18;for(const b of blds)if(b.alive&&b.done&&b.tribe===ti&&b.bt==='hut'&&b.occ>0){const d=d2(b.x,b.z,pit.x,pit.z);if(d<hd){hd=d;hb=b}}if(!hb)break;hb.occ--;vs.push(spawnUnit('brave',ti,hb.dx,hb.dz))}
         vs.forEach((u,i)=>{u.bel={pit,stage:0,side:i%2?1:-1,t:gt+45};u.cmd=true;u.st='move';setTarget(u,pit.x-2*u.bel.side,pit.z+(R()-.5)*.6)});
         effects.push({t:60,up(e,dt){e.t-=dt;const y=Math.max(0,hAt(pit.x,pit.z));if(R()<dt*16)PA.emit(pit.x+(R()-.5)*.3,y+.1,pit.z+(R()-.5)*.3,(R()-.5)*.1,.5+R()*.4,(R()-.5)*.1,.3+R()*.2,1,.5+R()*.3,.12,1,.15,-1);if(R()<dt*2)PN.emit(pit.x,y+.6,pit.z,(R()-.5)*.2,.6,(R()-.5)*.2,2.5,.25,.22,.2,.4,.7,-.05);if(e.t<=dt)pits.splice(pits.indexOf(pit),1);
           for(const u of vs){const B=u.bel;if(!u.alive||!B)continue;if(gt>B.t){u.bel=null;u.cmd=false;continue}
@@ -3697,7 +3699,7 @@ function buildWorld(){const SC=scen();alien=SC&&SC.alien||null;applyAlien();well
   trees=w.trees.map(t=>({x:t.x,z:t.z,wood:TUNE.woodPerTree,alive:true,sc:.8+R()*.45,tint:.85+R()*.25}));treeCap=Math.round(trees.length*1.1);tGridDirty=true;
   tribes=[];
   for(let i=0;i<=settings.enemies;i++){const s=w.starts[i],D=DIFF[settings.diff];const ai=i||watching,ST=SC?(ai?SC.them||{}:SC.me||{}):{},SA=(SC&&SC.ai)||{};const T={dread:0,tomb:null,id:i,...TRIBES[i],c:new C.Color(TRIBES[i].col),mana:ST.mana??(ai?(D.aiMana0??150):D.pMana0),wood:ST.wood??(ai?(D.aiWood??40):D.pWood),woodGoal:ai?120:160,alive:true,shaman:null,reincT:0,cd:{},manaMult:ai?D.mana*((TRIBES[i].pers||{}).mana||1)*(SA.mana||1):(SC?(ST.manaMult||1):D.pMana),breedMult:(ai?D.breed:D.pBreed)*(ai&&SA.breed||1),capMax:ai?SA.cap:undefined,ai:ai?mkAI(i,s):null,stats:{pop:0,braves:0,outB:0,housed:0,others:0,mil:0,queued:0,huts:0,blds:0,sites:0,b:{},cap:25,cnt:{}}};
-    T.roof=T.c.clone().lerp(new C.Color(0xc9a55a),.3);if(ai&&grimOn())T.pal=(GRIM_PAL[T.name]||GRIM_PAL.Ochre).slice();else if(i&&SC&&settings.chal){T.pal=SC.teach&&SC.teach.length&&SC.rpal!=='all'?CHAL_BASIC.concat(SC.teach):SP.map(x=>x.k).filter(k=>k!=='arma'&&(SC.rpal==='all'||!NEW_SP.includes(k)))}tribes.push(T);
+    T.roof=T.c.clone().lerp(new C.Color(0xc9a55a),.3);if(ai&&grimOn())T.pal=(GRIM_PAL[T.name]||GRIM_PAL.Ochre).slice();else if(i&&SC&&settings.chal){T.pal=SC.teach&&SC.teach.length&&SC.rpal!=='all'?CHAL_BASIC.concat(SC.teach,SC.rextra||[]):SP.map(x=>x.k).filter(k=>k!=='arma'&&(SC.rpal==='all'||!NEW_SP.includes(k)))}tribes.push(T);
     const rs=validSpot(i,'reinc',s.x,s.z);const sp=rs.err?{cx0:Math.floor(s.x-1),cz0:Math.floor(s.z-1)}:rs;const r=placeBuilding(i,'reinc',sp,true);
     if(T.ai){T.ai.base={x:r.x,z:r.z}}
     let huts=0;const want=ST.huts??(ai?(D.aiHuts??1):D.pHuts);for(let a=0;a<24&&huts<want;a++){const ang=a/12*TAU+.4,rr=a<12?5:7.5,v=validSpot(i,'hut',r.x+Math.cos(ang)*rr,r.z+Math.sin(ang)*rr);if(!v.err){const h=placeBuilding(i,'hut',v,true);h.occ=2;huts++}}
