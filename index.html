@@ -474,6 +474,7 @@ const UT={
   ghost:{hp:1,spd:2.6,dmg:7,cd:.9,rng:1,aggro:8,label:'Ghost',pl:'ghosts'},
   balloon:{hp:110,spd:2.8,cap:4,dmg:22,cd:3.2,rng:6.5,aggro:8,label:'Balloonist',pl:'balloonists',veh:true,fly:true,bomb:true},
   wild:{hp:40,spd:1.6,dmg:0,cd:1,rng:.9,aggro:0,label:'Wildman',pl:'wildmen'},
+  daughter:{hp:60,spd:2.3,dmg:0,cd:1,rng:.9,aggro:0,label:'Landlord\'s Daughter',pl:'landlord\'s daughters'},
   phillip:{hp:600,spd:2.4,dmg:35,cd:.8,rng:1,aggro:14,label:'Black Phillip',pl:'black goats'},
 };
 const MIL={warrior:1,archer:1,oss:1,balloon:1};const isHold=b=>!!BT[b.bt].hold;
@@ -491,6 +492,7 @@ const BT={
   torch:{s:1,wood:0,time:1,hp:1400,label:'Scrying Torch',info:'A burning beacon; the land around it stays in sight while it stands'},
   tomb:{s:3,wood:0,time:1,hp:5000,label:'Tomb Fortress',info:'Your Cunning Woman lies sealed here'},
   oak:{s:4,wood:300,time:50,hp:1500,label:"Herne's Oak",info:'Hang your Cunning Woman from it for two minutes and the Wild Hunt rides'},
+  inn:{s:3,wood:90,time:26,hp:420,label:'Inn',train:'daughter',mana:260,tt:45,info:'Trains the landlord\'s daughter, who lures enemy fighters away, gets them drunk and brings them home to sleep it off'},
   cottage:{s:3,wood:80,bmana:300,time:20,hp:450,label:'Cottage',info:'Opens the Train tab: train any fighter from one place, keep numbers topped up, and send idle osses roaming. One per village'},
   balloon:{s:4,wood:80,time:26,hp:400,label:'Balloon Works',train:'balloon',mana:60,tt:14,info:'Builds balloons'},
   wicker:{s:3,wood:80,time:20,hp:300,label:'Wicker Man',site:'wicker',holdN:5,burnT:8,info:'Holds five; burns for mana and a frenzy'},
@@ -498,7 +500,7 @@ const BT={
   barrow:{s:3,wood:0,time:1,hp:1e9,label:'Hollow Hill',info:'Seal your Cunning Woman inside with twenty followers and 1,500 mana',inv:true},
   moot:{s:5,wood:0,time:1,hp:1e9,label:'The Moot',info:'Where every people gathers at the end',inv:true}
 };
-const BUILDABLE=['hut','altar','camp','range','osshouse','cottage','fold','nest','hedge','maypole','wicker','god','oak','balloon'];
+const BUILDABLE=['hut','altar','camp','range','osshouse','cottage','inn','fold','nest','hedge','maypole','wicker','god','oak','balloon'];
 const SP=[
   {k:'blast',n:'Blast',c:25,cd:1.5,r:11,rad:1.8,s:0},
   {k:'lightning',n:'Lightning',c:90,cd:6,r:14,rad:1.2,s:0},
@@ -570,6 +572,7 @@ const ICON={
   hut:'<path d="M3 13L12 4l9 9M5 11v9h14v-9"/><path d="M10 20v-5h4v5"/>',
   camp:'<path d="M2 20L12 4l10 16z"/><path d="M12 4v16M9 20l3-5 3 5"/>',
   range:'<path d="M8 21V9h8v12M6 9l6-6 6 6"/><circle cx="12" cy="14" r="2"/>',
+  inn:'<path d="M3 11l9-6 9 6M5 9v11h14V9"/><path d="M9 20v-4h3v4M15 13h4v3h-4zM17 11v2"/>',
   cottage:'<path d="M3 12l9-7 9 7M5 10v10h14V10"/><path d="M15 7V4h2.5v5"/><path d="M10 20v-5h4v5"/>',
   osshouse:'<path d="M7 21v-6l-3-3 3-7 5-2 3 3 2 6-3 2v7"/><circle cx="10" cy="8" r="1"/>',
   hedge:'<path d="M2 18c2-5 4-5 6 0 2-5 4-5 6 0 2-5 4-5 6 0"/><path d="M5 13l-1-2M9 12l1-2M15 12l-1-2M19 13l1-2M2 18h20"/>',
@@ -740,7 +743,8 @@ function applyAlien(){const a=alien;if(typeof sun==='undefined')return;sun.inten
 const LVS=()=>settings.chal?CHAL:SCEN;
 function scen(){return settings.campaign!=null?LVS()[settings.campaign]:null}
 function scenSets(i){const b=new Set(['hut']),sp=new Set();let tomb=false;for(let k=0;k<=i;k++){const L=LVS()[k];(L.addB||[]).forEach(x=>b.add(x));(L.addS||[]).forEach(x=>sp.add(x));if(L.tomb===true)tomb=true;if(L.all){BUILDABLE.forEach(x=>b.add(x));SP.forEach(x=>sp.add(x.k));tomb=true}}if(LVS()[i].tombHere)tomb=true;for(const x of (LVS()[i].ban||[])){b.delete(x);sp.delete(x);if(x==='tomb')tomb=false}return {b,s:sp,tomb}}
-const allowB=t=>!allowSets||(t==='tomb'?allowSets.tomb:allowSets.b.has(t));
+const innOn=()=>devMode();
+const allowB=t=>(t!=='inn'||innOn())&&!allowSets||(t==='tomb'?allowSets.tomb:allowSets.b.has(t));
 const allowS=k=>!allowSets||allowSets.s.has(k);
 // Grimoire mode (test mode for now): the player casts only the spells chosen before the game; rivals keep every spell. All-against-all is always to hand.
 const GRIM_N=9,GRIM_KEY='wicker-grimoire-v1';
@@ -1067,7 +1071,7 @@ function moveStep(u,dt){const D=UT[u.type];const fz=tribes[u.tribe]&&tribes[u.tr
   u.x=wrap(nx);u.z=wrap(nz);u.face=Math.atan2(wx,wz);u.moving=true;return 0}
 
 let inCommand=false;
-function attack(u,t){if(u.glam>gt&&!inCommand||u.chgSafe||t.chgSafe)return;u.st='attack';u.tgt=t}
+function attack(u,t){if(u.glam>gt&&!inCommand||u.chgSafe||t.chgSafe||u.drunk||u.lure)return;u.st='attack';u.tgt=t}
 function canHit(u,t){if(t.bt)return !BT[t.bt].inv;if(UT[t.type].fly)return !!UT[u.type].bomb;return true}
 function resumeAfter(u){u.tgt=null;if(u.order==='amove'){u.st='amove';setTarget(u,u.otx,u.otz,u.ofx,u.ofz)}else{u.st='idle';u.gx=u.x;u.gz=u.z}}
 let atk=-1;
@@ -1151,6 +1155,8 @@ function leapDone(u,T){const LS=leapScale(T.id);if(T.id===0){const a=A();a.leaps
   T.truceUntil=gt+LEAP_TRUCE;for(const o of tribes)if(o.ai&&o.id!==T.id){const ai=o.ai;ai.nextAtk=Math.max(ai.nextAtk,gt+LEAP_TRUCE);
     if(ai.wave&&ai.wave.tgt===T.id){const set=new Set(ai.wave.ids);for(const w of units)if(w.alive&&set.has(w.id)){orderUnit(w,ai.base.x+(R()-.5)*6,ai.base.z+(R()-.5)*6,false);w.raidT=0}ai.wave=null}}
   sfx('built',1);if(T.id===0&&!watching){toast(`She is gone over the edge. ${LEAP_N} of your people step out from among the stones, and for a while even your enemies are still.`);flash(.25)}}
+const INN_NAMES=['The Wicker Arms','The Black Goat','The Hanged Man','The Green Man','The Drowned Bell','The Lamb and Flag','The Hare and Hounds','The Barley Mow','The Old Oak','The Fox and Feathers','The Plough','The Crooked Billet','The Rose and Crown','The Bull','The Wheatsheaf','The Bell'];
+function innName(){const used=new Set(blds.filter(b=>b.alive&&b.innName).map(b=>b.innName)),free=INN_NAMES.filter(n=>!used.has(n));const L=free.length?free:INN_NAMES;return L[(R()*L.length)|0]}
 function placeBuilding(ti,type,spot,instant){const D=BT[type],s=D.s,{cx0,cz0}=spot;
   let sum=0,n=0;for(let dz=0;dz<=s;dz++)for(let dx=0;dx<=s;dx++){sum+=H[wi(cz0+dz)*N+wi(cx0+dx)];n++}
   const avg=Math.max(.4,sum/n);for(let dz=0;dz<=s;dz++)for(let dx=0;dx<=s;dx++)H[wi(cz0+dz)*N+wi(cx0+dx)]=avg;
@@ -1159,7 +1165,7 @@ function placeBuilding(ti,type,spot,instant){const D=BT[type],s=D.s,{cx0,cz0}=sp
   const b={inside:[],capt:[],sq:0,cq:0,id:nextId++,bt:type,tribe:ti,x:wrap(cx0+s/2),z:wrap(cz0+s/2),cx0:wi(cx0),cz0:wi(cz0),hp:D.hp,mhp:D.hp,prog:instant?1:0,done:!!instant,alive:true,occ:0,q:0,breed:0,tt:0,trainee:false,claim:null,nb:0,hitT:-9};
   b.dx=b.x;b.dz=wrap(b.z+s/2+.6);faceBuilding(b);
   for(let dz=0;dz<s;dz++)for(let dx=0;dx<s;dx++)bOcc[wi(cz0+dz)*N+wi(cx0+dx)]=b.id;
-  blds.push(b);bById.set(b.id,b);
+  if(type==='inn')b.innName=innName();blds.push(b);bById.set(b.id,b);
   if(!instant){tribes[ti].wood-=D.wood;if(D.bmana)tribes[ti].mana-=D.bmana;for(let k=0;k<(type==='hedge'?1:3);k++){const br=getFreeBrave(tribes[ti],b.x,b.z);if(!br)break;assignBuild(br,b)}}
   return b}
 function destroyBld(b){if(!b.alive||BT[b.bt].inv)return;if(b.tribe===0&&b.bt!=='hedge'&&b.bt!=='torch'&&!b.burnt)A().lostBld=true;b.alive=false;const s=BT[b.bt].s;if(b.bt!=='hedge'&&b.bt!=='torch'&&!armageddon&&!b.burnt&&atk>=0&&atk!==b.tribe&&tribes[atk]&&!tribes[atk].wild&&tribes[b.tribe]&&!tribes[b.tribe].wild)saltGround(b,b.tribe);if(b.bt==='hedge'){if(b.done)setHedge(b,0)}
@@ -1261,7 +1267,29 @@ function seaTick(){{const SC=scen();if(SC&&SC.seasAt&&!chalSeasDone&&gt>=SC.seas
   let n=0;for(const u of units)if(u.alive&&!u.inV&&!u.air&&!UT[u.type].fly&&water[cidx(u.x,u.z)]){killUnit(u,null);n++}
   for(const a of stock)if(!a.dead&&water[cidx(a.x,a.z)])a.gone=true;stock=stock.filter(a=>!a.gone);flash(.4);cam.shake=Math.max(cam.shake,.7);sfx('quake',1);
   if(!watching)toast(`The blood tide rises and swallows the low ground.${n?' '+n+' are drowned.':''}`)}
-function chgTick(){phillipTick();seaTick();chgTravelTick();
+// ---- the landlord's daughter: lures enemy fighters, gets them drunk, and walks them home to sleep it off at her inn ----
+const LURE_T=['warrior','oss','brave'],LURE_MAX=6;
+function daughterTick(){
+  for(const u of units){if(!u.alive)continue;
+    if(u.drunk){const d=u.drunk;if(!d.alive){u.drunk=null;u.sleep=0;u.cmd=false;u.st='idle';continue}
+      if(u.sleep>gt)continue;const inn=d.inn&&d.inn.alive?d.inn:null;
+      if(inn&&d.home){const a=u.slot*1.1,x=wrap(inn.x+Math.cos(a)*3.2),z=wrap(inn.z+Math.sin(a)*3.2);if(d2(u.x,u.z,x,z)<1.6*1.6){u.sleep=Infinity;u.st='idle';u.moving=false}else{u.st='move';u.cmd=true;u.order=null;u.tgt=null;setTarget(u,x+(R()-.5)*.4,z+(R()-.5)*.4)}}
+      else{u.st='move';u.cmd=true;u.order=null;u.tgt=null;setTarget(u,d.x+(R()-.5)*2.5,d.z+(R()-.5)*2.5)}continue}
+    if(u.lure){const d=u.lure.d;if(!d.alive||d.inV||d2(u.x,u.z,d.x,d.z)>5.5*5.5){u.lure=null;u.cmd=false;u.st='idle';continue}u.lure.n++;u.st='move';u.cmd=true;u.order=null;u.tgt=null;setTarget(u,d.x+(R()-.5)*1.2,d.z+(R()-.5)*1.2);
+      if(u.lure.n>=3){const n=units.filter(o=>o.alive&&o.drunk===d).length;u.lure=null;if(n<LURE_MAX){u.drunk=d;u.slot=n;if(d.tribe===0&&!watching&&gt>(d.aleT||0)){d.aleT=gt+12;toast(`The ${tribes[u.tribe].name} folk are drinking your landlord's daughter's ale.`)}}else{u.cmd=false;u.st='idle'}}}}
+  for(const d of units){if(!d.alive||d.type!=='daughter'||d.inV)continue;
+    const mine=units.filter(o=>o.alive&&o.drunk===d),T=tribes[d.tribe];
+    let inn=null,bd=1e18;for(const b of blds)if(b.alive&&b.done&&b.tribe===d.tribe&&b.bt==='inn'){const dd=d2(d.x,d.z,b.x,b.z);if(dd<bd){bd=dd;inn=b}}d.inn=inn;
+    // she takes them in a few at a time, and only those who can be reached by her charms: not archers, Cunning Women or the like
+    if(mine.length<LURE_MAX)query(grid,d.x,d.z,3.5,o=>{if(!o.alive||o.tribe===d.tribe||o.tribe===wildId||o.inV||o.drunk||o.lure||o.chgSafe||o.sleep>gt||!LURE_T.includes(o.type)||d2(o.x,o.z,d.x,d.z)>3.5*3.5)return;o.lure={d,n:0};o.tgt=null;o.st='move';o.cmd=true;setTarget(o,d.x,d.z)});
+    d.home=!!(inn&&d2(d.x,d.z,inn.x,inn.z)<6*6);
+    // with drunks in tow and nothing else to do, she walks them home
+    if(mine.length&&inn&&!d.home&&(d.st==='idle'||!d.cmd)){d.st='move';d.cmd=false;setTarget(d,inn.dx,inn.dz)}
+    if(mine.length&&d.home&&!d.toldHome&&inn){d.toldHome=true;if(!watching&&(d.tribe===0||mine[0].tribe===0)){const who=mine.length===1?'One':String(mine.length);toast(d.tribe===0?`${who} of the ${tribes[mine[0].tribe].name} folk are sleeping it off at ${inn.innName||'your inn'}.`:`Some of your people are sleeping it off at ${inn.innName||'the '+T.name+' inn'}.`)}}
+    if(!mine.length)d.toldHome=false;
+    // a rival's daughter goes out to meet fighters near her village
+    if(T&&T.ai&&!mine.length&&d.st==='idle'&&inn){const e=enemyNear(inn.x,inn.z,d.tribe,24,o=>LURE_T.includes(o.type)&&o.type!=='brave'&&!o.drunk);if(e){d.st='move';setTarget(d,e.x,e.z)}}}}
+function chgTick(){phillipTick();seaTick();chgTravelTick();daughterTick();
   if(!watching&&tribes[0]){const murr=tribes.some(o=>o&&o.id!==0&&!o.wild&&o.murrainUntil>gt)||stock.some(a=>a.tribe!==0&&a.sick&&!a.dead),ang=effects.some(e=>e.k==='angel'&&e.ti===0)||units.some(u=>u.alive&&u.tribe!==0&&u.fits>gt),bl=tribes.some(o=>o&&o.id!==0&&!o.wild&&o.blightUntil>gt);if(murr&&ang&&bl)earn('d_plagues')}
   for(const b of blds)if(b.alive&&b.wither&&gt>=b.wither){b.burnt=true;destroyBld(b)}
   // a stranger in their colours is only suspected after lingering close to their Cunning Woman for a while, not on sight
@@ -1893,7 +1921,7 @@ function harvestBroken(T,alive,di){const Dt=tribes[di],out={n:0,where:'altar'};i
 function enemyBalloonNear(T){const b=T.ai.base;for(const u of units)if(u.alive&&u.type==='balloon'&&u.tribe!==T.id&&u.tribe!==wildId&&d2(b.x,b.z,u.x,u.z)<30*30)return true;return false}
 function aiBuild(T){const S=T.stats,ai=T.ai;if(S.sites>=2)return;let want=null;const realB=S.b;if(allowSets){S.b=Object.assign({},realB);for(const t of BUILDABLE)if(!allowB(t))S.b[t]=99}
   const capped=T.capMax&&TUNE.popBase+S.huts*TUNE.popPerHut>=T.capMax;
-  if((S.cap-S.pop<6&&!capped)||S.huts<2)want='hut';else if(ai.D.bare&&!S.b.altar)want='altar';else if(!S.b.camp)want='camp';else if(!S.b.cottage&&allowB('cottage')&&T.mana>=(ai.cotAt||(ai.cotAt=R()<.35?320:400)))want='cottage';else if(ai.queenHunt&&!S.b.osshouse&&S.braves>=6)want='osshouse';else if(ai.may&&!S.b.maypole&&S.braves>=8&&gt>ai.may)want='maypole';else if(ai.airRaid&&!S.b.balloon&&S.braves>=6)want='balloon';else if(!S.b.range&&S.braves>=8)want='range';else if(!S.b.osshouse&&S.braves>=8)want='osshouse';else if((!S.b.fold||S.caps>=S.b.fold*13)&&S.b.osshouse&&(S.b.fold||0)<3)want='fold';else if(!S.b.altar)want='altar';else if(!S.b.maypole&&S.braves>=16&&gt>480)want='maypole';else if(!S.b.wicker&&S.braves>=14&&gt>(settings.diff==='easy'?420:240))want='wicker';else if(!S.b.balloon&&S.braves>=14&&gt>300)want='balloon';else if((S.b.nest||0)<(gt>420?1:0)+(S.huts>6?1:0)+(enemyBalloonNear(T)?1:0))want='nest';else if(!S.b.god&&settings.diff!=='easy'&&S.pop>=55&&gt>600)want='god';else if(!S.b.oak&&settings.diff!=='easy'&&S.pop>=TUNE.aiOakPop*((TRIBES[T.id].pers||{}).oak||1)&&gt>TUNE.aiOakTime*((TRIBES[T.id].pers||{}).oak||1))want='oak';
+  if((S.cap-S.pop<6&&!capped)||S.huts<2)want='hut';else if(ai.D.bare&&!S.b.altar)want='altar';else if(!S.b.camp)want='camp';else if(!S.b.inn&&allowB('inn')&&S.braves>=8&&gt>300&&T.mana>=150)want='inn';else if(!S.b.cottage&&allowB('cottage')&&T.mana>=(ai.cotAt||(ai.cotAt=R()<.35?320:400)))want='cottage';else if(ai.queenHunt&&!S.b.osshouse&&S.braves>=6)want='osshouse';else if(ai.may&&!S.b.maypole&&S.braves>=8&&gt>ai.may)want='maypole';else if(ai.airRaid&&!S.b.balloon&&S.braves>=6)want='balloon';else if(!S.b.range&&S.braves>=8)want='range';else if(!S.b.osshouse&&S.braves>=8)want='osshouse';else if((!S.b.fold||S.caps>=S.b.fold*13)&&S.b.osshouse&&(S.b.fold||0)<3)want='fold';else if(!S.b.altar)want='altar';else if(!S.b.maypole&&S.braves>=16&&gt>480)want='maypole';else if(!S.b.wicker&&S.braves>=14&&gt>(settings.diff==='easy'?420:240))want='wicker';else if(!S.b.balloon&&S.braves>=14&&gt>300)want='balloon';else if((S.b.nest||0)<(gt>420?1:0)+(S.huts>6?1:0)+(enemyBalloonNear(T)?1:0))want='nest';else if(!S.b.god&&settings.diff!=='easy'&&S.pop>=55&&gt>600)want='god';else if(!S.b.oak&&settings.diff!=='easy'&&S.pop>=TUNE.aiOakPop*((TRIBES[T.id].pers||{}).oak||1)&&gt>TUNE.aiOakTime*((TRIBES[T.id].pers||{}).oak||1))want='oak';
   else if(S.huts<Math.min(9,2+gt/ai.D.hutRate))want='hut';else if((S.b.camp||0)<2&&gt>420)want='camp';else if((S.b.range||0)<2&&gt>520)want='range';
   S.b=realB;if(!want||!allowB(want))return;if(T.wood<BT[want].wood){T.woodGoal=Math.max(120,BT[want].wood+30);if(allowS('flatten')&&gt>(ai.woodChk||0)){ai.woodChk=gt+30;const f=field(ai.base.x,ai.base.z);let n=0;for(const t of trees)if(t.alive&&d2(t.x,t.z,ai.base.x,ai.base.z)<22*22&&f[cidx(t.x,t.z)]>=0)n++;ai.treeStarved=n<4}if(ai.treeStarved)aiFlatten(T);return}
   const sp=findSpot(T,want);if(sp)placeBuilding(T.id,want,sp);else aiFlatten(T)}
@@ -1905,7 +1933,8 @@ function aiTrain(T,armyN){const S=T.stats,ai=T.ai;if(S.braves<6)return;
   if(ai.balRush&&!ai.rushed&&gt>=ai.balRush&&!armageddon){const bw=blds.find(b=>b.alive&&b.done&&b.tribe===T.id&&b.bt==='balloon');
     if(bw&&!bw.q&&!units.some(u=>u.alive&&u.tribe===T.id&&u.type==='balloon')){if(T.mana>=BT.balloon.mana){T.mana-=BT.balloon.mana;bw.q++}return}}
 const target=Math.floor(S.pop*(ai.milR+(T.mana>1500?.15:0)));if(armyN+S.queued>=target)return;
-  if(armageddon)return;const opts=[];for(const b of blds)if(b.alive&&b.done&&b.tribe===T.id&&BT[b.bt].train&&b.q<2)opts.push(b);if(!opts.length)return;
+  if(armageddon)return;const opts=[];{const inn=blds.find(b=>b.alive&&b.done&&b.tribe===T.id&&b.bt==='inn');if(inn&&!inn.q&&!units.some(u=>u.alive&&u.tribe===T.id&&u.type==='daughter')&&T.mana>=BT.inn.mana+300&&R()<.3){T.mana-=BT.inn.mana;inn.q++}}
+  for(const b of blds)if(b.alive&&b.done&&b.tribe===T.id&&BT[b.bt].train&&b.bt!=='inn'&&b.q<2)opts.push(b);if(!opts.length)return;
   const w=ai.queenHunt?{camp:.35,range:.2,osshouse:.45,balloon:.05}:ai.airRaid?{camp:.35,range:.15,osshouse:.1,balloon:.4}:(TRIBES[T.id].pers||{}).train||{camp:.4,range:.3,osshouse:.22,balloon:.1};let tot=0;for(const b of opts)tot+=w[b.bt];let r=R()*tot,pick=opts[0];for(const b of opts){r-=w[b.bt];if(r<=0){pick=b;break}}
   if(pick.bt==='balloon'&&ai.balCap!=null){let n=0;for(const u of units)if(u.alive&&u.tribe===T.id&&u.type==='balloon')n++;for(const b of blds)if(b.alive&&b.tribe===T.id&&b.bt==='balloon')n+=b.q;if(n>=ai.balCap)return}
   const cost=BT[pick.bt].mana;if(T.mana>=cost+ai.res){T.mana-=cost;pick.q++}}
@@ -2180,6 +2209,8 @@ const UMOD={
     for(let i=0;i<6;i++){const a=i/6*TAU;f.push(P(new C.SphereGeometry(.035,4,3),i%2?0xe7c84a:0xd85a7a,Math.cos(a)*.14,.85,Math.sin(a)*.14))}
     for(let i=0;i<5;i++){const a=i/5*TAU;f.push(P(new C.ConeGeometry(.02,.1,4),0xe7c84a,Math.cos(a)*.08,.9,Math.sin(a)*.08))}
     return {t:[P(cyl(.215,.235,.06,8),WT,0,.42,0)],f}},
+  daughter:()=>{const f=[P(new C.ConeGeometry(.27,.5,8),0x3a2a22,0,.25,0),P(cyl(.12,.15,.2,8),0xf1ece0,0,.58,0),P(new C.SphereGeometry(.105,6,5),SKIN,0,.75,0),P(new C.SphereGeometry(.12,6,4,0,TAU,0,Math.PI*.6),0x8a3a1c,0,.77,-.01),P(cyl(.05,.03,.32,5),0x8a3a1c,0,.62,-.08),
+      P(cyl(.05,.05,.1,6),0x8a6a3a,.2,.5,.06),P(cyl(.052,.052,.02,6),0xe8dcc0,.2,.56,.06)];return {t:[P(cyl(.165,.16,.14,8),WT,0,.44,0),P(cyl(.28,.28,.05,8),WT,0,.06,0)],f}},
   oss:()=>({t:[P(cyl(.36,.39,.06,10),WT,0,.62,0),P(new C.BoxGeometry(.03,.32,.03),WT,.12,.45,.36),P(new C.BoxGeometry(.03,.32,.03),WT,-.12,.45,.36)],f:[P(new C.ConeGeometry(.42,.95,10),0x14110f,0,.47,0),P(new C.BoxGeometry(.15,.17,.4),BONE,0,1.02,.18),P(new C.BoxGeometry(.12,.06,.3),0x2a1f18,0,.92,.24),P(new C.ConeGeometry(.04,.14,4),0x14110f,.06,1.16,.05),P(new C.ConeGeometry(.04,.14,4),0x14110f,-.06,1.16,.05),P(new C.ConeGeometry(.06,.35,5),0x14110f,0,1.2,-.05,-.5,0,0),P(new C.SphereGeometry(.025,4,3),0xb8392f,.08,1.07,.32),P(new C.SphereGeometry(.025,4,3),0xb8392f,-.08,1.07,.32)]}),
   hunter:()=>{const hk=0x16120f,f=[P(new C.BoxGeometry(.32,.36,1),hk,0,.78,0),P(new C.BoxGeometry(.16,.42,.18),hk,0,1.08,.5,-.5),P(new C.BoxGeometry(.14,.16,.38),hk,0,1.28,.7),P(new C.SphereGeometry(.1,6,5),BONE,0,1.62,-.02),P(new C.ConeGeometry(.02,.32,4),BONE,.09,1.83,-.02,0,0,-.5),P(new C.ConeGeometry(.02,.32,4),BONE,-.09,1.83,-.02,0,0,.5),P(new C.BoxGeometry(.03,.03,1.3),0x6e5530,.2,1.3,.2)];
     for(const sx of[-1,1])for(const sz of[-1,1])f.push(P(new C.BoxGeometry(.08,.62,.08),hk,sx*.11,.31,sz*.38));return {t:[P(cyl(.12,.24,.52,6),WT,0,1.25,-.05)],f}},
@@ -2204,6 +2235,11 @@ const BMOD={
   camp:()=>{const w=0x8a6238,f=[P(new C.BoxGeometry(3.6,.2,3.6),0x6b4a2c,0,.1,0),P(new C.BoxGeometry(3.6,.8,.18),w,0,.5,-1.7),P(new C.BoxGeometry(.18,.8,3.6),w,-1.7,.5,0),P(new C.BoxGeometry(.18,.8,3.6),w,1.7,.5,0),P(new C.BoxGeometry(1.2,.8,.18),w,-1.2,.5,1.7),P(new C.BoxGeometry(1.2,.8,.18),w,1.2,.5,1.7),P(cyl(.04,.04,2.6,4),WOOD,1.3,1.3,-1.3)];
     return {t:[P(new C.ConeGeometry(1.25,1.5,4),WT,0,.95,0,0,Math.PI/4),P(new C.BoxGeometry(.5,.32,.03),WT,1.55,2.4,-1.3)],f}},
   range:()=>({t:[P(new C.ConeGeometry(1.05,1,8),WT,0,2.95,0)],f:[P(new C.BoxGeometry(3.4,.25,3.4),0x7d776c,0,.12,0),P(cyl(.75,.9,2.3,8),STONE,0,1.3,0),P(cyl(.36,.36,.06,10),WHITE,1.2,.75,1.15,Math.PI/2),P(cyl(.2,.2,.07,10),0xc23b2b,1.2,.75,1.17,Math.PI/2)]}),
+  inn:()=>{const W=0xd8ccae,TB=0x3a2a1c,f=[P(new C.BoxGeometry(3,1.9,1.9),W,0,.95,0),P(cyl(.75,.75,3.1,3),0x6a4a2a,0,2.25,0,-Math.PI/2,Math.PI/2),P(new C.BoxGeometry(.5,.8,.08),TB,0,.4,.97),
+      P(new C.BoxGeometry(.36,.3,.06),0x2a2018,.9,1.3,.97),P(new C.BoxGeometry(.36,.3,.06),0x2a2018,-.9,1.3,.97),P(new C.BoxGeometry(.36,.3,.06),0x2a2018,.9,.55,.97),P(new C.BoxGeometry(.36,.3,.06),0x2a2018,-.9,.55,.97),
+      P(new C.BoxGeometry(3.04,.08,.06),TB,0,1.0,.96),P(new C.BoxGeometry(.08,1.9,.06),TB,-1.48,.95,.96),P(new C.BoxGeometry(.08,1.9,.06),TB,1.48,.95,.96),P(new C.BoxGeometry(.3,.9,.3),STONE,1.1,2.6,-.3),
+      P(cyl(.04,.04,2,5),TB,1.95,1,1.2),P(new C.BoxGeometry(.75,.06,.06),TB,1.7,1.95,1.2),P(new C.BoxGeometry(.03,.25,.03),0x2a2018,1.5,1.82,1.2),P(new C.BoxGeometry(.03,.25,.03),0x2a2018,1.9,1.82,1.2),
+      P(cyl(.18,.2,.3,8),0x6a4a2a,-1.75,.15,1.1),P(cyl(.18,.2,.3,8),0x6a4a2a,-1.75,.15,.65)];return {t:[P(new C.BoxGeometry(.55,.42,.05),WT,1.7,1.55,1.2)],f}},
   cottage:()=>{const W=0xd6c9ab,f=[P(new C.BoxGeometry(2.3,1,1.5),W,0,.5,0),P(cyl(.5,.5,2.3,3),W,0,1.25,0,-Math.PI/2,Math.PI/2),P(new C.BoxGeometry(.42,.64,.08),0x3a2a1c,0,.32,.76),P(new C.BoxGeometry(.32,.26,.06),0x2a2018,.66,.62,.76),P(new C.BoxGeometry(.3,1,.3),STONE,-.85,1.5,-.25,0,0,.06),
     P(new C.BoxGeometry(.05,.5,.05),0xc9b38a,-.4,.55,.8,0,0,.1),P(new C.BoxGeometry(.05,.46,.05),0xbfa77c,-.5,.53,.8,0,0,-.06),P(new C.BoxGeometry(.05,.52,.05),0xc9b38a,-.6,.56,.8,0,0,.04),
     P(new C.BoxGeometry(.14,.2,.1),0x6d7a3c,.25,.86,.82),P(new C.BoxGeometry(.12,.18,.1),0x8a6a3c,.45,.86,.82),P(new C.BoxGeometry(.14,.2,.1),0x5e6e38,.95,.86,.82),
@@ -2275,7 +2311,7 @@ function inst(g,m,cap){const im=new C.InstancedMesh(g,m,cap);im.instanceMatrix.s
 // Tribe-coloured parts write alpha 254/255 so the film grade can find them and leave them out (invisible otherwise).
 matT.onBeforeCompile=sh=>{sh.fragmentShader=sh.fragmentShader.replace('#include <dithering_fragment>','#include <dithering_fragment>\n\tgl_FragColor.a=254./255.;')};
 function mkPair(def,cap,ghost){const d=def();return {t:inst(merge(d.t),ghost?gMatT:matT,cap),f:inst(merge(d.f),ghost?gMatF:matF,cap),n:0,cap}}
-const UCAP={phillip:12,goat:60,chicken:300,rabbit:200,queen:8,hunter:40,brave:700,warrior:360,oss:240,captive:120,archer:300,shaman:8,ghost:120,balloon:60,wild:200};
+const UCAP={daughter:30,phillip:12,goat:60,chicken:300,rabbit:200,queen:8,hunter:40,brave:700,warrior:360,oss:240,captive:120,archer:300,shaman:8,ghost:120,balloon:60,wild:200};
 // ---------------- MODEL EDITS ----------------
 // Models edited in the Model workshop (menu) are stored as lists of parts. Edits you export from the
 // workshop can be pasted into MODEL_DATA here so that they ship with the game for everyone; edits made
@@ -3670,7 +3706,7 @@ function renderTribe(force){const T=tribes[0];if(!T)return;let h='';const b=sel.
     else h+=`<div class="card"><b>${D.label}</b><span>${D.info}</span></div>`;if(force||h!==lastTribeHTML){$('pTribe').innerHTML=h;lastTribeHTML=h}return}
   if(b){const D=BT[b.bt];let st=b.done?(b.bt==='hut'?`${b.occ} of 5 villagers inside`:D.info):`Being built · ${Math.floor(b.prog*100)}%`;
     if(b.done&&D.train&&b.q>0)st=b.trainee?`Training ${UT[D.train].label.toLowerCase()} · ${Math.ceil(b.tt)}s · ${b.q} queued`:(b.held?`Waiting · your last ${TRAIN_KEEP} villagers will not be trained · ${b.q} queued`:`Waiting for a villager · ${b.q} queued`);
-    h+=`<div class="card"><b>${D.label}</b><span>${st}</span></div>`;
+    h+=`<div class="card"><b>${b.innName||D.label}</b><span>${b.innName?'Inn · ':''}${st}</span></div>`;
     if(b.done&&b.bt==='osshouse'&&hasCottage())h+=`<button class="qs${T.ossRoam?' go':''}" data-act="roam"><span>${T.ossRoam?'On: idle osses hunt by themselves':'Off: osses wait for orders'}</span><b>Roam</b></button>`;
     if(b.done&&D.train)h+=`<button class="qs go" data-act="train" ${T.mana<D.mana?'disabled':''}><span>${D.mana} mana</span><b>Train ${UT[D.train].label.toLowerCase()}</b></button><button class="qs" data-act="cancel" ${b.q-(b.trainee?1:0)<=0?'disabled':''}><span>Refund mana</span><b>Cancel one</b></button>`;
     const caps=captivesOf(0);
