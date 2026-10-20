@@ -705,7 +705,7 @@ const CHAL=[
   intro:'[Placeholder intro, to be written.] Their villages are crowded with the harvest in. Who would notice one more face at the hearth, until it burns?'},
  {title:'The Fair',season:'autumn',seed:30443,style:'continent',enemies:1,diff:'normal',fog:true,all:true,goal:{type:'conquer'},teach:['glamour','pricking'],also:['changeling','familiar','hypno','quake','torch'],herd:true,
   me:{mana:500,wood:180,huts:3,warriors:2},them:{mana:900,huts:3,warriors:3},ai:{first:280},news:['Glamour','Pricking'],
-  alien:{land:[.92,1.12,1.04],sun:0xb8ffe0,hemi:0xa8d8c8,ground:0x18342a,fog:0x5a8a78,water:[.1,.26,.24]},
+  alien:{land:[1.16,1.32,.7],sun:0xfff0a0,hemi:0xffe6b8,ground:0x6a4a24,fog:0xd8c27a,water:[.06,.34,.46],sunI:1.35,hemiI:.95},
   intro:'[Placeholder intro, to be written.] At the fair no face is quite what it seems. Wear another\'s colours and walk among them; and keep a pin about thee, for their changelings and familiars are already among thine.'},
  {title:'The Long Nights',season:'autumn',seed:30773,style:'highlands',enemies:2,diff:'normal',fog:true,all:true,goal:{type:'conquer'},teach:['keening','briar'],
   me:{mana:600,wood:200,huts:3,warriors:3},them:{mana:600,huts:4,warriors:3},ai:{first:300},news:['Keening Wail','Briar Sleep'],
@@ -736,7 +736,7 @@ function chalKnown(i){const s=new Set();for(let k=0;k<=i&&k<CHAL.length;k++)(CHA
 function learnt(){const p=chalProg(),s=new Set();CHAL.forEach((L,i)=>{if(p.best[i]!=null)(L.teach||[]).forEach(k=>s.add(k))});return s}
 let allowSets=null,skirmishSettings=null,campView='base',alien=null;
 // the challenge levels are lit and coloured a little wrong: land, light, fog and water are all shifted
-function applyAlien(){const a=alien;if(typeof sun==='undefined')return;sun.color.setHex(a?a.sun:0xffcf94);hemiL.color.setHex(a?a.hemi:0xd6c7a5);hemiL.groundColor.setHex(a?a.ground:0x3b2c1c);if(!armageddon)scene.fog.color.setHex(a?a.fog:0x7f725b)}
+function applyAlien(){const a=alien;if(typeof sun==='undefined')return;sun.intensity=a&&a.sunI||.95;hemiL.intensity=a&&a.hemiI||.7;sun.color.setHex(a?a.sun:0xffcf94);hemiL.color.setHex(a?a.hemi:0xd6c7a5);hemiL.groundColor.setHex(a?a.ground:0x3b2c1c);if(!armageddon)scene.fog.color.setHex(a?a.fog:0x7f725b)}
 const LVS=()=>settings.chal?CHAL:SCEN;
 function scen(){return settings.campaign!=null?LVS()[settings.campaign]:null}
 function scenSets(i){const b=new Set(['hut']),sp=new Set();let tomb=false;for(let k=0;k<=i;k++){const L=LVS()[k];(L.addB||[]).forEach(x=>b.add(x));(L.addS||[]).forEach(x=>sp.add(x));if(L.tomb===true)tomb=true;if(L.all){BUILDABLE.forEach(x=>b.add(x));SP.forEach(x=>sp.add(x.k));tomb=true}}if(LVS()[i].tombHere)tomb=true;for(const x of (LVS()[i].ban||[])){b.delete(x);sp.delete(x);if(x==='tomb')tomb=false}return {b,s:sp,tomb}}
