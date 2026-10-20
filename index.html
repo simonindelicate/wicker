@@ -515,7 +515,7 @@ const SP=[
   {k:'fire',n:"Day o'the Stones",c:550,cd:30,r:14,rad:4.5,s:0},
   {k:'angel',n:"St. Anthony's Fire",c:650,cd:40,r:12,rad:2,s:0},
   {k:'volcano',n:'Volcano',c:1100,cd:45,r:15,rad:8,s:2},
-  {k:'changeling',n:'Changeling',c:70,cd:60,r:12,rad:.9,s:1},
+  {k:'changeling',n:'Changeling',c:200,cd:60,r:12,rad:.9,s:1},
   {k:'murrain',n:'Murrain',c:200,cd:30,r:14,rad:6,s:0},
   {k:'phillip',n:'Black Phillip',c:350,cd:45,r:14,rad:1.5,s:0},
   {k:'familiar',n:'Familiar',c:250,cd:30,r:14,rad:1.5,s:1},
@@ -2084,7 +2084,7 @@ function wildSpot(){for(let t=0;t<60;t++){const x=R()*N,z=R()*N,c=cidx(x,z);if(!
 function wildTick(){if(armageddon||gt<wildT)return;wildT=gt+TUNE.wildEvery;let n=0;for(const u of units)if(u.alive&&u.tribe===wildId)n++;if(n>=TUNE.wildMax)return;const p=wildSpot();if(!p)return;const k=2+(R()*2|0);for(let i=0;i<k;i++)spawnWild(p.x+(R()-.5)*2,p.z+(R()-.5)*2)}
 function updFog(){if(!fogOn)return;visNow.fill(0);const T=tribes[0];if(T&&T.tomb){visNow.fill(1);seen.fill(1);return}
   const mark=(x,z,r)=>{const cx=Math.floor(x),cz=Math.floor(z),r2=r*r;for(let dz=-r;dz<=r;dz++){const w=Math.floor(Math.sqrt(r2-dz*dz)),row=wi(cz+dz)*N;for(let dx=-w;dx<=w;dx++){const c=row+wi(cx+dx);visNow[c]=1;seen[c]=1}}};
-  for(const u of units)if(u.alive&&u.tribe===0&&!u.inV)mark(u.x,u.z,u.type==='shaman'?11:u.type==='balloon'?13:7);
+  for(const u of units)if(u.alive&&(u.tribe===0||u.chg===0)&&!u.inV)mark(u.x,u.z,u.type==='shaman'?11:u.type==='balloon'?13:7);
   for(const a of stock)if(a.fam&&a.tribe===0)mark(a.x,a.z,7);
   for(const f of fetches)if(f.ti===0)mark(f.x,f.z,7);
   for(const b of blds)if(b.alive&&b.tribe===0)mark(b.x,b.z,b.bt==='nest'&&b.done?TUNE.nestSight:b.bt==='torch'?TUNE.torchSight:8);
@@ -4198,6 +4198,6 @@ document.querySelectorAll('.filmBox').forEach(box=>{box.addEventListener('click'
   box.addEventListener('input',e=>{const r=e.target.closest('input[data-fk]');if(!r)return;film[r.dataset.fk]=+r.value;filmSave();filmUI()})});
 filmUI();
 resize();buildWorld();menuUnlocks();showContinue();requestAnimationFrame(frame);
-window.__ws={castLog,get seaRise(){return seaRise},get seaRed(){return seaRed},get water(){return water},get fetches(){return fetches},get stains(){return stains},sendAnimal,kindle,get stock(){return stock},get hutches(){return hutches},get HUT_TOP(){return HUT_TOP},get wind(){return wind},get windOn(){return windOn},get lastFight(){return lastFight},windTick,get wildFl(){return wildFl},get season(){return season},endGame,destroyBld,crown,villagerCount,tokGet,keepsake,useKeepsake,walkReach,postAt,setSel,get banners(){return banners},get sel(){return sel},get world(){return world},light,memorial,get stats(){return stats},get cam(){return cam},get WS(){return WS},wsOpen,wsClose,captureDef,defFromData,merge,ORIG_UMOD,ORIG_BMOD,get UM(){return UM},get BM(){return BM},get wear(){return wear},get buntings(){return buntings},get patches(){return patches},get wells(){return wells},get units(){return units},get tribes(){return tribes},get blds(){return blds},sim,beginGame,get gt(){return gt},castSpell,tryCast,saveGame,loadGame,setSel,command,showLevel,SCEN,field,get walkA(){return walk},hAt,get water(){return water},findSpot,get allow(){return allowSets},get pass(){return pass},get swamps(){return swamps},get debris(){return debris},queenValue,invokeArma,startRitual,sendVehicle,get wildId(){return wildId},get armageddon(){return armageddon},placeBuilding,validSpot,orderMove,spawnUnit,command,get water(){return water},findSpot};
+window.__ws={castLog,isVis:(x,z)=>isVis(x,z),get seaRise(){return seaRise},get seaRed(){return seaRed},get water(){return water},get fetches(){return fetches},get stains(){return stains},sendAnimal,kindle,get stock(){return stock},get hutches(){return hutches},get HUT_TOP(){return HUT_TOP},get wind(){return wind},get windOn(){return windOn},get lastFight(){return lastFight},windTick,get wildFl(){return wildFl},get season(){return season},endGame,destroyBld,crown,villagerCount,tokGet,keepsake,useKeepsake,walkReach,postAt,setSel,get banners(){return banners},get sel(){return sel},get world(){return world},light,memorial,get stats(){return stats},get cam(){return cam},get WS(){return WS},wsOpen,wsClose,captureDef,defFromData,merge,ORIG_UMOD,ORIG_BMOD,get UM(){return UM},get BM(){return BM},get wear(){return wear},get buntings(){return buntings},get patches(){return patches},get wells(){return wells},get units(){return units},get tribes(){return tribes},get blds(){return blds},sim,beginGame,get gt(){return gt},castSpell,tryCast,saveGame,loadGame,setSel,command,showLevel,SCEN,field,get walkA(){return walk},hAt,get water(){return water},findSpot,get allow(){return allowSets},get pass(){return pass},get swamps(){return swamps},get debris(){return debris},queenValue,invokeArma,startRitual,sendVehicle,get wildId(){return wildId},get armageddon(){return armageddon},placeBuilding,validSpot,orderMove,spawnUnit,command,get water(){return water},findSpot};
 })();
 </script>
