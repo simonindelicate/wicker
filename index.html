@@ -66,9 +66,10 @@ body.watch #top .res,body.watch #chips{display:none}
 
 #mini{position:absolute;right:12px;top:calc(var(--topH,56px) + 6px);width:118px;height:118px;border-radius:8px;border:1px solid var(--line);background:#0a1018;touch-action:none;image-rendering:pixelated}
 #side{position:absolute;left:10px;top:42%;display:flex;flex-direction:column;gap:8px}
+#camTiltBox{position:absolute;right:10px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;background:var(--panel2);border:1px solid var(--line,#5a4a3a);border-radius:10px;padding:8px 6px;font-size:11px;z-index:5}#camTiltBox input{writing-mode:vertical-lr;direction:rtl;height:160px;width:22px}
 #hint{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(178px + env(safe-area-inset-bottom,0px));display:flex;align-items:center;gap:10px;background:var(--panel2);border:1px solid var(--mana);border-radius:10px;padding:6px 6px 6px 12px;max-width:calc(100% - 32px);font-size:14px}
 #hint span{min-width:0}
-body.noui #top,body.noui #mini,body.noui #side,body.noui #dock,body.noui #hint,body.noui #toasts,body.noui #ov,body.noui #rejoice{display:none!important}#uiNote{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:rgba(8,13,22,.8);color:#e8dcc0;padding:10px 16px;border-radius:10px;font-size:14px;text-align:center;max-width:calc(100% - 32px);pointer-events:none;transition:opacity .6s}#toasts{position:absolute;left:50%;transform:translateX(-50%);top:calc(104px + env(safe-area-inset-top,0px));display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none;width:calc(100% - 32px);max-width:440px}
+body.noui #top,body.noui #mini,body.noui #side,body.noui #camTiltBox,body.noui #dock,body.noui #hint,body.noui #toasts,body.noui #ov,body.noui #rejoice{display:none!important}#uiNote{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:rgba(8,13,22,.8);color:#e8dcc0;padding:10px 16px;border-radius:10px;font-size:14px;text-align:center;max-width:calc(100% - 32px);pointer-events:none;transition:opacity .6s}#toasts{position:absolute;left:50%;transform:translateX(-50%);top:calc(104px + env(safe-area-inset-top,0px));display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none;width:calc(100% - 32px);max-width:440px}
 .toast{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:6px 12px;font-size:14px;text-align:center;animation:tin .25s ease-out}
 @keyframes tin{from{opacity:0;transform:translateY(-6px)}}
 #rejoice{position:absolute;left:0;right:0;top:30%;text-align:center;pointer-events:none;padding:0 16px;animation:rj 1.2s ease-out}
@@ -203,13 +204,14 @@ details.help summary{cursor:pointer;color:var(--text);font:14px var(--f-display)
     <div class="res"><span class="lab">Time</span><b id="rTime">0:00</b></div>
     <div id="chips"></div>
     <div id="foes"></div>
-    <div class="ctl"><button class="btn" id="bSpeed" title="Game speed">1×</button><button class="btn" id="bPause">Pause</button><button class="btn" id="bSound" aria-pressed="true" title="Sound">Sound</button><button class="btn" id="bFull" title="Full screen (F)">Full screen</button><button class="btn" id="bHideUI" title="Test mode: hide every control (H, or a three-finger tap, brings them back)" hidden>Hide UI</button><button class="btn" id="bMenu">Menu</button></div>
+    <div class="ctl"><button class="btn" id="bSpeed" title="Game speed">1×</button><button class="btn" id="bPause">Pause</button><button class="btn" id="bSound" aria-pressed="true" title="Sound">Sound</button><button class="btn" id="bFull" title="Full screen (F)">Full screen</button><button class="btn" id="bCamFree" title="Test mode: free the camera to go much closer, much further and to any tilt" hidden>Free camera</button><button class="btn" id="bHideUI" title="Test mode: hide every control (H, or a three-finger tap, brings them back)" hidden>Hide UI</button><button class="btn" id="bMenu">Menu</button></div>
   </header>
   <canvas id="mini" width="128" height="128" hidden></canvas>
   <div id="side" hidden>
     <button class="btn" id="bBox" aria-pressed="false" title="Drag to select a group">Box</button>
     <button class="btn" id="bFocus" title="Find your Cunning Woman (Space)">Cunning Woman</button>
   </div>
+  <div id="camTiltBox" hidden><span>Tilt</span><input type="range" id="camTilt" min="0.04" max="1.5" step="0.01"></div>
   <div id="hint" hidden><span id="hintT"></span><button class="btn go" id="hintGo" hidden>Invoke</button><button class="btn" id="hintX">Cancel</button></div>
   <div id="toasts"></div>
   <div id="uiNote" hidden>Controls hidden. Tap with three fingers, or press H, to bring them back.</div>
@@ -3351,8 +3353,11 @@ class PSys{constructor(max,add,kind){this.max=max;this.n=0;const F=()=>new Float
 const PN=new PSys(3500,false),PA=new PSys(5000,true,'fire'),HALO=new PSys(16,true,'glow');
 
 // ---------------- render ----------------
+// test mode: a free camera for screenshots, much closer, much further and at any tilt
+let camFree=false;const camMin=()=>camFree?2.5:(galleryOn?6:14),camMax=()=>camFree?MAXD*2.2:MAXD;
+function setCamFree(on){camFree=on;$('bCamFree').classList.toggle('on',on);$('camTiltBox').hidden=!on;if(on){const zt=clamp((cam.dist-14)/(MAXD-14),0,1);cam.tilt=lerp(.62,1.08,zt);$('camTilt').value=cam.tilt}else{cam.tilt=null;cam.dist=clamp(cam.dist,camMin(),camMax())}}
 function updCam(dt){const fh=Math.max(hAt(cam.fx,cam.fz),0);cam.fh+=(fh-cam.fh)*Math.min(1,dt*4);
-  const zt=clamp((cam.dist-14)/(MAXD-14),0,1);K=lerp(TUNE.curveNear,TUNE.curveFar,zt*zt);const p=lerp(.62,1.08,zt),cp=Math.cos(p),sp=Math.sin(p);
+  const zt=clamp((cam.dist-14)/(MAXD-14),0,1);K=lerp(TUNE.curveNear,TUNE.curveFar,zt*zt);const p=camFree&&cam.tilt!=null?cam.tilt:lerp(.62,1.08,zt),cp=Math.cos(p),sp=Math.sin(p);
   camera.position.set(Math.sin(cam.yaw)*cp*cam.dist,sp*cam.dist+cam.fh,Math.cos(cam.yaw)*cp*cam.dist);
   camera.lookAt(0,cam.fh,0);
   if(cam.shake>0){camera.position.x+=(R()-.5)*cam.shake;camera.position.y+=(R()-.5)*cam.shake;cam.shake=Math.max(0,cam.shake-dt*1.4)}
@@ -3558,13 +3563,13 @@ glc.addEventListener('pointerdown',e=>{audio();if(wsOn){wsDown(e);return}if(gall
 function panBy(x0,y0,x1,y1){const a=pickGround(x0,y0),b=pickGround(x1,y1);if(a&&b){cam.fx=wrap(cam.fx+(a.rx-b.rx));cam.fz=wrap(cam.fz+(a.rz-b.rz))}else{const s=cam.dist*.0025,dx=x0-x1,dy=y0-y1,cy=Math.cos(cam.yaw),sy=Math.sin(cam.yaw);cam.fx=wrap(cam.fx+(dx*cy+dy*sy)*s);cam.fz=wrap(cam.fz+(-dx*sy+dy*cy)*s)}}
 glc.addEventListener('pointermove',e=>{if(wsOn){wsMove(e);return}if(e.pointerType==='mouse'){hoverSX=e.clientX;hoverSY=e.clientY;hoverMouse=true}
   const p=pointers.get(e.pointerId);if(!p||(!running&&!galleryOn))return;const px=p.x,py=p.y;p.x=e.clientX;p.y=e.clientY;if(Math.hypot(p.x-p.sx,p.y-p.sy)>8)p.moved=true;if(!gest)return;
-  if(gest.kind==='pinch'){const [a,b]=[...pointers.values()];if(!b)return;const d=Math.hypot(a.x-b.x,a.y-b.y),an=Math.atan2(b.y-a.y,b.x-a.x);cam.dist=clamp(gest.dist0*gest.d0/Math.max(20,d),14,MAXD);cam.yaw=gest.yaw0+(an-gest.a0);
+  if(gest.kind==='pinch'){const [a,b]=[...pointers.values()];if(!b)return;const d=Math.hypot(a.x-b.x,a.y-b.y),an=Math.atan2(b.y-a.y,b.x-a.x);cam.dist=clamp(gest.dist0*gest.d0/Math.max(20,d),camMin(),camMax());cam.yaw=gest.yaw0+(an-gest.a0);
     const mx=(a.x+b.x)/2,my=(a.y+b.y)/2;panBy(gest.mx,gest.my,mx,my);gest.mx=mx;gest.my=my;return}
   if(!p.moved)return;
   if(gest.kind==='maybeBox'){gest={kind:'box',x0:p.sx,y0:p.sy,x1:p.x,y1:p.y}}
   if(gest.kind==='box'){gest.x1=p.x;gest.y1=p.y;return}
   if(gest.kind==='maybeRot')gest={kind:'rot'};
-  if(gest.kind==='rot'){cam.yaw-=(p.x-px)*.006;cam.dist=clamp(cam.dist+(p.y-py)*.08,galleryOn?6:14,MAXD);return}
+  if(gest.kind==='rot'){cam.yaw-=(p.x-px)*.006;cam.dist=clamp(cam.dist+(p.y-py)*.08,camMin(),camMax());return}
   if(gest.kind==='pan')panBy(px,py,p.x,p.y)});
 let lpTimer=0;
 function endPointer(e){if(wsOn){wsUp(e);return}const p=pointers.get(e.pointerId);if(!p)return;clearTimeout(lpTimer);
@@ -3575,7 +3580,7 @@ function endPointer(e){if(wsOn){wsUp(e);return}const p=pointers.get(e.pointerId)
   if(pointers.size===0)gest=null;else if(pointers.size===1){gest={kind:boxMode?'none':'pan'};const q=[...pointers.values()][0];q.moved=true}}
 glc.addEventListener('pointerup',endPointer);glc.addEventListener('pointercancel',endPointer);
 glc.addEventListener('pointerleave',e=>{if(e.pointerType==='mouse')hoverMouse=false});
-glc.addEventListener('wheel',e=>{e.preventDefault();if(wsOn){WS.dist=clamp(WS.dist*Math.exp(e.deltaY*.001),1,40);return}cam.dist=clamp(cam.dist*Math.exp(e.deltaY*.001),galleryOn?6:14,MAXD)},{passive:false});
+glc.addEventListener('wheel',e=>{e.preventDefault();if(wsOn){WS.dist=clamp(WS.dist*Math.exp(e.deltaY*.001),1,40);return}cam.dist=clamp(cam.dist*Math.exp(e.deltaY*.001),camMin(),camMax())},{passive:false});
 function boxSelect(g){const x0=Math.min(g.x0,g.x1),x1=Math.max(g.x0,g.x1),y0=Math.min(g.y0,g.y1),y1=Math.max(g.y0,g.y1);const out=[];
   for(const u of units){if(!u.alive||u.inV||u.tribe!==0||u.type==='captive'||u.type==='hunter'||u.type==='phillip')continue;const p=unitScreen(u);if(p&&p[0]>=x0&&p[0]<=x1&&p[1]>=y0&&p[1]<=y1)out.push(u)}
   if(out.length){setSel(out);sfx('select',.4)}if(boxMode){boxMode=false;$('bBox').setAttribute('aria-pressed','false')}}
@@ -3658,7 +3663,7 @@ document.addEventListener('keyup',e=>{keys[e.key.toLowerCase()]=false});
 const keys={};
 function keyCam(dt){let fx=0,fz=0;if(keys.w||keys.arrowup)fz-=1;if(keys.s||keys.arrowdown)fz+=1;if(keys.a||keys.arrowleft)fx-=1;if(keys.d||keys.arrowright)fx+=1;
   if(fx||fz){const s=cam.dist*.9*dt,cy=Math.cos(cam.yaw),sy=Math.sin(cam.yaw);cam.fx=wrap(cam.fx+(fx*cy+fz*sy)*s);cam.fz=wrap(cam.fz+(-fx*sy+fz*cy)*s)}
-  if(keys.q)cam.yaw+=dt*1.5;if(keys.e)cam.yaw-=dt*1.5;if(keys.z||keys['+']||keys['='])cam.dist=clamp(cam.dist-dt*25,14,MAXD);if(keys.x||keys['-'])cam.dist=clamp(cam.dist+dt*25,14,MAXD)}
+  if(keys.q)cam.yaw+=dt*1.5;if(keys.e)cam.yaw-=dt*1.5;if(keys.z||keys['+']||keys['='])cam.dist=clamp(cam.dist-dt*25,camMin(),camMax());if(keys.x||keys['-'])cam.dist=clamp(cam.dist+dt*25,camMin(),camMax())}
 mini.addEventListener('pointerdown',e=>{if(!running)return;const r=mini.getBoundingClientRect();cam.fx=wrap((e.clientX-r.left)/r.width*N);cam.fz=wrap((e.clientY-r.top)/r.height*N);e.stopPropagation()});
 
 // ---------------- UI ----------------
@@ -3881,9 +3886,10 @@ function buildWorld(){const SC=scen();alien=SC&&SC.alien||null;applyAlien();chgP
   computeStats();rebuildTGrid();rebuildGrid();
   const p=tribes[0].shaman||blds.find(b=>b.alive&&b.bt==='reinc'&&b.tribe===0)||tribes[0].tomb;cam.fx=p.x;cam.fz=p.z;cam.dist=36;drawPreview()}
 {const tp=$('top'),setTH=()=>{if(!tp.hidden)document.documentElement.style.setProperty('--topH',tp.getBoundingClientRect().bottom+'px')};if(window.ResizeObserver)new ResizeObserver(setTH).observe(tp);addEventListener('resize',setTH)}
-function devUI(){$('bHideUI').hidden=!devMode();setNoUI(false)}
+function devUI(){$('bHideUI').hidden=!devMode();$('bCamFree').hidden=!devMode();if(!devMode()&&camFree)setCamFree(false);setNoUI(false)}
 let uiNoteT=0;function setNoUI(on){document.body.classList.toggle('noui',on);const n=$('uiNote');clearTimeout(uiNoteT);if(on){n.hidden=false;n.style.opacity=1;uiNoteT=setTimeout(()=>{n.style.opacity=0;uiNoteT=setTimeout(()=>{n.hidden=true},700)},2500)}else n.hidden=true}
 $('bHideUI').addEventListener('click',()=>setNoUI(true));
+$('bCamFree').addEventListener('click',()=>setCamFree(!camFree));$('camTilt').addEventListener('input',e=>{cam.tilt=+e.target.value});
 document.addEventListener('touchstart',e=>{if(e.touches.length>=3&&document.body.classList.contains('noui')){e.preventDefault();setNoUI(false)}},{passive:false,capture:true});
 function beginGame(){devUI();fogOn=!!settings.fog&&!window.__nofog;if(fogOn){vis.fill(.035);updFog()}startDrone();$('menu').hidden=true;inMenu=false;running=true;paused=false;over=false;speed=1;$('bSpeed').textContent='1×';$('bPause').textContent='Pause';
   for(const id of['top','mini','side','dock'])$(id).hidden=false;const p=tribes[0].shaman||blds.find(b=>b.alive&&b.bt==='reinc'&&b.tribe===0)||tribes[0].tomb;cam.fx=p.x;cam.fz=p.z;cam.dist=30;setSel([]);setTab('spells');resize();
