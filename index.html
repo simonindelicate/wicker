@@ -707,7 +707,7 @@ const CHAL=[
   me:{mana:500,wood:180,huts:3,warriors:2},them:{mana:900,huts:3,warriors:3},ai:{first:280},news:['Glamour','Pricking'],
   alien:{land:[1,1,1],sun:0xffa8c0,hemi:0xf4c0cc,ground:0x3b2c1c,fog:0xa8848c,water:[.17,.25,.22],sunI:1.45,hemiI:.95},
   intro:'[Placeholder intro, to be written.] At the fair no face is quite what it seems. Wear another\'s colours and walk among them; and keep a pin about thee, for their changelings and familiars are already among thine.'},
- {title:'The Long Nights',season:'autumn',seed:30773,style:'highlands',enemies:2,diff:'normal',fog:true,all:true,goal:{type:'conquer'},teach:['keening','briar'],
+ {title:'The Long Nights',season:'autumn',seed:30773,style:'highlands',enemies:2,diff:'normal',fog:true,all:true,goal:{type:'conquer'},teach:['keening','briar'],also:['changeling'],chgStart:true,
   me:{mana:600,wood:200,huts:3,warriors:3},them:{mana:600,huts:4,warriors:3},ai:{first:300},news:['Keening Wail','Briar Sleep'],
   alien:{land:[.9,.9,1.1],sun:0x9aa0ff,hemi:0x8890c0,ground:0x181a30,fog:0x484e70,water:[.08,.1,.22]},
   intro:'[Placeholder intro, to be written.] The nights draw in. Let them hear the wail across the hills, and let the briars take whoever sleeps.'},
@@ -1268,7 +1268,7 @@ function chgTick(){phillipTick();seaTick();chgTravelTick();
   for(const u of units)if(u.alive&&u.glam>gt&&tribes[u.glamAs]&&tribes[u.glamAs].ai){const hs=tribes[u.glamAs].shaman;if(hs&&hs.alive&&!hs.inV&&d2(u.x,u.z,hs.x,hs.z)<36){u.glSus=(u.glSus||0)+1;if(u.glSus>=12){u.glSus=0;tribes[u.glamAs].susp={x:u.x,z:u.z,t:gt}}}else u.glSus=Math.max(0,(u.glSus||0)-.5)}
   for(const u of units){if(!u.alive||u.chg==null)continue;
     if(u.chg!==0&&gt-(u.chgBorn||0)>40){let n=0;for(const b of blds)if(b.alive&&b.tribe===u.tribe&&!BT[b.bt].inv&&b.bt!=='hedge'&&d2(b.x,b.z,u.x,u.z)<25)n++;if(n>=2){kindle(u);continue}}
-    if(u.chg===0&&u.tribe!==0&&!u.chgSafe){const hs=tribes[u.tribe]&&tribes[u.tribe].shaman;if(hs&&hs.alive&&!hs.inV&&d2(u.x,u.z,hs.x,hs.z)<36){u.chg=null;u.unmaskT=gt;if(u.sel)deselect(u);u.tribe=0;u.order=null;u.tgt=null;u.cmd=false;const dx=wd(u.x-hs.x),dz=wd(u.z-hs.z),l=Math.hypot(dx,dz)||1;u.st='flee';u.ft=3;setTarget(u,u.x+dx/l*6,u.z+dz/l*6);if(!watching)toast(`The ${tribes[hs.tribe].name} Cunning Woman has found your changeling. It runs for home.`)}}}{const sh=tribes[0]&&tribes[0].shaman;if(sh&&sh.alive&&!sh.inV&&!watching)for(const u of units)if(u.alive&&u.tribe===0&&u.chg!=null&&u.chg!==0&&!u.chgSafe&&d2(u.x,u.z,sh.x,sh.z)<6*6)unmask(u)}
+    if(u.chg===0&&u.tribe!==0&&!u.chgSafe){const hs=tribes[u.tribe]&&tribes[u.tribe].shaman;if(hs&&hs.alive&&!hs.inV&&d2(u.x,u.z,hs.x,hs.z)<36){u.chg=null;u.unmaskT=gt;if(u.sel)deselect(u);u.tribe=0;u.order=null;u.tgt=null;u.cmd=false;const dx=wd(u.x-hs.x),dz=wd(u.z-hs.z),l=Math.hypot(dx,dz)||1;u.st='flee';u.ft=3;setTarget(u,u.x+dx/l*6,u.z+dz/l*6);if(!watching)toast(`The ${tribes[hs.tribe].name} Cunning Woman has found your changeling. It runs for home.`)}}}{const sh=tribes[0]&&tribes[0].shaman;if(sh&&sh.alive&&!sh.inV&&!watching)for(const u of units)if(u.alive&&u.tribe===0&&u.chg!=null&&u.chg!==0&&!u.chgSafe&&!(u.hideT>gt)&&d2(u.x,u.z,sh.x,sh.z)<6*6)unmask(u)}
 for(const T of tribes)if(T&&!T.wild&&T.murrainUntil>gt)T.dread=Math.max(T.dread||0,TUNE.desertAt-DREAD.altar);
 for(const u of units)if(u.alive&&u.chg!=null&&gt>=u.chgAt)kindle(u)}
 // ---- offering livestock (test mode) ----
@@ -3806,6 +3806,9 @@ function buildWorld(){const SC=scen();alien=SC&&SC.alien||null;applyAlien();chgP
     for(let rr=3;rr<9&&!spot;rr+=.8)for(let t=0;t<16;t++){const a=t/16*TAU+.2,x=wrap(r.x+Math.cos(a)*rr),z=wrap(r.z+Math.sin(a)*rr),c=cidx(x,z);if(!bOcc[c]&&walk[c]&&!water[c]){spot={x,z};break}}
     if(spot)wells.push({x:spot.x,z:spot.z,tribe:T.id,born:-30,seeded:true})}
   for(const T of tribes)T.free=T.id===0&&SC&&SC.free?SC.free.slice():null;
+  // seasons that begin with changelings already planted: yours in each rival camp, and each rival's in yours
+  if(SC&&SC.chgStart){const plant=(by,inT)=>{const sh=inT.shaman;let h=null,hd=-1;for(const b of blds)if(b.alive&&b.bt==='hut'&&b.tribe===inT.id){const d=sh?d2(b.x,b.z,sh.x,sh.z):R();if(d>hd){hd=d;h=b}}if(!h)return;let x=h.dx,z=h.dz;if(sh){const dx=wd(h.x-sh.x),dz=wd(h.z-sh.z),l=Math.hypot(dx,dz)||1,c=nearestCell(sh.x+dx/l*Math.max(l+5,12),sh.z+dz/l*Math.max(l+5,12),4,q=>pass[q]);if(c){x=c.x;z=c.z}}const u=spawnUnit('brave',inT.id,x,z);u.chg=by;u.chgAt=180+R()*60;u.chgBorn=0;u.hideT=90};
+    for(const T of tribes){if(T.wild||!T.id)continue;plant(0,T);plant(T.id,tribes[0])}}
   if(SC&&SC.bounty&&w.riteSpot){const T0=tribes[0],r=blds.find(b=>b.bt==='reinc'&&b.tribe===0),o=w.riteSpot,sz=BT.god.s,v=validSpot(0,'god',o.x,o.z);placeBuilding(0,'god',v.err?{cx0:Math.floor(o.x-sz/2+.5),cz0:Math.floor(o.z-sz/2+.5)}:v,true);
     let folds=blds.filter(b=>b.bt==='fold'&&b.tribe===0).length;for(let a=0;a<48&&folds<2;a++){const ang=a/12*TAU+.9,rr=6+(a/12|0)*2.5,v=validSpot(0,'fold',r.x+Math.cos(ang)*rr,r.z+Math.sin(ang)*rr);if(!v.err){placeBuilding(0,'fold',v,true);folds++}}
     for(const b of blds)if(b.bt==='fold'&&b.tribe===0)while(b.capt.length<BT.fold.hold)b.capt.push(wildId)}
