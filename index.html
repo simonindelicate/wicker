@@ -185,7 +185,7 @@ details.help summary{cursor:pointer;color:var(--text);font:14px var(--f-display)
   #hint{bottom:calc(168px + env(safe-area-inset-bottom,0px));width:calc(100% - 24px)}
   #toasts{top:calc(var(--topH,84px) + 6px);left:12px;transform:none;width:calc(100% - 120px);align-items:flex-start}
   .tile{width:70px;height:74px}
-  #side{top:36%}
+  #side{top:36%;gap:5px}#side .btn{font-size:10px;padding:5px 8px;letter-spacing:.04em;min-height:0}
 }
 @media (prefers-reduced-motion:reduce){.toast{animation:none}#flash{transition:none}}
 </style>
@@ -200,6 +200,7 @@ details.help summary{cursor:pointer;color:var(--text);font:14px var(--f-display)
     <div class="res"><span class="lab">Captives</span><b id="rCap">0</b></div>
     <div class="res"><span class="lab">Wood</span><b id="rWood">0</b></div>
     <div class="res"><span class="lab">Followers</span><b id="rPop">0</b></div>
+    <div class="res"><span class="lab">Time</span><b id="rTime">0:00</b></div>
     <div id="chips"></div>
     <div id="foes"></div>
     <div class="ctl"><button class="btn" id="bSpeed" title="Game speed">1×</button><button class="btn" id="bPause">Pause</button><button class="btn" id="bSound" aria-pressed="true" title="Sound">Sound</button><button class="btn" id="bFull" title="Full screen (F)">Full screen</button><button class="btn" id="bHideUI" title="Test mode: hide every control (H, or a three-finger tap, brings them back)" hidden>Hide UI</button><button class="btn" id="bMenu">Menu</button></div>
@@ -3736,7 +3737,7 @@ $('bNew').addEventListener('click',()=>{$('end').hidden=true;if(scen()){openMenu
 $('bNext').addEventListener('click',()=>{$('end').hidden=true;showLevel(settings.campaign+1)});
 function updHUD(){const T=tribes[0];if(!T)return;$('rMana').textContent=Math.floor(T.mana);$('rManaBar').style.width=Math.min(100,T.mana/MANA_MAX*100)+'%';
   $('rDreadBar').style.width=Math.min(100,T.dread||0)+'%';$('rCap').textContent=T.stats.caps||0;
-  let ch='';{const SC=scen();if(SC){const g=SC.goal;let t=`${settings.chal?'Season':'Level'} ${settings.campaign+1}`;if(g.type==='survive'){const left=Math.max(0,g.n-gt);t+=` · Hold on ${Math.floor(left/60)}:${String(Math.floor(left%60)).padStart(2,'0')}`}else if(g.type==='captives')t+=` · Captives ${T.stats.caps||0}/${g.n}`;else if(g.type==='queen')t+=' · Offer a May Queen';else if(g.type==='mana')t+=` · Mana ${Math.floor(T.mana)}/${g.n}`;else if(g.type==='pop')t+=` · People ${T.stats.pop}/${g.n}`;else if(g.type==='fetch')t+=' · Hunt a Cunning Woman';else t+=' · Conquer';ch+=`<span class="chip">${t}</span>`}}if(T.tomb)ch+='<span class="chip att">Entombed</span>';if((T.dread||0)>40)ch+='<span class="chip ar">Your people are fleeing</span>';if(T.frenzyUntil>gt&&!over&&!celebrating)ch+=`<span class="chip fr">Frenzy ${Math.ceil(T.frenzyUntil-gt)}s</span>`;if(armageddon)ch+='<span class="chip ar">All-against-all</span>';if($('chips').innerHTML!==ch)$('chips').innerHTML=ch;$('rWood').textContent=Math.floor(T.wood);$('rPop').textContent=T.stats.pop+' / '+T.stats.cap;
+  let ch='';{const SC=scen();if(SC){const g=SC.goal;let t=`${settings.chal?'Season':'Level'} ${settings.campaign+1}`;if(g.type==='survive'){const left=Math.max(0,g.n-gt);t+=` · Hold on ${Math.floor(left/60)}:${String(Math.floor(left%60)).padStart(2,'0')}`}else if(g.type==='captives')t+=` · Captives ${T.stats.caps||0}/${g.n}`;else if(g.type==='queen')t+=' · Offer a May Queen';else if(g.type==='mana')t+=` · Mana ${Math.floor(T.mana)}/${g.n}`;else if(g.type==='pop')t+=` · People ${T.stats.pop}/${g.n}`;else if(g.type==='fetch')t+=' · Hunt a Cunning Woman';else t+=' · Conquer';ch+=`<span class="chip">${t}</span>`}}if(T.tomb)ch+='<span class="chip att">Entombed</span>';if((T.dread||0)>40)ch+='<span class="chip ar">Your people are fleeing</span>';if(T.frenzyUntil>gt&&!over&&!celebrating)ch+=`<span class="chip fr">Frenzy ${Math.ceil(T.frenzyUntil-gt)}s</span>`;if(armageddon)ch+='<span class="chip ar">All-against-all</span>';if($('chips').innerHTML!==ch)$('chips').innerHTML=ch;$('rWood').textContent=Math.floor(T.wood);$('rPop').textContent=T.stats.pop+' / '+T.stats.cap;{const m=Math.floor(gt/60),t=m+':'+String(Math.floor(gt%60)).padStart(2,'0');if($('rTime').textContent!==t)$('rTime').textContent=t}
   $('foes').innerHTML=tribes.slice(watching?0:1).filter(o=>!o.wild).map(o=>watching?`<button class="foe${o.alive?'':' dead'}" data-t="${o.id}"><i style="background:${o.css}"></i>${o.name} ${o.alive?o.stats.pop+' · '+Math.floor(o.mana)+' mana'+(o.tomb?' · entombed':''):''}</button>`:`<button class="foe${o.alive?'':' dead'}${o.broken?' broken':''}" data-t="${o.id}" title="Tap to find the ${o.name} folk"><i style="background:${o.css}"></i>${o.alive?o.stats.pop:o.name}</button>`).join('');
   updTiles();$('selT').innerHTML=selSummary();$('selX').hidden=!sel.length;$('selPost').hidden=!sel.some(u=>!u.bt&&u.tribe===0&&(u.type==='warrior'||u.type==='archer'));if(tab==='tribe')renderTribe(dockDirty);if(tab==='train')renderTrain(dockDirty);dockDirty=false}
 
