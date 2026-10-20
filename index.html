@@ -1193,7 +1193,9 @@ function burnBld(b,delay,by){if(!b||!b.alive)return;if((b.bt==='wicker'||b.bt===
 // ---- the changeling: one of your own goes to a rival village in their colours, and one of theirs runs to your fold ----
 let chgPick=null;
 function chgOK(u,ti){return u.alive&&u.tribe===ti&&!u.inV&&!u.air&&u.chg==null&&!u.chgSafe&&!['shaman','hunter','ghost','phillip','queen','captive'].includes(u.type)&&!UT[u.type].veh}
-function sendChangeling(u,T){if(!u.alive)return;const by=u.tribe,home=blds.find(b=>b.alive&&b.bt==='reinc'&&b.tribe===T.id)||blds.find(b=>b.alive&&b.tribe===T.id&&!BT[b.bt].inv);if(!home)return;
+function sendChangeling(u,T){if(!u.alive)return;const by=u.tribe,sh=T.shaman;let home=null,hd=-1;for(const b of blds){if(!b.alive||!b.done||b.tribe!==T.id||b.bt!=='hut')continue;const d=sh&&sh.alive?d2(b.x,b.z,sh.x,sh.z):R();if(d>hd){hd=d;home=b}}
+  // it makes for the hut furthest from their Cunning Woman
+  home=home||blds.find(b=>b.alive&&b.tribe===T.id&&!BT[b.bt].inv);if(!home)return;
   // the one who takes its place: the same rank if they have one abroad, else a villager, called out of a hut if need be
   const ok=o=>o.alive&&o.tribe===T.id&&!o.inV&&!o.air&&o.chg==null&&!o.chgSafe&&!['shaman','hunter','ghost','phillip','queen','captive'].includes(o.type)&&!UT[o.type].veh;
   let v=units.find(o=>ok(o)&&o.type===u.type)||units.find(o=>ok(o)&&o.type==='brave');
@@ -1210,7 +1212,8 @@ function chgTravelTick(){if(chgPick){const u=chgPick.u;if(!u.alive||u.tribe!==0)
   for(const u of units){if(!u.alive||!u.chgSafe)continue;
     if(u.goWild){if(d2(u.x,u.z,u.goWild.x,u.goWild.z)<8*8||u.st==='idle'){spawnWild(u.x,u.z);removeUnit(u)}continue}
     if(u.chgHome){if(d2(u.x,u.z,u.chgHome.x,u.chgHome.z)<7*7||u.st==='idle'&&d2(u.x,u.z,u.chgHome.x,u.chgHome.z)<14*14){u.chgSafe=false;u.chgHome=null;u.cmd=false;u.st='idle';u.chgAt=gt+180;u.chgBorn=gt}else if(u.st==='idle')setTarget(u,u.chgHome.x,u.chgHome.z),u.st='move';continue}
-    if(u.type==='captive'&&u.st==='idle')chgRoute(u)}}
+    if(u.type==='captive'&&u.st==='idle')chgRoute(u)}
+  for(const u of units){if(!u.alive||!u.chgKindle)continue;const b=u.chgKindle;if(!b.alive||b.tribe!==u.tribe){u.chgKindle=null;continue}if(d2(u.x,u.z,b.x,b.z)<(BT[b.bt].s*.5+2.2)**2)kindle(u);else if(u.st==='idle'){u.st='move';setTarget(u,b.dx,b.dz)}}}
 function kindle(u){if(!u.alive||u.chg==null||u.chgSafe)return;const by=u.chg,T=tribes[u.tribe];let b0=null,bd=6*6;for(const b of blds){if(!b.alive||b.tribe!==u.tribe||BT[b.bt].inv||b.bt==='hedge'||b.bt==='reinc')continue;const d=d2(u.x,u.z,b.x,b.z)-(BT[b.bt].s*.5)**2;if(d<bd){bd=d;b0=b}}
   u.chg=null;if(b0){burnBld(b0,0,by);let b1=null,bd1=4.5*4.5;for(const b of blds){if(!b.alive||b===b0||b.tribe!==b0.tribe||BT[b.bt].inv||b.bt==='hedge'||b.bt==='reinc')continue;const d=d2(b0.x,b0.z,b.x,b.z);if(d<bd1){bd1=d;b1=b}}if(b1)burnBld(b1,2.5,by)}
   if(by===0&&!watching)toast(b0?`The changeling kindles the ${T?T.name+' ':''}${BT[b0.bt].label.toLowerCase()} and runs for the wilds.`:'The changeling found nothing to burn and runs for the wilds.');
@@ -3534,7 +3537,11 @@ function onTap(sx,sy,right,shift){if(over||watching)return;const T=tribes[0],g=p
     placeBuilding(0,placing,v);sfx('select',.6);unplace();return}
   const hu=pickUnit(sx,sy);let hb=null,ht=null;
   if(!hu&&g){const id=bOcc[cidx(g.x,g.z)];if(id)hb=bById.get(id)||null;if(hb&&(!hb.alive||!seenAt(hb.x,hb.z)))hb=null;if(!hb)ht=nearestTree(g.x,g.z,1.1)}
-  if(right&&!hu&&!hb&&!ht){clearSel();return}
+  if(right&&!hu&&!hb&&!ht&&!(sel.length===1&&sel[0].chg===0)){clearSel();return}
+  // your changeling, once among them, can be walked about, and set to kindle a particular building of theirs
+  {const cu=sel.length===1&&!sel[0].bt&&sel[0].chg===0&&sel[0].alive&&!sel[0].chgSafe?sel[0]:null;
+    if(cu&&!hu&&g){if(hb&&hb.tribe===cu.tribe&&!BT[hb.bt].inv&&hb.bt!=='hedge'&&hb.bt!=='reinc'){cu.chgKindle=hb;cu.st='move';cu.cmd=true;setTarget(cu,hb.dx,hb.dz);mark(hb.x,hb.z,1,.5,.2);toast(`Your changeling goes to the ${(BT[hb.bt].label||hb.bt).toLowerCase()}. It will kindle when it gets there.`)}
+      else{cu.chgKindle=null;cu.st='move';cu.cmd=true;setTarget(cu,g.x,g.z);mark(g.x,g.z,.6,.6,.6)}sfx('select',.4);return}}
   const grp=sel.filter(e=>!e.bt&&e.alive&&e.tribe===0);const hasBraves=grp.some(u=>u.type==='brave'),hasGround=grp.some(u=>!UT[u.type].veh);
   if(!right){
     if(hu&&hu.tribe===0&&(hu.type==='queen'||hu.type==='shaman')&&!hu.sel&&grp.some(u=>MIL[u.type]&&u.type!=='oss'&&!UT[u.type].veh)){command(grp,g,hu,null,null);return}
@@ -4198,6 +4205,6 @@ document.querySelectorAll('.filmBox').forEach(box=>{box.addEventListener('click'
   box.addEventListener('input',e=>{const r=e.target.closest('input[data-fk]');if(!r)return;film[r.dataset.fk]=+r.value;filmSave();filmUI()})});
 filmUI();
 resize();buildWorld();menuUnlocks();showContinue();requestAnimationFrame(frame);
-window.__ws={castLog,isVis:(x,z)=>isVis(x,z),get seaRise(){return seaRise},get seaRed(){return seaRed},get water(){return water},get fetches(){return fetches},get stains(){return stains},sendAnimal,kindle,get stock(){return stock},get hutches(){return hutches},get HUT_TOP(){return HUT_TOP},get wind(){return wind},get windOn(){return windOn},get lastFight(){return lastFight},windTick,get wildFl(){return wildFl},get season(){return season},endGame,destroyBld,crown,villagerCount,tokGet,keepsake,useKeepsake,walkReach,postAt,setSel,get banners(){return banners},get sel(){return sel},get world(){return world},light,memorial,get stats(){return stats},get cam(){return cam},get WS(){return WS},wsOpen,wsClose,captureDef,defFromData,merge,ORIG_UMOD,ORIG_BMOD,get UM(){return UM},get BM(){return BM},get wear(){return wear},get buntings(){return buntings},get patches(){return patches},get wells(){return wells},get units(){return units},get tribes(){return tribes},get blds(){return blds},sim,beginGame,get gt(){return gt},castSpell,tryCast,saveGame,loadGame,setSel,command,showLevel,SCEN,field,get walkA(){return walk},hAt,get water(){return water},findSpot,get allow(){return allowSets},get pass(){return pass},get swamps(){return swamps},get debris(){return debris},queenValue,invokeArma,startRitual,sendVehicle,get wildId(){return wildId},get armageddon(){return armageddon},placeBuilding,validSpot,orderMove,spawnUnit,command,get water(){return water},findSpot};
+window.__ws={castLog,onTap:(a,b,c,d)=>onTap(a,b,c,d),isVis:(x,z)=>isVis(x,z),get seaRise(){return seaRise},get seaRed(){return seaRed},get water(){return water},get fetches(){return fetches},get stains(){return stains},sendAnimal,kindle,get stock(){return stock},get hutches(){return hutches},get HUT_TOP(){return HUT_TOP},get wind(){return wind},get windOn(){return windOn},get lastFight(){return lastFight},windTick,get wildFl(){return wildFl},get season(){return season},endGame,destroyBld,crown,villagerCount,tokGet,keepsake,useKeepsake,walkReach,postAt,setSel,get banners(){return banners},get sel(){return sel},get world(){return world},light,memorial,get stats(){return stats},get cam(){return cam},get WS(){return WS},wsOpen,wsClose,captureDef,defFromData,merge,ORIG_UMOD,ORIG_BMOD,get UM(){return UM},get BM(){return BM},get wear(){return wear},get buntings(){return buntings},get patches(){return patches},get wells(){return wells},get units(){return units},get tribes(){return tribes},get blds(){return blds},sim,beginGame,get gt(){return gt},castSpell,tryCast,saveGame,loadGame,setSel,command,showLevel,SCEN,field,get walkA(){return walk},hAt,get water(){return water},findSpot,get allow(){return allowSets},get pass(){return pass},get swamps(){return swamps},get debris(){return debris},queenValue,invokeArma,startRitual,sendVehicle,get wildId(){return wildId},get armageddon(){return armageddon},placeBuilding,validSpot,orderMove,spawnUnit,command,get water(){return water},findSpot};
 })();
 </script>
