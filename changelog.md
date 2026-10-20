@@ -169,6 +169,94 @@ This was the busiest day in the history.
 
   The personalities are intact, and the balance fix doubles as a story the player can see.
 
+## 16 October: test-mode tools and a phone top bar
+
+- **Hide UI (test mode).** A button in the top bar clears every control off the screen, for screenshots and footage. H, or a three-finger tap on a phone, brings them back.
+- **The top bar on phones.** The control buttons became compact and wrap instead of overflowing, and the minimap and messages now sit below the bar whatever its height.
+
+## 18 October: the Grimoire, livestock and a second campaign
+
+The day began as brainstorming about what comes after the campaign. Simon set the rule that shaped everything since: the base game stays as it is, and the new material lives in a separate mode. IDEAS.md was written to hold the plans.
+
+- **The Train tab and the Cottage.** A Train tab queues any unit type from one place, with Keep-N standing orders that top up while mana allows and a Roam toggle that sends idle Osses after wild men and deserters. It was too effective to give away, so it is unlocked by building the Cunning Woman's Cottage (80 wood, 300 mana, one per village), which arrives in the campaign with the Oss House. Simon built the cottage model in the workshop.
+- **Livestock.** Each settled well now keeps a black goat, a few chickens and a rabbit hutch. Animals can be offered at altars and wicker figures without raising dread: a goat is worth a captive, a chicken 0.3 of a villager and a rabbit 0.2, balanced by how fast each breeds back. They show as animal silhouettes inside the wicker figures. Simon built the goat model.
+- **Grimoire mode.** A procedural mode in which you choose your spells before the game, now nine. Each rival tribe carries its own nine, which set its style: Blood for war, Forest for magic and defence, Ash for beasts and disease, Ochre a little of everything.
+- **Thirteen new spells**, all for the Grimoire and the challenge campaign:
+  - **Changeling**, a saboteur that kindles fires inside a rival village (reworked on 20 October).
+  - **Murrain**, a plague on a herd. While the carcasses lie, the tribe's dread is held one altar sacrifice below the desertion line. It comes with green vapour, sickly motes and flies.
+  - **Black Phillip**, cast on a rival's goat. It goes unnoticed until its first backward kick, which kills outright, then rampages for thirty seconds. If it survives, it escapes to the wilds and earns a token.
+  - **The Familiar**, cast on your own goat. It is unseen by every rival except through Pricking, drinks mana from each rival altar it can reach, and lifts the fog where it walks.
+  - **The Fetch**, a slow black double of your Cunning Woman that walks straight for a chosen rival Cunning Woman over sea and hill and cannot be harmed. In practice it mostly drives her off rather than catching her.
+  - **Glamour**, ninety seconds in a rival's colours. Nobody targets you, and only a blow you strike breaks it.
+  - **Pricking**, which reveals glamours, changelings and familiars.
+  - **Beltane Fire**, a stone-ringed fire pit that couples leap before going home to breed twice as fast for a minute.
+  - **Sword Dance**, which trains twice as fast for a minute, with those trained taking a fifth less harm.
+  - **Cradle Blight**, which stops births in a rival village for a minute, cast with a sickly mist.
+  - **Keening Wail**, which reaches sixty paces and drives villagers into the wilds.
+  - **Briar Sleep**, a ring of thorns whose sleepers include Cunning Women, until a blow wakes her.
+  - **Seas of Blood**, at 2,900 mana. After a thirty-second blood tide the sea rises and drowns the low ground. It can be cast again and again, and each casting leaves the sea permanently redder.
+- **Rivals learn the new craft.** Rivals cast from their palettes with their own rules. They prick only on suspicion, keep their goats for Phillip and the familiar, build cottages once they have mana to spare, and offer small stock before villagers.
+- **A fix for being stuck.** Units standing on a steep cell could report "no way across". The pathing now steps them off onto walkable ground. A camera lift tried the same day was taken straight back out.
+- **Seasons of the Witch.** Simon decided the shape of the post-campaign progression:
+  - finishing the campaign opens a challenge campaign;
+  - its first level humbles you, so it is won by surviving five minutes against three fully stocked rivals casting everything;
+  - the levels after that put you on even terms with the rivals;
+  - each new spell is unlocked for the Grimoire when its season teaches it;
+  - Extreme is available in the Grimoire;
+  - the last level is a winnable rematch of the first;
+  - finishing it all will open a victory-lap NG+ of the original campaign with the Grimoire.
+
+  Each season is lit and coloured slightly wrong. The Grimoire opened outside test mode, starting from the base spells.
+- **Writing.** prompts.md was added, with Krea 2 prompts for a tarot deck matched to the game's models.
+
+## 19 October: ten seasons, played through
+
+- **The seasons.**
+  1. The Humbling.
+  2. The Herd: livestock from the start, little mana and a free Familiar.
+  3. May Eve: grow to 160 people against two rivals who raid only you and carry Cradle Blight.
+  4. The Sickness: both Cunning Women start entombed, with one hut and 300 mana each and no Blast or Lightning, so the plagues decide it.
+  5. Harvest.
+  6. The Fair.
+  7. The Long Nights.
+  8. The Hunt: won when a rival Cunning Woman dies by any means while your fetch is hunting her.
+  9. The Flood: you start on a raised mountain, with the rivals low.
+  10. The Answer.
+
+  The rest of the day was spent tuning these as Simon played them. May Eve went from far too easy to unwinnable on Hard and settled on Normal.
+- **Spell sets by season.** At first each teaching season carried only the basic spells and its own new ones. Simon pointed out that this was a default, not a rule, and seasons can now also carry earlier spells for both sides: St Anthony's Fire in the Sickness, for example. Pricking now comes after the Changeling, with the Fair moved after Harvest, rather than as an eleventh season, which was briefly and wrongly added.
+- **Fixes.**
+  - Beltane Fire now calls villagers out of the huts to make up the line; before, it gathered nobody early in a game.
+  - Rivals now find huts to blight from much further away.
+- **A token.** End it in hemp: win while your Cunning Woman hangs from the tree.
+- **Models.** Simon's rabbit and hutch were built in. The barrow's change in the same export was reverted, because its mound takes the colour of the ground beneath it.
+- **The menu and the opening line.**
+  - The menu now shows unlocked options on first load.
+  - The Grimoire picker opens outside test mode; one gate had been missed.
+  - The old "rivals usually first attack after N minutes" toast was replaced with one of Simon's six opening lines, picked at random.
+- **Writing.** prompts-film.md was added: twelve gameplay scenes as stills and fifteen-second shots from a lost 1973 Eastmancolor folk horror film.
+
+## 20 October: the Changeling remade
+
+- **The Changeling, cast on your own.** Simon redesigned it:
+  - you cast it on one of your own people and choose a rival village;
+  - it walks there in their colours while one of theirs of the same rank runs to your thrall fold (your altar if the folds are full, or it goes wild if you have neither);
+  - neither can be touched on the road;
+  - once there it lifts the fog around it, can be walked about, and can be set to kindle a particular building;
+  - when left alone it keeps clear of the Cunning Woman it lives among.
+
+  At 70 mana it farmed captives, so it went up to 200. As Simon put it, the real value is seeing into their camp, which is worth trading mana for nearly one to one.
+- **Plague of Flies, strengthened.** It now drives everyone out of any hut it settles on. This changes the base spell, at Simon's request, because it had always been underpowered.
+- **Glamour, less easily seen through.** Rivals grow suspicious only after a glamoured stranger lingers about twelve seconds near their Cunning Woman, not on sight.
+- **Season tuning.**
+  - Harvest carries Plague of Flies.
+  - The Fair carries Hypnotise, Earthquake and Scrying Torch, under a bright pinkish sun. A garish palette was tried first and rejected.
+  - The Long Nights carries the Changeling and starts with changelings already planted in every camp.
+- **The interface.**
+  - A game timer was added to the top bar.
+  - The Box and Cunning Woman buttons were made compact on phones.
+- **Audio.** AUDIO-CUES.md gained cues for the Grimoire spells and the livestock.
+
 ---
 
 ## Threads that run through the history
@@ -178,4 +266,5 @@ A few principles recur often enough to be worth stating.
 - **The sacrifice economy decides everything.** Starting mana, folds full of captives, mana goals and the bare start of Extreme are all levers on one rule.
 - **Fix the level, not the game.** When a general AI rule was used to solve one level's problem, it usually damaged the emergent play elsewhere and was withdrawn: the bridging rule on Surrounded and the sortie rules for The Last Harvest. The fixes that lasted were scoped to the level that needed them.
 - **Cheese gets closed at its source.** Ättestupa's eligibility, a lone villager provoking an assault, and the Moot's mana asymmetry were each fixed by removing the exploitable condition rather than by punishing the player.
+- **The base game stays pure.** From 18 October the post-campaign material lives apart: in the Grimoire, in Seasons of the Witch and behind test mode. The base game changes only when a change is explicitly wanted there, as with Plague of Flies.
 - **Character over averages.** The rival personalities, the film grade's exempt tribe colours and the Blood–Forest grudge all keep what's distinctive and adjust around it.
