@@ -257,6 +257,27 @@ The day began as brainstorming about what comes after the campaign. Simon set th
   - The Box and Cunning Woman buttons were made compact on phones.
 - **Audio.** AUDIO-CUES.md gained cues for the Grimoire spells and the livestock.
 
+## 20–21 October (night): the Inn, and catching a crash
+
+- **The Inn and the Landlord's Daughter.**
+  - **What she is.** After a round of unit ideas that Simon found no gold in, he proposed a building of his own: the Inn, with a name drawn from a list as each one is built, which trains the Landlord's Daughter.
+  - **What she does.** She is a lure, not a fighter. Enemy warriors, Osses and villagers who come close gather round her. After a few seconds they are drunk and follow her home, six at most. They then sleep around her inn until she dies or they are killed or carried off. Archers, Cunning Women and the like are not taken in. Rivals build inns too, and send their daughters out to meet raiders.
+  - **Cost.** The Inn costs 90 wood and 100 mana. She is dear and slow to train: 260 mana and 45 seconds.
+  - **Into the base game.** She was built behind test mode first. In play she made little difference to battles, but helped with captives and gave a modest boost to defence. She then joined the base game, arriving in the campaign at May Morning beside the Maypole.
+  - **Names.** The inn names are Simon's, from films, television, books and games: the Slaughtered Lamb, the Winchester, Dorry's Tavern, the Green Man, Jamaica Inn, the Crow and Crown, the Mother Black Cap, the World's End, the Grendel's Head, the Red Lion, the Cloven Hoof, the Broken Drum, the Nag's Head, the Kebab and Calculator, the Bloody Stump, the Swamp Rot Inn and more, plus the Bannered Mare, the Queen Vic, the Dog in the Pond, Lassiter's and the Bronze.
+  - **Models.** Simon built the inn and daughter models in the workshop; a duplicated arm on the daughter was removed.
+- **Models.**
+  - Simon also reworked the hut: a door frame and a ring round the eaves.
+  - Workshop Export now lists only models that differ from those built into the game. The full list had grown past what could be copied on a phone, or sent in one message.
+- **Test-mode tools.**
+  - **Free camera.** It sits beside Hide UI and allows zooming from a few paces to twice the usual distance, with a tilt slider from ground level to overhead, for screenshots.
+  - **Watch mode.** Tapping a unit or building now names it: tribe, type or inn name, health, and states such as drunk, asleep, entombed, glamoured or a hidden changeling.
+- **Crashes.**
+  - **The start-of-game crash.** Gating the Inn behind test mode had broken the check on which buildings are allowed. Starting any game with test mode off crashed, from v178 until it was found in v181.
+  - **The error record.** Simon had been seeing an occasional "reading 'x'" crash too briefly to catch. The game now records the last error with its function, line and what was being played, and shows it on the main menu with Copy and Clear.
+  - **What it caught.** The first record pointed at wild-flower patches carried over from a previous game. A patch that had begun fading late in one game could ask for more flowers than it had in the next.
+  - **The fix.** Flower patches, bunting, tomb beds, fetches, fire pits, carcass stains, livestock and pending changeling choices are now all cleared when a new world is built or a save is loaded.
+
 ---
 
 ## Threads that run through the history
@@ -267,4 +288,5 @@ A few principles recur often enough to be worth stating.
 - **Fix the level, not the game.** When a general AI rule was used to solve one level's problem, it usually damaged the emergent play elsewhere and was withdrawn: the bridging rule on Surrounded and the sortie rules for The Last Harvest. The fixes that lasted were scoped to the level that needed them.
 - **Cheese gets closed at its source.** Ättestupa's eligibility, a lone villager provoking an assault, and the Moot's mana asymmetry were each fixed by removing the exploitable condition rather than by punishing the player.
 - **The base game stays pure.** From 18 October the post-campaign material lives apart: in the Grimoire, in Seasons of the Witch and behind test mode. The base game changes only when a change is explicitly wanted there, as with Plague of Flies.
+- **Errors are made visible.** Rare crashes are hard to see on a phone, so the game keeps its last error with enough context to find the line. The first one it caught was a fault that had sat unnoticed in old village-dressing code.
 - **Character over averages.** The rival personalities, the film grade's exempt tribe colours and the Blood–Forest grudge all keep what's distinctive and adjust around it.
