@@ -3659,7 +3659,10 @@ function postAt(x,z){const f=sel.filter(u=>!u.bt&&u.alive&&u.tribe===0&&!u.inV&&
   const bn={id:nextId++,x:wrap(x),z:wrap(z),tribe:0};banners.push(bn);f.sort((a,b)=>(a.type==='archer')-(b.type==='archer'));
   f.forEach((u,i)=>{const a=i*2.39996,r=i?.7+.42*Math.sqrt(i):.6,px=wrap(x+Math.cos(a)*r),pz=wrap(z+Math.sin(a)*r);orderUnit(u,px,pz,false);u.post=bn.id;u.postSpot=true;u.postUnit=false;u.cmd=true});
   mark(x,z,.7,.95,.6);sfx('order',.5);toast(`${f.length} posted here. They will hold this ground and fight whatever comes near.`)}
-function onTap(sx,sy,right,shift){if(over||watching)return;const T=tribes[0],g=pickGround(sx,sy);
+// watching the villages fight: a tap names whatever is under it
+function watchInfo(sx,sy){const u=pickUnit(sx,sy);if(u){const T=tribes[u.tribe],D=UT[u.type];let t=`${T?T.name:''} ${D.label}`.trim();if(u.type==='shaman'&&T&&T.tomb)t+=' (entombed)';t+=` · ${Math.max(0,Math.round(u.hp))}/${Math.round(u.mhp||D.hp)} health`;if(u.drunk)t+=' · drunk';if(u.sleep>gt)t+=' · asleep';if(u.chg!=null&&tribes[u.chg])t+=` · a ${tribes[u.chg].name} changeling`;if(u.glam>gt)t+=' · glamoured';toast(t);return}
+  const g=pickGround(sx,sy);if(!g)return;const id=bOcc[cidx(g.x,g.z)],b=id?bById.get(id):null;if(b&&b.alive){const T=tribes[b.tribe],D=BT[b.bt];let t=b.innName?`${b.innName}, the ${T?T.name:''} inn`:`${T&&!T.wild?T.name+' ':''}${D.label}`;if(b.bt==='hut')t+=` · ${b.occ} inside`;if(!b.done)t+=' · being built';t+=` · ${Math.max(0,Math.round(b.hp))}/${b.mhp} health`;toast(t)}}
+function onTap(sx,sy,right,shift){if(watching&&!over&&!right){watchInfo(sx,sy);return}if(over||watching)return;const T=tribes[0],g=pickGround(sx,sy);
   if(armed==='arma')return;
   if(posting){if(right){posting=false;hint(null);return}if(g)postAt(g.x,g.z);return}
   if(armed){if(right){disarm();return}const tb=pickBalloon(sx,sy,true);if(tb&&(armed==='blast'||armed==='lightning')){/*aim at the balloon itself*/}if(!g&&!tb)return;const sh=T.shaman;if(!sh&&!T.tomb){toast('Your Cunning Woman is waiting to be reborn');return}if(sh&&sh.hanging){toast('Your Cunning Woman is hanging from the oak');return}const s=SPK[armed];
