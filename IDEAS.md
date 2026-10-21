@@ -177,7 +177,7 @@ The problem: late in a game you forget to train Osses, and sending them out afte
 
 ## The Inn and the Landlord's Daughter (Built; in the base game from v188)
 
-- **The Inn.** A base-game building (90 wood and 100 mana) with a name drawn from a list as it is built (the Wicker Arms, the Black Goat, the Hanged Man and so on). It trains the Landlord's Daughter. Arrives in the campaign at level 8, May Morning, alongside the Maypole.
+- **The Inn.** A base-game building (90 wood and 100 mana) with a name drawn from a list as it is built (eighteen of Simon's: the Slaughtered Lamb, the Winchester, Jamaica Inn, the Nag's Head and so on). It trains the Landlord's Daughter. Arrives in the campaign at level 8, May Morning, alongside the Maypole.
 - **The Landlord's Daughter.** Trained freely but dear and slow (260 mana, 45 s). Enemy warriors, osses and villagers who come close are drawn to her; after a few seconds they are drunk and follow her, six at most. She walks them home to her inn, where they sleep around it until she dies or they are killed or captured. Archers, Cunning Women and the like are not taken in.
 - **Rivals** build inns and train daughters, who go out to meet fighters near their village.
 - **Played (21 October):** little effect on battles, but useful for captives and a good minor defensive boost.
