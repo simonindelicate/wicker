@@ -1158,7 +1158,7 @@ function leapDone(u,T){const LS=leapScale(T.id);if(T.id===0){const a=A();a.leaps
   T.truceUntil=gt+LEAP_TRUCE;for(const o of tribes)if(o.ai&&o.id!==T.id){const ai=o.ai;ai.nextAtk=Math.max(ai.nextAtk,gt+LEAP_TRUCE);
     if(ai.wave&&ai.wave.tgt===T.id){const set=new Set(ai.wave.ids);for(const w of units)if(w.alive&&set.has(w.id)){orderUnit(w,ai.base.x+(R()-.5)*6,ai.base.z+(R()-.5)*6,false);w.raidT=0}ai.wave=null}}
   sfx('built',1);if(T.id===0&&!watching){toast(`She is gone over the edge. ${LEAP_N} of your people step out from among the stones, and for a while even your enemies are still.`);flash(.25)}}
-const INN_NAMES=['The Slaughtered Lamb','The Winchester','Dorry\'s Tavern','The Green Man','Jamaica Inn','The Crow and Crown','The Mother Black Cap','The World\'s End','The Half-Inched Crown','The Grendel\'s Head','The Red Lion','The Cloven Hoof','The Broken Drum','The Bull','The Nag\'s Head','The Kebab and Calculator','The Bloody Stump','The Swamp Rot Inn'];
+const INN_NAMES=['The Slaughtered Lamb','The Winchester','Dorry\'s Tavern','The Green Man','Jamaica Inn','The Crow and Crown','The Mother Black Cap','The World\'s End','The Half-Inched Crown','The Grendel\'s Head','The Red Lion','The Cloven Hoof','The Broken Drum','The Bull','The Nag\'s Head','The Kebab and Calculator','The Bloody Stump','The Swamp Rot Inn','The Bannered Mare','The Queen Vic'];
 function innName(){const used=new Set(blds.filter(b=>b.alive&&b.innName).map(b=>b.innName)),free=INN_NAMES.filter(n=>!used.has(n));const L=free.length?free:INN_NAMES;return L[(R()*L.length)|0]}
 function placeBuilding(ti,type,spot,instant){const D=BT[type],s=D.s,{cx0,cz0}=spot;
   let sum=0,n=0;for(let dz=0;dz<=s;dz++)for(let dx=0;dx<=s;dx++){sum+=H[wi(cz0+dz)*N+wi(cx0+dx)];n++}
