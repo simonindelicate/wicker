@@ -459,10 +459,10 @@ const TUNE={
   zoomMax:112,curveNear:1/170,curveFar:1/88
 };
 const TRIBES=[
-  {name:'Ochre',col:0xc4892a,css:'#d39b3c',pers:{}},
-  {name:'Blood',col:0x8e1d18,css:'#b8392f',pers:{war:1.12,mil:.04,castGap:1.2,grudge:{Forest:2},train:{camp:.46,range:.3,osshouse:.17,balloon:.07}}},
+  {name:'Ochre',col:0xc4892a,css:'#d39b3c',pers:{huddle:.7}},
+  {name:'Blood',col:0x8e1d18,css:'#b8392f',pers:{huddle:1,war:1.12,mil:.04,castGap:1.2,grudge:{Forest:2},train:{camp:.46,range:.3,osshouse:.17,balloon:.07}}},
   {name:'Forest',col:0x179c80,css:'#33c4a0',pers:{war:.9,mil:-.04,mana:1.05,ossHunt:.85,train:{camp:.35,range:.28,osshouse:.28,balloon:.09}}},
-  {name:'Ash',col:0xcfc9bc,css:'#d8d2c5',pers:{oak:.85,train:{camp:.38,range:.28,osshouse:.2,balloon:.16}}}];
+  {name:'Ash',col:0xcfc9bc,css:'#d8d2c5',pers:{huddle:.3,oak:.85,train:{camp:.38,range:.28,osshouse:.2,balloon:.16}}}];
 // pers: war = attack eagerness, mil = extra share of fighters, castGap = slower spellcasting, mana = sacrifice yield, ossHunt = shorter gaps between Oss hunts, grudge = extra weight when picking that tribe to attack (Hard and above), oak = earlier Herne's Oak, train = what they train
 const MANA_MAX=TUNE.manaMax,YIELD=TUNE.yield,DREAD=TUNE.dread;MAXD=TUNE.zoomMax;
 const UT={
@@ -1863,7 +1863,11 @@ function updProjs(dt){for(let i=projs.length-1;i>=0;i--){const p=projs[i];p.t+=d
 
 // ---------------- AI ----------------
 function mkAI(i,s){const D=DIFF[settings.diff],P=TRIBES[i].pers||{},SA=(scen()&&scen().ai)||{},war=(P.war||1)*(SA.war||1);return {base:{x:s.x,z:s.z},nextBuild:4+i,nextAtk:SA.first!=null?SA.first+(SA.only0?(i-1)*20:R()*40):(D.first+R()*60)/war,need:SA.need??Math.max(3,Math.round(D.need/war)),needInc:SA.needInc??D.needInc,only0:!!SA.only0,airRaid:!!SA.airRaid,hangRaid:!!SA.hangRaid,balCap:SA.balCap,freeBridge:!!SA.freeBridge,firstAt0:SA.firstAt0||0,sent:0,balRush:SA.balRush||0,queenHunt:!!SA.queenHunt,capMe:SA.capMe||null,meWaves:0,may:SA.may||0,D,int:SA.int??D.int/war,res:D.res,gap:D.gap*(P.castGap||1)*(SA.gap||1),castT:0,milR:SA.mil??(D.milR+(P.mil||0)),bridge:null,calm:0,siege:0}}
-function findSpot(T,type){const b=T.ai.base,S=T.stats,f=field(b.x,b.z);for(let t=0;t<90;t++){const a=R()*TAU,r=4.5+R()*Math.min(24,7+S.blds*1.6),v=validSpot(T.id,type,b.x+Math.cos(a)*r,b.z+Math.sin(a)*r);if(v.err)continue;const sz=type==='hedge'?1:BT[type].s;let ok=false;for(let dz=-1;dz<=sz&&!ok;dz++)for(let dx=-1;dx<=sz;dx++){if(f[wi(v.cz0+dz)*N+wi(v.cx0+dx)]>=0){ok=true;break}}if(ok)return v}return null}
+// huddle (personality): 0 takes the first good site at any distance (Forest, a scattered village); towards 1 the tribe weighs its choice towards sites near the stone circle (Blood, a tight one)
+function findSpot(T,type){const b=T.ai.base,S=T.stats,f=field(b.x,b.z),hud=(TRIBES[T.id]&&TRIBES[T.id].pers||{}).huddle||0,rmax=Math.min(24,7+S.blds*1.6),cands=[];
+  for(let t=0;t<90;t++){const a=R()*TAU,r=4.5+Math.pow(R(),1+hud*2)*rmax,v=validSpot(T.id,type,b.x+Math.cos(a)*r,b.z+Math.sin(a)*r);if(v.err)continue;const sz=type==='hedge'?1:BT[type].s;let ok=false;for(let dz=-1;dz<=sz&&!ok;dz++)for(let dx=-1;dx<=sz;dx++){if(f[wi(v.cz0+dz)*N+wi(v.cx0+dx)]>=0){ok=true;break}}
+    if(!ok)continue;if(!hud)return v;cands.push({v,r});if(cands.length>=16)break}
+  if(!cands.length)return null;let tot=0;for(const c of cands){c.w=Math.exp(-hud*7*(c.r-4.5)/rmax);tot+=c.w}let x=R()*tot;for(const c of cands){x-=c.w;if(x<=0)return c.v}return cands[cands.length-1].v}
 // Scripted raids (Late to the Feast): each rival in turn sends one raid on the player at a set time, topped up to its size.
 function forceRaid(T,n){const ai=T.ai,base=ai.base;if(!tribes[0].alive||armageddon)return;const army=[];for(const u of units)if(u.alive&&u.tribe===T.id&&!u.inV&&!u.post&&(u.type==='warrior'||u.type==='archer')&&army.length<n)army.push(u);
   while(army.length<n){const a=R()*TAU,u=spawnUnit('warrior',T.id,base.x+Math.cos(a)*3,base.z+Math.sin(a)*3);army.push(u)}
