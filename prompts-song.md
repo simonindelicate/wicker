@@ -4,7 +4,7 @@ Nine fifteen-second sequences, one for each half-verse and one for each chorus, 
 
 **What the sequences show:**
 - **The arc.** The song moves from a village barring its doors against the Cunning Woman, to pleading with her, to living under her rule, and the last chorus turns on her. The sequences follow that arc.
-- **The village.** The village that sings wears plain undyed and russet wool, so it reads as a people of its own rather than one of the game's tribes.
+- **The village.** The village in the song wears plain undyed and russet wool, so it reads as a people of its own rather than one of the game's tribes.
 - **The Cunning Woman.** She is described as in the game and the other prompt documents: long white hair, a mustard-gold ochre robe and cape, an indigo sash, a necklace of pink, white and yellow beads, and a headdress of bleached bone horns.
 - **The waters.** "Our waters" are a cold river or estuary between her country and theirs. The last chorus's "bloody waters" calls back to Seas of Blood.
 
