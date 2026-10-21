@@ -638,7 +638,7 @@ const SCEN=[
   me:{mana:300,wood:220,huts:2},ai:{airRaid:true,first:420,firstAt0:1,balRush:150},
   intro:'‘tis time to take wing, O beloved. Thy foes swell their halls across the sea - we must see them sink beneath the waves. We have a new weapon - the balloon. From above we can rain fire upon them, carry our fighting men to their shores and defend our lands from their intrusions. In opportunity there is danger - our enemies have this weapon themselves. Raise the rook trees to resist them and claim the skies for thine own. The land is sick upon these islands - a cunning woman cannot be reborn amidst the salt. Your death will be the end of all.'},
  {title:'May Morning',season:'spring',seed:8803,style:'continent',enemies:2,diff:'normal',fog:false,goal:{type:'mana',n:1000},ban:['wicker','god'],
-  addB:['maypole'],addS:['hypno'],news:['Maypole','Hypnotise'],
+  addB:['maypole','inn'],addS:['hypno'],news:['Maypole','Inn','Hypnotise'],
   me:{mana:300,wood:220,huts:3},ai:{first:600,queenHunt:true,may:150},
   intro:'Wicker is in short supply this season - if we are to survive, we shall need to appease the land as our oldest ancestors taught us. Crown the May Queen and exalt her for a season. Nature is a lustful mistress. Only the fairest of our daughters shall fit her for a bride. Crown her. Guard her. Attend her prime. Why, then she shall dance her bloody nuptials and bring all favour upon us.'},
  {title:'The Wicker God',season:'summer',seed:9901,style:'islands',enemies:2,diff:'normal',fog:true,goal:{type:'conquer'},
@@ -746,7 +746,7 @@ function applyAlien(){const a=alien;if(typeof sun==='undefined')return;sun.inten
 const LVS=()=>settings.chal?CHAL:SCEN;
 function scen(){return settings.campaign!=null?LVS()[settings.campaign]:null}
 function scenSets(i){const b=new Set(['hut']),sp=new Set();let tomb=false;for(let k=0;k<=i;k++){const L=LVS()[k];(L.addB||[]).forEach(x=>b.add(x));(L.addS||[]).forEach(x=>sp.add(x));if(L.tomb===true)tomb=true;if(L.all){BUILDABLE.forEach(x=>b.add(x));SP.forEach(x=>sp.add(x.k));tomb=true}}if(LVS()[i].tombHere)tomb=true;for(const x of (LVS()[i].ban||[])){b.delete(x);sp.delete(x);if(x==='tomb')tomb=false}return {b,s:sp,tomb}}
-const innOn=()=>devMode();
+const innOn=()=>true;
 const allowB=t=>(t!=='inn'||innOn())&&(!allowSets||(t==='tomb'?allowSets.tomb:allowSets.b.has(t)));
 const allowS=k=>!allowSets||allowSets.s.has(k);
 // Grimoire mode (test mode for now): the player casts only the spells chosen before the game; rivals keep every spell. All-against-all is always to hand.

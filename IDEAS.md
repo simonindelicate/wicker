@@ -175,10 +175,11 @@ The problem: late in a game you forget to train Osses, and sending them out afte
 - **The Chronicle (Candidate).** An end-of-game account written in the game's own voice, as a ballad or a tapestry-style scroll of the key moments.
 - **Photo mode (Candidate).** Build on Hide UI with a free camera, depth of field, and a still export with the film grade applied.
 
-## The Inn and the Landlord's Daughter (Decided for the base game; built in v178 behind test mode)
+## The Inn and the Landlord's Daughter (Built; in the base game from v188)
 
-- **The Inn.** A base-game building (90 wood and 100 mana) with a name drawn from a list as it is built (the Wicker Arms, the Black Goat, the Hanged Man and so on). It trains the Landlord's Daughter. To be slotted into the campaign alongside the May Queen once tested.
+- **The Inn.** A base-game building (90 wood and 100 mana) with a name drawn from a list as it is built (the Wicker Arms, the Black Goat, the Hanged Man and so on). It trains the Landlord's Daughter. Arrives in the campaign at level 8, May Morning, alongside the Maypole.
 - **The Landlord's Daughter.** Trained freely but dear and slow (260 mana, 45 s). Enemy warriors, osses and villagers who come close are drawn to her; after a few seconds they are drunk and follow her, six at most. She walks them home to her inn, where they sleep around it until she dies or they are killed or captured. Archers, Cunning Women and the like are not taken in.
 - **Rivals** build inns and train daughters, who go out to meet fighters near their village.
-- **Open:** campaign placement; whether the inn does anything else (a faster drain of dread was suggested); balance after testing.
+- **Played (21 October):** little effect on battles, but useful for captives and a good minor defensive boost.
+- **Open:** whether the inn does anything else (a faster drain of dread was suggested).
 
