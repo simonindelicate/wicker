@@ -40,7 +40,8 @@ A place to keep design ideas between sessions. Nothing here is built yet. Each e
 7. **The final challenge level is a winnable version of the Humbling.**
 8. **Each challenge level is coloured slightly wrong** (redder, bluer, and so on).
 5. **Extreme is available in the Grimoire.**
-6. **Finishing the challenge campaign** earns a token and unlocks **NG+**: the original campaign replayed with the Grimoire mechanic. NG+ is a victory lap: rivals stay classic.
+6. **Spell modes for procedural games (v203):** Base spells (the original set), Cunning spells (every spell for you and every rival, as in the Answer; opened by finishing Seasons of the Witch) and Grimoire (choose nine from what you have learnt).
+7. **Finishing the challenge campaign** earns a token and unlocks **NG+**: the original campaign replayed with the Grimoire mechanic. NG+ is a victory lap: rivals stay classic.
 
 **Built in v150**, ten seasons (titles and intros are placeholders):
 1. The Humbling: survive five minutes.
