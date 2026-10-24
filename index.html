@@ -2480,7 +2480,22 @@ const MODEL_DATA={
   {"s":"box","a":[0.3,0.5,0.7],"p":[0.378,0.01,1.366],"r":[-30,0,-13],"k":[1,1,1],"c":"#676767","t":0},
   {"s":"sphere","a":[0.1,5,3,0,6.283185307179586,0,3.141592653589793],"p":[0.68,0.01,1.588],"r":[0,0,0],"k":[1,1,1],"c":"#696969","t":0},
   {"s":"box","a":[1.17,0.03,0.3],"p":[0,0.6,1.436],"r":[0,0,-1],"k":[1,1,1],"c":"#676767","t":0},
-  {"s":"sphere","a":[1.51,10,4,0,6.2832,0,1.5708],"p":[0.58,-0.186,-1.134],"r":[0,0,0],"k":[1,0.55,1],"c":"#ffffff","t":1}
+  {"s":"sphere","a":[1.51,10,4,0,6.2832,0,1.5708],"p":[0.58,-0.186,-1.134],"r":[0,0,0],"k":[1,0.55,1],"c":"#ffffff","t":1},
+  {"s":"sphere","a":[2.035,10,3,0,6.2832,0,2.1834],"p":[0.8982,-0.5736,0.197],"r":[0,0,0],"k":[1,0.55,1],"c":"#ffffff","t":1},
+  {"s":"sphere","a":[2.035,10,3,0,6.2832,0,2.1834],"p":[-0.6774,-0.3467,-0.3894],"r":[0,0,0],"k":[1,0.55,1],"c":"#ffffff","t":1},
+  {"s":"cyl","a":[1.055,0.155,2.63,4],"p":[-0.0848,0.184,0],"r":[84,44,-8],"k":[1,1,1],"c":"#828282","t":0},
+  {"s":"box","a":[0.95,1,0.3],"p":[0.0232,0.5,1.1712],"r":[0,0,0],"k":[1,1,1],"c":"#67645c","t":0},
+  {"s":"box","a":[0.3,1.66,0.3],"p":[0.8052,0.172,1.2312],"r":[0,0,11],"k":[1,1,1],"c":"#67645c","t":0},
+  {"s":"box","a":[0.3,1.66,0.3],"p":[-0.8052,-0.334,1.5692],"r":[0,35,-11],"k":[1,1,1],"c":"#67645c","t":0},
+  {"s":"cone","a":[0.07,0.745,10],"p":[1.2492,0.592,0.9992],"r":[0,0,-7],"k":[1,1,1],"c":"#452a28","t":0},
+  {"s":"cone","a":[0.07,0.745,10],"p":[1.4692,0.592,0.7032],"r":[0,0,5],"k":[1,1,1],"c":"#452a28","t":0},
+  {"s":"cone","a":[0.07,0.745,10],"p":[1.4692,0.592,-0.1188],"r":[0,0,5],"k":[1,1,1],"c":"#452a28","t":0},
+  {"s":"cone","a":[0.07,0.745,10],"p":[0.9772,0.592,-0.7648],"r":[0,0,5],"k":[1,1,1],"c":"#452a28","t":0},
+  {"s":"cone","a":[0.07,0.745,10],"p":[-1.0574,0.7435,0.9733],"r":[0,-18,7],"k":[1,1,1],"c":"#452a28","t":0},
+  {"s":"cone","a":[0.07,0.745,10],"p":[-1.1752,0.7435,0.6237],"r":[0,-18,-5],"k":[1,1,1],"c":"#452a28","t":0},
+  {"s":"cone","a":[0.07,0.745,10],"p":[-1.1868,0.7435,-0.158],"r":[0,-18,-5],"k":[1,1,1],"c":"#452a28","t":0},
+  {"s":"cone","a":[0.07,0.745,10],"p":[-1.0968,0.7435,-0.6202],"r":[0,-18,-5],"k":[1,1,1],"c":"#452a28","t":0},
+  {"s":"cyl","a":[0.545,0.545,1.09,8],"p":[0,0.616,0],"r":[83,0,0],"k":[1,1,1],"c":"#ffffff","t":1}
 ],
 "b:reinc":[
   {"s":"box","a":[0.44,0.38,0.44],"p":[0,1.45,0],"r":[0,0,0],"k":[1,1,1],"c":"#ffffff","t":1},
@@ -3994,8 +4009,14 @@ function buildWorld(){const SC=scen();alien=SC&&SC.alien||null;applyAlien();chgP
   if(SC&&SC.bounty&&w.riteSpot){const T0=tribes[0],r=blds.find(b=>b.bt==='reinc'&&b.tribe===0),o=w.riteSpot,sz=BT.god.s,v=validSpot(0,'god',o.x,o.z);placeBuilding(0,'god',v.err?{cx0:Math.floor(o.x-sz/2+.5),cz0:Math.floor(o.z-sz/2+.5)}:v,true);
     let folds=blds.filter(b=>b.bt==='fold'&&b.tribe===0).length;for(let a=0;a<48&&folds<2;a++){const ang=a/12*TAU+.9,rr=6+(a/12|0)*2.5,v=validSpot(0,'fold',r.x+Math.cos(ang)*rr,r.z+Math.sin(ang)*rr);if(!v.err){placeBuilding(0,'fold',v,true);folds++}}
     for(const b of blds)if(b.bt==='fold'&&b.tribe===0)while(b.capt.length<BT.fold.hold)b.capt.push(wildId)}
+  // a hollow hill is eased into the land: a low skirt of earth runs up to the mound on every side but the entrance, and a few trees stand close enough to hide the joins
+const dressBarrow=b=>{if(!b)return;const cx=Math.round(b.x),cz=Math.round(b.z),base=H[wi(cz)*N+wi(cx)];
+    for(let dz=-5;dz<=5;dz++)for(let dx=-5;dx<=5;dx++){const d=Math.hypot(dx,dz);if(d<2.2||d>5)continue;if(dz>0&&Math.abs(dx)<1.8)continue;const i=wi(cz+dz)*N+wi(cx+dx);if(bOcc[i]||H[i]<.3)continue;const w=1-sstep(2.2,5,d);H[i]=Math.max(H[i],lerp(H[i],base+.4,w))}
+    recompute(cx-7,cz-7,cx+7,cz+7);
+    let n=0;for(let k=0;k<40&&n<7;k++){const a=R()*TAU,r=3.1+R()*2.4;if(Math.sin(a)>.45)continue;const x=wrap(b.x+Math.cos(a)*r),z=wrap(b.z+Math.sin(a)*r),c=cidx(x,z);if(!walk[c]||water[c]||bOcc[c]||trees.some(t=>t.alive&&d2(t.x,t.z,x,z)<1.3))continue;trees.push({x,z,wood:TUNE.woodPerTree,alive:true,sc:.75+R()*.4,tint:.85+R()*.25});n++}
+    tGridDirty=true};
   const neutral=(type,pt)=>{const sz=BT[type].s,v=validSpot(wildId,type,pt.x,pt.z);return placeBuilding(wildId,type,v.err?{cx0:Math.floor(pt.x-sz/2+.5),cz0:Math.floor(pt.z-sz/2+.5)}:v,true)};
-  const mb=neutral('moot',w.centre);moot={x:mb.x,z:wrap(mb.z+3.2)};for(const b of w.barrows)neutral('barrow',b);
+  const mb=neutral('moot',w.centre);moot={x:mb.x,z:wrap(mb.z+3.2)};for(const b of w.barrows)dressBarrow(neutral('barrow',b));
   // tombed seasons: every Cunning Woman starts sealed in the hollow hill nearest her village
   if(SC&&SC.tombed){const used=new Set();for(const T of tribes){if(T.wild||!T.shaman)continue;let bb=null,bd=1e18;for(const b of blds)if(b.alive&&b.bt==='barrow'&&!used.has(b)){const d=d2(b.x,b.z,T.shaman.x,T.shaman.z);if(d<bd){bd=d;bb=b}}if(!bb)continue;used.add(bb);
     removeUnit(T.shaman);T.shaman=null;bb.bt='tomb';bb.tribe=T.id;bb.hp=bb.mhp=BT.tomb.hp;bb.done=true;T.tomb=bb;bb.dx=bb.x;bb.dz=wrap(bb.z+BT.tomb.s/2+.6)}}
