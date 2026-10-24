@@ -973,7 +973,7 @@ function decorTick(dt){
         for(const b of sp){free.delete(b);buntings.push({a:{x:best.x,z:best.z,h:best.h},b:{x:b.x,z:b.z,h:HUT_TOP},id:best.id+b.id,src:best.src.concat([b])})}}}}
   // an entombed Cunning Woman's hill: five strings from the centre pole out to five flower beds
   tombBeds=[];for(const b of blds){if(!b.alive||b.bt!=='tomb')continue;for(let i=0;i<5;i++){const a=i/5*TAU+.31,x=wrap(b.x+Math.cos(a)*5.4),z=wrap(b.z+Math.sin(a)*5.4);if(water[cidx(x,z)]||H[cidx(x,z)]<.3)continue;
-    tombBeds.push({x,z,id:b.id*5+i});buntings.push({a:{x:b.x,z:b.z,h:3.0},b:{x,z,h:1.05},id:b.id+i*2,src:[b]})}}
+    tombBeds.push({x,z,id:b.id*5+i});buntings.push({a:{x:b.x,z:b.z,h:3.0+(b.baseY!=null?0.520-(hAt(b.x,b.z)-b.baseY):0)},b:{x,z,h:1.05},id:b.id+i*2,src:[b]})}}
   const nearB=(x,z,r,ti)=>{let n=0;for(const o of blds)if(o.alive&&o.done&&!BT[o.bt].inv&&o.bt!=='hedge'&&(ti==null||o.tribe===ti)&&d2(o.x,o.z,x,z)<r*r)n++;return n};
   const clear=(x,z,r)=>{for(let dz=-r;dz<=r;dz++)for(let dx=-r;dx<=r;dx++){const c=cidx(x+dx,z+dz);if(bOcc[c]||water[c]||!walk[c]||hazU[c]>gt||saltU[c]>gt||wearShown[c])return false}return true};
   // wild-flower patches in spare ground between buildings, where there is no room to build
@@ -1213,7 +1213,7 @@ function sendChangeling(u,T){if(!u.alive)return;const by=u.tribe,sh=T.shaman;let
   const near=f=>{let b=null,bd=1e18;for(const o of units)if(ok(o)&&f(o)){const d=d2(o.x,o.z,home.x,home.z);if(d<bd){bd=d;b=o}}return b};
   let v=near(o=>o.type===u.type)||near(o=>o.type==='brave');
   if(!v){let h=null,hd=1e18;for(const b of blds)if(b.alive&&b.done&&b.tribe===T.id&&b.bt==='hut'&&b.occ>0){const d=d2(b.x,b.z,home.x,home.z);if(d<hd){hd=d;h=b}}if(h){h.occ--;v=spawnUnit('brave',T.id,h.dx,h.dz)}}
-  if(u.sel)deselect(u);u.tribe=T.id;u.chg=by;u.chgSafe=true;u.chgAt=Infinity;u.chgHome={x:home.x,z:home.z};u.order=null;u.tgt=null;u.post=null;u.cmd=true;u.st='move';setTarget(u,home.x+(R()-.5)*4,home.z+(R()-.5)*4);
+  if(u.sel)deselect(u);u.tribe=T.id;u.chg=by;u.chgSafe=true;u.chgAt=1e9;u.chgHome={x:home.x,z:home.z};u.order=null;u.tgt=null;u.post=null;u.cmd=true;u.st='move';setTarget(u,home.x+(R()-.5)*4,home.z+(R()-.5)*4);
   if(v){const c=spawnUnit('captive',by,v.x,v.z);c.capt={tribe:T.id};c.chgSafe=true;removeUnit(v);chgRoute(c)}
   if(by===0&&!watching)toast(`Your changeling sets off for the ${T.name} village in their colours.${v?' One of theirs is already running to you.':''}`);
   else if(T.id===0&&!watching&&v)toast(`One of your ${v.type==='brave'?'people':v.type+'s'} has been taken by the fairies. Something wearing their face has gone in their place.`)}
@@ -1281,7 +1281,7 @@ function daughterTick(){
   for(const u of units){if(!u.alive)continue;
     if(u.drunk){const d=u.drunk;if(!d.alive){u.drunk=null;u.sleep=0;u.cmd=false;u.st='idle';continue}
       if(u.sleep>gt)continue;const inn=d.inn&&d.inn.alive?d.inn:null;
-      if(inn&&d.home){const a=u.slot*1.1,x=wrap(inn.x+Math.cos(a)*3.2),z=wrap(inn.z+Math.sin(a)*3.2);if(d2(u.x,u.z,x,z)<1.6*1.6){u.sleep=Infinity;u.st='idle';u.moving=false}else{u.st='move';u.cmd=true;u.order=null;u.tgt=null;setTarget(u,x+(R()-.5)*.4,z+(R()-.5)*.4)}}
+      if(inn&&d.home){const a=u.slot*1.1,x=wrap(inn.x+Math.cos(a)*3.2),z=wrap(inn.z+Math.sin(a)*3.2);if(d2(u.x,u.z,x,z)<1.6*1.6){u.sleep=1e9;u.st='idle';u.moving=false}else{u.st='move';u.cmd=true;u.order=null;u.tgt=null;setTarget(u,x+(R()-.5)*.4,z+(R()-.5)*.4)}}
       else{u.st='move';u.cmd=true;u.order=null;u.tgt=null;setTarget(u,d.x+(R()-.5)*2.5,d.z+(R()-.5)*2.5)}continue}
     if(u.lure){const d=u.lure.d;if(!d.alive||d.inV||d2(u.x,u.z,d.x,d.z)>5.5*5.5){u.lure=null;u.cmd=false;u.st='idle';continue}u.lure.n++;u.st='move';u.cmd=true;u.order=null;u.tgt=null;setTarget(u,d.x+(R()-.5)*1.2,d.z+(R()-.5)*1.2);
       if(u.lure.n>=3){const n=units.filter(o=>o.alive&&o.drunk===d).length;u.lure=null;if(n<LURE_MAX){u.drunk=d;u.slot=n;if(d.tribe===0&&!watching&&gt>(d.aleT||0)){d.aleT=gt+12;toast(`The ${tribes[u.tribe].name} folk are drinking your landlord's daughter's ale.`)}}else{u.cmd=false;u.st='idle'}}}}
@@ -2467,7 +2467,7 @@ const MODEL_DATA={
   {"s":"ring","a":[1.06,0.05,6,12,6.283185307179586],"p":[0,0.796,0],"r":[90,0,0],"k":[1,1,1],"c":"#5c5c5c","t":1}
 ],
 "b:barrow":[
-  {"s":"sphere","a":[1.75,10,4,0,6.2832,0,1.5708],"p":[0,0,0],"r":[0,0,0],"k":[1,0.55,1],"c":"#ffffff","t":1},
+  {"s":"box","a":[0.001,0.001,0.001],"p":[0,0.01,0],"r":[0,0,0],"k":[1,1,1],"c":"#ffffff","t":1},
   {"s":"box","a":[0.3,1,0.3],"p":[-0.45,0.5,1.3],"r":[0,0,0],"k":[1,1,1],"c":"#67645c","t":0},
   {"s":"box","a":[0.3,1,0.3],"p":[0.45,0.5,1.3],"r":[0,0,0],"k":[1,1,1],"c":"#67645c","t":0},
   {"s":"box","a":[1.35,0.24,0.62],"p":[0,1.1,1.3],"r":[0,0,0],"k":[1,1,1],"c":"#5d5a53","t":0},
@@ -2480,9 +2480,6 @@ const MODEL_DATA={
   {"s":"box","a":[0.3,0.5,0.7],"p":[0.378,0.01,1.366],"r":[-30,0,-13],"k":[1,1,1],"c":"#676767","t":0},
   {"s":"sphere","a":[0.1,5,3,0,6.283185307179586,0,3.141592653589793],"p":[0.68,0.01,1.588],"r":[0,0,0],"k":[1,1,1],"c":"#696969","t":0},
   {"s":"box","a":[1.17,0.03,0.3],"p":[0,0.6,1.436],"r":[0,0,-1],"k":[1,1,1],"c":"#676767","t":0},
-  {"s":"sphere","a":[1.51,10,4,0,6.2832,0,1.5708],"p":[0.58,-0.186,-1.134],"r":[0,0,0],"k":[1,0.55,1],"c":"#ffffff","t":1},
-  {"s":"sphere","a":[2.035,10,3,0,6.2832,0,2.1834],"p":[0.8982,-0.5736,0.197],"r":[0,0,0],"k":[1,0.55,1],"c":"#ffffff","t":1},
-  {"s":"sphere","a":[2.035,10,3,0,6.2832,0,2.1834],"p":[-0.6774,-0.3467,-0.3894],"r":[0,0,0],"k":[1,0.55,1],"c":"#ffffff","t":1},
   {"s":"cyl","a":[1.055,0.155,2.63,4],"p":[-0.0848,0.184,0],"r":[84,44,-8],"k":[1,1,1],"c":"#828282","t":0},
   {"s":"box","a":[0.95,1,0.3],"p":[0.0232,0.5,1.1712],"r":[0,0,0],"k":[1,1,1],"c":"#67645c","t":0},
   {"s":"box","a":[0.3,1.66,0.3],"p":[0.8052,0.172,1.2312],"r":[0,0,11],"k":[1,1,1],"c":"#67645c","t":0},
@@ -2494,8 +2491,7 @@ const MODEL_DATA={
   {"s":"cone","a":[0.07,0.745,10],"p":[-1.0574,0.7435,0.9733],"r":[0,-18,7],"k":[1,1,1],"c":"#452a28","t":0},
   {"s":"cone","a":[0.07,0.745,10],"p":[-1.1752,0.7435,0.6237],"r":[0,-18,-5],"k":[1,1,1],"c":"#452a28","t":0},
   {"s":"cone","a":[0.07,0.745,10],"p":[-1.1868,0.7435,-0.158],"r":[0,-18,-5],"k":[1,1,1],"c":"#452a28","t":0},
-  {"s":"cone","a":[0.07,0.745,10],"p":[-1.0968,0.7435,-0.6202],"r":[0,-18,-5],"k":[1,1,1],"c":"#452a28","t":0},
-  {"s":"cyl","a":[0.545,0.545,1.09,8],"p":[0,0.616,0],"r":[83,0,0],"k":[1,1,1],"c":"#ffffff","t":1}
+  {"s":"cone","a":[0.07,0.745,10],"p":[-1.0968,0.7435,-0.6202],"r":[0,-18,-5],"k":[1,1,1],"c":"#452a28","t":0}
 ],
 "b:reinc":[
   {"s":"box","a":[0.44,0.38,0.44],"p":[0,1.45,0],"r":[0,0,0],"k":[1,1,1],"c":"#ffffff","t":1},
@@ -3370,6 +3366,55 @@ const MODEL_DATA={
   {"s":"sphere","a":[0.08,5,6,0,6.283185307179586,0,3.141592653589793],"p":[0.4933,0,0.4139],"r":[0,-40,0],"k":[1,1,1],"c":"#fff39c","t":0},
   {"s":"sphere","a":[0.08,5,6,0,6.283185307179586,0,3.141592653589793],"p":[0.4551,0,-0.4552],"r":[180,-45,180],"k":[1,1,1],"c":"#e7a0e8","t":0},
   {"s":"sphere","a":[0.08,5,6,0,6.283185307179586,0,3.141592653589793],"p":[-0.4551,0,0.4552],"r":[180,-45,180],"k":[1,1,1],"c":"#fff39c","t":0}
+],
+"b:tomb":[
+  {"s":"box","a":[0.3,1,0.3],"p":[-0.45,0.5,1.3],"r":[0,0,0],"k":[1,1,1],"c":"#67645c","t":0},
+  {"s":"box","a":[0.3,1,0.3],"p":[0.45,0.5,1.3],"r":[0,0,0],"k":[1,1,1],"c":"#67645c","t":0},
+  {"s":"box","a":[1.35,0.24,0.62],"p":[0,1.1,1.3],"r":[0,0,0],"k":[1,1,1],"c":"#5d5a53","t":0},
+  {"s":"box","a":[0.6,0.72,0.1],"p":[0,0.274,1.536],"r":[-30,0,0],"k":[1,1,1],"c":"#0f0c0a","t":0},
+  {"s":"box","a":[0.3,0.68,0.3],"p":[-0.472,0.2,1.436],"r":[-13,4,-4],"k":[1,1,1],"c":"#575757","t":0},
+  {"s":"box","a":[0.3,0.68,0.3],"p":[0.506,0.2,1.436],"r":[-4,-22,4],"k":[1,1,1],"c":"#575757","t":0},
+  {"s":"sphere","a":[0.255,5,3,0,6.283185307179586,0,3.141592653589793],"p":[0.53,0.05,1.588],"r":[0,0,0],"k":[1,1,1],"c":"#696969","t":0},
+  {"s":"sphere","a":[0.255,5,3,0,6.283185307179586,0,3.141592653589793],"p":[-0.53,-0.108,1.588],"r":[0,30,0],"k":[1,1,1],"c":"#696969","t":0},
+  {"s":"box","a":[0.3,0.5,0.7],"p":[-0.378,0.01,1.36],"r":[-30,0,0],"k":[1,1,1],"c":"#676767","t":0},
+  {"s":"box","a":[0.3,0.5,0.7],"p":[0.378,0.01,1.366],"r":[-30,0,-13],"k":[1,1,1],"c":"#676767","t":0},
+  {"s":"sphere","a":[0.1,5,3,0,6.283185307179586,0,3.141592653589793],"p":[0.68,0.01,1.588],"r":[0,0,0],"k":[1,1,1],"c":"#696969","t":0},
+  {"s":"box","a":[1.17,0.03,0.3],"p":[0,0.6,1.436],"r":[0,0,-1],"k":[1,1,1],"c":"#676767","t":0},
+  {"s":"cyl","a":[1.055,0.155,2.63,4],"p":[-0.0848,0.184,0],"r":[84,44,-8],"k":[1,1,1],"c":"#828282","t":0},
+  {"s":"box","a":[0.95,1,0.3],"p":[0.0232,0.5,1.1712],"r":[0,0,0],"k":[1,1,1],"c":"#67645c","t":0},
+  {"s":"box","a":[0.3,1.66,0.3],"p":[0.8052,0.172,1.2312],"r":[0,0,11],"k":[1,1,1],"c":"#67645c","t":0},
+  {"s":"box","a":[0.3,1.66,0.3],"p":[-0.8052,-0.334,1.5692],"r":[0,35,-11],"k":[1,1,1],"c":"#67645c","t":0},
+  {"s":"cone","a":[0.07,0.745,10],"p":[1.2492,0.592,0.9992],"r":[0,0,-7],"k":[1,1,1],"c":"#452a28","t":0},
+  {"s":"cone","a":[0.07,0.745,10],"p":[1.4692,0.592,0.7032],"r":[0,0,5],"k":[1,1,1],"c":"#452a28","t":0},
+  {"s":"cone","a":[0.07,0.745,10],"p":[1.4692,0.592,-0.1188],"r":[0,0,5],"k":[1,1,1],"c":"#452a28","t":0},
+  {"s":"cone","a":[0.07,0.745,10],"p":[0.9772,0.592,-0.7648],"r":[0,0,5],"k":[1,1,1],"c":"#452a28","t":0},
+  {"s":"cone","a":[0.07,0.745,10],"p":[-1.0574,0.7435,0.9733],"r":[0,-18,7],"k":[1,1,1],"c":"#452a28","t":0},
+  {"s":"cone","a":[0.07,0.745,10],"p":[-1.1752,0.7435,0.6237],"r":[0,-18,-5],"k":[1,1,1],"c":"#452a28","t":0},
+  {"s":"cone","a":[0.07,0.745,10],"p":[-1.1868,0.7435,-0.158],"r":[0,-18,-5],"k":[1,1,1],"c":"#452a28","t":0},
+  {"s":"cone","a":[0.07,0.745,10],"p":[-1.0968,0.7435,-0.6202],"r":[0,-18,-5],"k":[1,1,1],"c":"#452a28","t":0},
+  {"s":"box","a":[0.78,0.86,0.16],"p":[0,0.33,1.62],"r":[-30,0,0],"k":[1,1,1],"c":"#6f6a60","t":0},
+  {"s":"cone","a":[0.12,1.6,4],"p":[1.9,1.611,0.0],"r":[0,0,-14.32],"k":[1,1,1],"c":"#8a6c3e","t":0},
+  {"s":"cone","a":[0.12,1.6,4],"p":[1.712,1.425,0.824],"r":[0,0,-12.91],"k":[1,1,1],"c":"#8a6c3e","t":0},
+  {"s":"cone","a":[0.12,1.6,4],"p":[1.185,1.292,1.485],"r":[0,0,-8.93],"k":[1,1,1],"c":"#8a6c3e","t":0},
+  {"s":"cone","a":[0.12,1.6,4],"p":[0.423,1.226,1.852],"r":[0,0,-3.19],"k":[1,1,1],"c":"#8a6c3e","t":0},
+  {"s":"cone","a":[0.12,1.6,4],"p":[-0.423,1.226,1.852],"r":[0,0,3.19],"k":[1,1,1],"c":"#8a6c3e","t":0},
+  {"s":"cone","a":[0.12,1.6,4],"p":[-1.185,1.292,1.485],"r":[0,0,8.93],"k":[1,1,1],"c":"#8a6c3e","t":0},
+  {"s":"cone","a":[0.12,1.6,4],"p":[-1.712,1.425,0.824],"r":[0,0,12.91],"k":[1,1,1],"c":"#8a6c3e","t":0},
+  {"s":"cone","a":[0.12,1.6,4],"p":[-1.9,1.611,0.0],"r":[0,0,14.32],"k":[1,1,1],"c":"#8a6c3e","t":0},
+  {"s":"cone","a":[0.12,1.6,4],"p":[-1.712,1.823,-0.824],"r":[0,0,12.91],"k":[1,1,1],"c":"#8a6c3e","t":0},
+  {"s":"cone","a":[0.12,1.6,4],"p":[-1.185,2.01,-1.485],"r":[0,0,8.93],"k":[1,1,1],"c":"#8a6c3e","t":0},
+  {"s":"cone","a":[0.12,1.6,4],"p":[-0.423,2.121,-1.852],"r":[0,0,3.19],"k":[1,1,1],"c":"#8a6c3e","t":0},
+  {"s":"cone","a":[0.12,1.6,4],"p":[0.423,2.121,-1.852],"r":[0,0,-3.19],"k":[1,1,1],"c":"#8a6c3e","t":0},
+  {"s":"cone","a":[0.12,1.6,4],"p":[1.185,2.01,-1.485],"r":[0,0,-8.93],"k":[1,1,1],"c":"#8a6c3e","t":0},
+  {"s":"cone","a":[0.12,1.6,4],"p":[1.712,1.823,-0.824],"r":[0,0,-12.91],"k":[1,1,1],"c":"#8a6c3e","t":0},
+  {"s":"box","a":[0.5,1.6,0.4],"p":[0,2.32,0],"r":[0,0,0],"k":[1,1,1],"c":"#9b7b48","t":0},
+  {"s":"box","a":[1.6,0.22,0.22],"p":[0,2.82,0],"r":[0,0,0],"k":[1,1,1],"c":"#6e5530","t":0},
+  {"s":"box","a":[0.45,0.5,0.45],"p":[0,3.37,0],"r":[0,0,0],"k":[1,1,1],"c":"#9b7b48","t":0},
+  {"s":"cone","a":[0.04,0.3,4],"p":[-0.15,3.72,0],"r":[0,0,28.65],"k":[1,1,1],"c":"#d9cfb6","t":0},
+  {"s":"cone","a":[0.04,0.3,4],"p":[0.15,3.72,0],"r":[0,0,-28.65],"k":[1,1,1],"c":"#d9cfb6","t":0},
+  {"s":"box","a":[0.06,0.6,0.5],"p":[1.95,2.492,0],"r":[0,0,0],"k":[1,1,1],"c":"#ffffff","t":1},
+  {"s":"box","a":[0.06,0.6,0.5],"p":[-1.95,2.492,0],"r":[0,0,0],"k":[1,1,1],"c":"#ffffff","t":1},
+  {"s":"box","a":[0.5,0.6,0.06],"p":[0,2.095,1.95],"r":[0,0,0],"k":[1,1,1],"c":"#ffffff","t":1}
 ]
 };
 const MODEL_KEY='wicker-models-v1',D2R=Math.PI/180;
@@ -3545,7 +3590,7 @@ function drawEntities(){
   for(const k in UM){fin(UM[k].t,UM[k].n);fin(UM[k].f,UM[k].n)}
   for(const k in BM)BM[k].n=0;
   for(const b of blds){if(!b.alive)continue;const rx=wd(b.x-cam.fx),rz=wd(b.z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2+40)continue;if(!visB(b))continue;const M=BM[b.bt];if(M.n>=M.cap)continue;const dim=b.tribe!==0&&!isVis(b.x,b.z);
-    const y=hAt(b.x,b.z)-r2*K,sy=b.done?1:.12+.88*b.prog,i=M.n++,yw=b.bt==='hedge'?(b.id*2.39996)%TAU:(b.yaw||0);place(M.t,i,rx,y,rz,yw,1,sy);place(M.f,i,rx,y,rz,yw,1,sy);
+    const y=(b.baseY!=null?b.baseY:hAt(b.x,b.z))-r2*K,sy=b.done?1:.12+.88*b.prog,i=M.n++,yw=b.bt==='hedge'?(b.id*2.39996)%TAU:(b.yaw||0);place(M.t,i,rx,y,rz,yw,1,sy);place(M.f,i,rx,y,rz,yw,1,sy);
     const T=tribes[b.tribe];if(b.bt==='barrow')groundCol(b.x,b.z,3.2,_c);else{_c.copy(b.bt==='hut'?T.roof:T.c);if(gt-b.hitT<.1)_c.setRGB(1,.9,.8);if(!b.done)_c.multiplyScalar(.7)}M.t.setColorAt(i,_c);
     _c.setRGB(1,1,1);if(b.hp<b.mhp*.5)_c.multiplyScalar(.65);if(!b.done)_c.setRGB(.85,.8,.7);if(b.lit)_c.setRGB(.42,.26,.18);if(dim)_c.multiplyScalar(.5);M.f.setColorAt(i,_c)}
   {const HL=BM.hedgelink,hm=new Map();for(const b of blds)if(b.alive&&b.bt==='hedge')hm.set(wi(b.cz0)*N+wi(b.cx0),b);
@@ -4009,11 +4054,12 @@ function buildWorld(){const SC=scen();alien=SC&&SC.alien||null;applyAlien();chgP
   if(SC&&SC.bounty&&w.riteSpot){const T0=tribes[0],r=blds.find(b=>b.bt==='reinc'&&b.tribe===0),o=w.riteSpot,sz=BT.god.s,v=validSpot(0,'god',o.x,o.z);placeBuilding(0,'god',v.err?{cx0:Math.floor(o.x-sz/2+.5),cz0:Math.floor(o.z-sz/2+.5)}:v,true);
     let folds=blds.filter(b=>b.bt==='fold'&&b.tribe===0).length;for(let a=0;a<48&&folds<2;a++){const ang=a/12*TAU+.9,rr=6+(a/12|0)*2.5,v=validSpot(0,'fold',r.x+Math.cos(ang)*rr,r.z+Math.sin(ang)*rr);if(!v.err){placeBuilding(0,'fold',v,true);folds++}}
     for(const b of blds)if(b.bt==='fold'&&b.tribe===0)while(b.capt.length<BT.fold.hold)b.capt.push(wildId)}
-  // a hollow hill is eased into the land: a low skirt of earth runs up to the mound on every side but the entrance, and a few trees stand close enough to hide the joins
-const dressBarrow=b=>{if(!b)return;const cx=Math.round(b.x),cz=Math.round(b.z),base=H[wi(cz)*N+wi(cx)];
-    for(let dz=-5;dz<=5;dz++)for(let dx=-5;dx<=5;dx++){const d=Math.hypot(dx,dz);if(d<2.2||d>5)continue;if(dz>0&&Math.abs(dx)<1.8)continue;const i=wi(cz+dz)*N+wi(cx+dx);if(bOcc[i]||H[i]<.3)continue;const w=1-sstep(2.2,5,d);H[i]=Math.max(H[i],lerp(H[i],base+.4,w))}
-    recompute(cx-7,cz-7,cx+7,cz+7);
-    let n=0;for(let k=0;k<40&&n<7;k++){const a=R()*TAU,r=3.1+R()*2.4;if(Math.sin(a)>.45)continue;const x=wrap(b.x+Math.cos(a)*r),z=wrap(b.z+Math.sin(a)*r),c=cidx(x,z);if(!walk[c]||water[c]||bOcc[c]||trees.some(t=>t.alive&&d2(t.x,t.z,x,z)<1.3))continue;trees.push({x,z,wood:TUNE.woodPerTree,alive:true,sc:.75+R()*.4,tint:.85+R()*.25});n++}
+  // a hollow hill is raised out of the land itself: the mound is terrain, sitting a little behind the stonework, and only the stonework is a model
+const BARROW_R=4.6,BARROW_H=1.75,BARROW_BACK=1.2;
+const dressBarrow=b=>{if(!b)return;const cx=Math.round(b.x),cz=Math.round(b.z);b.baseY=hAt(b.x,b.z);const base=b.baseY,mz=b.z-BARROW_BACK,r=Math.ceil(BARROW_R)+1;
+    for(let dz=-r-1;dz<=r+1;dz++)for(let dx=-r;dx<=r;dx++){const vx=cx+dx,vz=cz+dz,d=Math.hypot(vx-b.x,vz-mz);if(d>=BARROW_R)continue;const i=wi(vz)*N+wi(vx);const q=1-(d/BARROW_R)**2;H[i]=Math.max(H[i],base+BARROW_H*q*q)}
+    recompute(cx-r-2,cz-r-3,cx+r+2,cz+r+2);
+    let n=0;for(let k=0;k<50&&n<7;k++){const a=R()*TAU,rr=4.6+R()*1.8;if(Math.sin(a)>.45)continue;const x=wrap(b.x+Math.cos(a)*rr),z=wrap(mz+Math.sin(a)*rr),c=cidx(x,z);if(!walk[c]||water[c]||bOcc[c]||trees.some(t=>t.alive&&d2(t.x,t.z,x,z)<1.3))continue;trees.push({x,z,wood:TUNE.woodPerTree,alive:true,sc:.75+R()*.4,tint:.85+R()*.25});n++}
     tGridDirty=true};
   const neutral=(type,pt)=>{const sz=BT[type].s,v=validSpot(wildId,type,pt.x,pt.z);return placeBuilding(wildId,type,v.err?{cx0:Math.floor(pt.x-sz/2+.5),cz0:Math.floor(pt.z-sz/2+.5)}:v,true)};
   const mb=neutral('moot',w.centre);moot={x:mb.x,z:wrap(mb.z+3.2)};for(const b of w.barrows)dressBarrow(neutral('barrow',b));
