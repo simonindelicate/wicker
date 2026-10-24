@@ -973,7 +973,7 @@ function decorTick(dt){
         for(const b of sp){free.delete(b);buntings.push({a:{x:best.x,z:best.z,h:best.h},b:{x:b.x,z:b.z,h:HUT_TOP},id:best.id+b.id,src:best.src.concat([b])})}}}}
   // an entombed Cunning Woman's hill: five strings from the centre pole out to five flower beds
   tombBeds=[];for(const b of blds){if(!b.alive||b.bt!=='tomb')continue;for(let i=0;i<5;i++){const a=i/5*TAU+.31,x=wrap(b.x+Math.cos(a)*5.4),z=wrap(b.z+Math.sin(a)*5.4);if(water[cidx(x,z)]||H[cidx(x,z)]<.3)continue;
-    tombBeds.push({x,z,id:b.id*5+i});buntings.push({a:{x:b.x,z:b.z,h:3.0+(b.baseY!=null?0.520-(hAt(b.x,b.z)-b.baseY):0)},b:{x,z,h:1.05},id:b.id+i*2,src:[b]})}}
+    tombBeds.push({x,z,id:b.id*5+i});buntings.push({a:{x:b.x,z:b.z,h:3.0+(b.baseY!=null?-0.073-(hAt(b.x,b.z)-b.baseY):0)},b:{x,z,h:1.05},id:b.id+i*2,src:[b]})}}
   const nearB=(x,z,r,ti)=>{let n=0;for(const o of blds)if(o.alive&&o.done&&!BT[o.bt].inv&&o.bt!=='hedge'&&(ti==null||o.tribe===ti)&&d2(o.x,o.z,x,z)<r*r)n++;return n};
   const clear=(x,z,r)=>{for(let dz=-r;dz<=r;dz++)for(let dx=-r;dx<=r;dx++){const c=cidx(x+dx,z+dz);if(bOcc[c]||water[c]||!walk[c]||hazU[c]>gt||saltU[c]>gt||wearShown[c])return false}return true};
   // wild-flower patches in spare ground between buildings, where there is no room to build
@@ -3393,28 +3393,28 @@ const MODEL_DATA={
   {"s":"cone","a":[0.07,0.745,10],"p":[-1.1868,0.7435,-0.158],"r":[0,-18,-5],"k":[1,1,1],"c":"#452a28","t":0},
   {"s":"cone","a":[0.07,0.745,10],"p":[-1.0968,0.7435,-0.6202],"r":[0,-18,-5],"k":[1,1,1],"c":"#452a28","t":0},
   {"s":"box","a":[0.78,0.86,0.16],"p":[0,0.33,1.62],"r":[-30,0,0],"k":[1,1,1],"c":"#6f6a60","t":0},
-  {"s":"cone","a":[0.12,1.6,4],"p":[1.9,1.611,0.0],"r":[0,0,-14.32],"k":[1,1,1],"c":"#8a6c3e","t":0},
-  {"s":"cone","a":[0.12,1.6,4],"p":[1.712,1.425,0.824],"r":[0,0,-12.91],"k":[1,1,1],"c":"#8a6c3e","t":0},
-  {"s":"cone","a":[0.12,1.6,4],"p":[1.185,1.292,1.485],"r":[0,0,-8.93],"k":[1,1,1],"c":"#8a6c3e","t":0},
-  {"s":"cone","a":[0.12,1.6,4],"p":[0.423,1.226,1.852],"r":[0,0,-3.19],"k":[1,1,1],"c":"#8a6c3e","t":0},
-  {"s":"cone","a":[0.12,1.6,4],"p":[-0.423,1.226,1.852],"r":[0,0,3.19],"k":[1,1,1],"c":"#8a6c3e","t":0},
-  {"s":"cone","a":[0.12,1.6,4],"p":[-1.185,1.292,1.485],"r":[0,0,8.93],"k":[1,1,1],"c":"#8a6c3e","t":0},
-  {"s":"cone","a":[0.12,1.6,4],"p":[-1.712,1.425,0.824],"r":[0,0,12.91],"k":[1,1,1],"c":"#8a6c3e","t":0},
-  {"s":"cone","a":[0.12,1.6,4],"p":[-1.9,1.611,0.0],"r":[0,0,14.32],"k":[1,1,1],"c":"#8a6c3e","t":0},
-  {"s":"cone","a":[0.12,1.6,4],"p":[-1.712,1.823,-0.824],"r":[0,0,12.91],"k":[1,1,1],"c":"#8a6c3e","t":0},
-  {"s":"cone","a":[0.12,1.6,4],"p":[-1.185,2.01,-1.485],"r":[0,0,8.93],"k":[1,1,1],"c":"#8a6c3e","t":0},
-  {"s":"cone","a":[0.12,1.6,4],"p":[-0.423,2.121,-1.852],"r":[0,0,3.19],"k":[1,1,1],"c":"#8a6c3e","t":0},
-  {"s":"cone","a":[0.12,1.6,4],"p":[0.423,2.121,-1.852],"r":[0,0,-3.19],"k":[1,1,1],"c":"#8a6c3e","t":0},
-  {"s":"cone","a":[0.12,1.6,4],"p":[1.185,2.01,-1.485],"r":[0,0,-8.93],"k":[1,1,1],"c":"#8a6c3e","t":0},
-  {"s":"cone","a":[0.12,1.6,4],"p":[1.712,1.823,-0.824],"r":[0,0,-12.91],"k":[1,1,1],"c":"#8a6c3e","t":0},
-  {"s":"box","a":[0.5,1.6,0.4],"p":[0,2.32,0],"r":[0,0,0],"k":[1,1,1],"c":"#9b7b48","t":0},
-  {"s":"box","a":[1.6,0.22,0.22],"p":[0,2.82,0],"r":[0,0,0],"k":[1,1,1],"c":"#6e5530","t":0},
-  {"s":"box","a":[0.45,0.5,0.45],"p":[0,3.37,0],"r":[0,0,0],"k":[1,1,1],"c":"#9b7b48","t":0},
-  {"s":"cone","a":[0.04,0.3,4],"p":[-0.15,3.72,0],"r":[0,0,28.65],"k":[1,1,1],"c":"#d9cfb6","t":0},
-  {"s":"cone","a":[0.04,0.3,4],"p":[0.15,3.72,0],"r":[0,0,-28.65],"k":[1,1,1],"c":"#d9cfb6","t":0},
-  {"s":"box","a":[0.06,0.6,0.5],"p":[1.95,2.492,0],"r":[0,0,0],"k":[1,1,1],"c":"#ffffff","t":1},
-  {"s":"box","a":[0.06,0.6,0.5],"p":[-1.95,2.492,0],"r":[0,0,0],"k":[1,1,1],"c":"#ffffff","t":1},
-  {"s":"box","a":[0.5,0.6,0.06],"p":[0,2.095,1.95],"r":[0,0,0],"k":[1,1,1],"c":"#ffffff","t":1}
+  {"s":"cone","a":[0.12,1.6,4],"p":[1.9,1.235,0.0],"r":[0,0,-14.32],"k":[1,1,1],"c":"#8a6c3e","t":0},
+  {"s":"cone","a":[0.12,1.6,4],"p":[1.712,0.8,0.824],"r":[0,0,-12.91],"k":[1,1,1],"c":"#8a6c3e","t":0},
+  {"s":"cone","a":[0.12,1.6,4],"p":[1.185,0.8,1.485],"r":[0,0,-8.93],"k":[1,1,1],"c":"#8a6c3e","t":0},
+  {"s":"cone","a":[0.12,1.6,4],"p":[0.423,0.8,1.852],"r":[0,0,-3.19],"k":[1,1,1],"c":"#8a6c3e","t":0},
+  {"s":"cone","a":[0.12,1.6,4],"p":[-0.423,0.8,1.852],"r":[0,0,3.19],"k":[1,1,1],"c":"#8a6c3e","t":0},
+  {"s":"cone","a":[0.12,1.6,4],"p":[-1.185,0.8,1.485],"r":[0,0,8.93],"k":[1,1,1],"c":"#8a6c3e","t":0},
+  {"s":"cone","a":[0.12,1.6,4],"p":[-1.712,0.8,0.824],"r":[0,0,12.91],"k":[1,1,1],"c":"#8a6c3e","t":0},
+  {"s":"cone","a":[0.12,1.6,4],"p":[-1.9,1.235,0.0],"r":[0,0,14.32],"k":[1,1,1],"c":"#8a6c3e","t":0},
+  {"s":"cone","a":[0.12,1.6,4],"p":[-1.712,1.575,-0.824],"r":[0,0,12.91],"k":[1,1,1],"c":"#8a6c3e","t":0},
+  {"s":"cone","a":[0.12,1.6,4],"p":[-1.185,1.919,-1.485],"r":[0,0,8.93],"k":[1,1,1],"c":"#8a6c3e","t":0},
+  {"s":"cone","a":[0.12,1.6,4],"p":[-0.423,2.137,-1.852],"r":[0,0,3.19],"k":[1,1,1],"c":"#8a6c3e","t":0},
+  {"s":"cone","a":[0.12,1.6,4],"p":[0.423,2.137,-1.852],"r":[0,0,-3.19],"k":[1,1,1],"c":"#8a6c3e","t":0},
+  {"s":"cone","a":[0.12,1.6,4],"p":[1.185,1.919,-1.485],"r":[0,0,-8.93],"k":[1,1,1],"c":"#8a6c3e","t":0},
+  {"s":"cone","a":[0.12,1.6,4],"p":[1.712,1.575,-0.824],"r":[0,0,-12.91],"k":[1,1,1],"c":"#8a6c3e","t":0},
+  {"s":"box","a":[0.5,1.6,0.4],"p":[0,1.727,0],"r":[0,0,0],"k":[1,1,1],"c":"#9b7b48","t":0},
+  {"s":"box","a":[1.6,0.22,0.22],"p":[0,2.227,0],"r":[0,0,0],"k":[1,1,1],"c":"#6e5530","t":0},
+  {"s":"box","a":[0.45,0.5,0.45],"p":[0,2.777,0],"r":[0,0,0],"k":[1,1,1],"c":"#9b7b48","t":0},
+  {"s":"cone","a":[0.04,0.3,4],"p":[-0.15,3.127,0],"r":[0,0,28.65],"k":[1,1,1],"c":"#d9cfb6","t":0},
+  {"s":"cone","a":[0.04,0.3,4],"p":[0.15,3.127,0],"r":[0,0,-28.65],"k":[1,1,1],"c":"#d9cfb6","t":0},
+  {"s":"box","a":[0.06,0.6,0.5],"p":[1.95,2.121,0],"r":[0,0,0],"k":[1,1,1],"c":"#ffffff","t":1},
+  {"s":"box","a":[0.06,0.6,0.5],"p":[-1.95,2.121,0],"r":[0,0,0],"k":[1,1,1],"c":"#ffffff","t":1},
+  {"s":"box","a":[0.5,0.6,0.06],"p":[0,1.7,1.95],"r":[0,0,0],"k":[1,1,1],"c":"#ffffff","t":1}
 ]
 };
 const MODEL_KEY='wicker-models-v1',D2R=Math.PI/180;
@@ -4055,9 +4055,9 @@ function buildWorld(){const SC=scen();alien=SC&&SC.alien||null;applyAlien();chgP
     let folds=blds.filter(b=>b.bt==='fold'&&b.tribe===0).length;for(let a=0;a<48&&folds<2;a++){const ang=a/12*TAU+.9,rr=6+(a/12|0)*2.5,v=validSpot(0,'fold',r.x+Math.cos(ang)*rr,r.z+Math.sin(ang)*rr);if(!v.err){placeBuilding(0,'fold',v,true);folds++}}
     for(const b of blds)if(b.bt==='fold'&&b.tribe===0)while(b.capt.length<BT.fold.hold)b.capt.push(wildId)}
   // a hollow hill is raised out of the land itself: the mound is terrain, sitting a little behind the stonework, and only the stonework is a model
-const BARROW_R=4.6,BARROW_H=1.75,BARROW_BACK=1.2;
+const BARROW_R=4.6,BARROW_H=1.75,BARROW_BACK=2.4;
 const dressBarrow=b=>{if(!b)return;const cx=Math.round(b.x),cz=Math.round(b.z);b.baseY=hAt(b.x,b.z);const base=b.baseY,mz=b.z-BARROW_BACK,r=Math.ceil(BARROW_R)+1;
-    for(let dz=-r-1;dz<=r+1;dz++)for(let dx=-r;dx<=r;dx++){const vx=cx+dx,vz=cz+dz,d=Math.hypot(vx-b.x,vz-mz);if(d>=BARROW_R)continue;const i=wi(vz)*N+wi(vx);const q=1-(d/BARROW_R)**2;H[i]=Math.max(H[i],base+BARROW_H*q*q)}
+    for(let dz=-r-1;dz<=r+1;dz++)for(let dx=-r;dx<=r;dx++){const vx=cx+dx,vz=cz+dz,d=Math.hypot(vx-b.x,vz-mz);if(d>=BARROW_R)continue;if(vz-b.z>.3&&Math.abs(vx-b.x)<2.6)continue;const i=wi(vz)*N+wi(vx);const q=1-(d/BARROW_R)**2;H[i]=Math.max(H[i],base+BARROW_H*q*q)}
     recompute(cx-r-2,cz-r-3,cx+r+2,cz+r+2);
     let n=0;for(let k=0;k<50&&n<7;k++){const a=R()*TAU,rr=4.6+R()*1.8;if(Math.sin(a)>.45)continue;const x=wrap(b.x+Math.cos(a)*rr),z=wrap(mz+Math.sin(a)*rr),c=cidx(x,z);if(!walk[c]||water[c]||bOcc[c]||trees.some(t=>t.alive&&d2(t.x,t.z,x,z)<1.3))continue;trees.push({x,z,wood:TUNE.woodPerTree,alive:true,sc:.75+R()*.4,tint:.85+R()*.25});n++}
     tGridDirty=true};
