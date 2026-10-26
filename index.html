@@ -109,6 +109,7 @@ body.noui #top,body.noui #mini,body.noui #side,body.noui #camTiltBox,body.noui #
 .card span{font-size:13px;color:var(--muted)}
 
 .scrim{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:16px;background:radial-gradient(ellipse at 50% 60%,rgba(6,10,18,.15),rgba(6,10,18,.72));overflow:auto}
+.twSheet details{border-top:1px solid var(--line);padding:6px 0}.twSheet summary{cursor:pointer;font-size:15px;padding:6px 0}.twItem{margin:8px 0 12px}.twItem label{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12px;opacity:.8;margin-bottom:4px}.twItem label button{font-size:11px;padding:2px 8px}.twItem textarea,#twIOt{width:100%;box-sizing:border-box;background:rgba(0,0,0,.25);color:inherit;border:1px solid var(--line);border-radius:8px;padding:8px;font:inherit;font-size:15px;line-height:1.4;resize:vertical}.twItem.changed textarea{border-color:var(--mana)}#twIOt{min-height:180px;font-family:monospace;font-size:12px}.twFind{width:100%;box-sizing:border-box;margin:6px 0 10px;padding:8px;border-radius:8px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:inherit;font:inherit}.twBar{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 .sheet{width:min(640px,100%);max-height:100%;overflow:auto;background:var(--panel2);border:1px solid var(--line);border-radius:16px;padding:22px 22px 18px;box-shadow:0 24px 70px rgba(0,0,0,.55)}
 h1{font:400 clamp(36px,9vw,58px)/1 var(--f-display);letter-spacing:.1em;margin:0 0 8px;color:var(--ochre);text-wrap:balance}
 h2{font:400 28px/1.1 var(--f-display);letter-spacing:.06em;margin:0 0 8px;text-wrap:balance}
@@ -265,6 +266,7 @@ details.help summary{cursor:pointer;color:var(--text);font:14px var(--f-display)
       <button class="secondary" id="bWatch">Watch the villages fight among themselves</button>
       <button class="secondary" id="bTokens">Tokens</button>
       <button class="secondary" id="bGallery">Model workshop</button>
+      <button class="secondary" id="bText" hidden>Text workshop</button>
       <div id="errLog" hidden style="font-size:12px;opacity:.85;margin:6px 0;word-break:break-word"><span id="errLogT"></span> <button class="btn" id="errCopy">Copy</button> <button class="btn" id="errClear">Clear</button></div>
       <details class="help">
         <summary>How to play</summary>
@@ -312,6 +314,16 @@ details.help summary{cursor:pointer;color:var(--text);font:14px var(--f-display)
     </div>
   </div>
 
+  <div id="tw" class="scrim" hidden>
+    <div class="sheet twSheet">
+      <h2>Text workshop</h2>
+      <p class="sub">Every piece of the game's writing. Changes take effect at once and are kept on this device; Export gives the changed lines to send on and bake in. Spell names show on the spell tiles after a reload.</p>
+      <input id="twFind" class="twFind" placeholder="Find…" autocomplete="off">
+      <div id="twList"></div>
+      <div class="twBar"><button class="secondary" id="twExport">Export</button><button class="secondary" id="twImport">Import</button><button class="primary" id="twDone">Done</button></div>
+      <div id="twIO" hidden><p class="sub" id="twIOh"></p><textarea id="twIOt" spellcheck="false"></textarea><div class="twBar"><button class="secondary" id="twIOcopy">Copy</button><button class="primary" id="twIOapply">Use these words</button><button class="secondary" id="twIOclose">Close</button></div></div>
+    </div>
+  </div>
   <div id="grim" class="scrim" hidden>
     <div class="sheet">
       <h2>Grimoire</h2>
@@ -2336,6 +2348,8 @@ const UCAP={daughter:30,phillip:12,goat:60,chicken:300,rabbit:200,queen:8,hunter
 // Models edited in the Model workshop (menu) are stored as lists of parts. Edits you export from the
 // workshop can be pasted into MODEL_DATA here so that they ship with the game for everyone; edits made
 // in the workshop itself are kept in this browser and override these.
+// words baked in from the text workshop: key -> text
+const TEXT_DATA={};
 const MODEL_DATA={
 "u:goat":[
   {"s":"cyl","a":[0.105,0.075,0.035,8],"p":[0,0.46,0.19],"r":[39,0,0],"k":[1,1,1],"c":"#ffffff","t":1},
@@ -4034,7 +4048,7 @@ function drawPreview(){const pc=$('prev'),px=pc.getContext('2d');const tmp=docum
   for(const b of blds)if(b.alive&&b.tribe===wildId){px.fillStyle='#d9cfb6';px.strokeStyle='#0d0a08';px.lineWidth=1.5;px.beginPath();px.arc(b.x*sc,b.z*sc,b.bt==='moot'?5:4,0,TAU);px.fill();px.stroke()}
   const land=(()=>{let n=0;for(let c=0;c<N*N;c++)if(!water[c])n++;return Math.round(n/(N*N)*100)})();
   $('prevCap').textContent=`Your village is ochre. ${land}% land, ${settings.enemies} rival${settings.enemies>1?'s':''}. Pale marks are the Moot and the hollow hills.`}
-function menuUnlocks(){showErrLog();$('bChal').hidden=!chalOpen();{const d=chalOpen();$('oModeF').hidden=!d;$('oModeCun').hidden=!cunOpen();if((!d||settings.mode==='cunning'&&!cunOpen())&&settings.mode!=='classic'){settings.mode='classic';$('oMode').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x.dataset.v==='classic'))}}{const pr=campProg(),ok=!!pr.complete||devMode();$('oDfX').hidden=!ok;if(!ok&&settings.diff==='extreme'){settings.diff='hard';$('oDf').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x.dataset.v==='hard'))}}}
+function menuUnlocks(){showErrLog();$('bText').hidden=!devMode();$('bChal').hidden=!chalOpen();{const d=chalOpen();$('oModeF').hidden=!d;$('oModeCun').hidden=!cunOpen();if((!d||settings.mode==='cunning'&&!cunOpen())&&settings.mode!=='classic'){settings.mode='classic';$('oMode').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x.dataset.v==='classic'))}}{const pr=campProg(),ok=!!pr.complete||devMode();$('oDfX').hidden=!ok;if(!ok&&settings.diff==='extreme'){settings.diff='hard';$('oDf').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x.dataset.v==='hard'))}}}
 function openMenu(){setNoUI(false);menuUnlocks();if(settings.campaign!=null){if(skirmishSettings)Object.assign(settings,skirmishSettings);settings.campaign=null}settings.chal=false;allowSets=null;applyAllow();showContinue();scene.fog.near=30;scene.fog.far=80;watching=false;document.body.classList.remove('watch');running=false;droneLevel();over=false;inMenu=true;$('menu').hidden=false;for(const id of['top','mini','side','dock'])$(id).hidden=true;hint(null);armed=null;placing=null;$('oSeed').value=settings.seed;buildWorld()}
 function buildWorld(){const SC=scen();alien=SC&&SC.alien||null;applyAlien();chgPick=null;chgPre=null;wells=[];stock=[];hutches=[];stains=[];seaRed=0;seaRise=null;chalSeasDone=false;fetchStartDone=false;cwLost=false;const w=genWorld(settings.seed,settings.style,settings.enemies+1,{centre:SC&&SC.centre,centreGap:SC&&SC.centreGap,keep:SC&&SC.keep,square:SC&&SC.square,mount:SC&&SC.mount});world=w;H=w.h;TN=w.tn;
   walk=new Uint8Array(N*N);water=new Uint8Array(N*N);pass=new Uint8Array(N*N);hazU=new Float32Array(N*N);hazType=new Int8Array(N*N);hazOwner=new Int8Array(N*N).fill(-1);saltU=new Float32Array(N*N);saltOwner=new Int8Array(N*N);saltList.clear();wear=new Float32Array(N*N);wearShown=new Uint8Array(N*N);flowers=[];hazGrp=new Int32Array(N*N);swamps={};swampSeq=1;hedgeA=new Uint8Array(N*N);bOcc=new Int32Array(N*N);colW=new Float32Array(N*N*3);
@@ -4368,6 +4382,38 @@ $('wsIOapply').addEventListener('click',()=>{let o;try{o=JSON.parse($('wsIOt').v
   try{localStorage.setItem(MODEL_KEY,JSON.stringify(loc))}catch(e){}$('wsIO').hidden=true;wsLoad(WS.key);wsStatus();toast(n?`${n} model${n===1?'':'s'} taken in`:'Nothing in that text matched a model')});
 $('wsIOclose').addEventListener('click',()=>{$('wsIO').hidden=true});
 $('bGallery').addEventListener('click',()=>wsOpen());
+// ---- text workshop (test mode): every piece of the game's writing, editable in place ----
+const TEXT_KEY='wicker-text-v1';
+function textDefs(){const d=[],lines=(arr)=>({get:()=>arr.join('\n'),set:v=>arr.splice(0,arr.length,...String(v).split('\n').map(x=>x.trim()).filter(Boolean)),big:1});
+  SCEN.forEach((L,i)=>{d.push({g:'Campaign levels',k:`scen.${i}.title`,l:`${i+1}. Title`,get:()=>L.title,set:v=>L.title=v});d.push({g:'Campaign levels',k:`scen.${i}.intro`,l:`${i+1}. Intro`,get:()=>L.intro,set:v=>L.intro=v,big:1})});
+  CHAL.forEach((L,i)=>{d.push({g:'Seasons of the Witch',k:`chal.${i}.title`,l:`${i+1}. Title`,get:()=>L.title,set:v=>L.title=v});d.push({g:'Seasons of the Witch',k:`chal.${i}.intro`,l:`${i+1}. Intro`,get:()=>L.intro,set:v=>L.intro=v,big:1});
+  });
+  for(const sp of SP)d.push({g:'Spell names',k:`spname.${sp.k}`,l:sp.k,get:()=>sp.n,set:v=>sp.n=v});
+  for(const sp of SP)if(SPDESC[sp.k]!=null)d.push({g:'Spell descriptions',k:`spdesc.${sp.k}`,l:sp.n,get:()=>SPDESC[sp.k],set:v=>SPDESC[sp.k]=v,big:1});
+  d.push({g:'Lists',k:'list.opening',l:'Opening lines for procedural games, one per line',...lines(OPENING)});
+  d.push({g:'Lists',k:'list.inns',l:'Inn names, one per line',...lines(INN_NAMES)});
+  d.push({g:'Lists',k:'list.rejoice',l:'Rejoice! lines on victory, one per line',...lines(REJOICE)});
+  for(const [cat,list] of TOKS)for(const t of list){d.push({g:'Tokens',k:`tok.${t[0]}`,l:`${cat}: ${t[0]}`,get:()=>t[1],set:v=>{t[1]=v;TOKMAP[t[0]].d=v}});if(t[2]!=null)d.push({g:'Tokens',k:`tok.${t[0]}.hint`,l:`${cat}: ${t[0]} (hint)`,get:()=>t[2],set:v=>{t[2]=v;TOKMAP[t[0]].h=v}})}
+  return d}
+let TW=null,twBaked={};
+function textLocal(){try{return JSON.parse(localStorage.getItem(TEXT_KEY))||{}}catch(e){return {}}}
+function textInit(){TW=textDefs();const loc=textLocal();for(const x of TW){const o=x.get();if(TEXT_DATA[x.k]!=null)x.set(TEXT_DATA[x.k]);twBaked[x.k]=x.get();if(loc[x.k]!=null)x.set(loc[x.k]);if(o==null)twBaked[x.k]=''}}
+function twSave(k,v){const loc=textLocal();if(v===twBaked[k])delete loc[k];else loc[k]=v;try{localStorage.setItem(TEXT_KEY,JSON.stringify(loc))}catch(e){toast('This browser would not keep the change')}}
+function twItem(x){const v=x.get(),ch=v!==twBaked[x.k];return `<div class="twItem${ch?' changed':''}" data-k="${x.k}"><label><span>${x.l.replace(/</g,'&lt;')}</span><button class="btn" data-rs="${x.k}" ${ch?'':'hidden'}>Back to original</button></label><textarea rows="${x.big?Math.min(9,Math.max(3,Math.ceil(v.length/60)+(v.split('\n').length-1))):1}">${v.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</textarea></div>`}
+function twRender(){const f=$('twFind').value.trim().toLowerCase(),groups={};for(const x of TW){if(f&&!(x.l+' '+x.get()).toLowerCase().includes(f))continue;(groups[x.g]=groups[x.g]||[]).push(x)}
+  $('twList').innerHTML=Object.keys(groups).map(g=>`<details ${f?'open':''} data-g="${g}"><summary>${g} (${groups[g].length})</summary>${f?groups[g].map(twItem).join(''):''}</details>`).join('')||'<p class="sub">Nothing matches.</p>'}
+$('twList').addEventListener('toggle',e=>{const d=e.target;if(d.tagName!=='DETAILS'||!d.open||d.querySelector('.twItem'))return;const f=$('twFind').value.trim().toLowerCase();d.insertAdjacentHTML('beforeend',TW.filter(x=>x.g===d.dataset.g&&(!f||(x.l+' '+x.get()).toLowerCase().includes(f))).map(twItem).join(''))},true);
+$('twList').addEventListener('input',e=>{const it=e.target.closest('.twItem');if(!it)return;const x=TW.find(q=>q.k===it.dataset.k);x.set(e.target.value);const v=x.get();twSave(x.k,v);const ch=v!==twBaked[x.k];it.classList.toggle('changed',ch);it.querySelector('[data-rs]').hidden=!ch});
+$('twList').addEventListener('click',e=>{const b=e.target.closest('[data-rs]');if(!b)return;const x=TW.find(q=>q.k===b.dataset.rs);x.set(twBaked[x.k]);twSave(x.k,twBaked[x.k]);const it=b.closest('.twItem');it.outerHTML=twItem(x)});
+$('twFind').addEventListener('input',twRender);
+$('bText').addEventListener('click',()=>{audio();$('menu').hidden=true;$('tw').hidden=false;$('twIO').hidden=true;twRender()});
+$('twDone').addEventListener('click',()=>{$('tw').hidden=true;$('menu').hidden=false});
+$('twExport').addEventListener('click',()=>{const out={};for(const x of TW){const v=x.get();if(v!==twBaked[x.k])out[x.k]=v}const n=Object.keys(out).length;if(!n)return toast('Nothing has been changed from the game\'s own words');
+  $('twIOt').value=JSON.stringify(out,null,1);$('twIOh').textContent=`${n} line${n===1?'':'s'} changed. Copy this and send it on to be baked into the game.`;$('twIOapply').hidden=true;$('twIOcopy').hidden=false;$('twIO').hidden=false});
+$('twImport').addEventListener('click',()=>{$('twIOt').value='';$('twIOh').textContent='Paste exported text here, then press Use these words.';$('twIOapply').hidden=false;$('twIOcopy').hidden=true;$('twIO').hidden=false});
+$('twIOclose').addEventListener('click',()=>{$('twIO').hidden=true});
+$('twIOcopy').addEventListener('click',async()=>{const t=$('twIOt');t.select();let ok=false;try{await navigator.clipboard.writeText(t.value);ok=true}catch(e){try{ok=document.execCommand('copy')}catch(_){}}toast(ok?'Copied':'Select the text and copy it by hand')});
+$('twIOapply').addEventListener('click',()=>{let d;try{d=JSON.parse($('twIOt').value)}catch(e){return toast('That is not exported text')}let n=0;for(const k in d){const x=TW.find(q=>q.k===k);if(!x)continue;x.set(d[k]);twSave(k,x.get());n++}$('twIO').hidden=true;twRender();toast(`${n} line${n===1?'':'s'} taken in`)});
 function openTokens(){const g=tokGet();let h='',n=0,got=0;for(const [cat,list] of TOKS){h+=`<div class="tokCat">${cat}</div><div class="tokGrid">`;for(const t of list){const o=TOKMAP[t[0]],have=!!g[o.id];n++;if(have)got++;
     h+=`<div class="tok${have?' got':''}"><i></i><span>${o.d}</span></div>`}h+='</div>'}
   $('tokList').innerHTML=h;$('tokSub').textContent=`${got} of ${n} earned.${devMode()?' Test mode is on: tokens are not earned while it is.':''}`;$('tokIO').value='';$('menu').hidden=true;$('tokens').hidden=false}
@@ -4490,7 +4536,7 @@ document.querySelectorAll('.filmBox').forEach(box=>{box.addEventListener('click'
   box.addEventListener('input',e=>{const r=e.target.closest('input[data-fk]');if(!r)return;film[r.dataset.fk]=+r.value;filmSave();filmUI()})});
 filmUI();
 $('errCopy').addEventListener('click',()=>{const t=$('errLogT').textContent;try{navigator.clipboard.writeText(t);toast('Copied')}catch(e){}});$('errClear').addEventListener('click',()=>{try{localStorage.removeItem(ERR_KEY)}catch(e){}showErrLog()});
-resize();buildWorld();menuUnlocks();showContinue();requestAnimationFrame(frame);
+textInit();resize();buildWorld();menuUnlocks();showContinue();requestAnimationFrame(frame);
 window.__ws={castLog,setTarget:(u,x,z)=>setTarget(u,x,z),onTap:(a,b,c,d)=>onTap(a,b,c,d),unitScreen:u=>unitScreen(u),isVis:(x,z)=>isVis(x,z),get seaRise(){return seaRise},get seaRed(){return seaRed},get water(){return water},get fetches(){return fetches},get stains(){return stains},sendAnimal,kindle,get stock(){return stock},get hutches(){return hutches},get HUT_TOP(){return HUT_TOP},get wind(){return wind},get windOn(){return windOn},get lastFight(){return lastFight},windTick,get wildFl(){return wildFl},get season(){return season},endGame,destroyBld,crown,villagerCount,tokGet,keepsake,useKeepsake,walkReach,postAt,setSel,get banners(){return banners},get sel(){return sel},get world(){return world},light,memorial,get stats(){return stats},get cam(){return cam},get WS(){return WS},wsOpen,wsClose,captureDef,defFromData,merge,ORIG_UMOD,ORIG_BMOD,get UM(){return UM},get BM(){return BM},get wear(){return wear},get buntings(){return buntings},get patches(){return patches},get wells(){return wells},get units(){return units},get tribes(){return tribes},get blds(){return blds},sim,beginGame,get gt(){return gt},castSpell,tryCast,saveGame,loadGame,setSel,command,showLevel,SCEN,field,get walkA(){return walk},hAt,get water(){return water},findSpot,get allow(){return allowSets},get pass(){return pass},get swamps(){return swamps},get debris(){return debris},queenValue,invokeArma,startRitual,sendVehicle,get wildId(){return wildId},get armageddon(){return armageddon},placeBuilding,validSpot,orderMove,spawnUnit,command,get water(){return water},findSpot};
 })();
 </script>
