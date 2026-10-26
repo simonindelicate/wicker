@@ -507,7 +507,7 @@ const BT={
   torch:{s:1,wood:0,time:1,hp:1400,label:'Scrying Torch',info:'A burning beacon; the land around it stays in sight while it stands'},
   tomb:{s:3,wood:0,time:1,hp:5000,label:'Tomb Fortress',info:'Your Cunning Woman lies sealed here'},
   oak:{s:4,wood:300,time:50,hp:1500,label:"Herne's Oak",info:'Hang your Cunning Woman from it for two minutes and the Wild Hunt rides'},
-  inn:{s:3,wood:90,bmana:100,time:26,hp:420,label:'Inn',train:'daughter',mana:260,tt:45,info:'Trains the landlord\'s daughter, who lures enemy fighters away, gets them drunk and brings them home to sleep it off'},
+  inn:{s:3,wood:90,bmana:100,time:26,hp:420,label:'Inn',train:'daughter',mana:260,tt:45,info:'Trains the landlord\'s daughter, who lures enemy fighters away, gets them drunk and brings them home to sleep it off. Huts near her breed half as fast again'},
   cottage:{s:3,wood:80,bmana:300,time:20,hp:450,label:'Cottage',info:'Opens the Train tab: train any fighter from one place, keep numbers topped up, and send idle osses roaming. One per village'},
   balloon:{s:4,wood:80,time:26,hp:400,label:'Balloon Works',train:'balloon',mana:60,tt:14,info:'Builds balloons'},
   wicker:{s:3,wood:80,time:20,hp:300,label:'Wicker Man',site:'wicker',holdN:5,burnT:8,info:'Holds five; burns for mana and a frenzy'},
@@ -1289,7 +1289,8 @@ function seaTick(){fetchStartTick();{const SC=scen();if(SC&&SC.seasAt&&!chalSeas
   if(!watching)toast(`The blood tide rises and swallows the low ground.${n?' '+n+' are drowned.':''}`)}
 // ---- the landlord's daughter: lures enemy fighters, gets them drunk, and walks them home to sleep it off at her inn ----
 const LURE_T=['warrior','oss','brave'],LURE_MAX=6;
-function daughterTick(){
+const DTR=[],DTR_R=10,DTR_MULT=1.5; // landlord's daughters: huts of her tribe within DTR_R of her breed DTR_MULT times as fast (not stacking)
+function daughterTick(){DTR.length=0;for(const u of units)if(u.alive&&u.type==='daughter'&&!u.inV)DTR.push(u);
   for(const u of units){if(!u.alive)continue;
     if(u.drunk){const d=u.drunk;if(!d.alive){u.drunk=null;u.sleep=0;u.cmd=false;u.st='idle';continue}
       if(u.sleep>gt)continue;const inn=d.inn&&d.inn.alive?d.inn:null;
@@ -1676,7 +1677,7 @@ function updBld(b,dt){const D=BT[b.bt],T=tribes[b.tribe];if(D.inv)return;
     if(!tg){b.cd=.4;return}b.cd=TUNE.nestReload;const sy=hAt(b.x,b.z)+3.4,ty=unitY(tg)+1.4,dd=Math.sqrt(bd),ti=b.tribe;b.aim=Math.atan2(wd(tg.x-b.x),wd(tg.z-b.z));
     proj({kind:'blast',sx:b.x,sz:b.z,sy,tx:tg.x,tz:tg.z,ty,dur:Math.max(.3,dd/16),arc:1.2,ti,onHit:(x,z)=>{if(tg.alive&&d2(x,z,tg.x,tg.z)<3.2*3.2){atk=ti;dmgUnit(tg,TUNE.nestDamage,null)}for(let i=0;i<18;i++)PA.emit(x,ty,z,(R()-.5)*3,(R()-.5)*3,(R()-.5)*3,.35,1,.5,.12,1,.5,2);sfx('blast',.35,x,z)}});
     sfx('arrow',.3,b.x,b.z);return}
-  if(b.bt==='hut'){if(b.occ>0&&T.stats.pop<T.stats.cap){if(!(T.blightUntil>gt))b.breed+=dt*(TUNE.breedBase+TUNE.breedPerOccupant*b.occ)*T.breedMult*(T.beltaneUntil>gt?2:1);if(b.breed>=1){b.breed=0;const u=spawnUnit('brave',b.tribe,b.dx,b.dz);u.think=1}}
+  if(b.bt==='hut'){if(b.occ>0&&T.stats.pop<T.stats.cap){if(!(T.blightUntil>gt)){const dn=DTR.some(d=>d.tribe===b.tribe&&d2(d.x,d.z,b.x,b.z)<DTR_R*DTR_R);b.breed+=dt*(TUNE.breedBase+TUNE.breedPerOccupant*b.occ)*T.breedMult*(T.beltaneUntil>gt?2:1)*(dn?DTR_MULT:1);if(dn&&R()<dt*.5&&seenAt(b.x,b.z))PA.emit(b.x+(R()-.5)*.8,hAt(b.x,b.z)+1.6,b.z+(R()-.5)*.8,0,.5,0,1.4,1,.62,.7,.8,.35,0)}if(b.breed>=1){b.breed=0;const u=spawnUnit('brave',b.tribe,b.dx,b.dz);u.think=1}}
     if(b.occ>0&&R()<dt*.8){const [cx,cz]=byaw(b,.3,0);PN.emit(b.x+cx,hAt(b.x,b.z)+2.2,b.z+cz,(R()-.5)*.2,.5,(R()-.5)*.2,2.5,.55,.53,.5,.35,.7,-.15)}}
   if(D.train&&!armageddon){if(b.trainee){b.tt-=dt*(T.swordUntil>gt?2:1);if(b.tt<=0){b.trainee=false;b.q--;produce(b);dockDirty=true}}
     else if(b.q>0){const cl=b.claim;if(!cl||!cl.alive||cl.st!=='enter'||cl.bld!==b){b.held=T.id===0&&spareVillagers(T.id)<=TRAIN_KEEP;const br=b.held?null:getFreeBrave(T,b.x,b.z);if(br){if(T.id===0)mark(br.x,br.z,.6,.85,1);br.st='enter';br.bld=b;br.purpose='train';setTarget(br,b.dx,b.dz);b.claim=br}}}}
