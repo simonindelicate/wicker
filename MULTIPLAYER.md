@@ -25,15 +25,19 @@ Its costs are these:
 
 Players' browsers talk to each other directly over **WebRTC data channels**, the browser's built-in peer-to-peer connection. Once they are connected, no server sits in the middle. The one thing a server is needed for is the introduction. Two browsers can't find each other unaided, so each has to hand the other a short description of how to reach it, called an offer and an answer. Carrying those is called **signalling**.
 
-There are three ways to carry them:
+**Signalling lives on Simon's DigitalOcean droplet.** indelicates.xyz is shared hosting on Hostinger, and Vercel and Netlify only run short-lived functions. None of them can later carry a TURN relay (see below), so the droplet is the one home for all the server parts.
+- **The relay.** A small Node program, about forty lines, holds the host's offer under the join code and passes a guest's answer back. It stores nothing for longer than a lobby lasts and carries no game traffic.
+- **The address.** It is served at a subdomain such as `mp.indelicates.xyz`, pointed at the droplet with one A record in the domain's DNS. Caddy gives it HTTPS and renews the certificate itself.
+- **Restarts.** A systemd service restarts it after a reboot.
+- **The fallback.** If the relay is ever down, the offer and answer can be swapped by hand as copy-and-paste text or a QR code, as keepsakes are shared now. That route needs no server at all.
 
-1. **A tiny relay on indelicates.xyz (recommended).** The relay does one job: it holds the host's offer under the join code and passes a guest's answer back. It needs perhaps forty lines of Node or PHP, stores nothing for longer than a lobby lasts, and carries no game traffic. The code is just a key for its lookup table. This gives the short, typeable codes the design wants.
-2. **A public broker.** PeerJS runs a free signalling service that does the same job with no server of our own. It is quicker to start with, but the game would rely on a third party's uptime and rules.
-3. **No server at all.** Players swap the offer and answer as copy-and-paste text, as keepsakes are shared now. It costs nothing, but the text is several hundred characters each way, so this is a fallback, not the main route.
+**The first version: direct connections only.** WebRTC's direct connection covers two cases with the same code:
+- **On the same network.** Two devices on the same Wi-Fi or home network connect to each other directly. This is the LAN case, and it needs no outside help beyond the introduction.
+- **Across the internet.** Players on ordinary home broadband connect directly too, once a public STUN server has told each browser its outside address. Google's free STUN servers are the usual choice.
 
-**Getting through home routers.** Most connections succeed using a public STUN server, which only tells each browser its outside address; Google's free ones are the usual choice. Some networks won't allow a direct connection at all, such as some mobile carriers and strict office or university networks. For those a **TURN** server relays the traffic. One option is to run coturn on the same machine as the signalling relay. The other is to accept that a minority of players can't connect, and say so plainly when it happens. TURN can be added later without changing anything else.
+**TURN comes later.** Some networks won't allow a direct connection at all, such as some mobile carriers and strict office, university or hotel networks. Players on them need a **TURN** server, coturn, on the droplet, relaying all their game traffic. Until it exists, the game says plainly when a connection can't be made. Adding it later is a change to the connection settings only; nothing else in the design depends on it.
 
-**Where the game must be served from.** A page published as a claude.ai artifact may not be allowed to open outside network connections. The multiplayer build should therefore be played from Simon's own hosting, either indelicates.xyz or GitHub Pages from this repository. Single-player stays exactly as it is wherever the file is opened.
+**Where the game must be served from.** A page published as a claude.ai artifact may not be allowed to open outside network connections. The multiplayer build should therefore be played from Simon's own hosting, such as GitHub Pages from this repository, Netlify or Vercel. It must be a secure (https) page.
 
 ---
 
@@ -76,6 +80,16 @@ Selection, the camera, the build menu and the spell bar stay entirely on the gue
 
 ---
 
+## Kept apart from single-player
+
+The single-player game carries no multiplayer code. Multiplayer is a separate file, `multiplayer.html`, made by a small build script, `tools/build_mp.py`. The script takes the current `index.html` and adds:
+- the multiplayer module: connection, lobby, sending and receiving state, and smoothing;
+- the Host and Join screens.
+
+The module works by wrapping the game's own functions from outside. For example, on a guest it replaces `command` with a version that sends the order to the host. The single-player file is never touched by any of this. Whenever the game changes, the script is run again, so multiplayer always has the current game in it and the two never drift apart as a fork would.
+
+**The exceptions: who "the player" is, and spell visuals.** The game assumes the player is tribe 0 throughout, and a wrapper can't reach inside the functions to change that. That change, described next, has to be made in the shared game code. It replaces "tribe 0" with a variable that is always 0 in single-player, so it adds no networking and changes nothing a single player can see. Some spells' visuals may need the same treatment, for the same reason, and on the same terms.
+
 ## What has to change in the game first
 
 The biggest piece of work isn't networking. Throughout the code, "the player" means **tribe 0**: in about 180 places, `ti===0` or `tribes[0]` decides whether to show a toast, check the spell palette, earn a token, count towards a level goal, light the fog or update the HUD. Those uses fall into two kinds, and they need separating:
@@ -109,18 +123,19 @@ The **fog** is computed now for tribe 0 only. It must be computed for each human
 
 Each stage leaves the game working and can be tested on its own:
 
-1. **`me` and `T.human`.** This is the refactor above, done in single-player only, and must change nothing a single player can see. Run through the campaign's first levels and a skirmish to confirm.
-2. **Two tabs on one machine.** Use the browser's `BroadcastChannel` as a stand-in transport between two tabs: one host, one guest. This exercises the whole protocol without any networking or servers, and is how most of the work would be tested.
-3. **The whole world on joining.** The `saveGame` encoder is sent once; the guest builds the world from it and draws it, still and unchanging.
-4. **Updates and smoothing.** Units, buildings, terrain and tribes stream to the guest, and it watches the host's game live.
-5. **Guest orders.** Commands, spells, building and training travel to the host and are carried out for the guest's tribe.
-6. **Events.** The spell visuals, sounds and toasts are split out and played on guests.
-7. **The real connection.** WebRTC replaces `BroadcastChannel`, with the signalling relay on indelicates.xyz and the join code.
-8. **Lobby and seats.** Host and Join screens, choosing tribes, Grimoire picks, and start.
-9. **Dropping out and rejoining.** The AI takeover, reconnection and the host-lost message.
-10. **TURN,** if players report failures to connect.
+1. **`me` and `T.human`.** This is the refactor above, the main change to the shared game. It must change nothing a single player can see. Run through the campaign's first levels and a skirmish to confirm.
+2. **The build script and an empty module.** `tools/build_mp.py` produces `multiplayer.html`, which so far plays exactly like single-player.
+3. **Two tabs on one machine.** Use the browser's `BroadcastChannel` as a stand-in transport between two tabs: one host, one guest. This exercises the whole protocol without any networking or servers, and is how most of the work would be tested.
+4. **The whole world on joining.** The `saveGame` encoder is sent once; the guest builds the world from it and draws it, still and unchanging.
+5. **Updates and smoothing.** Units, buildings, terrain and tribes stream to the guest, and it watches the host's game live.
+6. **Guest orders.** Commands, spells, building and training travel to the host and are carried out for the guest's tribe.
+7. **Events.** The spell visuals, sounds and toasts are split out and played on guests.
+8. **The real connection.** WebRTC replaces `BroadcastChannel`, with the signalling relay on the droplet and the join code. Test on one home network first, then between two houses.
+9. **Lobby and seats.** Host and Join screens, choosing tribes, Grimoire picks, and start.
+10. **Dropping out and rejoining.** The AI takeover, reconnection and the host-lost message.
+11. **TURN** on the droplet, once the direct version is working.
 
-Stages 1 and 6 are the ones that touch existing play, and need the most care. The rest add new code beside the old.
+Stages 1 and 7 are the only ones that may touch the shared game, and need the most care. Stage 7 splits spell visuals away from spell rules; it is done in the multiplayer module where it can be, and in the shared code only where it can't, and then in the same behaviour-neutral way. The rest is new code in the multiplayer file alone.
 
 ---
 
@@ -129,5 +144,5 @@ Stages 1 and 6 are the ones that touch existing play, and need the most care. Th
 1. **How many players?** The maps hold four tribes, so up to four humans, or fewer with AI filling the rest. Is two the first target?
 2. **Who plays together?** Is the first mode everyone against everyone, or humans allied against the AI? Allies would need a notion of friendly tribes, which the game doesn't have now. The shared-tribe idea in `IDEAS.md`, with one player as the Cunning Woman and one commanding the village, is a further step again.
 3. **Honest fog.** Should each guest receive only what their tribe can see? It is fairer, and impossible to cheat, but costs more work on the host.
-4. **The relay.** Is the indelicates.xyz server a suitable place for the forty-line signalling relay, and does it run Node, PHP or something else?
+4. **The droplet.** Which operating system does it run (Ubuntu is usual), and is there a subdomain of indelicates.xyz free to point at it?
 5. **Phones.** Should a phone be allowed to host, or only to join?
