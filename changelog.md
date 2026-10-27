@@ -278,6 +278,54 @@ The day began as brainstorming about what comes after the campaign. Simon set th
   - **What it caught.** The first record pointed at wild-flower patches carried over from a previous game. A patch that had begun fading late in one game could ask for more flowers than it had in the next.
   - **The fix.** Flower patches, bunting, tomb beds, fetches, fire pits, carcass stains, livestock and pending changeling choices are now all cleared when a new world is built or a save is loaded.
 
+## 21–22 October: village character, the song, and the Hunt
+
+- **Rival villages.** Simon asked why rival Cunning Women spread their buildings so widely. The site-finder took the first good spot anywhere within reach. It now follows personality.
+  - Forest still takes the first good site anywhere.
+  - Ash, Ochre and Blood try sites nearer their stone circle more often, and weigh their choice towards them. Ash huddles a little, Ochre a good deal and Blood the most.
+- **"O Woman of the Cunning".**
+  - **The prompts.** `prompts-song.md` illustrates Simon's song with nine fifteen-second H3 sequences, one for each half-verse and chorus, following the song's arc from barred doors to the bloody waters.
+  - **No singing on screen.** The first draft had villagers singing. Mouths that move could never match his recording, so the villagers are now silent and the song plays over them.
+  - **Queuing.** `tools/queue_prompts.py` sends every prompt in a prompts file to ComfyUI's queue in one go, with fresh seeds and output files named after each section.
+- **Models.** Simon's Cunning Woman and Beltane fire pit were built in. The same export carried a balloon edit he had never made: an older change saved in his browser. The built-in balloon was kept.
+- **The Hunt.**
+  - **The opening.** Both rivals send a fetch after your Cunning Woman three seconds in.
+  - **The goal.** It is won by bringing down both rival Cunning Women. No Cunning Woman is reborn in this level, and losing yours loses it. The top bar counts the rivals left.
+  - **Mana.** Starting mana was doubled to 2,400, so a second fetch can be sent.
+
+## 23–24 October: modes, and the hollow hills
+
+- **The Answer eased.** Simon judged it unwinnable. Rivals now start with 1,000 mana and lighter garrisons. Their first attack comes at four minutes and then every two, only their first two waves are aimed at you, and they are a little less warlike and slower to cast.
+- **Spell modes.** The start screen now offers three:
+  - Base spells, previously called All;
+  - Cunning spells, in which you and every rival carry every spell, as in the Answer; it opens once Seasons of the Witch is finished;
+  - the Grimoire.
+- **Models.** Simon's Rider of the Hunt was built in.
+- **The hollow hills.**
+  - **The problem.** A barrow modelled as a mound always sat awkwardly on the land, its curves sticking out of the slope.
+  - **The fix.** The mound is now raised from the terrain itself, a dome set just behind the stonework. It shares the land's faces, light, snow and colour, and trees stand round its sides and back to soften the edges.
+  - **The doorway.** The first version buried the stonework. The dome now sits further back and the ground in front is left at its own level, so the doorway and its black entrance stand fully clear.
+  - **The models.** The barrow model is now the stonework alone, with Simon's larger doorway. The tomb is the same stonework with the entrance sealed, plus its pole, stakes, pennants and bunting.
+- **The entombment rite.** The Cunning Woman no longer simply vanishes.
+  - Her twenty followers fling pink, yellow and white flowers into the air, then fall dead where they stand. Their bodies lie in pools of blood for fifteen seconds.
+  - She walks to the doorway and down into the hill, and only then is it sealed.
+
+## 26 October: the words, and the daughter
+
+- **The text workshop.** Editing the game's writing in text files was a chore. Test mode now has a text workshop beside the model workshop.
+  - It lists every piece of writing, grouped: level titles and intros, spell names and descriptions, the opening lines, inn names, the Rejoice! lines and the tokens.
+  - Edits take effect at once and are kept on the device. Export gives only the changed lines, to be built in as models are.
+- **Simon's words.** The first export was built in:
+  - all ten Seasons of the Witch intros;
+  - two renamed seasons, The Long Night and The Inundation;
+  - Seas of Blood renamed Blood-Running-Sea;
+  - nine spell descriptions;
+  - a longer Rejoice! list.
+  
+  Obvious slips are corrected when words are built in; deliberate archaisms are kept.
+- **The Landlord's Daughter.** She was underpowered for her cost. Huts of her tribe within ten paces of her now breed half as fast again. Two daughters don't double it, but she does stack with Beltane. Covered huts give off a faint pink mote.
+- **Multiplayer.** Design work began, in `MULTIPLAYER.md`.
+
 ---
 
 ## Threads that run through the history
