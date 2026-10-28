@@ -353,6 +353,8 @@ Simon's experience of three spells, rather than their numbers, drove these chang
   - **Other costs.** Cradle Blight came down from 300 to 200. Keening Wail now catches four in ten rather than three. Blood-Running-Sea came down from 2,900 to 2,000.
 - **The text workshop takes in the messages.** Toasts, hints and the end-of-game lines are now in it too: about two hundred of them, read from the game's own code. Each is labelled with where it comes from, and its live parts, such as a number or a tribe's name, are shown as {1}, {2} and so on to keep in place. An edited message replaces the original as it appears, without touching the code that sends it.
 
+- **Dismantling.** Simon found the best play increasingly meant moving the Forest Altar, and there was no way to take down your own buildings. Any of your buildings can now be dismantled from its panel, with a second tap to confirm. You get half its wood back and no mana. The people inside come out, and captives move to another fold with room or go wild. It doesn't count as losing a building, and it leaves no salted ground. The stone circle, tomb, hollow hill and Herne's Oak can't be dismantled, nor can anything burning or in the middle of a rite.
+
 ---
 
 ## Threads that run through the history

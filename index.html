@@ -1186,16 +1186,24 @@ function placeBuilding(ti,type,spot,instant){const D=BT[type],s=D.s,{cx0,cz0}=sp
   if(type==='inn')b.innName=innName();blds.push(b);bById.set(b.id,b);
   if(!instant){tribes[ti].wood-=D.wood;if(D.bmana)tribes[ti].mana-=D.bmana;for(let k=0;k<(type==='hedge'?1:3);k++){const br=getFreeBrave(tribes[ti],b.x,b.z);if(!br)break;assignBuild(br,b)}}
   return b}
-function destroyBld(b){if(!b.alive||BT[b.bt].inv)return;if(b.tribe===0&&b.bt!=='hedge'&&b.bt!=='torch'&&!b.burnt)A().lostBld=true;b.alive=false;const s=BT[b.bt].s;if(b.bt!=='hedge'&&b.bt!=='torch'&&!armageddon&&!b.burnt&&atk>=0&&atk!==b.tribe&&tribes[atk]&&!tribes[atk].wild&&tribes[b.tribe]&&!tribes[b.tribe].wild)saltGround(b,b.tribe);if(b.bt==='hedge'){if(b.done)setHedge(b,0)}
+// ---- dismantling your own buildings: half the wood back, no mana; the people inside come out, captives move to another fold with room or go wild ----
+let dismArm=null;
+const canDismantle=b=>b&&b.alive&&!BT[b.bt].inv&&!['reinc','tomb','barrow','oak'].includes(b.bt)&&!b.lit&&!b.burnt&&!b.sealing&&!b.rite&&!b.hangUntil;
+function dismantle(b){if(!canDismantle(b))return;const T=tribes[b.tribe],D=BT[b.bt],back=Math.floor((D.wood||0)/2);
+  for(let i=b.capt.length-1;i>=0;i--){const h=blds.find(o=>o!==b&&o.alive&&o.done&&o.tribe===b.tribe&&isHold(o)&&o.capt.length<BT[o.bt].hold);if(h){h.capt.push(b.capt[i]);b.capt.splice(i,1)}}
+  if(b.sel)deselect(b);b.dism=true;const a0=atk;atk=b.tribe;destroyBld(b);atk=a0;T.wood+=back;rebuildGrid();
+  for(let i=0;i<30;i++)dust(b.x+(R()-.5)*D.s,b.z+(R()-.5)*D.s);sfx('chop',.7,b.x,b.z);
+  if(b.tribe===0)toast(`The ${b.innName||D.label.toLowerCase()} is taken down.${back?` ${back} wood comes back.`:''}`)}
+function destroyBld(b){if(!b.alive||BT[b.bt].inv)return;if(b.tribe===0&&b.bt!=='hedge'&&b.bt!=='torch'&&!b.burnt&&!b.dism)A().lostBld=true;b.alive=false;const s=BT[b.bt].s;if(b.bt!=='hedge'&&b.bt!=='torch'&&!armageddon&&!b.burnt&&atk>=0&&atk!==b.tribe&&tribes[atk]&&!tribes[atk].wild&&tribes[b.tribe]&&!tribes[b.tribe].wild)saltGround(b,b.tribe);if(b.bt==='hedge'){if(b.done)setHedge(b,0)}
   for(let dz=0;dz<s;dz++)for(let dx=0;dx<s;dx++){const c=wi(b.cz0+dz)*N+wi(b.cx0+dx);if(bOcc[c]===b.id)bOcc[c]=0}
   for(let i=0;i<b.occ;i++){const a=R()*TAU,u=spawnUnit('brave',b.tribe,b.x+Math.cos(a)*s*.6,b.z+Math.sin(a)*s*.6);if(water[cidx(u.x,u.z)]){killUnit(u);continue}u.st='flee';u.ft=4+R()*2;setTarget(u,b.x+Math.cos(a)*(9+R()*4),b.z+Math.sin(a)*(9+R()*4));u.think=2}
   for(const ct of b.capt)spawnWild(b.x+(R()-.5)*s,b.z+(R()-.5)*s);b.capt.length=0;
   if(b.bt==='tomb'&&((scen()&&(scen().oneLife||scen().cwLoss))||(!scen()&&settings.diff==='extreme'))&&!watching){const T=tribes[b.tribe];T.tomb=null;T.oneLifeLost=true;flash(.4);if(b.tribe===0)toast('Your tomb has fallen, and your Cunning Woman with it. Here she does not come back.')}
   else if(b.bt==='tomb'){const T=tribes[b.tribe];T.tomb=null;T.reincT=gt+TUNE.tombRespawn;T.mana=Math.floor(T.mana*TUNE.tombManaKeep);flash(.4);toast(b.tribe===0&&!watching?'Your tomb has fallen and your Cunning Woman with it. She will rise again at the stone circle in a minute, and half your mana is lost.':`The ${T.name} tomb has fallen`)}
-  const y=hAt(b.x,b.z);for(let i=0;i<40;i++){PA.emit(b.x+(R()-.5)*s,y+R()*1.5,b.z+(R()-.5)*s,(R()-.5)*3,1+R()*4,(R()-.5)*3,.6+R()*.6,1,.5,.15,1,.9,4)}
+  const y=hAt(b.x,b.z);if(!b.dism)for(let i=0;i<40;i++){PA.emit(b.x+(R()-.5)*s,y+R()*1.5,b.z+(R()-.5)*s,(R()-.5)*3,1+R()*4,(R()-.5)*3,.6+R()*.6,1,.5,.15,1,.9,4)}
   for(let i=0;i<20;i++)PN.emit(b.x+(R()-.5)*s,y+R(),b.z+(R()-.5)*s,(R()-.5),1+R(),(R()-.5),2+R()*2,.3,.28,.26,.7,1.6,-.3);
   if(b.tribe!==0&&!b.burnt)stats.razed++;
-  if(b.sel)deselect(b);if(!b.burnt)sfx('boom',.8,b.x,b.z)}
+  if(b.sel)deselect(b);if(!b.burnt&&!b.dism)sfx('boom',.8,b.x,b.z)}
 function grove(b){let n=0;for(const t of trees)if(t.alive&&d2(b.x,b.z,t.x,t.z)<49)n++;return .5+Math.min(1,n/14)*.75}
 function offerValue(b,cap,wild){const y=YIELD[BT[b.bt].site];let v=cap?y[1]*(wild?.8:1):y[0];if(b.bt==='altar')v*=grove(b);return v}
 function captivesOf(ti){let n=0;for(const b of blds)if(b.alive&&b.tribe===ti&&isHold(b))n+=b.capt.length;return n}
@@ -4032,7 +4040,8 @@ function renderTribe(force){const T=tribes[0];if(!T)return;let h='';const b=sel.
     if(b.done&&isHold(b))h+=`<div class="card"><b>Captives</b><span>${b.capt.length} of ${D.hold} held here</span></div>`;
     if(b.bt==='oak'&&b.done){const riders=units.filter(u=>u.alive&&u.type==='hunter'&&u.tribe===0).length;h=`<div class="card"><b>${D.label}</b><span>${b.awake?`The Hunt rides · ${riders} abroad · each death they cause feeds you like a captive`:b.hangUntil?`Your Cunning Woman hangs here · ${Math.ceil(b.hangUntil-gt)}s`:'Dormant. Hang your Cunning Woman here for two minutes to wake the Wild Hunt'}</span></div>`;if(!b.awake&&!b.hangUntil)h+=`<button class="qs go" data-act="hang" ${T.shaman&&!T.shaman.hanging?'':'disabled'}><span>She is gone for two minutes</span><b>Hang your Cunning Woman</b></button>`}
     if(b.bt==='tomb')h=`<div class="card"><b>${D.label}</b><span>Your Cunning Woman lies here · ${Math.ceil(b.hp)} of ${b.mhp}</span></div>`;
-    if(b.done&&b.bt==='hut')h+=`<button class="qs" data-act="callout" ${b.occ?'':'disabled'}><span>Send them to work</span><b>Call villagers out</b></button>`}
+    if(b.done&&b.bt==='hut')h+=`<button class="qs" data-act="callout" ${b.occ?'':'disabled'}><span>Send them to work</span><b>Call villagers out</b></button>`;
+    if(b.tribe===0&&canDismantle(b)){const arm=dismArm&&dismArm.id===b.id&&gt<dismArm.t;h+=`<button class="qs${arm?' go':''}" data-act="dism"><span>${arm?'Tap again to take it down':'Half its wood back'}</span><b>Dismantle</b></button>`}}
   else if(sel.length===1&&sel[0].chg===0&&sel[0].alive){const u=sel[0],Tt=tribes[u.tribe];h+=`<div class="card"><b>Changeling</b><span>${u.chgSafe?`On its way to the ${Tt?Tt.name:''} folk`:`Living among the ${Tt?Tt.name:''} folk · kindles by itself in ${Math.max(0,Math.ceil(u.chgAt-gt))}s`}</span></div>${u.chgSafe?'':'<span class="sub">Tap the ground to walk it, or one of their buildings to kindle that.</span>'}<button class="qs go" data-act="kindle" ${u.chgSafe?'disabled':''}><span>Burns where it stands, and the next building over</span><b>Kindle</b></button>`}
   else if(sel.length===1&&sel[0].type==='queen'&&sel[0].tribe===0){const q=sel[0],g=units.filter(u=>u.alive&&u.postUnit&&u.post===q.id).length,ripe=gt-q.born>=TUNE.queenRipen;
     h+=`<div class="card"><b>${q.thrall?'Captured May Queen':'May Queen'}</b><span>${q.thrall?'Taken from the '+(tribes[q.orig]?tribes[q.orig].name:'')+' folk · ':''}Worth ${queenValue(q)} mana${ripe?', at her richest':', rising to '+TUNE.queenMax} · ${g} guard${g===1?'':'s'}</span></div><button class="qs go" data-act="offerq"><span>No dread</span><b>Offer her</b></button>`}
@@ -4052,6 +4061,7 @@ $('pTribe').addEventListener('click',e=>{const t=e.target.closest('[data-act]');
   const pick=pred=>{const out=myUnits(pred);setSel(out);if(out.length)centerOn(out);sfx('select',.4)};
   if(a==='train'){const D=BT[b.bt];if(T.mana<D.mana){toast('Not enough mana');return}T.mana-=D.mana;b.q++;toast(`${UT[D.train].label} queued. ${b.q} in line; a villager will walk in to be trained.`)}
   else if(a==='roam'){T.ossRoam=!T.ossRoam;toast(T.ossRoam?'Idle osses will go out by themselves after wild men, deserters and broken tribes.':'Osses will wait for your orders.');renderTribe(true)}
+  else if(a==='dism'){if(dismArm&&dismArm.id===b.id&&gt<dismArm.t){dismArm=null;dismantle(b)}else{dismArm={id:b.id,t:gt+4}}renderTribe(true)}
   else if(a==='cancel'){if(b.q-(b.trainee?1:0)>0){b.q--;T.mana+=BT[b.bt].mana;toast(`One cancelled. ${BT[b.bt].mana} mana returned.`)}}
   else if(a==='sac'){b.sq++;toast(`A villager will walk to the ${nm}. ${b.sq+b.cq} offering${b.sq+b.cq===1?'':'s'} on the way.`)}
   else if(a==='cap'){if(captivesOf(0)>b.cq){b.cq++;toast(`A captive will be led from the fold to the ${nm}.`)}}
