@@ -1107,7 +1107,8 @@ function killUnit(u,src){if(!u.alive)return;killCount++;if(u.type==='shaman'&&u.
   if(u.tribe===0&&u.type!=='ghost')stats.lost++;else if(src&&src.tribe===0)stats.killed++;
   if(u.type==='shaman'){const T=tribes[u.tribe];const one=scen()&&scen().oneLife&&!watching;if(T.shaman===u){T.shaman=null;T.reincT=gt+TUNE.shamanRespawn;if(one&&T.alive&&!T.wild)T.oneLifeLost=true}if(u.tribe===0&&!one&&!u.leapt)toast(`Your Cunning Woman has fallen. She returns to the stone circle in ${TUNE.shamanRespawn} seconds.`)}
   if(u.sel)deselect(u);sfx('die',.5,u.x,u.z)}
-function convertUnit(u,ti){if(u.inV||!u.alive)return;if(u.type==='wild'){u.type='brave';u.mhp=UT.brave.hp;u.hp=Math.max(u.hp,35)}u.tribe=ti;u.hyp=null;u.st='idle';u.tgt=null;u.order=null;u.gx=u.x;u.gz=u.z;if(u.sel&&ti!==0)deselect(u);
+function convertUnit(u,ti){if(u.inV||!u.alive)return;if(u.carry&&u.carry.tribe===ti)releaseCarry(u); // an Oss turned while carrying one of its new people lets them go
+  if(u.type==='wild'){u.type='brave';u.mhp=UT.brave.hp;u.hp=Math.max(u.hp,35)}u.tribe=ti;u.hyp=null;u.st='idle';u.tgt=null;u.order=null;u.gx=u.x;u.gz=u.z;if(u.sel&&ti!==0)deselect(u);
   for(let i=0;i<10;i++)PA.emit(u.x,unitY(u)+.5,u.z,(R()-.5)*1.5,1+R()*2,(R()-.5)*1.5,.7,.9,.85,.5,1,.35,-1)}
 function toss(u,x,z,vh,vu){if(UT[u.type].veh||u.inV||!u.alive)return;const dx=wd(u.x-x),dz=wd(u.z-z),l=Math.hypot(dx,dz)||1;
   u.ay=u.air?u.ay:hAt(u.x,u.z);u.air=true;u.avx=dx/l*vh+(R()-.5);u.avz=dz/l*vh+(R()-.5);u.avy=vu;u.st='idle';u.tgt=null}
@@ -1511,6 +1512,7 @@ function updUnit(u,dt){const D=UT[u.type],T=tribes[u.tribe];if(season==='winter'
   u.moving=false;
   if(u.air){u.x=wrap(u.x+u.avx*dt);u.z=wrap(u.z+u.avz*dt);u.ay+=u.avy*dt;u.avy-=20*dt;const g=hAt(u.x,u.z);
     if(u.ay<=g&&u.avy<0){u.air=false;const imp=-u.avy;if(g<-.1){killUnit(u,null);return}if(imp>11)dmgUnit(u,(imp-11)*14,null);if(u.alive){u.st='idle';u.gx=u.x;u.gz=u.z}}return}
+  if(u.panicT>gt&&u.st!=='flee')panicLeg(u); // panic overrides any order until it passes
   if(u.cd>0)u.cd-=dt;
   if(u.type==='ghost'&&u.life<gt){killUnit(u,null);return}
   if(u.hyp&&u.hyp.until<gt){const o=u.hyp.orig;u.hyp=null;convertUnit(u,o);if(u.alive&&!u.inV)panic(u,30)}

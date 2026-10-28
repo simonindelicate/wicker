@@ -339,6 +339,9 @@ Simon's experience of three spells, rather than their numbers, drove these chang
   - **Seen and unseen.** They cannot be harmed or ordered on the way. Each carries a small halo in the caster's colour, so a rival's keening against you is as plain as your own. Your own afflicted also clear a little fog around them.
   - **Release.** They stand about her in a daze for ten seconds, then wake as wildmen.
   - **First play.** Simon found the drift too quick to be eerie, so it was halved. The wildmen also seemed to vanish a second or two after waking. A wildman wanders around a home point, and only wildmen born in the wild had one. Any villager turned wild, by the keening or by other routes, wandered towards a position that wasn't a number, and was lost. Wildmen without a home now take the spot where they woke.
+- **Two Hypnotise bugs from play.**
+  - **The May Queen in your own fold.** A rival Oss carrying your May Queen, once hypnotised, carried her home to your own fold, where she became a "captive" of her own people. An Oss that changes sides while carrying one of its new people now lets them go.
+  - **A one-second panic.** A rival's Oss panicked only for a moment before going back to hunting. The rival AI's own orders, such as a hunt for a May Queen, were overriding the panic. Panic now overrides any order until its thirty seconds are up.
 - **The text workshop takes in the messages.** Toasts, hints and the end-of-game lines are now in it too: about two hundred of them, read from the game's own code. Each is labelled with where it comes from, and its live parts, such as a number or a tribe's name, are shown as {1}, {2} and so on to keep in place. An edited message replaces the original as it appears, without touching the code that sends it.
 
 ---
