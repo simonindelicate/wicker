@@ -3852,12 +3852,14 @@ function setSel(arr){if(!arr.length)selAdd=false;for(const e of sel)e.sel=false;
 glc.addEventListener('contextmenu',e=>e.preventDefault());
 glc.addEventListener('pointerdown',e=>{audio();if(wsOn){wsDown(e);return}if(galleryOn){try{glc.setPointerCapture(e.pointerId)}catch(_){}pointers.set(e.pointerId,{x:e.clientX,y:e.clientY,sx:e.clientX,sy:e.clientY,btn:e.button,type:e.pointerType,moved:true});gest={kind:'rot'};return}if(!running)return;try{glc.setPointerCapture(e.pointerId)}catch(_){}
   pointers.set(e.pointerId,{x:e.clientX,y:e.clientY,sx:e.clientX,sy:e.clientY,btn:e.button,type:e.pointerType,moved:false,t0:performance.now()});
+  if(placing==='hedge'&&pointers.size===1&&e.button!==2){clearTimeout(lpTimer);gest={kind:'hedge'};hedgeStroke={cells:[],seen:new Set(),last:null,why:''};hedgeAdd(e.clientX,e.clientY);return}
   if(pointers.size===1&&e.pointerType!=='mouse'){const pid=e.pointerId,sx0=e.clientX,sy0=e.clientY;clearTimeout(lpTimer);lpTimer=setTimeout(()=>{const p=pointers.get(pid);if(!p||p.moved||pointers.size!==1||!running)return;if(pickUnit(sx0,sy0))return;const g=pickGround(sx0,sy0);if(g&&bOcc[cidx(g.x,g.z)])return;p.moved=true;p.long=true;clearSel();if(navigator.vibrate)try{navigator.vibrate(15)}catch(_){}},550)}
   if(pointers.size===2){clearTimeout(lpTimer);const [a,b]=[...pointers.values()];a.moved=b.moved=true;gest={t0:performance.now(),kind:'pinch',d0:Math.hypot(a.x-b.x,a.y-b.y),a0:Math.atan2(b.y-a.y,b.x-a.x),dist0:cam.dist,yaw0:cam.yaw,mx:(a.x+b.x)/2,my:(a.y+b.y)/2}}
   else if(pointers.size===1){if(e.pointerType==='mouse'){gest=e.button===0?{kind:'maybeBox'}:e.button===2?{kind:'maybeRot'}:{kind:'pan'}}else gest={kind:boxMode?'maybeBox':'pan'}}});
 function panBy(x0,y0,x1,y1){const a=pickGround(x0,y0),b=pickGround(x1,y1);if(a&&b){cam.fx=wrap(cam.fx+(a.rx-b.rx));cam.fz=wrap(cam.fz+(a.rz-b.rz))}else{const s=cam.dist*.0025,dx=x0-x1,dy=y0-y1,cy=Math.cos(cam.yaw),sy=Math.sin(cam.yaw);cam.fx=wrap(cam.fx+(dx*cy+dy*sy)*s);cam.fz=wrap(cam.fz+(-dx*sy+dy*cy)*s)}}
 glc.addEventListener('pointermove',e=>{if(wsOn){wsMove(e);return}if(e.pointerType==='mouse'){hoverSX=e.clientX;hoverSY=e.clientY;hoverMouse=true}
   const p=pointers.get(e.pointerId);if(!p||(!running&&!galleryOn))return;const px=p.x,py=p.y;p.x=e.clientX;p.y=e.clientY;if(Math.hypot(p.x-p.sx,p.y-p.sy)>8)p.moved=true;if(!gest)return;
+  if(gest.kind==='hedge'){hedgeAdd(p.x,p.y);return}
   if(gest.kind==='pinch'){const [a,b]=[...pointers.values()];if(!b)return;const d=Math.hypot(a.x-b.x,a.y-b.y),an=Math.atan2(b.y-a.y,b.x-a.x);cam.dist=clamp(gest.dist0*gest.d0/Math.max(20,d),camMin(),camMax());cam.yaw=gest.yaw0+(an-gest.a0);
     const mx=(a.x+b.x)/2,my=(a.y+b.y)/2;panBy(gest.mx,gest.my,mx,my);gest.mx=mx;gest.my=my;return}
   if(!p.moved)return;
@@ -3867,9 +3869,24 @@ glc.addEventListener('pointermove',e=>{if(wsOn){wsMove(e);return}if(e.pointerTyp
   if(gest.kind==='rot'){cam.yaw-=(p.x-px)*.006;cam.dist=clamp(cam.dist+(p.y-py)*.08,camMin(),camMax());return}
   if(gest.kind==='pan')panBy(px,py,p.x,p.y)});
 let lpTimer=0;
+// ---- hedges are drawn: press, drag along the line they should run, let go. A running count and cost show as you draw ----
+let hedgeStroke=null;
+function hedgeHint(){if(placing!=='hedge')return;const S=hedgeStroke,w=BT.hedge.wood;if(!S){hint(`Draw the hedge: press and drag along where it should run. Each length costs ${w} wood.`);return}
+  const n=S.cells.filter(c=>c.ok).length;hint(`${n} length${n===1?'':'s'} · ${n*w} wood${S.why?' · '+S.why:''}`)}
+function hedgeAdd(sx,sy){const S=hedgeStroke;if(!S)return;const g=pickGround(sx,sy);if(!g)return;const T=tribes[0],w=BT.hedge.wood;
+  const from=S.last||{x:g.x,z:g.z},dx=wd(g.x-from.x),dz=wd(g.z-from.z),L=Math.hypot(dx,dz),steps=Math.max(1,Math.ceil(L*2));
+  for(let i=S.last?1:0;i<=steps;i++){const x=wrap(from.x+dx*i/steps),z=wrap(from.z+dz*i/steps),c=cidx(x,z);if(S.seen.has(c))continue;
+    const ok=S.cells.filter(q=>q.ok).length;if(S.cells.length>=TUNE.hedgeMax){S.why=`a hedge is at most ${TUNE.hedgeMax} long`;break}if((ok+1)*w>T.wood){S.why='not enough wood for more';break}
+    S.seen.add(c);const cx=Math.floor(x)+.5,cz=Math.floor(z)+.5,v=seenAt(cx,cz)?validSpot(0,'hedge',cx,cz):{err:1};S.cells.push({x:cx,z:cz,ok:!v.err});mark(cx,cz,v.err?.8:.45,v.err?.25:.75,v.err?.2:.3)}
+  S.last={x:g.x,z:g.z};hedgeHint()}
+function hedgeCommit(){const S=hedgeStroke;hedgeStroke=null;if(!S||!S.cells.length){hedgeHint();return}const T=tribes[0];let made=0;
+  for(const c of S.cells){if(!c.ok||T.wood<BT.hedge.wood)continue;const v=validSpot(0,'hedge',c.x,c.z);if(v.err)continue;placeBuilding(0,'hedge',v);made++}
+  toast(made?`${made} length${made===1?'':'s'} of hedge laid out. Villagers will plant them.`:'No hedge could be laid there');sfx('select',.6);unplace()}
+setInterval(()=>{const S=hedgeStroke;if(S&&running)for(const c of S.cells)PA.emit(c.x,Math.max(0,hAt(c.x,c.z))+.25,c.z,0,.15,0,.5,c.ok?.45:.8,c.ok?.75:.25,c.ok?.3:.2,.9,.35,0)},120);
 function endPointer(e){if(wsOn){wsUp(e);return}const p=pointers.get(e.pointerId);if(!p)return;clearTimeout(lpTimer);
   if(gest&&gest.kind==='pinch'&&!gest.done&&e.type==='pointerup'&&performance.now()-gest.t0<350){let still=true;for(const q of pointers.values())if(Math.hypot(q.x-q.sx,q.y-q.sy)>14)still=false;if(still){gest.done=true;clearSel()}}
   pointers.delete(e.pointerId);
+  if(gest&&gest.kind==='hedge'){gest=null;if(e.type==='pointerup'&&p.btn!==2)hedgeCommit();else{hedgeStroke=null;hedgeHint()}return}
   if(gest&&gest.kind==='box'&&pointers.size===0){boxSelect(gest);gest=null;return}
   if(!p.moved&&gest&&gest.kind!=='pinch'&&pointers.size===0&&e.type==='pointerup'){const lp=p.type!=='mouse'&&p.btn!==2&&performance.now()-(p.t0||1e15)>480&&!armed&&!placing&&!posting;onTap(p.sx,p.sy,p.btn===2,e.shiftKey||selAdd||lp);if(lp&&sel.length&&!sel[0].bt){selAdd=true;dockDirty=true}}
   if(pointers.size===0)gest=null;else if(pointers.size===1){gest={kind:boxMode?'none':'pan'};const q=[...pointers.values()][0];q.moved=true}}
@@ -3973,7 +3990,7 @@ $('pSpells').innerHTML=SP.map((s,i)=>`<button class="tile sp s${s.s}" data-k="${
 $('pBuild').innerHTML=BUILDABLE.map(k=>`<button class="tile bt" data-b="${k}" title="${BT[k].label} — ${BT[k].info}">${svg(ICON[k==='balloon'?'balloonB':k])}<span class="nm">${BT[k].label}</span><span class="cost wood">${BT[k].wood} wood${BT[k].bmana?' · '+BT[k].bmana+' mana':''}</span></button>`).join('');
 const spTiles=[...document.querySelectorAll('#pSpells .tile')],bTiles=[...document.querySelectorAll('#pBuild .tile')];
 $('pSpells').addEventListener('click',e=>{const t=e.target.closest('.tile');if(!t)return;audio();t.classList.remove('pulse');void t.offsetWidth;t.classList.add('pulse');sfx('select',.5);const k=t.dataset.k;if(armed===k)disarm();else arm(k)});
-$('pBuild').addEventListener('click',e=>{const t=e.target.closest('.tile');if(!t)return;audio();t.classList.remove('pulse');void t.offsetWidth;t.classList.add('pulse');sfx('select',.5);const k=t.dataset.b;if(armageddon){toast('Nothing can be built while the world ends');return}if(k==='cottage'&&blds.some(b=>b.alive&&b.tribe===0&&b.bt==='cottage')){toast('Your village already has a cottage');return}if(BT[k].bmana&&tribes[0].mana<BT[k].bmana){toast(`The ${BT[k].label} needs ${BT[k].bmana} mana as well as wood`);return}if(tribes[0].wood<BT[k].wood){tribes[0].woodGoal=Math.max(tribes[0].woodGoal,BT[k].wood+20);toast(`Your villagers will gather wood for it. ${BT[k].label} needs ${BT[k].wood} wood`);return}placing=k;armed=null;hedgeStart=null;hint(k==='hedge'?`Tap where the hedge begins. Each length costs ${BT.hedge.wood} wood.`:`Tap where to build the ${BT[k].label}`)});
+$('pBuild').addEventListener('click',e=>{const t=e.target.closest('.tile');if(!t)return;audio();t.classList.remove('pulse');void t.offsetWidth;t.classList.add('pulse');sfx('select',.5);const k=t.dataset.b;if(armageddon){toast('Nothing can be built while the world ends');return}if(k==='cottage'&&blds.some(b=>b.alive&&b.tribe===0&&b.bt==='cottage')){toast('Your village already has a cottage');return}if(BT[k].bmana&&tribes[0].mana<BT[k].bmana){toast(`The ${BT[k].label} needs ${BT[k].bmana} mana as well as wood`);return}if(tribes[0].wood<BT[k].wood){tribes[0].woodGoal=Math.max(tribes[0].woodGoal,BT[k].wood+20);toast(`Your villagers will gather wood for it. ${BT[k].label} needs ${BT[k].wood} wood`);return}placing=k;armed=null;hedgeStart=null;if(k==='hedge'){hedgeStroke=null;hedgeHint()}else hint(`Tap where to build the ${BT[k].label}`)});
 function arm(k){if(!allowS(k)||!palOK(k))return;if(k!=='arma'&&!tribes[0].shaman&&tribes[0].tomb){armed=k;placing=null;hint(`${SPK[k].n}: tap anywhere. ${SPDESC[k]}`);updTiles();return}
   if(k==='arma'){armed=k;placing=null;hint('All-against-all: ten followers burn in your wicker man and your mana is spent. Every hut falls and the last tribe standing wins. This cannot be undone.',true);updTiles();return}
   if(!tribes[0].shaman){toast('Your Cunning Woman is waiting to be reborn');return}armed=k;placing=null;const s=SPK[k];if(k==='changeling'){chgPre=null;const n=tribes.filter(o=>o&&!o.wild&&o.alive&&o.id!==0&&!o.broken).length;hint(`Changeling: tap one of your own people${n>1?', and tap a rival\'s name at the top to choose where it goes':''}. ${SPDESC[k]}`);updTiles();return}hint(`${s.n}: tap a target. ${SPDESC[k]}`);updTiles()}
@@ -3991,7 +4008,7 @@ function updTiles(){const T=tribes[0];if(!T)return;const att=T.attainUntil>gt;fo
 let dockDirty=true,lastTribeHTML='';
 function plural(n,t){return n+' '+(n===1?UT[t].label.toLowerCase():UT[t].pl)}
 function selSummary(){if(!sel.length)return 'Nothing selected';if(selAdd&&!sel[0].bt)return selSummary0()+' <span class="addTag">Adding</span>';return selSummary0()}
-function selSummary0(){if(sel[0].bt){const b=sel[0];return `<b>${BT[b.bt].label}</b>`+(b.tribe!==0&&b.tribe!==wildId?' (enemy)':'')}
+function selSummary0(){if(sel[0].bt){const b=sel[0];return `<b>${b.innName||BT[b.bt].label}</b>`+(b.tribe!==0&&b.tribe!==wildId?' (enemy)':'')}
   const c={};for(const u of sel)c[u.type]=(c[u.type]||0)+1;return Object.keys(c).map(t=>`<b>${plural(c[t],t)}</b>`).join(' · ')}
 // ---- Train tab, standing orders and roaming osses (player only) ----
 const TRAIN_BT=['camp','range','osshouse','balloon'],KEEP_STEPS=[0,2,4,6,8,10,15,20],KEEP_RES=100;

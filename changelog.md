@@ -355,6 +355,14 @@ Simon's experience of three spells, rather than their numbers, drove these chang
 
 - **Dismantling.** Simon found the best play increasingly meant moving the Forest Altar, and there was no way to take down your own buildings. Any of your buildings can now be dismantled from its panel, with a second tap to confirm. You get half its wood back and no mana. The people inside come out, and captives move to another fold with room or go wild. It doesn't count as losing a building, and it leaves no salted ground. The stone circle, tomb, hollow hill and Herne's Oak can't be dismantled, nor can anything burning or in the middle of a rite.
 
+- **Irritations, from a pass through play.**
+  - **Sound.** Simon had never noticed the word "Sound" in the top bar. It is now a speaker icon, crossed out when muted, and the pause menu has the same toggle. The choice is remembered.
+  - **The info box.** Long names and descriptions, such as an inn's, broke the layout. The cards at the bottom now keep to one line each, and tapping a card pops up its full name and description. Long button text, such as Ättestupa's, is held to two lines.
+  - **The Tribe menu.** It now lists May Queens, Landlord's Daughters, the Wild Hunt and Ghosts whenever you have any, and ends with Idle villagers.
+  - **Adding to a selection.** Shift-click on a Tribe menu button adds to the selection, as shift-click on the map already did, so five balloons and five warriors take two clicks. On a phone, a long press on a unit or a Tribe button selects it and starts adding mode. Every tap after that adds, until an order is given or the selection cleared, and an "Adding" tag shows on the selection line.
+  - **Hedges are drawn.** Rather than tapping where a hedge begins and where it ends, you press and drag along the line it should run. A running count and cost show as you draw, and lengths that can't be planted show red.
+  - **The Landlord's Daughter** now also makes camps and other training buildings within ten paces of her train half as fast again. This stacks with the Sword Dance.
+
 ---
 
 ## Threads that run through the history
