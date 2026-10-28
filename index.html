@@ -1484,10 +1484,10 @@ function sendVehicle(v,x,z,am){v.dest={x:wrap(x),z:wrap(z),am:!!am};
 
 // ---------------- unit behaviour ----------------
 // ---- the keening daze: the afflicted float a little above the ground, leaning, towards the caster's Cunning Woman (or her hill, or her stone circle), stand dazed about her for DAZE_HOLD s, then go wild ----
-const DAZE_SPD=3.4,DAZE_HOLD=10;
+const DAZE_SPD=1.7,DAZE_HOLD=10;
 function daze(u,by){if(u.sel)deselect(u);const c=casterOf(tribes[by]),h=c||blds.find(b=>b.alive&&b.bt==='reinc'&&b.tribe===by);const a=h?Math.atan2(wd(u.z-h.z),wd(u.x-h.x))+(R()-.5)*1.6:R()*TAU;
   u.daze={by,ang:a,r:R(),at:0};u.chgSafe=true;u.st='dazed';u.tgt=null;u.order=null;u.cmd=false;u.post=null;u.moving=false}
-function dazeRelease(u){u.daze=null;u.chgSafe=false;if(u.sel)deselect(u);if(u.tribe!==wildId){u.type='wild';u.tribe=wildId;u.mhp=UT.wild.hp;u.hp=Math.min(u.hp,u.mhp)}u.order=null;u.tgt=null;u.cmd=false;u.st='idle';u.gx=u.x;u.gz=u.z;u.tx=u.x;u.tz=u.z}
+function dazeRelease(u){u.daze=null;u.chgSafe=false;if(u.sel)deselect(u);if(u.tribe!==wildId){u.type='wild';u.tribe=wildId;u.mhp=UT.wild.hp;u.hp=Math.min(u.hp,u.mhp)}u.order=null;u.tgt=null;u.cmd=false;u.st='idle';u.gx=u.x;u.gz=u.z;u.tx=u.x;u.tz=u.z;u.hx=u.x;u.hz=u.z}
 function dazeTick(u,dt){const z=u.daze,T=tribes[z.by];let c=T&&T.alive!==false?casterOf(T):null;if(c&&(c.inV||c.air||!c.alive))c=null;
   const h=c||(T&&blds.find(b=>b.alive&&b.bt==='reinc'&&b.tribe===z.by));if(!h){dazeRelease(u);return false}
   const ring=c&&c.tomb?5.6+z.r*1.2:c?1.8+z.r*1.6:3+z.r*1.5;for(let k=0;k<9&&!walk[cidx(h.x+Math.cos(z.ang)*ring,h.z+Math.sin(z.ang)*ring)];k++)z.ang+=.7;const tx=h.x+Math.cos(z.ang)*ring,tz=h.z+Math.sin(z.ang)*ring,dx=wd(tx-u.x),dz=wd(tz-u.z),d=Math.hypot(dx,dz);
@@ -1642,7 +1642,7 @@ function findPrey(u){const cx=u.rcx??u.gx,cz=u.rcz??u.gz;let best=null,bd=1e18;
   query(grid,cx,cz,TUNE.ossRoam,o=>{if(!o.alive||o.glam>gt||o.tribe===u.tribe||o.inV||o.air||o.carry||o.type==='shaman'||o.type==='captive'||o.type==='ghost'||UT[o.type].veh)return;if(d2(cx,cz,o.x,o.z)>TUNE.ossRoam*TUNE.ossRoam)return;
     if(o.listen>gt&&o.capBy&&o.capBy!==u)return;const d=d2(u.x,u.z,o.x,o.z)*(o.type==='queen'?.1:1);if(d<bd){bd=d;best=o}});if(best)best.capBy=u;return best}
 function wildThink(u){if(u.lastAtk&&u.lastAtk.alive&&u.lastAtkT>gt-3){const a=u.lastAtk,dx=wd(u.x-a.x),dz=wd(u.z-a.z),l=Math.hypot(dx,dz)||1;u.st='flee';u.ft=3;setTarget(u,u.x+dx/l*6,u.z+dz/l*6);return}
-  if(R()<.35){const x=u.hx+(R()-.5)*9,z=u.hz+(R()-.5)*9;if(pass[cidx(x,z)]){u.st='move';setTarget(u,x,z)}}}
+  if(R()<.35){if(u.hx==null){u.hx=u.x;u.hz=u.z}const x=u.hx+(R()-.5)*9,z=u.hz+(R()-.5)*9;if(pass[cidx(x,z)]){u.st='move';setTarget(u,x,z)}}}
 function braveThink(u,T){const S=T.stats;
   if(armageddon){const e=nearestEnemy(u,20);if(e){attack(u,e);return}mootPull(u);orderUnit(u,moot.x+(R()-.5)*6,moot.z+(R()-.5)*6,true,moot.x,moot.z);return}
   if(u.lastAtk&&u.lastAtk.alive&&u.lastAtkT>gt-2&&u.lastAtk.tribe!==u.tribe){const a=u.lastAtk;if(a.type==='brave'||a.type==='oss'){attack(u,a);return}
