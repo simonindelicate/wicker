@@ -342,6 +342,7 @@ Simon's experience of three spells, rather than their numbers, drove these chang
 - **Two Hypnotise bugs from play.**
   - **The May Queen in your own fold.** A rival Oss carrying your May Queen, once hypnotised, carried her home to your own fold, where she became a "captive" of her own people. An Oss that changes sides while carrying one of its new people now lets them go.
   - **A one-second panic.** A rival's Oss panicked only for a moment before going back to hunting. The rival AI's own orders, such as a hunt for a May Queen, were overriding the panic. Panic now overrides any order until its thirty seconds are up.
+- **Untouchable means uncatchable.** Osses could still seize units meant to be untouchable: changelings on their way, the keened as they drift, and the followers at an entombment. They no longer can.
 - **The text workshop takes in the messages.** Toasts, hints and the end-of-game lines are now in it too: about two hundred of them, read from the game's own code. Each is labelled with where it comes from, and its live parts, such as a number or a tribe's name, are shown as {1}, {2} and so on to keep in place. An edited message replaces the original as it appears, without touching the code that sends it.
 
 ---

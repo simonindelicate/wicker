@@ -1570,7 +1570,7 @@ function updUnit(u,dt){const D=UT[u.type],T=tribes[u.tribe];if(season==='winter'
     if(dd<=lim||(dd<3.6&&u.stuck>.6)){u.inV=v;v.pass.push(u);u.st='idle';if(u.sel)deselect(u);dockDirty=true;break}
     u.tx=v.x;u.tz=v.z;u.fx=v.x;u.fz=v.z;const r=moveStep(u,dt);if(r===2){if(dd<3.6){u.inV=v;v.pass.push(u);u.st='idle';if(u.sel)deselect(u);dockDirty=true}else u.st='idle'}
     break}
-  case 'preach':{const t=u.tgt;if(u.carry||!t||!t.alive||t.tribe===u.tribe||t.inV||t.air||t.type==='shaman'||t.type==='captive'||UT[t.type].veh){u.st='idle';u.think=.2;break}
+  case 'preach':{const t=u.tgt;if(u.carry||!t||!t.alive||t.chgSafe||t.tribe===u.tribe||t.inV||t.air||t.type==='shaman'||t.type==='captive'||UT[t.type].veh){u.st='idle';u.think=.2;break}
     const dd=Math.sqrt(d2(u.x,u.z,t.x,t.z));
     if(dd>1.1){if(!u.cmdCap&&d2(t.x,t.z,u.rcx??u.gx,u.rcz??u.gz)>20*20){u.st='idle';break}u.tx=t.x;u.tz=t.z;u.fx=t.x;u.fz=t.z;u.pt=0;if(moveStep(u,dt)===2)u.st='idle'}
     else{u.face=Math.atan2(wd(t.x-u.x),wd(t.z-u.z));t.listen=gt+.3;t.takenBy=u.tribe;u.pt=(u.pt||0)+dt;u.chop=true;
@@ -1641,7 +1641,7 @@ function idleThink(u,D,T){if(D.veh&&!D.bomb)return;if(u.ferryJ&&inFerry(u))retur
   if(armageddon&&d2(u.x,u.z,moot.x,moot.z)>64){mootPull(u);orderUnit(u,moot.x+(R()-.5)*6,moot.z+(R()-.5)*6,true,moot.x,moot.z);return}
   if(d2(u.x,u.z,u.gx,u.gz)>6){u.st='move';setTarget(u,u.gx,u.gz)}}
 function findPrey(u){const cx=u.rcx??u.gx,cz=u.rcz??u.gz;let best=null,bd=1e18;
-  query(grid,cx,cz,TUNE.ossRoam,o=>{if(!o.alive||o.glam>gt||o.tribe===u.tribe||o.inV||o.air||o.carry||o.type==='shaman'||o.type==='captive'||o.type==='ghost'||UT[o.type].veh)return;if(d2(cx,cz,o.x,o.z)>TUNE.ossRoam*TUNE.ossRoam)return;
+  query(grid,cx,cz,TUNE.ossRoam,o=>{if(!o.alive||o.glam>gt||o.chgSafe||o.tribe===u.tribe||o.inV||o.air||o.carry||o.type==='shaman'||o.type==='captive'||o.type==='ghost'||UT[o.type].veh)return;if(d2(cx,cz,o.x,o.z)>TUNE.ossRoam*TUNE.ossRoam)return;
     if(o.listen>gt&&o.capBy&&o.capBy!==u)return;const d=d2(u.x,u.z,o.x,o.z)*(o.type==='queen'?.1:1);if(d<bd){bd=d;best=o}});if(best)best.capBy=u;return best}
 function wildThink(u){if(u.lastAtk&&u.lastAtk.alive&&u.lastAtkT>gt-3){const a=u.lastAtk,dx=wd(u.x-a.x),dz=wd(u.z-a.z),l=Math.hypot(dx,dz)||1;u.st='flee';u.ft=3;setTarget(u,u.x+dx/l*6,u.z+dz/l*6);return}
   if(R()<.35){if(u.hx==null){u.hx=u.x;u.hz=u.z}const x=u.hx+(R()-.5)*9,z=u.hz+(R()-.5)*9;if(pass[cidx(x,z)]){u.st='move';setTarget(u,x,z)}}}
