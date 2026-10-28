@@ -361,6 +361,7 @@ Simon's experience of three spells, rather than their numbers, drove these chang
   - **The Tribe menu.** It now lists May Queens, Landlord's Daughters, the Wild Hunt and Ghosts whenever you have any, and ends with Idle villagers.
   - **Adding to a selection.** Shift-click on a Tribe menu button adds to the selection, as shift-click on the map already did, so five balloons and five warriors take two clicks. On a phone, a long press on a unit or a Tribe button selects it and starts adding mode. Every tap after that adds, until an order is given or the selection cleared, and an "Adding" tag shows on the selection line.
   - **Hedges are drawn.** Rather than tapping where a hedge begins and where it ends, you press and drag along the line it should run. A running count and cost show as you draw, and lengths that can't be planted show red.
+  - **Rejoice!** On phones the victory celebration's words were drawn over the Box and Cunning Woman buttons. While it plays, the side buttons, hints, toasts and selection line now step aside.
   - **The Landlord's Daughter** now also makes camps and other training buildings within ten paces of her train half as fast again. This stacks with the Sword Dance.
 
 ---
