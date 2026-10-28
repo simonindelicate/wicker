@@ -2364,7 +2364,7 @@ function inst(g,m,cap){const im=new C.InstancedMesh(g,m,cap);im.instanceMatrix.s
 // Tribe-coloured parts write alpha 254/255 so the film grade can find them and leave them out (invisible otherwise).
 matT.onBeforeCompile=sh=>{sh.fragmentShader=sh.fragmentShader.replace('#include <dithering_fragment>','#include <dithering_fragment>\n\tgl_FragColor.a=254./255.;')};
 function mkPair(def,cap,ghost){const d=def();return {t:inst(merge(d.t),ghost?gMatT:matT,cap),f:inst(merge(d.f),ghost?gMatF:matF,cap),n:0,cap}}
-const UCAP={daughter:30,phillip:12,goat:60,chicken:300,rabbit:200,queen:8,hunter:40,brave:700,warrior:360,oss:240,captive:120,archer:300,shaman:8,ghost:120,balloon:60,wild:200};
+const UCAP={shamanP:8,daughter:30,phillip:12,goat:60,chicken:300,rabbit:200,queen:8,hunter:40,brave:700,warrior:360,oss:240,captive:120,archer:300,shaman:8,ghost:120,balloon:60,wild:200};
 // ---------------- MODEL EDITS ----------------
 // Models edited in the Model workshop (menu) are stored as lists of parts. Edits you export from the
 // workshop can be pasted into MODEL_DATA here so that they ship with the game for everyone; edits made
@@ -2665,6 +2665,42 @@ const MODEL_DATA={
   {"s":"cyl","a":[0.005,0.005,0.06,8],"p":[0.074,0.7853,0.0521],"r":[0,0,0],"k":[1,1,1],"c":"#ffffff","t":0},
   {"s":"sphere","a":[0.01,8,6,0,6.283185307179586,0,3.141592653589793],"p":[-0.075,0.6613,0.052],"r":[0,0,0],"k":[1,1,1],"c":"#b8a888","t":1},
   {"s":"sphere","a":[0.008,8,6,0,6.283185307179586,0,3.141592653589793],"p":[-0.075,0.6753,0.052],"r":[0,0,0],"k":[1,1,1],"c":"#b8a888","t":1}
+],
+"u:shamanP":[
+  {"s":"cyl","a":[0.13,0.27,0.62,6],"p":[0,0.31,0],"r":[0,0,0],"k":[1,1,1],"c":"#ffffff","t":1},
+  {"s":"sphere","a":[0.12,5,5,0,6.2832,0,3.1416],"p":[0,0.73,0],"r":[0,0,0],"k":[1,1,1],"c":"#ffbeb8","t":0},
+  {"s":"cyl","a":[0.025,0.03,1.1,5],"p":[0.28,0.55,0],"r":[0,0,-1],"k":[1,1,1],"c":"#7a5130","t":0},
+  {"s":"sphere","a":[0.07,7,4,0,6.2832,0,6.7387],"p":[0.29,1.13,0],"r":[0,0,0],"k":[1,1,1],"c":"#d8cbb0","t":0},
+  {"s":"cone","a":[0.025,0.42,4],"p":[-0.11,1,0],"r":[0,0,28.65],"k":[1,1,1],"c":"#d9cfb6","t":0},
+  {"s":"cone","a":[0.013,0.2,4],"p":[-0.22,1.078,0],"r":[0,0,63.03],"k":[1,1,1],"c":"#d9cfb6","t":0},
+  {"s":"cone","a":[0.018,0.18,3],"p":[-0.106,1.0373,-0.062],"r":[-29,-62,15.9],"k":[1,1,1],"c":"#d9cfb6","t":0},
+  {"s":"cone","a":[0.025,0.42,4],"p":[0.11,1,0],"r":[0,0,-28.65],"k":[1,1,1],"c":"#d9cfb6","t":0},
+  {"s":"cone","a":[0.013,0.2,4],"p":[0.22,1.078,0],"r":[0,0,-63.03],"k":[1,1,1],"c":"#d9cfb6","t":0},
+  {"s":"cone","a":[0.018,0.18,3],"p":[0.106,1.0373,-0.062],"r":[-29,62,-15.9],"k":[1,1,1],"c":"#d9cfb6","t":0},
+  {"s":"ring","a":[0.07,0.04,6,12,6.283185307179586],"p":[0,0.6173,0],"r":[90,0,0],"k":[1,1,1],"c":"#2f3868","t":0},
+  {"s":"sphere","a":[0.125,6,5,0,6.2832,0,1.7907],"p":[0,0.755,-0.017],"r":[-36,0,0],"k":[1,1,1],"c":"#ffffff","t":0},
+  {"s":"cyl","a":[0.035,0.045,0.35,8],"p":[0,0.5773,-0.129],"r":[10,0,0],"k":[1,1,1],"c":"#ffffff","t":0},
+  {"s":"ring","a":[0.03,0.025,5,10,6.2832],"p":[0,0.555,-0.138],"r":[90,0,0],"k":[1,1,1],"c":"#2f3868","t":0},
+  {"s":"cyl","a":[0.025,0.04,0.3,8],"p":[0.153,0.5773,0],"r":[180,0,105],"k":[1,1,1],"c":"#b8a888","t":1},
+  {"s":"cone","a":[0.16,0.3,8],"p":[0,0.484,0],"r":[180,0,0],"k":[1,1,1],"c":"#b8a888","t":1},
+  {"s":"cyl","a":[0.015,0.06,0.3,8],"p":[-0.143,0.435,0],"r":[0,0,-10],"k":[1,1,1],"c":"#b8a888","t":1},
+  {"s":"sphere","a":[0.015,4,6,0,6.283185307179586,0,3.141592653589793],"p":[-0.102,0.5973,0.084],"r":[0,0,0],"k":[1,1,1],"c":"#e77ed1","t":0},
+  {"s":"sphere","a":[0.015,4,6,0,6.283185307179586,0,3.141592653589793],"p":[0.102,0.5973,0.084],"r":[0,0,0],"k":[1,1,1],"c":"#e77ed1","t":0},
+  {"s":"sphere","a":[0.015,4,6,0,6.283185307179586,0,3.141592653589793],"p":[-0.072,0.565,0.1],"r":[0,0,0],"k":[1,1,1],"c":"#ffffff","t":0},
+  {"s":"sphere","a":[0.015,4,6,0,6.283185307179586,0,3.141592653589793],"p":[0.072,0.565,0.1],"r":[0,0,0],"k":[1,1,1],"c":"#ffffff","t":0},
+  {"s":"sphere","a":[0.015,4,6,0,6.283185307179586,0,3.141592653589793],"p":[-0.044,0.555,0.122],"r":[0,0,0],"k":[1,1,1],"c":"#ffff80","t":0},
+  {"s":"sphere","a":[0.015,4,6,0,6.283185307179586,0,3.141592653589793],"p":[0.044,0.555,0.122],"r":[0,0,0],"k":[1,1,1],"c":"#ffff80","t":0},
+  {"s":"sphere","a":[0.02,4,6,0,6.283185307179586,0,3.141592653589793],"p":[0,0.555,0.14],"r":[0,0,0],"k":[1,1,1],"c":"#ffff80","t":1},
+  {"s":"cone","a":[0.01,0.09,8],"p":[-0.083,0.9913,-0.003],"r":[0,0,-5],"k":[1,1,1],"c":"#b8a888","t":0},
+  {"s":"cone","a":[0.01,0.09,8],"p":[0.083,0.9913,-0.003],"r":[0,0,5],"k":[1,1,1],"c":"#b8a888","t":0},
+  {"s":"ring","a":[0.105,0.01,6,12,6.283185307179586],"p":[0,0.8013,-0.027],"r":[74,0,0],"k":[1,1,1],"c":"#b8a888","t":1},
+  {"s":"sphere","a":[0.095,6,5,0,6.2832,0,3.1416],"p":[-0.065,0.752,-0.028],"r":[0,0,0],"k":[1,1,1],"c":"#ffffff","t":0},
+  {"s":"sphere","a":[0.095,6,5,0,6.2832,0,3.1416],"p":[0.065,0.752,-0.028],"r":[0,0,0],"k":[1,1,1],"c":"#ffffff","t":0},
+  {"s":"cyl","a":[0.005,0.005,0.18,8],"p":[-0.074,0.7233,0.0521],"r":[0,0,0],"k":[1,1,1],"c":"#ffffff","t":0},
+  {"s":"cyl","a":[0.005,0.005,0.06,8],"p":[0.074,0.7853,0.0521],"r":[0,0,0],"k":[1,1,1],"c":"#ffffff","t":0},
+  {"s":"sphere","a":[0.01,8,6,0,6.283185307179586,0,3.141592653589793],"p":[-0.075,0.6613,0.052],"r":[0,0,0],"k":[1,1,1],"c":"#b8a888","t":1},
+  {"s":"sphere","a":[0.008,8,6,0,6.283185307179586,0,3.141592653589793],"p":[-0.075,0.6753,0.052],"r":[0,0,0],"k":[1,1,1],"c":"#b8a888","t":1},
+  {"s":"sphere","a":[0.13,8,6,0,6.2832,0,3.1416],"p":[0,0.4,0.12],"r":[0,0,0],"k":[1,1.1,1],"c":"#ffffff","t":1}
 ],
 "u:queen":[
   {"s":"cyl","a":[0.215,0.235,0.06,8],"p":[0,0.42,0],"r":[0,0,0],"k":[1,1,1],"c":"#ffffff","t":1},
@@ -3489,6 +3525,7 @@ function captureDef(def){const proto=C.BufferGeometry.prototype,AM=proto.applyMa
     out.push({s,a:a.map(v=>r4(+v)),p:[pp.x,pp.y,pp.z].map(r4),r:[eu.x,eu.y,eu.z].map(v=>Math.round(v/D2R*100)/100),k:[sc.x,sc.y,sc.z].map(r4),c:'#'+col.getHexString(),t:team})}
   return out}
 function modelEdits(){let loc={};try{loc=JSON.parse(localStorage.getItem(MODEL_KEY))||{}}catch(e){}return Object.assign({},MODEL_DATA,loc)}
+UMOD.shamanP=UMOD.shaman; // the Cunning Woman with child (carrying a Fetch); her look is the workshop model u:shamanP
 const ORIG_UMOD=Object.assign({},UMOD),ORIG_BMOD=Object.assign({},BMOD);
 function applyModelEdits(){const E=modelEdits();for(const k in ORIG_UMOD)UMOD[k]=ORIG_UMOD[k];for(const k in ORIG_BMOD)BMOD[k]=ORIG_BMOD[k];
   for(const k in E){const name=k.slice(2),set=k[0]==='u'?UMOD:BMOD,orig=k[0]==='u'?ORIG_UMOD:ORIG_BMOD;if(!orig[name]||!Array.isArray(E[k]))continue;try{set[name]=defFromData(E[k])}catch(e){console.error('model edit',k,e)}}
@@ -4285,7 +4322,7 @@ window.addEventListener('pagehide',()=>saveGame());document.addEventListener('vi
 // gives a block of text that can be baked into MODEL_DATA so they ship with the game.
 let wsOn=false,galleryOn=false;
 const WS={multi:new Set(),addMode:false,scene:null,group:null,key:null,parts:[],sel:-1,undo:[],lastPush:0,yaw:.6,pitch:.42,dist:4,ty:.5,tribe:0,ref:true,refMesh:null,box:null,drag:null,pts:new Map(),dirty:new Set()};
-const ANIM_L={goat:'Black goat',chicken:'Chicken',rabbit:'Rabbit'};
+const ANIM_L={shamanP:'Cunning Woman with child',goat:'Black goat',chicken:'Chicken',rabbit:'Rabbit'};
 function wsLabel(k){const n=k.slice(2);if(k==='b:hedgelink')return 'Blackthorn Hedge (join)';if(k==='b:hutch')return 'Rabbit hutch';if(k==='b:firepit')return 'Beltane fire pit';if(k[0]==='u'&&ANIM_L[n])return ANIM_L[n];return k[0]==='u'?(UT[n]?UT[n].label:n):(BT[n]?BT[n].label:n)}
 function wsKeys(){return Object.keys(ORIG_UMOD).filter(k=>k!=='ghost'&&k!=='phillip').map(k=>'u:'+k).concat(Object.keys(ORIG_BMOD).map(k=>'b:'+k))}
 function wsOrigParts(k){const n=k.slice(2);return captureDef(k[0]==='u'?ORIG_UMOD[n]:ORIG_BMOD[n])}
