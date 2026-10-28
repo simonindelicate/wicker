@@ -326,6 +326,19 @@ The day began as brainstorming about what comes after the campaign. Simon set th
 - **The Landlord's Daughter.** She was underpowered for her cost. Huts of her tribe within ten paces of her now breed half as fast again. Two daughters don't double it, but she does stack with Beltane. Covered huts give off a faint pink mote.
 - **Multiplayer.** Design work began, in `MULTIPLAYER.md`.
 
+## 28 October: three spells reworked from play
+
+Simon's experience of three spells, rather than their numbers, drove these changes.
+
+- **Blast.** It felt slow, though its cooldown is short.
+  - **Stays armed.** Each cast used to need two taps, the spell and then the target. Blast now stays armed after casting, so each tap fires another, until the tile is tapped again or the player right-clicks.
+  - **Faster flight.** The shot flies twice as fast, so it lands before a running unit has moved on.
+- **Hypnotise.** It used to feel like setting up a problem for half a minute later, because the hypnotised turned back wherever they stood, often in the middle of your village. They still fight for you for 25 seconds, which lets you turn an attack and regroup. When it wears off, they now flee in a panic in random directions for a further thirty seconds.
+- **Keening Wail.** It never felt noticeable, because its payoff happened far from where it was cast.
+  - **The drift.** The afflicted now float a little above the ground, leaning forward, and drift in a straight line to the casting Cunning Woman, wherever she is: to her hill if she is entombed, or her stone circle if she is waiting to be reborn.
+  - **Seen and unseen.** They cannot be harmed or ordered on the way. Each carries a small halo in the caster's colour, so a rival's keening against you is as plain as your own. Your own afflicted also clear a little fog around them.
+  - **Release.** They stand about her in a daze for ten seconds, then wake as wildmen.
+
 ---
 
 ## Threads that run through the history
