@@ -123,7 +123,8 @@ These belong to the Grimoire and Seasons of the Witch. None of them has a placeh
 | `phillip-rampage` | Black Phillip rampaging | 8000 loop | Snorting, hooves, scattering people. Runs for the 30 seconds. |
 | `familiar` | Familiar cast on your own goat | 1500 | A faint violet chime and a whisper. |
 | `familiar-drink` | The familiar drinking at a rival altar | 4000 loop | Lapping, very quiet. It is meant to go unnoticed. |
-| `fetch` | The Fetch born from your Cunning Woman | 3000 | A long exhale into smoke, a muffled bell. |
+| `fetch-labour` | A Cunning Woman labouring in her cottage | 10000 loop | Low, strained breathing behind a wall; smoke and a slow creak. Heard only nearby: it must not warn anyone further off. |
+| `fetch` | The Fetch born, heard by whoever it hunts as well as its mother | 3000 | A long exhale into smoke, a muffled bell. The game uses `horn` here for now. |
 | `fetch-walk` | The Fetch walking | 6000 loop | Heavy, unhurried footfalls with felled timber now and then. |
 | `fetch-take` | The Fetch taking a Cunning Woman | 2500 | A choked cry and silence. |
 | `glamour` | Glamour cast | 1500 | A shimmer, like a breath on glass. |
@@ -153,5 +154,5 @@ These belong to the Grimoire and Seasons of the Witch. None of them has a placeh
 ## Specifics worth knowing
 
 - The cues that matter most for play are `horn`, `bog-claim` and `die`, because they tell you something is happening off screen. They are worth getting right first.
-- The loops (`swarm`, `whirl`, `fire`, `angel`, `maypole`, `ritual`, `oak-hang`, `hunt-roam`, `flies-carcass`, `phillip-rampage`, `familiar-drink`, `fetch-walk`, `sworddance`, `chicken`) need clean loop points, with no click where the end meets the start.
-- The game currently synthesises 13 of these (`select`, `blast`, `quake`, `built`, `thunder`, `die`, `boom`, `arrow`, `swarm`, `horn`, `hit`, `chop` and `cast`). Seas of Blood borrows `quake` and animal offerings borrow `die`. Everything else in this list is silent for now.
+- The loops (`swarm`, `whirl`, `fire`, `angel`, `maypole`, `ritual`, `oak-hang`, `hunt-roam`, `flies-carcass`, `phillip-rampage`, `familiar-drink`, `fetch-labour`, `fetch-walk`, `sworddance`, `chicken`) need clean loop points, with no click where the end meets the start.
+- The game currently synthesises 13 of these (`select`, `blast`, `quake`, `built`, `thunder`, `die`, `boom`, `arrow`, `swarm`, `horn`, `hit`, `chop` and `cast`). Blood-Running-Sea borrows `quake`, animal offerings borrow `die` and the Fetch's birth borrows `horn`. Everything else in this list is silent for now.
