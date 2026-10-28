@@ -1105,7 +1105,7 @@ function killUnit(u,src){if(!u.alive)return;killCount++;if(u.type==='shaman'&&u.
   else for(let i=0;i<14;i++)PA.emit(u.x,y+.5,u.z,(R()-.5)*1.5,R()*2,(R()-.5)*1.5,.6,.5,.7,1,.8,.4,-1);
   if(u.pass){for(const p of u.pass){p.inV=null;p.x=u.x;p.z=u.z;if(u.type==='balloon'){p.air=true;p.ay=y;p.avx=(R()-.5)*2;p.avz=(R()-.5)*2;p.avy=1}else killUnit(p,null)}u.pass.length=0}
   if(u.tribe===0&&u.type!=='ghost')stats.lost++;else if(src&&src.tribe===0)stats.killed++;
-  if(u.type==='shaman'){const T=tribes[u.tribe];const one=scen()&&scen().oneLife&&!watching;if(T.shaman===u){T.shaman=null;T.reincT=gt+TUNE.shamanRespawn;if(one&&T.alive&&!T.wild)T.oneLifeLost=true}if(u.tribe===0&&!one&&!u.leapt)toast(`Your Cunning Woman has fallen. She returns to the stone circle in ${TUNE.shamanRespawn} seconds.`)}
+  if(u.type==='shaman'){const T=tribes[u.tribe];const one=scen()&&(scen().oneLife||scen().cwLoss)&&!watching;if(T.shaman===u){T.shaman=null;T.reincT=gt+TUNE.shamanRespawn;if(one&&T.alive&&!T.wild)T.oneLifeLost=true}if(u.tribe===0&&!one&&!u.leapt)toast(`Your Cunning Woman has fallen. She returns to the stone circle in ${TUNE.shamanRespawn} seconds.`)}
   if(u.sel)deselect(u);sfx('die',.5,u.x,u.z)}
 function convertUnit(u,ti){if(u.inV||!u.alive)return;if(u.carry&&u.carry.tribe===ti)releaseCarry(u); // an Oss turned while carrying one of its new people lets them go
   if(u.type==='wild'){u.type='brave';u.mhp=UT.brave.hp;u.hp=Math.max(u.hp,35)}u.tribe=ti;u.hyp=null;u.st='idle';u.tgt=null;u.order=null;u.gx=u.x;u.gz=u.z;if(u.sel&&ti!==0)deselect(u);
@@ -1190,7 +1190,7 @@ function destroyBld(b){if(!b.alive||BT[b.bt].inv)return;if(b.tribe===0&&b.bt!=='
   for(let dz=0;dz<s;dz++)for(let dx=0;dx<s;dx++){const c=wi(b.cz0+dz)*N+wi(b.cx0+dx);if(bOcc[c]===b.id)bOcc[c]=0}
   for(let i=0;i<b.occ;i++){const a=R()*TAU,u=spawnUnit('brave',b.tribe,b.x+Math.cos(a)*s*.6,b.z+Math.sin(a)*s*.6);if(water[cidx(u.x,u.z)]){killUnit(u);continue}u.st='flee';u.ft=4+R()*2;setTarget(u,b.x+Math.cos(a)*(9+R()*4),b.z+Math.sin(a)*(9+R()*4));u.think=2}
   for(const ct of b.capt)spawnWild(b.x+(R()-.5)*s,b.z+(R()-.5)*s);b.capt.length=0;
-  if(b.bt==='tomb'&&((scen()&&scen().oneLife)||(!scen()&&settings.diff==='extreme'))&&!watching){const T=tribes[b.tribe];T.tomb=null;T.oneLifeLost=true;flash(.4);if(b.tribe===0)toast('Your tomb has fallen, and your Cunning Woman with it. Here she does not come back.')}
+  if(b.bt==='tomb'&&((scen()&&(scen().oneLife||scen().cwLoss))||(!scen()&&settings.diff==='extreme'))&&!watching){const T=tribes[b.tribe];T.tomb=null;T.oneLifeLost=true;flash(.4);if(b.tribe===0)toast('Your tomb has fallen, and your Cunning Woman with it. Here she does not come back.')}
   else if(b.bt==='tomb'){const T=tribes[b.tribe];T.tomb=null;T.reincT=gt+TUNE.tombRespawn;T.mana=Math.floor(T.mana*TUNE.tombManaKeep);flash(.4);toast(b.tribe===0&&!watching?'Your tomb has fallen and your Cunning Woman with it. She will rise again at the stone circle in a minute, and half your mana is lost.':`The ${T.name} tomb has fallen`)}
   const y=hAt(b.x,b.z);for(let i=0;i<40;i++){PA.emit(b.x+(R()-.5)*s,y+R()*1.5,b.z+(R()-.5)*s,(R()-.5)*3,1+R()*4,(R()-.5)*3,.6+R()*.6,1,.5,.15,1,.9,4)}
   for(let i=0;i<20;i++)PN.emit(b.x+(R()-.5)*s,y+R(),b.z+(R()-.5)*s,(R()-.5),1+R(),(R()-.5),2+R()*2,.3,.28,.26,.7,1.6,-.3);
