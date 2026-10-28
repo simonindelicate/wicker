@@ -338,6 +338,7 @@ Simon's experience of three spells, rather than their numbers, drove these chang
   - **The drift.** The afflicted now float a little above the ground, leaning forward, and drift in a straight line to the casting Cunning Woman, wherever she is: to her hill if she is entombed, or her stone circle if she is waiting to be reborn.
   - **Seen and unseen.** They cannot be harmed or ordered on the way. Each carries a small halo in the caster's colour, so a rival's keening against you is as plain as your own. Your own afflicted also clear a little fog around them.
   - **Release.** They stand about her in a daze for ten seconds, then wake as wildmen.
+- **The text workshop takes in the messages.** Toasts, hints and the end-of-game lines are now in it too: about two hundred of them, read from the game's own code. Each is labelled with where it comes from, and its live parts, such as a number or a tribe's name, are shown as {1}, {2} and so on to keep in place. An edited message replaces the original as it appears, without touching the code that sends it.
 
 ---
 

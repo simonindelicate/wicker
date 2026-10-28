@@ -4410,10 +4410,40 @@ function textDefs(){const d=[],lines=(arr)=>({get:()=>arr.join('\n'),set:v=>arr.
   d.push({g:'Lists',k:'list.inns',l:'Inn names, one per line',...lines(INN_NAMES)});
   d.push({g:'Lists',k:'list.rejoice',l:'Rejoice! lines on victory, one per line',...lines(REJOICE)});
   for(const [cat,list] of TOKS)for(const t of list){d.push({g:'Tokens',k:`tok.${t[0]}`,l:`${cat}: ${t[0]}`,get:()=>t[1],set:v=>{t[1]=v;TOKMAP[t[0]].d=v}});if(t[2]!=null)d.push({g:'Tokens',k:`tok.${t[0]}.hint`,l:`${cat}: ${t[0]} (hint)`,get:()=>t[2],set:v=>{t[2]=v;TOKMAP[t[0]].h=v}})}
+  for(const t of msgTemplates()){const leg=t.exprs.map((e,i)=>`{${i+1}} is ${e.length>34?e.slice(0,32)+'…':e}`).join(' · ');d.push({g:t.g,k:t.k,l:(t.ctx?t.ctx+(leg?' — ':''):'')+leg,get:()=>MSG_OVR[t.k]??t.text,set:v=>{if(v===t.text)delete MSG_OVR[t.k];else MSG_OVR[t.k]=v},big:t.text.length>70})}
   return d}
+// Messages (toasts, hints, end-of-game lines) are read out of the game's own source: each toast(...), hint(...) and end-screen line becomes a template,
+// its fixed words editable and its live parts shown as {1}, {2}... An edited template is applied as the message is shown, so no game code changes.
+const twUnesc=c=>c==='n'?'\n':c==='t'?'\t':c;
+function twLit(src,i){const q=src[i];let j=i+1;if(q==='`'){const parts=[''],exprs=[];while(j<src.length){const c=src[j];if(c==='\\'){parts[parts.length-1]+=twUnesc(src[j+1]);j+=2;continue}if(c==='`')return{end:j+1,parts,exprs};
+    if(c==='$'&&src[j+1]==='{'){const e=twScan(src,j+2,'}');if(e<0)return null;exprs.push(src.slice(j+2,e));parts.push('');j=e+1;continue}parts[parts.length-1]+=c;j++}return null}
+  let t='';while(j<src.length){const c=src[j];if(c==='\\'){t+=twUnesc(src[j+1]);j+=2;continue}if(c===q)return{end:j+1,parts:[t],exprs:[]};if(c==='\n')return null;t+=c;j++}return null}
+// scan from i to the first character in stops at depth 0 (or an unmatched closer); literals skipped
+function twScan(src,i,stops,end){end=end??src.length;let d=0;while(i<end){const c=src[i];if(c==='\''||c==='"'||c==='`'){const l=twLit(src,i);if(!l)return -1;i=l.end;continue}
+  if(c==='('||c==='['||c==='{')d++;else if(c===')'||c===']'||c==='}'){if(d===0)return i;d--}else if(d===0&&stops.includes(c))return i;i++}return end>=src.length?-1:end}
+function twTop(e,ch){const out=[];let i=0,d=0;while(i<e.length){const c=e[i];if(c==='\''||c==='"'||c==='`'){const l=twLit(e,i);if(!l)return null;i=l.end;continue}if('([{'.includes(c))d++;else if(')]}'.includes(c))d--;
+  else if(d===0&&ch(c,e[i+1],e[i-1]))out.push(i);i++}return out}
+function twAlts(e){e=e.trim();const qs=twTop(e,(c,n)=>c==='?'&&n!=='.'&&n!=='?');if(qs===null)return[];const q=qs.find((x,k)=>e[x-1]!=='?');
+  if(q!=null){let lvl=0,colon=-1;const ps=twTop(e.slice(q+1),(c,n,p)=>(c==='?'&&n!=='.'&&n!=='?'&&p!=='?')||c===':')||[];for(const x of ps){const c=e[q+1+x];if(c==='?')lvl++;else if(lvl)lvl--;else{colon=q+1+x;break}}
+    if(colon>0)return twAlts(e.slice(q+1,colon)).concat(twAlts(e.slice(colon+1)))}
+  const pl=twTop(e,c=>c==='+');if(pl===null)return[];const terms=[];let a=0;for(const x of pl.concat([e.length])){terms.push(e.slice(a,x).trim());a=x+1}
+  const parts=[''],exprs=[];let lit=0;for(const t of terms){const l=(t[0]==='\''||t[0]==='"'||t[0]==='`')?twLit(t,0):null;
+    if(l&&l.end===t.length){lit++;parts[parts.length-1]+=l.parts[0];for(let k=0;k<l.exprs.length;k++){exprs.push(l.exprs[k]);parts.push(l.parts[k+1])}}else{exprs.push(t);parts.push('')}}
+  return lit&&parts.join('').replace(/[^A-Za-z]/g,'').length>=3?[{parts,exprs}]:[]}
+let MSG_T=null;const MSG_OVR={};
+function twHash(t){let h=5381;for(let i=0;i<t.length;i++)h=(h*33^t.charCodeAt(i))>>>0;return h.toString(36)}
+function msgTemplates(){if(MSG_T)return MSG_T;MSG_T=[];const src=[...document.scripts].filter(x=>!x.type||/javascript/.test(x.type)).map(x=>x.textContent).sort((a,b)=>b.length-a.length)[0]||'',seen=new Set();
+  const take=(re,g,stops)=>{re.lastIndex=0;let m;while((m=re.exec(src))){const st=m.index+m[0].length,e=twScan(src,st,stops);if(e<0)continue;for(const t of twAlts(src.slice(st,e))){const key='msg.'+twHash(t.parts.join('\u0001'));if(seen.has(key))continue;seen.add(key);
+    const esc=x=>x.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');t.k=key;t.g=g;{const back=src.slice(Math.max(0,m.index-4000),m.index),fm=[...back.matchAll(/function (\w+)\(/g)].pop(),cm=[...back.matchAll(/case '(\w+)'/g)].pop();t.ctx=(fm?fm[1]:'')+(cm&&(!fm||cm.index>fm.index)?' · '+cm[1]:'')}t.re=new RegExp('^'+t.parts.map(esc).join('([\\s\\S]*?)')+'$');t.lit=t.parts.join('').length;t.text=t.parts.map((x,i)=>i?`{${i}}`+x:x).join('');MSG_T.push(t)}}};
+  take(/(?<![\w.])toast\(/g,'Messages',[]);take(/(?<![\w.])hint\(/g,'Hints',[',']);take(/\$\('end[TS]'\)\.textContent=/g,'End of game',[';',',']);return MSG_T}
+function msgOut(m){if(!m||!MSG_T)return m;let best=null,bc=null;for(const t of MSG_T){if(best&&t.lit<=best.lit)continue;const c=t.re.exec(m);if(c){best=t;bc=c}}
+  if(!best||MSG_OVR[best.k]==null)return m;return MSG_OVR[best.k].replace(/\{(\d+)\}/g,(x,i)=>bc[+i]??'')}
+function msgWatch(){const fix=el=>{if(el.__tw===el.textContent)return;const o=msgOut(el.textContent);el.__tw=o;if(o!==el.textContent)el.textContent=o};
+  new MutationObserver(ms=>{for(const m of ms)for(const n of m.addedNodes)if(n.nodeType===1)fix(n)}).observe($('toasts'),{childList:true});
+  for(const id of ['hintT','endT','endS'])new MutationObserver(()=>fix($(id))).observe($(id),{childList:true,characterData:true,subtree:true})}
 let TW=null,twBaked={};
 function textLocal(){try{return JSON.parse(localStorage.getItem(TEXT_KEY))||{}}catch(e){return {}}}
-function textInit(){TW=textDefs();const loc=textLocal();for(const x of TW){const o=x.get();if(TEXT_DATA[x.k]!=null)x.set(TEXT_DATA[x.k]);twBaked[x.k]=x.get();if(loc[x.k]!=null)x.set(loc[x.k]);if(o==null)twBaked[x.k]=''}}
+function textInit(){msgWatch();TW=textDefs();const loc=textLocal();for(const x of TW){const o=x.get();if(TEXT_DATA[x.k]!=null)x.set(TEXT_DATA[x.k]);twBaked[x.k]=x.get();if(loc[x.k]!=null)x.set(loc[x.k]);if(o==null)twBaked[x.k]=''}}
 function twSave(k,v){const loc=textLocal();if(v===twBaked[k])delete loc[k];else loc[k]=v;try{localStorage.setItem(TEXT_KEY,JSON.stringify(loc))}catch(e){toast('This browser would not keep the change')}}
 function twItem(x){const v=x.get(),ch=v!==twBaked[x.k];return `<div class="twItem${ch?' changed':''}" data-k="${x.k}"><label><span>${x.l.replace(/</g,'&lt;')}</span><button class="btn" data-rs="${x.k}" ${ch?'':'hidden'}>Back to original</button></label><textarea rows="${x.big?Math.min(9,Math.max(3,Math.ceil(v.length/60)+(v.split('\n').length-1))):1}">${v.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</textarea></div>`}
 function twRender(){const f=$('twFind').value.trim().toLowerCase(),groups={};for(const x of TW){if(f&&!(x.l+' '+x.get()).toLowerCase().includes(f))continue;(groups[x.g]=groups[x.g]||[]).push(x)}
