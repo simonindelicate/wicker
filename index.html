@@ -114,7 +114,7 @@ body.rejoicing #side,body.rejoicing #hint,body.rejoicing #toasts,body.rejoicing 
 .card b,.card span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}.card{cursor:pointer}
 .qs{max-width:236px}.qs.qsN{min-width:46px;align-items:center;padding:6px 8px}.qs span{line-height:1.2;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 #bSound{display:inline-flex;align-items:center;justify-content:center;min-width:34px}#bMute{display:flex;align-items:center;justify-content:center;gap:8px;width:100%}
-#cardPop{position:absolute;left:10px;right:10px;bottom:150px;max-width:460px;background:var(--panel2);border:1px solid var(--line);border-left:2px solid var(--mana);border-radius:10px;padding:12px 14px;z-index:30;box-shadow:0 12px 40px rgba(0,0,0,.5)}#cardPop b{display:block;font:17px var(--f-display);letter-spacing:.05em;font-weight:400;margin-bottom:4px}#cardPop p{margin:0;font-size:14px;line-height:1.45;color:var(--muted)}
+#cardPop{position:absolute;left:10px;right:10px;bottom:150px;max-width:460px;background:var(--panel2);border:1px solid var(--line);border-left:2px solid var(--mana);border-radius:10px;padding:12px 14px;z-index:30;box-shadow:0 12px 40px rgba(0,0,0,.5)}#cardPop b{display:block;font:17px var(--f-display);letter-spacing:.05em;font-weight:400;margin-bottom:4px}#cardPop p.popBuff{color:#f3b9cb;margin-top:6px}#cardPop p{margin:0;font-size:14px;line-height:1.45;color:var(--muted)}
 
 .scrim{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:16px;background:radial-gradient(ellipse at 50% 60%,rgba(6,10,18,.15),rgba(6,10,18,.72));overflow:auto}
 .twSheet details{border-top:1px solid var(--line);padding:6px 0}.twSheet summary{cursor:pointer;font-size:15px;padding:6px 0}.twItem{margin:8px 0 12px}.twItem label{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12px;opacity:.8;margin-bottom:4px}.twItem label button{font-size:11px;padding:2px 8px}.twItem textarea,#twIOt{width:100%;box-sizing:border-box;background:rgba(0,0,0,.25);color:inherit;border:1px solid var(--line);border-radius:8px;padding:8px;font:inherit;font-size:15px;line-height:1.4;resize:vertical}.twItem.changed textarea{border-color:var(--mana)}#twIOt{min-height:180px;font-family:monospace;font-size:12px}.twFind{width:100%;box-sizing:border-box;margin:6px 0 10px;padding:8px;border-radius:8px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:inherit;font:inherit}.twBar{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
@@ -1328,7 +1328,7 @@ function seaTick(){fetchStartTick();{const SC=scen();if(SC&&SC.seasAt&&!chalSeas
   if(!watching)toast(`The blood tide rises and swallows the low ground.${n?' '+n+' are drowned.':''}`)}
 // ---- the landlord's daughter: lures enemy fighters, gets them drunk, and walks them home to sleep it off at her inn ----
 const LURE_T=['warrior','oss','brave'],LURE_MAX=6;
-const DTR=[],DTR_R=10,DTR_MULT=1.5; // landlord's daughters: huts and training buildings of her tribe within DTR_R of her breed/train DTR_MULT times as fast (not stacking)
+const DTR=[],DTR_R=10,DTR_MULT=1.5,dtrNear=b=>DTR.length>0&&DTR.some(d=>d.tribe===b.tribe&&d2(d.x,d.z,b.x,b.z)<DTR_R*DTR_R); // landlord's daughters: huts and training buildings of her tribe within DTR_R of her breed/train DTR_MULT times as fast (not stacking)
 function daughterTick(){DTR.length=0;for(const u of units)if(u.alive&&u.type==='daughter'&&!u.inV)DTR.push(u);
   for(const u of units){if(!u.alive)continue;
     if(u.drunk){const d=u.drunk;if(!d.alive){u.drunk=null;u.sleep=0;u.cmd=false;u.st='idle';continue}
@@ -3694,7 +3694,7 @@ function drawEntities(){
   for(const b of blds){if(!b.alive)continue;const rx=wd(b.x-cam.fx),rz=wd(b.z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2+40)continue;if(!visB(b))continue;const M=BM[b.bt];if(M.n>=M.cap)continue;const dim=b.tribe!==0&&!isVis(b.x,b.z);
     const y=(b.baseY!=null?b.baseY:hAt(b.x,b.z))-r2*K,sy=b.done?1:.12+.88*b.prog,i=M.n++,yw=b.bt==='hedge'?(b.id*2.39996)%TAU:(b.yaw||0);place(M.t,i,rx,y,rz,yw,1,sy);place(M.f,i,rx,y,rz,yw,1,sy);
     const T=tribes[b.tribe];if(b.bt==='barrow')groundCol(b.x,b.z,3.2,_c);else{_c.copy(b.bt==='hut'?T.roof:T.c);if(gt-b.hitT<.1)_c.setRGB(1,.9,.8);if(!b.done)_c.multiplyScalar(.7)}M.t.setColorAt(i,_c);
-    _c.setRGB(1,1,1);if(b.done&&!b.lit&&(b.bt==='hut'||BT[b.bt].train)&&DTR.length&&!watching&&HALO.n<HALO.max-8&&DTR.some(d=>d.tribe===b.tribe&&d2(d.x,d.z,b.x,b.z)<DTR_R*DTR_R)){const hy=hAt(b.x,b.z)+.7,s2=BT[b.bt].s*.42,q=.5+.5*Math.sin(gt*2.2+b.id);for(let k=0;k<6;k++){const a=k/6*TAU+b.id;HALO.emit(b.x+Math.cos(a)*s2,hy,b.z+Math.sin(a)*s2,0,0,0,1,1,.55,.75,.13+.08*q,2.4,0)}}if(b.hp<b.mhp*.5)_c.multiplyScalar(.65);if(!b.done)_c.setRGB(.85,.8,.7);if(b.lit)_c.setRGB(.42,.26,.18);if(dim)_c.multiplyScalar(.5);M.f.setColorAt(i,_c)}
+    _c.setRGB(1,1,1);if(b.hp<b.mhp*.5)_c.multiplyScalar(.65);if(!b.done)_c.setRGB(.85,.8,.7);if(b.lit)_c.setRGB(.42,.26,.18);if(dim)_c.multiplyScalar(.5);M.f.setColorAt(i,_c)}
   {const HL=BM.hedgelink,hm=new Map();for(const b of blds)if(b.alive&&b.bt==='hedge')hm.set(wi(b.cz0)*N+wi(b.cx0),b);
     for(const b of hm.values()){if(!visB(b))continue;for(const [dx,dz] of [[1,0],[0,1],[1,1],[1,-1]]){const o=hm.get(wi(b.cz0+dz)*N+wi(b.cx0+dx));if(!o||!visB(o))continue;
       if(dx&&dz&&(hm.has(wi(b.cz0)*N+wi(b.cx0+dx))||hm.has(wi(b.cz0+dz)*N+wi(b.cx0))))continue;if(HL.n>=HL.cap)break;
@@ -3795,6 +3795,11 @@ function drawOverlay(){ctx.clearRect(0,0,cw,ch);if(!tribes.length)return;
     if(b.done&&b.tribe===0&&b.sel&&b.bt==='hut'){for(let i=0;i<5;i++){ctx.fillStyle=i<b.occ?'#ece2cc':'rgba(236,226,204,.25)';ctx.beginPath();ctx.arc(sx-16+i*8,sy-7,2.5,0,TAU);ctx.fill()}}
     if(b.done&&b.tribe===0&&(isHold(b)||BT[b.bt].site)){const t=isHold(b)?(b.capt.length?b.capt.length+'/'+BT[b.bt].hold:''):BT[b.bt].holdN&&!b.lit?b.inside.length+'/'+BT[b.bt].holdN+(b.sq+b.cq?' +'+(b.sq+b.cq):''):(b.sq+b.cq&&!b.lit?(b.sq+b.cq)+' to come':'');if(t){ctx.fillStyle='#e3d8bd';ctx.font='12px "Alegreya Sans",sans-serif';ctx.textAlign='center';ctx.fillText(t,sx,sy-5)}}
     if(b.done&&b.q>0&&b.tribe===0){ctx.fillStyle='#e8b64c';ctx.font='12px "Alegreya Sans",sans-serif';ctx.textAlign='center';ctx.fillText('×'+b.q,sx,sy-5)}}
+  if(DTR.length&&!watching)for(const b of blds){if(!b.alive||!b.done||b.lit||!(b.bt==='hut'||BT[b.bt].train)||!visB(b)||!dtrNear(b))continue;const rx=wd(b.x-cam.fx),rz=wd(b.z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2)continue;
+    const [sx,sy,ok]=toScreen(rx,hAt(b.x,b.z)-r2*K+2.4,rz);if(!ok)continue;const sc=clamp(28/cam.dist,.55,1.4),hut=b.bt==='hut';
+    for(let k=0;k<2;k++){const t=(gt*.45+b.id*.37+k*.5)%1,x=sx+Math.sin((t+k)*5)*5*sc,y=sy-t*26*sc,a=Math.sin(t*Math.PI);ctx.globalAlpha=a*.9;
+      if(hut){const s3=5.5*sc;ctx.fillStyle='#ff7aa2';ctx.beginPath();ctx.moveTo(x,y+s3*.9);ctx.bezierCurveTo(x-s3*1.3,y,x-s3*.7,y-s3*.9,x,y-s3*.3);ctx.bezierCurveTo(x+s3*.7,y-s3*.9,x+s3*1.3,y,x,y+s3*.9);ctx.fill()}
+      else{ctx.fillStyle='#f0c25a';ctx.beginPath();ctx.arc(x,y,2.4*sc,0,TAU);ctx.fill()}}ctx.globalAlpha=1}
   if(gest&&gest.kind==='box'){const x0=Math.min(gest.x0,gest.x1)-ovR.left,y0=Math.min(gest.y0,gest.y1)-ovR.top;ctx.strokeStyle='#e8b64c';ctx.lineWidth=1.5;ctx.fillStyle='rgba(232,182,76,.08)';ctx.fillRect(x0,y0,Math.abs(gest.x1-gest.x0),Math.abs(gest.y1-gest.y0));ctx.strokeRect(x0,y0,Math.abs(gest.x1-gest.x0),Math.abs(gest.y1-gest.y0))}}
 let ovR={left:0,top:0};
 
@@ -4072,7 +4077,9 @@ function renderTribe(force){const T=tribes[0];if(!T)return;let h='';const b=sel.
 // tapping a card in the dock shows its full text (cards keep to one line each)
 function cardPop(card){let el=$('cardPop');if(!el){el=document.createElement('div');el.id='cardPop';el.hidden=true;$('dock').appendChild(el);document.addEventListener('pointerdown',e=>{if(!el.hidden&&!el.contains(e.target)&&!e.target.closest('#pTribe .card'))el.hidden=true},true)}
   if(!el.hidden&&el.dataset.src===card.textContent){el.hidden=true;return}const b=sel.length===1&&sel[0].bt?sel[0]:null,info=b&&BT[b.bt]&&BT[b.bt].info,sp=(card.querySelector('span')||{}).textContent||'';
-  const esc=t=>String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;');el.innerHTML=`<b>${esc((card.querySelector('b')||{}).textContent||'')}</b><p>${esc(sp)}</p>`+(info&&!sp.includes(info)?`<p>${esc(info)}</p>`:'');el.dataset.src=card.textContent;el.hidden=false}
+  const esc=t=>String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;');const bf=[];if(b&&b.done){const T=tribes[b.tribe];if(b.bt==='hut'){if(dtrNear(b))bf.push("Breeds half as fast again: the landlord's daughter is near");if(T&&T.beltaneUntil>gt)bf.push('Breeds twice as fast: the Beltane fire burns');if(T&&T.blightUntil>gt)bf.push('Barren: Cradle Blight')}
+    if(BT[b.bt].train){if(dtrNear(b))bf.push("Trains half as fast again: the landlord's daughter is near");if(T&&T.swordUntil>gt)bf.push('Trains twice as fast: the sword dance')}}
+  el.innerHTML=`<b>${esc((card.querySelector('b')||{}).textContent||'')}</b><p>${esc(sp)}</p>`+(info&&!sp.includes(info)?`<p>${esc(info)}</p>`:'')+(bf.length?`<p class="popBuff">${bf.map(esc).join('<br>')}</p>`:'');el.dataset.src=card.textContent;el.hidden=false}
 $('pTribe').addEventListener('click',e=>{const cd=e.target.closest('.card');if(cd){cardPop(cd);return}const t=e.target.closest('[data-act]');if(!t||t.disabled)return;audio();const T=tribes[0],a=t.dataset.act;const b=sel[0];
   pulseAct={a:t.dataset.act,t:performance.now()};t.classList.remove('pulse');void t.offsetWidth;t.classList.add('pulse');sfx('select',.6);const nm=b&&b.bt?BT[b.bt].label.toLowerCase():'';
   const add=e.shiftKey||selAdd||lpAdd;lpAdd=false;if(add&&!selAdd&&e.pointerType!=='mouse'&&!e.shiftKey)selAdd=true;
