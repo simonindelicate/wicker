@@ -367,7 +367,7 @@ Simon's experience of three spells, rather than their numbers, drove these chang
   - **The instruction bar.** When a spell was armed, the bar carried its whole description. With Simon's longer descriptions, the Changeling's covered half a phone screen. The bar now shows only the instruction, with the description beneath it in smaller type, held to two lines. Tapping it shows the rest.
   - **Spell names of its own.** Most of the remaining spell names still echoed the spell books of the god games that inspired Wicker. Simon renamed them in the game's own idiom: Ghost Army became Shade Host, Land Bridge became Causeway, Flatten became Harrow, Erode became Sink, Hypnotise became Witch and Whirlwind became Twisting Squall. The tokens, hints, help text and docs follow; this history keeps the old names where it describes the past. The old builds that still showed the earliest names were taken out of the repository, and this history now calls Wicker inspired by the classic god games rather than a clone of one.
   - **A nod to *Penda's Fen*.** A new token, "Not pure, never pure", is earned by giving one of every village, your own among them, and a wildman to the fire in one game.
-  - **The Landlord's Daughter** now also makes camps and other training buildings within ten paces of her train half as fast again. This stacks with the Sword Dance.
+  - **The Landlord's Daughter** now also makes camps and other training buildings within ten paces of her train half as fast again. This stacks with the Sword Dance. Her reach shows as a soft pink ring with a faint fill: round her when she's selected, or round every daughter of an inn when the inn is selected.
 
 ---
 

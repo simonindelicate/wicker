@@ -3590,6 +3590,9 @@ const ringG=new C.RingGeometry(.42,.54,24);ringG.rotateX(-Math.PI/2);
 const RM=inst(ringG,new C.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:.9,depthWrite:false}),300);
 const bigRingG=new C.RingGeometry(.96,1,72);bigRingG.rotateX(-Math.PI/2);
 const rangeRing=new C.Mesh(bigRingG,new C.MeshBasicMaterial({color:0xe8b64c,transparent:true,opacity:.55,depthTest:false,depthWrite:false}));rangeRing.renderOrder=5;rangeRing.visible=false;scene.add(rangeRing);
+// the Landlord's Daughter's reach: a soft pink ring round each selected daughter (or round every daughter of a selected inn), with a faint fill
+const DTR_RING=[];{const rg=new C.RingGeometry(.93,1,72);rg.rotateX(-Math.PI/2);const dg=new C.CircleGeometry(.93,48);dg.rotateX(-Math.PI/2);
+  for(let i=0;i<6;i++){const g=new C.Group(),r=new C.Mesh(rg,new C.MeshBasicMaterial({color:0xf29bb5,transparent:true,opacity:.6,depthTest:false,depthWrite:false})),d=new C.Mesh(dg,new C.MeshBasicMaterial({color:0xf29bb5,transparent:true,opacity:.07,depthTest:false,depthWrite:false}));r.renderOrder=d.renderOrder=4;g.add(d,r);g.visible=false;scene.add(g);DTR_RING.push(g)}}
 const tgtRing=new C.Mesh(bigRingG,new C.MeshBasicMaterial({color:0xff8a50,transparent:true,opacity:.85,depthTest:false,depthWrite:false}));tgtRing.renderOrder=5;tgtRing.visible=false;scene.add(tgtRing);
 const ghostG=new C.BoxGeometry(1,1,1);ghostG.translate(0,.5,0);
 const ghostMat=new C.MeshBasicMaterial({color:0x66ff88,transparent:true,opacity:.32,depthWrite:false});
@@ -3771,8 +3774,10 @@ function drawEntities(){
     _c.setRGB(.85,.95,1);RM.setColorAt(rn,_c);rn++}
   fin(RM,rn)}
 let hoverSX=-1,hoverSY=-1,hoverMouse=false;
-function drawIndicators(){rangeRing.visible=false;tgtRing.visible=false;placeGhost.visible=false;
+function drawIndicators(){rangeRing.visible=false;tgtRing.visible=false;placeGhost.visible=false;for(const g of DTR_RING)g.visible=false;
   if(!running||over)return;
+  {const inn=sel.length===1&&sel[0].bt==='inn'&&sel[0].tribe===0?sel[0]:null,ds=inn?units.filter(u=>u.alive&&u.type==='daughter'&&u.tribe===0&&(u.inn===inn||!u.inn)):sel.filter(u=>u.alive&&u.type==='daughter'&&u.tribe===0);
+    let i=0;for(const d of ds){if(i>=DTR_RING.length||d.inV)continue;const g=DTR_RING[i++],rx=wd(d.x-cam.fx),rz=wd(d.z-cam.fz);g.position.set(rx,Math.max(0,hAt(d.x,d.z))-(rx*rx+rz*rz)*K+.12,rz);g.scale.setScalar(DTR_R);g.visible=true}}
   const sh=tribes[0]&&tribes[0].shaman;let hp=null;
   if(armed||placing){const r=glc.getBoundingClientRect();hp=hoverMouse&&hoverSX>=0?pickGround(hoverSX,hoverSY):pickGround(r.left+r.width/2,r.top+r.height*.45)}
   if(armed&&armed!=='arma'&&SPK[armed].r<999&&sh){const s=SPK[armed];const rx=wd(sh.x-cam.fx),rz=wd(sh.z-cam.fz);rangeRing.position.set(rx,unitY(sh)-(rx*rx+rz*rz)*K+.1,rz);rangeRing.scale.setScalar(s.r);rangeRing.visible=true;
