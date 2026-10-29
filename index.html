@@ -2398,7 +2398,7 @@ function inst(g,m,cap){const im=new C.InstancedMesh(g,m,cap);im.instanceMatrix.s
 // Tribe-coloured parts write alpha 254/255 so the film grade can find them and leave them out (invisible otherwise).
 matT.onBeforeCompile=sh=>{sh.fragmentShader=sh.fragmentShader.replace('#include <dithering_fragment>','#include <dithering_fragment>\n\tgl_FragColor.a=254./255.;')};
 function mkPair(def,cap,ghost){const d=def();return {t:inst(merge(d.t),ghost?gMatT:matT,cap),f:inst(merge(d.f),ghost?gMatF:matF,cap),n:0,cap}}
-const UCAP={shamanP:8,daughter:30,phillip:12,goat:60,chicken:300,rabbit:200,queen:8,hunter:40,brave:700,warrior:360,oss:240,captive:120,archer:300,shaman:8,ghost:120,balloon:60,wild:200};
+const UCAP={shamanP:8,braveDaze:120,daughter:30,phillip:12,goat:60,chicken:300,rabbit:200,queen:8,hunter:40,brave:700,warrior:360,oss:240,captive:120,archer:300,shaman:8,ghost:120,balloon:60,wild:200};
 // ---------------- MODEL EDITS ----------------
 // Models edited in the Model workshop (menu) are stored as lists of parts. Edits you export from the
 // workshop can be pasted into MODEL_DATA here so that they ship with the game for everyone; edits made
@@ -2406,6 +2406,14 @@ const UCAP={shamanP:8,daughter:30,phillip:12,goat:60,chicken:300,rabbit:200,quee
 // words baked in from the text workshop: key -> text
 const TEXT_DATA={};
 const MODEL_DATA={
+"u:braveDaze":[
+  {"s":"cyl","a":[0.11,0.2,0.42,6],"p":[0,0.21,0],"r":[0,0,0],"k":[1,1,1],"c":"#ffffff","t":1},
+  {"s":"sphere","a":[0.11,6,5,0,6.2832,0,3.1416],"p":[0,0.53,0],"r":[0,0,0],"k":[1,1,1],"c":"#d9a27a","t":0},
+  {"s":"sphere","a":[0.118,6,3,0,6.2832,0,1.5708],"p":[0,0.55,0],"r":[0,0,0],"k":[1,1,1],"c":"#3b2a1e","t":0},
+  {"s":"cone","a":[0.15,0.3,8],"p":[0,0.2915,0],"r":[180,0,0],"k":[1,1,1],"c":"#b8a888","t":1},
+  {"s":"cyl","a":[0.03,0.055,0.3,8],"p":[-0.175,0.2615,-0.0798],"r":[44,0,-38],"k":[1,1,1],"c":"#b8a888","t":1},
+  {"s":"cyl","a":[0.03,0.055,0.3,8],"p":[0.175,0.2615,-0.0798],"r":[44,0,38],"k":[1,1,1],"c":"#b8a888","t":1}
+],
 "b:hedgelink":[
   {"s":"cyl","a":[0.035,0.045,0.7,4],"p":[-0.25,0.35,-0.17],"r":[0.7,0,1.9],"k":[1,1,1],"c":"#5e4a32","t":0},
   {"s":"cyl","a":[0.035,0.045,0.66,4],"p":[-0.25,0.33,0.17],"r":[1.8,0,3.5],"k":[1,1,1],"c":"#5e4a32","t":0},
@@ -3529,7 +3537,8 @@ function captureDef(def){const proto=C.BufferGeometry.prototype,AM=proto.applyMa
     out.push({s,a:a.map(v=>r4(+v)),p:[pp.x,pp.y,pp.z].map(r4),r:[eu.x,eu.y,eu.z].map(v=>Math.round(v/D2R*100)/100),k:[sc.x,sc.y,sc.z].map(r4),c:'#'+col.getHexString(),t:team})}
   return out}
 function modelEdits(){let loc={};try{loc=JSON.parse(localStorage.getItem(MODEL_KEY))||{}}catch(e){}return Object.assign({},MODEL_DATA,loc)}
-UMOD.shamanP=UMOD.shaman; // the Cunning Woman with child (carrying a Fetch); her look is the workshop model u:shamanP
+UMOD.shamanP=UMOD.shaman;UMOD.braveDaze=UMOD.brave; // a villager drawn by the Keening Wail; her look is the workshop model u:braveDaze
+ // the Cunning Woman with child (carrying a Fetch); her look is the workshop model u:shamanP
 const ORIG_UMOD=Object.assign({},UMOD),ORIG_BMOD=Object.assign({},BMOD);
 function applyModelEdits(){const E=modelEdits();for(const k in ORIG_UMOD)UMOD[k]=ORIG_UMOD[k];for(const k in ORIG_BMOD)BMOD[k]=ORIG_BMOD[k];
   for(const k in E){const name=k.slice(2),set=k[0]==='u'?UMOD:BMOD,orig=k[0]==='u'?ORIG_UMOD:ORIG_BMOD;if(!orig[name]||!Array.isArray(E[k]))continue;try{set[name]=defFromData(E[k])}catch(e){console.error('model edit',k,e)}}
@@ -3635,7 +3644,7 @@ function drawEntities(){
     if(u.hanging){const b=u.hanging,rx=wd(b.x-cam.fx),rz=wd(b.z-cam.fz),r2=rx*rx+rz*rz,M=UM.shaman;if(r2>VR2||M.n>=M.cap||(!visB(b)))continue;const y=hAt(b.x,b.z)-r2*K+1.15,i=M.n++,yaw=(b.yaw||0)+Math.sin(gt*.7)*.5,[ox,oz]=byaw(b,2.1,0);
       place(M.t,i,rx+ox,y,rz+oz,yaw,1.6);place(M.f,i,rx+ox,y,rz+oz,yaw,1.6);_c.copy(tribes[u.tribe].c).multiplyScalar(.7);M.t.setColorAt(i,_c);M.f.setColorAt(i,WHITE_C);continue}
     if(u.inV)continue;const rx=wd(u.x-cam.fx),rz=wd(u.z-cam.fz),r2=rx*rx+rz*rz;if(r2>VR2)continue;if(!visU(u))continue;
-    const M=UM[u.preg&&u.type==='shaman'?'shamanP':u.type];if(M.n>=M.cap)continue;let y=unitY(u)-r2*K,ox=0,oz=0,yaw=u.face;const god=false;const sc=u.type==='shaman'?1.6:1;if(u.type==='shaman'&&HALO.n<HALO.max){const tc=tribes[u.glam>gt&&tribes[u.glamAs]?u.glamAs:u.tribe].c;HALO.emit(u.x,unitY(u)+1.05,u.z,0,0,0,1,.55+tc.r*.45,.5+tc.g*.45,.4+tc.b*.45,.38+.08*Math.sin(gt*3+u.anim),3.4,0);HALO.emit(u.x,unitY(u)+1.85,u.z,0,0,0,1,1,.9,.6,.5,.9,0)}if(god)y+=.9+Math.sin(gt*2)*.15;
+    const M=UM[u.preg&&u.type==='shaman'?'shamanP':u.daze&&u.type==='brave'?'braveDaze':u.type];if(M.n>=M.cap)continue;let y=unitY(u)-r2*K,ox=0,oz=0,yaw=u.face;const god=false;const sc=u.type==='shaman'?1.6:1;if(u.type==='shaman'&&HALO.n<HALO.max){const tc=tribes[u.glam>gt&&tribes[u.glamAs]?u.glamAs:u.tribe].c;HALO.emit(u.x,unitY(u)+1.05,u.z,0,0,0,1,.55+tc.r*.45,.5+tc.g*.45,.4+tc.b*.45,.38+.08*Math.sin(gt*3+u.anim),3.4,0);HALO.emit(u.x,unitY(u)+1.85,u.z,0,0,0,1,1,.9,.6,.5,.9,0)}if(god)y+=.9+Math.sin(gt*2)*.15;
     if(u.moving)y+=Math.abs(Math.sin(gt*11+u.anim))*.07;
     if(u.chop)y+=Math.abs(Math.sin(gt*8+u.anim))*.05;
     if(gt-u.swing<.18){ox=Math.sin(u.face)*.13;oz=Math.cos(u.face)*.13}
@@ -4361,7 +4370,7 @@ window.addEventListener('pagehide',()=>saveGame());document.addEventListener('vi
 // gives a block of text that can be baked into MODEL_DATA so they ship with the game.
 let wsOn=false,galleryOn=false;
 const WS={multi:new Set(),addMode:false,scene:null,group:null,key:null,parts:[],sel:-1,undo:[],lastPush:0,yaw:.6,pitch:.42,dist:4,ty:.5,tribe:0,ref:true,refMesh:null,box:null,drag:null,pts:new Map(),dirty:new Set()};
-const ANIM_L={shamanP:'Cunning Woman with child',goat:'Black goat',chicken:'Chicken',rabbit:'Rabbit'};
+const ANIM_L={shamanP:'Cunning Woman with child',braveDaze:'Villager drawn by the keening',goat:'Black goat',chicken:'Chicken',rabbit:'Rabbit'};
 function wsLabel(k){const n=k.slice(2);if(k==='b:hedgelink')return 'Blackthorn Hedge (join)';if(k==='b:hutch')return 'Rabbit hutch';if(k==='b:firepit')return 'Beltane fire pit';if(k[0]==='u'&&ANIM_L[n])return ANIM_L[n];return k[0]==='u'?(UT[n]?UT[n].label:n):(BT[n]?BT[n].label:n)}
 function wsKeys(){return Object.keys(ORIG_UMOD).filter(k=>k!=='ghost'&&k!=='phillip').map(k=>'u:'+k).concat(Object.keys(ORIG_BMOD).map(k=>'b:'+k))}
 function wsOrigParts(k){const n=k.slice(2);return captureDef(k[0]==='u'?ORIG_UMOD[n]:ORIG_BMOD[n])}
