@@ -112,7 +112,7 @@ body.rejoicing #side,body.rejoicing #hint,body.rejoicing #toasts,body.rejoicing 
 .card span{font-size:13px;color:var(--muted)}
 #pTribe>.sub{flex:0 0 190px;align-self:center;font-size:12px;line-height:1.3;color:var(--muted);white-space:normal}
 .card b,.card span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}.card{cursor:pointer}
-.qs{max-width:236px}.qs span{line-height:1.2;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.qs{max-width:236px}.qs.qsN{min-width:46px;align-items:center;padding:6px 8px}.qs span{line-height:1.2;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 #bSound{display:inline-flex;align-items:center;justify-content:center;min-width:34px}#bMute{display:flex;align-items:center;justify-content:center;gap:8px;width:100%}
 #cardPop{position:absolute;left:10px;right:10px;bottom:150px;max-width:460px;background:var(--panel2);border:1px solid var(--line);border-left:2px solid var(--mana);border-radius:10px;padding:12px 14px;z-index:30;box-shadow:0 12px 40px rgba(0,0,0,.5)}#cardPop b{display:block;font:17px var(--f-display);letter-spacing:.05em;font-weight:400;margin-bottom:4px}#cardPop p{margin:0;font-size:14px;line-height:1.45;color:var(--muted)}
 
@@ -4066,7 +4066,7 @@ function renderTribe(force){const T=tribes[0];if(!T)return;let h='';const b=sel.
     h+=T.tomb&&!T.shaman?q('shaman','Tomb',1,'Find the fortress'):q('shaman','Cunning Woman',T.shaman?1:0,T.shaman?'Select and find':'Reborn in '+Math.max(0,Math.ceil(T.reincT-gt))+'s');
     if(canLeap(T)){const LS=leapScale(0);h+=`<button class="qs go" data-act="leap"><span>${LEAP_N} villagers rise from the stones; no attacks for ${LEAP_TRUCE}s${LS.n>5?`; with ${LS.n} fighters standing, the terror is weaker and she is gone ${LS.rb}s`:''}</span><b>Ättestupa</b></button>`}
     const guards=myUnits(u=>u.post).length,army=myUnits(u=>MIL[u.type]&&!u.post).length;
-    const f5=k=>{const n=myUnits(u=>u.type===k&&!u.post&&!sel.includes(u)).length;return `<button class="qs" data-act="five:${k}" ${n?'':'disabled'}><span>nearest</span><b>+5</b></button>`};
+    const f5=k=>{const n=myUnits(u=>u.type===k&&!u.post&&!sel.includes(u)).length;return `<button class="qs qsN" data-act="add1:${k}" ${n?'':'disabled'} title="Add the nearest one"><b>+1</b></button><button class="qs qsN" data-act="five:${k}" ${n?'':'disabled'} title="Add the nearest five"><b>+5</b></button>`};
     const fr=k=>myUnits(u=>u.type===k&&!u.post).length;h+=q('army','Army',army,army+' fighters')+q('warrior','Warriors',fr('warrior'),fr('warrior')+' ready')+f5('warrior')+q('archer','Archers',fr('archer'),fr('archer')+' ready')+f5('archer')+q('oss','Osses',fr('oss'),fr('oss')+' ready')+f5('oss')+q('guard','Guards',guards,guards+' posted');
     const br=T.stats.outB||0;h+=q('brave','Villagers',br,br+' outside, '+(T.stats.housed||0)+' in huts');
     const vn=S.balloon||0;h+=q('veh','Balloons',vn,vn+' balloons');const cn=units.filter(u=>u.alive&&u.chg===0).length;if(cn)h+=q('chg','Changelings',cn,cn+' among the rivals');
@@ -4098,8 +4098,8 @@ $('pTribe').addEventListener('click',e=>{const cd=e.target.closest('.card');if(c
   else if(a==='callout'){const n=b.occ;while(b.occ>0){b.occ--;const u=spawnUnit('brave',0,b.dx+(R()-.5)*2,b.dz+R());u.think=1.5}toast(`${n} villager${n===1?'':'s'} come out to work.`)}
   else if(a==='unload'){for(const v of sel)if(v.pass&&v.pass.length)unload(v)}
   else if(a==='shaman')focusShaman();
-  else if(a.startsWith('five:')){const k=a.slice(5),cand=myUnits(u=>u.type===k&&!u.post&&!sel.includes(u)).sort((p,q)=>((p.st==='idle'?0:400)+d2(p.x,p.z,cam.fx,cam.fz))-((q.st==='idle'?0:400)+d2(q.x,q.z,cam.fx,cam.fz)));
-    const keep=sel.filter(u=>!u.bt&&u.tribe===0&&u.alive);setSel(keep.concat(cand.slice(0,5)));sfx('select',.4)}
+  else if(a.startsWith('five:')||a.startsWith('add1:')){const take=a.startsWith('five:')?5:1,k=a.slice(5),cand=myUnits(u=>u.type===k&&!u.post&&!sel.includes(u)).sort((p,q)=>((p.st==='idle'?0:400)+d2(p.x,p.z,cam.fx,cam.fz))-((q.st==='idle'?0:400)+d2(q.x,q.z,cam.fx,cam.fz)));
+    const keep=sel.filter(u=>!u.bt&&u.tribe===0&&u.alive);setSel(keep.concat(cand.slice(0,take)));sfx('select',.4)}
   else if(a==='leap')startLeap(T);
   else if(a==='army')pick(u=>MIL[u.type]&&!u.post);else if(a==='guard')pick(u=>!!u.post);else if(a==='brave')pick(u=>u.type==='brave');else if(a==='idle')pick(u=>u.type==='brave'&&u.st==='idle'&&!u.cmd);else if(a==='veh')pick(u=>UT[u.type].veh);else pick(u=>u.type===a&&(!u.post||a==='queen'||a==='daughter'));
   renderTribe(true)});
