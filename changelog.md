@@ -1,18 +1,18 @@
 # Wicker: a retrospective changelog
 
-This is a history of how Wicker was built, reconstructed from the commit log, the waypoint builds kept in `waypoints/`, and the design decisions recorded from the earliest conversations. It doesn't list every commit. It follows the significant steps: each feature as it arrived, and each round of balance work, with the reasoning where the history records it. Dates are those of the commits. The repository opens on 9 October 2026 with a build that already carried most of the core game, so the first section describes that inheritance from the waypoints rather than from commits.
+This is a history of how Wicker was built, reconstructed from the commit log, the waypoint builds once kept in the repository, and the design decisions recorded from the earliest conversations. It doesn't list every commit. It follows the significant steps: each feature as it arrived, and each round of balance work, with the reasoning where the history records it. Dates are those of the commits. The repository opens on 9 October 2026 with a build that already carried most of the core game, so the first section describes that inheritance from the waypoints rather than from commits.
 
 ---
 
-## Prehistory: from Populous clone to Wicker
+## Prehistory: from Worldshaper to Wicker
 
-Wicker began as **Worldshaper**, a browser god game modelled closely on Populous: The Beginning. It was 3D, with water and cliffs, touch controls and a folk-horror mood, but in its mechanics it was essentially a Populous remake: a shaman, a spell list borrowed wholesale, tribes, and priests and temples converting followers.
+Wicker began as **Worldshaper**, a browser god game inspired by the classic god games, Populous: The Beginning above all. It was 3D, with water and cliffs, touch controls and a folk-horror mood, and its mechanics were the genre's familiar ones: a shaman, spells, tribes, and preachers converting followers.
 
 The break came when the game was redesigned around one idea: **mana comes only from sacrifice**. That rule pulled the rest of the design after it:
 
 - **Tiers of sacrifice.** There are three places to give people to the fire: the forest altar, the wicker man, and the ram-headed Wicker God.
 - **Dread.** Sacrificing your own followers builds dread, and dread makes villagers desert. Feeding the fire with your own people becomes a real cost rather than a free conversion.
-- **Captives over converts.** Captured enemies are worth more than converts and carry no dread, so taking prisoners becomes the efficient path. Populous's priests and temples were reimagined as a capturing unit: the **Oss**, trained at the Oss House.
+- **Captives over converts.** Captured enemies are worth more than converts and carry no dread, so taking prisoners becomes the efficient path. Conversion was reimagined as capture: the **Oss**, trained at the Oss House, seizes people and carries them home.
 - **Hollow-hill attainment.** It became a permanent late-game boost rather than a win condition. The shaman is entombed in a destructible wicker fortress, so the power she gains is also a target.
 - **The tribes.** A palette of Ochre, Blood, Forest and pale Ash.
 
@@ -20,14 +20,14 @@ At that point the sacrifice-economy version became its own project, Wicker. Worl
 
 ## Before the repository: the core game (to 9 October)
 
-The earliest kept build, `wicker-2026-10-08-rook-tree.html`, is already a complete god game in the tradition of Populous: The Beginning. It is a single HTML file using three.js, played on a wrapping 128-square heightmap world.
+The earliest kept build, from 8 October, is already a complete god game. It is a single HTML file using three.js, played on a wrapping 128-square heightmap world.
 
 - **Mana comes only from sacrifice.** A tribe of villagers breeds in huts, chops wood and builds. Mana comes from giving people to the fire: at a forest altar, inside a wicker man or a Wicker God, or as captives dragged home by Osses and penned in thrall folds. This is the game's defining economic rule, and nearly every later balance decision follows from it.
 - **The shaman and her spells.** A shaman (later the Cunning Woman) casts sixteen spells: Blast, Lightning, Plague of Flies, Shield, Ghost Army, Land Bridge, Flatten, Hypnotise, Whirlwind, Swamp, Erode, Earthquake, Firestorm, Angel of Death, Volcano and Armageddon.
 - **Buildings.** Huts, a warrior camp, an archery range, an Oss house, a rook nest, a thrall fold, an altar, the wicker man and Wicker God, a tomb, Herne's Oak, balloons and boats. There are also the stone circle where the shaman is reborn, the barrows, and a neutral Moot at the centre of the world.
 - **Rival tribes.** AI rivals breed, build, train, raid and cast against you and against each other.
 
-The second waypoint, `wicker-2026-10-09-pre-campaign.html`, adds the **maypole and May Queen** and the **blackthorn hedge**, together with the sacrifice spectacles, before any campaign existed.
+The second waypoint build, from 9 October, adds the **maypole and May Queen** and the **blackthorn hedge**, together with the sacrifice spectacles, before any campaign existed.
 
 ## 9 October: the campaign begins
 
@@ -58,7 +58,7 @@ The second waypoint, `wicker-2026-10-09-pre-campaign.html`, adds the **maypole a
   - a new forest altar: a split slab, a horned post, a knife and blood.
 - **Burnings as spectacle.** Fire catches the kindling first, then climbs. The Wicker God's hands burn, and its head, built from the current model, falls, lands with a thud and smoulders.
 - **Fighters spare raid victims.** Fighters no longer kill enemies that their own Osses are in the middle of capturing.
-- **Third waypoint.** `wicker-2026-10-10-settlements.html` was kept.
+- **Third waypoint.** A build from 10 October was kept.
 
 ## 11 October: models, spells reimagined, and the Surrounded problem
 
@@ -365,7 +365,7 @@ Simon's experience of three spells, rather than their numbers, drove these chang
   - **The hedge becomes a fence.** Simon's attempts at a hedge model never read as a hedge, only as a tangle of sticks. A rounded green mound came next; it looked neither natural nor man-made, so it stood out against both the trees and the buildings. A dead hedge of stakes and packed brush followed. Simon then reworked it himself into a rail fence of stakes, crossed rails and small thorns, which suits the village better. The join piece now carries the rails along the run at the same heights, so lengths meet cleanly. The rails are a lighter wood than the stakes, which keep the fold's timber, and a tribe-coloured rag is still tied on.
   - **The keened run like the children in *Weapons*.** Simon modelled a villager with her arms swept back. Villagers drawn by the Keening Wail now wear it while they drift, and ordinary villagers are unchanged. It is in the workshop as "Villager drawn by the keening".
   - **The instruction bar.** When a spell was armed, the bar carried its whole description. With Simon's longer descriptions, the Changeling's covered half a phone screen. The bar now shows only the instruction, with the description beneath it in smaller type, held to two lines. Tapping it shows the rest.
-  - **Spell names, away from Populous.** Most of the remaining spell names still echoed Populous: The Beginning's spell book, in much the same order. Simon renamed them in the game's own idiom: Ghost Army became Shade Host, Land Bridge became Causeway, Flatten became Harrow, Erode became Sink, Hypnotise became Witch and Whirlwind became Twisting Squall. The tokens, hints, help text and docs follow; this history keeps the old names where it describes the past.
+  - **Spell names of its own.** Most of the remaining spell names still echoed the spell books of the god games that inspired Wicker. Simon renamed them in the game's own idiom: Ghost Army became Shade Host, Land Bridge became Causeway, Flatten became Harrow, Erode became Sink, Hypnotise became Witch and Whirlwind became Twisting Squall. The tokens, hints, help text and docs follow; this history keeps the old names where it describes the past. The old builds that still showed the earliest names were taken out of the repository, and this history now calls Wicker inspired by the classic god games rather than a clone of one.
   - **The Landlord's Daughter** now also makes camps and other training buildings within ten paces of her train half as fast again. This stacks with the Sword Dance.
 
 ---
