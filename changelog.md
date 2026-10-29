@@ -370,6 +370,10 @@ Simon's experience of three spells, rather than their numbers, drove these chang
   - **A nod to *Penda's Fen*.** A new token, "Not pure, never pure", is earned by giving one of every village, your own among them, and a wildman to the fire in one game.
   - **The Landlord's Daughter** now also makes camps and other training buildings within ten paces of her train half as fast again. This stacks with the Sword Dance. Huts and training buildings in her reach now send up little rising hearts; a training building's popup says it is training at 1.5× speed to impress the Landlord's Daughter. A ring round her was tried first, but it was too easily confused with a spell's range. A pink glow came next; it only ever lit one building, because the glow system had room for very few, and it looked too much like Cradle Blight. A building's info popup now also lists what is helping or hindering it: her, Beltane, Cradle Blight or the Sword Dance.
 
+- **The lost Forest woman at All-against-all.** A battle of all-against-all would not end. Forest was down to one member who couldn't be found, and tapping their name only showed empty Forest buildings. She turned out to be a May Queen: everyone else marches to the Moot, but a Queen's own wandering took over before the pull to the Moot, so she stayed at home. Now she goes to the Moot with the rest. Two related things were mended at the same time:
+  - **Changelings.** A changeling living among a people counted as one of them, so your own changeling could keep a beaten tribe alive. It no longer counts, and when the tribe falls, the changeling comes home to its own side.
+  - **Finding the stragglers.** During All-against-all, tapping a tribe's name now cycles through its people only, not its buildings.
+
 ---
 
 ## Threads that run through the history

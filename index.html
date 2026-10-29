@@ -1662,7 +1662,8 @@ function idleThink(u,D,T){if(D.veh&&!D.bomb)return;if(u.ferryJ&&inFerry(u))retur
   if(u.type==='wild')return wildThink(u);
   if(u.type==='hunter')return hunterThink(u);
   if(u.type==='phillip'){if(scanFight(u,UT.phillip))return;if(R()<.5){const a=R()*TAU,x=u.x+Math.cos(a)*4,z=u.z+Math.sin(a)*4;if(pass[cidx(x,z)]){u.st='move';setTarget(u,x,z)}}u.think=1+R();return}
-  if(u.type==='queen'){if(u.lastAtk&&u.lastAtk.alive&&u.lastAtkT>gt-2.5){const a=u.lastAtk,dx=wd(u.x-a.x),dz=wd(u.z-a.z),l=Math.hypot(dx,dz)||1;u.st='flee';u.ft=2.5;setTarget(u,u.x+dx/l*5,u.z+dz/l*5);return}
+  if(u.type==='queen'){if(armageddon&&d2(u.x,u.z,moot.x,moot.z)>64){mootPull(u);orderUnit(u,moot.x+(R()-.5)*6,moot.z+(R()-.5)*6,true,moot.x,moot.z);return} // a May Queen goes to the Moot like everyone else
+    if(u.lastAtk&&u.lastAtk.alive&&u.lastAtkT>gt-2.5){const a=u.lastAtk,dx=wd(u.x-a.x),dz=wd(u.z-a.z),l=Math.hypot(dx,dz)||1;u.st='flee';u.ft=2.5;setTarget(u,u.x+dx/l*5,u.z+dz/l*5);return}
     if(R()<.4){const x=(u.hx??u.x)+(R()-.5)*5,z=(u.hz??u.z)+(R()-.5)*5;if(pass[cidx(x,z)]){u.st='move';setTarget(u,x,z)}}return}
   if(u.postUnit){const q=units.find(o=>o.id===u.post&&o.alive);if(!q){u.post=null;u.postUnit=false}else{u.gx=q.x;u.gz=q.z}}
   else if(u.post){if(u.postSpot?!banners.some(b=>b.id===u.post):!(bById.get(u.post)||{}).alive){u.post=null;u.postSpot=false}}
@@ -2129,7 +2130,7 @@ function aiCast(T){const ai=T.ai,sh=casterOf(T);if(!sh||sh.preg||sh.intoHill||sh
 // ---------------- tribe upkeep ----------------
 function computeStats(){if(banners.length)banners=banners.filter(b=>units.some(u=>u.alive&&u.post===b.id&&u.postSpot));for(const T of tribes)T.stats={pop:0,braves:0,outB:0,housed:0,others:0,mil:0,queued:0,huts:0,blds:0,sites:0,b:{},cap:15,cnt:{},caps:0};
   for(const b of blds)b.nb=0;
-  for(const u of units){if(!u.alive)continue;const S=tribes[u.tribe].stats;S.cnt[u.type]=(S.cnt[u.type]||0)+1;if(UT[u.type].veh||u.type==='ghost'||u.type==='captive'||u.type==='hunter'||u.type==='phillip'||u.thrall)continue;S.pop++;
+  for(const u of units){if(!u.alive)continue;const S=tribes[u.tribe].stats;S.cnt[u.type]=(S.cnt[u.type]||0)+1;if(UT[u.type].veh||u.type==='ghost'||u.type==='captive'||u.type==='hunter'||u.type==='phillip'||u.thrall||u.chg!=null)continue;S.pop++; // a changeling living among them is not one of them
     if(u.type==='brave'){S.braves++;if(!u.inV)S.outB++}else S.others++;if(MIL[u.type])S.mil++;if(u.st==='build'&&u.bld)u.bld.nb++}
   homeBits.fill(0);for(const b of blds){if(!b.alive||!b.done||BT[b.bt].inv||b.bt==='hedge'||b.tribe===wildId)continue;const bx=wi(Math.floor(b.x))>>3,bz=wi(Math.floor(b.z))>>3;for(let j=-1;j<=1;j++)for(let i=-1;i<=1;i++)homeBits[(((bz+j)&15)<<4)|((bx+i)&15)]|=1<<b.tribe}
   for(const b of blds){if(!b.alive||BT[b.bt].inv||b.bt==='hedge'||b.bt==='torch')continue;const S=tribes[b.tribe].stats;S.blds++;S.b[b.bt]=(S.b[b.bt]||0)+1;
@@ -2163,7 +2164,8 @@ function breakTribe(T){T.broken=true;const r=blds.find(b=>b.bt==='reinc'&&b.trib
   if(!watching)toast(`The ${T.name} folk are broken. Their last people are gathering at their stone circle, and their halls are falling in. Their Cunning Woman will not return.`);else toast(`The ${T.name} folk are broken`)}
 function conquerorOf(T){let c=T.lastHitBy!=null?tribes[T.lastHitBy]:null;if(c&&c.alive&&!c.wild&&c.id!==T.id)return c;
   let best=null,bd=1e18;const r=blds.find(b=>b.bt==='reinc'&&b.tribe===T.id)||{x:64,z:64};for(const o of tribes){if(o.wild||!o.alive||o.id===T.id)continue;const ob=blds.find(b=>b.bt==='reinc'&&b.tribe===o.id);if(!ob)continue;const d=d2(r.x,r.z,ob.x,ob.z);if(d<bd){bd=d;best=o}}return best}
-function finishTribe(T,how){T.alive=false;const C2=conquerorOf(T),me=x=>x&&x.id===0&&!watching;let msg='';
+function finishTribe(T,how){T.alive=false;for(const u of units)if(u.alive&&u.tribe===T.id&&u.chg!=null&&tribes[u.chg]&&tribes[u.chg].alive){if(u.sel)deselect(u);u.tribe=u.chg;u.chg=null;u.chgSafe=false;u.cmd=false;u.order=null;u.tgt=null;u.st='idle';u.gx=u.x;u.gz=u.z} // changelings among a fallen people go back to their own
+  const C2=conquerorOf(T),me=x=>x&&x.id===0&&!watching;let msg='';
   if(how==='flip'&&C2){let v=0,n=0;for(const b of blds){if(!b.alive||b.tribe!==T.id||BT[b.bt].inv)continue;if(b.bt==='tomb'){b.burnt=true;b.alive=false;continue}
       b.tribe=C2.id;b.q=0;b.trainee=false;b.claim=null;b.sq=0;b.cq=0;b.occ=0;b.sel&&deselect(b);v+=TUNE.flipManaBase+BT[b.bt].s*TUNE.flipManaPerSize;n++}
     v=Math.round(v*C2.manaMult);C2.mana=Math.min(MANA_MAX,C2.mana+v);
@@ -4151,7 +4153,7 @@ $('foes').addEventListener('click',e=>{const b=e.target.closest('[data-t]');if(!
   if(armed==='fetch'&&!watching){const P=tribes[0],t=T.shaman&&T.shaman.alive?T.shaman:T.tomb;if(!t){toast('Their Cunning Woman is not in the world');return}if(P.mana<spellCost(P,'fetch')){toast('Not enough mana for The Fetch');return}if((P.cd.fetch||0)>gt){toast('The Fetch is still gathering power');return}
     if(P.tomb&&!P.shaman)tryCast(0,'fetch',t.x,t.z,casterOf(P));else if(P.shaman){const sh=P.shaman;sh.st='cast';sh.spell='fetch';sh.px=t.x;sh.pz=t.z}disarm();return}
   if(watching){const f=T.shaman||T.tomb||blds.find(x=>x.alive&&x.tribe===T.id);if(f){cam.fx=f.x;cam.fz=f.z}return}
-  const L=[];for(const x of blds)if(x.alive&&x.tribe===T.id&&!BT[x.bt].inv&&x.bt!=='hedge'&&visB(x))L.push(x);for(const u of units)if(u.alive&&u.tribe===T.id&&!u.inV&&visU(u)&&u.type!=='captive')L.push(u);
+  const L=[];if(!armageddon)for(const x of blds)if(x.alive&&x.tribe===T.id&&!BT[x.bt].inv&&x.bt!=='hedge'&&visB(x))L.push(x);for(const u of units)if(u.alive&&u.tribe===T.id&&!u.inV&&visU(u)&&u.type!=='captive')L.push(u);
   if(!L.length){toast(`None of the ${T.name} folk are in sight. Explore, or wait for them to show themselves.`);return}
   const groups=[];for(const x of L){let g=groups.find(g=>d2(g.x,g.z,x.x,x.z)<10*10);if(!g){g={x:x.x,z:x.z,n:0};groups.push(g)}g.n++}groups.sort((a,c)=>c.n-a.n);
   T.findI=((T.findI??-1)+1)%groups.length;const g=groups[T.findI];cam.fx=g.x;cam.fz=g.z;toast(`${T.name}: ${groups.length===1?'their last known place':'group '+(T.findI+1)+' of '+groups.length+', '+g.n+' here'}`)});
