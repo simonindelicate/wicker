@@ -797,7 +797,7 @@ const TOKS=[
  ['Growth',[['pop25','Lead 25 followers'],['pop50','Lead 50 followers'],['pop100','Lead 100 followers'],['pop150','Lead 150 followers']]],
  ['Endurance',[['t30','Last half an hour in one game'],['t60','Last an hour in one game'],['t120','Last two hours in one game']]],
  ['Victories',[['w_easy','Win on Easy'],['w_normal','Win on Normal'],['w_hard','Win on Hard'],['w_extreme','Win on Extreme'],['w_arch','Win on an archipelago'],['w_cont','Win on a continent'],['w_high','Win in the highlands']]],
- ['Deeds',[['d_godcaps','Burn a Wicker God filled entirely with captives'],['d_phillip','Black Phillip survives his whole rampage'],['d_hemp','End it in hemp: win while your Cunning Woman hangs from the tree'],['d_fetch','Made fetch happen: take a rival Cunning Woman with your fetch'],['d_plagues','Have Murrain, St Anthony\'s Fire and Cradle Blight at work on your rivals all at once'],['d_richqueen','Offer a May Queen at her richest'],['d_harvest20','Drag twenty broken raiders to your altar in one game'],['d_carried','Have the twisting squall carry off a building'],['d_fever8',"Have one St. Anthony's Fire take eight people"],['d_leap2','Go over the edge twice in one game'],['d_thornwall','Survive The Long Watch without losing a building'],['d_nofear','Win without your dread ever passing the mark'],['d_noblade','Win without training a warrior'],['d_skytomb','Win Fire from the Sky from inside a hollow hill'],['d_threefolds','Have three Thrall Folds full at once'],['d_threefires','Have three wicker men burning close together at once']]],
+ ['Deeds',[['d_godcaps','Burn a Wicker God filled entirely with captives'],['d_phillip','Black Phillip survives his whole rampage'],['d_hemp','End it in hemp: win while your Cunning Woman hangs from the tree'],['d_fetch','Made fetch happen: take a rival Cunning Woman with your fetch'],['d_mixed','Not pure, never pure: give one of every village, your own among them, and a wildman to the fire in one game'],['d_plagues','Have Murrain, St Anthony\'s Fire and Cradle Blight at work on your rivals all at once'],['d_richqueen','Offer a May Queen at her richest'],['d_harvest20','Drag twenty broken raiders to your altar in one game'],['d_carried','Have the twisting squall carry off a building'],['d_fever8',"Have one St. Anthony's Fire take eight people"],['d_leap2','Go over the edge twice in one game'],['d_thornwall','Survive The Long Watch without losing a building'],['d_nofear','Win without your dread ever passing the mark'],['d_noblade','Win without training a warrior'],['d_skytomb','Win Fire from the Sky from inside a hollow hill'],['d_threefolds','Have three Thrall Folds full at once'],['d_threefires','Have three wicker men burning close together at once']]],
  ['Curiosities',[
   ['x_lightfits',"Strike down someone in the fits of St. Anthony's Fire with Lightning",'The burning man does not need the sky as well. Give it to him anyway.'],
   ['x_erodebr2','Sink ground raised by a Causeway, twice in one game','What the woman raises, the woman may drown. Twice.'],
@@ -1217,13 +1217,15 @@ function grove(b){let n=0;for(const t of trees)if(t.alive&&d2(b.x,b.z,t.x,t.z)<4
 function offerValue(b,cap,wild){const y=YIELD[BT[b.bt].site];let v=cap?y[1]*(wild?.8:1):y[0];if(b.bt==='altar')v*=grove(b);return v}
 function captivesOf(ti){let n=0;for(const b of blds)if(b.alive&&b.tribe===ti&&isHold(b))n+=b.capt.length;return n}
 function nearestHolder(ti,x,z,needCaps){let best=null,bd=1e18;for(const b of blds){if(!b.alive||!b.done||b.tribe!==ti||!isHold(b))continue;if(needCaps?!b.capt.length:b.capt.length>=BT[b.bt].hold)continue;const d=d2(x,z,b.x,b.z);if(d<bd){bd=d;best=b}}return best}
+// Not pure, never pure: one of every people in the game (your own among them) and a wildman, given to the fire in one game
+function notePure(ti,from){if(ti!==0||watching||from==null)return;const a=A(),m=a.mix||(a.mix={});m[from]=1;if(tribes.every(T=>m[T.id]))earn('d_mixed')}
 function sacrifice(u,b){const T=tribes[u.tribe];if(b.claim===u)b.claim=null;const cap=!!u.capt,wild=cap&&u.capt.tribe===wildId;if(u.chg!=null&&!b.lit){const by=u.chg;removeUnit(u);if(b.bt==='altar')burnBld(b,0,by);else{b.spoil=true;light(b)}return}removeUnit(u);
   if(u.type==='queen'){offerQueen(T,b,u);return}
-  if(b.lit)return;
-  if(b.bt==='altar'){const v=Math.round(offerValue(b,cap,wild)*T.manaMult);T.mana=Math.min(MANA_MAX,T.mana+v);if(!cap)T.dread=Math.min(100,T.dread+DREAD.altar);b.busy=gt+2.5;
+  if(b.lit)return;const from=cap?u.capt.tribe:u.tribe;
+  if(b.bt==='altar'){notePure(T.id,from);const v=Math.round(offerValue(b,cap,wild)*T.manaMult);T.mana=Math.min(MANA_MAX,T.mana+v);if(!cap)T.dread=Math.min(100,T.dread+DREAD.altar);b.busy=gt+2.5;
     const y=hAt(b.x,b.z);for(let i=0;i<18;i++)PA.emit(b.x+(R()-.5)*.6,y+.9,b.z+(R()-.5)*.6,(R()-.5)*1.2,1+R()*2,(R()-.5)*1.2,.7,.75,.08,.06,1,.4,2);
     b.mem=(b.mem||0)+1;sacN(b.tribe,1);sfx('die',.5,b.x,b.z);if(u.tribe===0){if(!u.harvest)toast(`${cap?'A captive':'A villager'} is given to the grove. +${v} mana`);stats.burned++}return}
-  b.inside.push({cap,wild});if(u.tribe===0)stats.burned++;dockDirty=true;
+  b.inside.push({cap,wild,from});if(u.tribe===0)stats.burned++;dockDirty=true;
   if(b.inside.length>=BT[b.bt].holdN)light(b)}
 function memorial(kind,x,z,tribe){const M=stats.mem||(stats.mem=[]);if(M.length>=60)return;
   if(kind==='doll'){const near=M.filter(m=>m.k==='doll'&&d2(m.cx,m.cz,x,z)<5*5);const c=near[0]||{cx:x,cz:z};const i=near.length,a=i*2.39996+.5,r=2.4+(i>=8?.7:0);M.push({k:'doll',cx:c.cx,cz:c.cz,x:wrap(c.cx+Math.cos(a)*r),z:wrap(c.cz+Math.sin(a)*r),tribe,t:gt})}
@@ -1366,7 +1368,7 @@ function offerAnimal(a,b){const T=tribes[b.tribe];if(b.bt==='altar'){if(b.busy>g
     const y=hAt(b.x,b.z);for(let i=0;i<12;i++)PA.emit(b.x+(R()-.5)*.6,y+.9,b.z+(R()-.5)*.6,(R()-.5)*1.2,1+R()*2,(R()-.5)*1.2,.7,.75,.08,.06,1,.4,2);sfx('die',.35,b.x,b.z);if(b.tribe===0)toast(`The ${a.kind==='goat'?'black goat':a.kind} is given to the grove. +${v} mana`);return true}
   b.aq=Math.max(0,(b.aq||0)-1);if(b.lit||b.inside.length>=BT[b.bt].holdN)return true;b.inside.push({cap:false,ani:a.kind});dockDirty=true;if(b.inside.length>=BT[b.bt].holdN)light(b);return true}
 function light(b){const T=tribes[b.tribe],D=BT[b.bt];if(b.lit)return;b.lit=true;sacN(b.tribe,b.inside.length);if(b.tribe===0){earn(b.bt==='god'?'r_burngod':'r_burnman');if(b.bt==='god'&&b.inside.length>=12&&b.inside.every(o=>o.cap))earn('d_godcaps')}if(!armageddon)memorial('doll',b.x,b.z,b.tribe);b.litT=gt;b.burnEnd=gt+D.burnT;if(b.bt==='god')b.burnEnd+=3;let v=0,own=0;
-  for(const o of b.inside){v+=o.ani?aniValue(b,o.ani):offerValue(b,o.cap,o.wild);if(!o.cap&&!o.ani)own++}
+  for(const o of b.inside){if(!o.ani&&o.from!=null)notePure(b.tribe,o.from);v+=o.ani?aniValue(b,o.ani):offerValue(b,o.cap,o.wild);if(!o.cap&&!o.ani)own++}
   if(b.spoil){v=0;if(b.tribe===0)toast('A changeling was among the offerings. The fire took early and gave nothing.');else if(!watching&&tribes[b.tribe])toast(`The ${tribes[b.tribe].name} fire took early. Their offering is wasted.`)}
   v=Math.round(v*T.manaMult);T.mana=Math.min(MANA_MAX,T.mana+v);T.dread=Math.min(100,T.dread+own*DREAD[D.site]);
   if(b.bt==='wicker')T.frenzyUntil=Math.min(gt+TUNE.frenzyMax,Math.max(gt,T.frenzyUntil||0)+TUNE.frenzyPerHead*b.inside.length);

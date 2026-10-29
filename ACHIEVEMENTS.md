@@ -104,6 +104,7 @@ Tokens are earned only in live play: never in "Watch the tribes fight", and neve
 | `d_phillip` |  | Black Phillip survives his whole rampage (Grimoire) |  |
 | `d_hemp` |  | End it in hemp: win while your Cunning Woman hangs from the tree |  |
 | `d_fetch` |  | Made fetch happen: take a rival Cunning Woman with your fetch (Grimoire) |  |
+| `d_mixed` |  | Not pure, never pure: give one of every village, your own among them, and a wildman to the fire in one game (a nod to *Penda's Fen*) |  |
 | `d_plagues` |  | Have Murrain, St Anthony's Fire and Cradle Blight at work on your rivals all at once (Grimoire) |  |
 
 ## Curiosities
