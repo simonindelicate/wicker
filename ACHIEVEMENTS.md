@@ -20,11 +20,11 @@ Tokens are earned only in live play: never in "Watch the tribes fight", and neve
 | ID | Name | Working description | Hint while locked |
 |---|---|---|---|
 | `sp_lightning` |  | Cast Lightning |  |
-| `sp_ghost` |  | Raise a Ghost Army |  |
-| `sp_hypno` |  | Cast Hypnotise |  |
-| `sp_whirl` |  | Call up a Whirlwind |  |
+| `sp_ghost` |  | Raise a Shade Host |  |
+| `sp_hypno` |  | Cast Witch |  |
+| `sp_whirl` |  | Call up a Twisting Squall |  |
 | `sp_swamp` |  | Lay a Bog |  |
-| `sp_erode` |  | Cast Erode |  |
+| `sp_erode` |  | Cast Sink |  |
 | `sp_quake` |  | Cast Earthquake |  |
 | `sp_fire` |  | Bring on Day o'the Stones |  |
 | `sp_angel` |  | Loose St. Anthony's Fire |  |
@@ -92,7 +92,7 @@ Tokens are earned only in live play: never in "Watch the tribes fight", and neve
 | `d_godcaps` |  | Burn a Wicker God filled entirely with captives |  |
 | `d_richqueen` |  | Offer a May Queen at her richest |  |
 | `d_harvest20` |  | Drag twenty broken raiders to your altar in one game |  |
-| `d_carried` |  | Have the whirlwind carry off a building |  |
+| `d_carried` |  | Have the twisting squall carry off a building |  |
 | `d_fever8` |  | Have one St. Anthony's Fire take eight people |  |
 | `d_leap2` |  | Go over the edge twice in one game |  |
 | `d_thornwall` |  | Survive The Long Watch without losing a building |  |
@@ -111,12 +111,12 @@ Tokens are earned only in live play: never in "Watch the tribes fight", and neve
 | ID | Name | Working description | Hint while locked |
 |---|---|---|---|
 | `x_lightfits` |  | Strike down someone in the fits of St. Anthony's Fire with Lightning | The burning man does not need the sky as well. Give it to him anyway. |
-| `x_erodebr2` |  | Sink ground raised by a Land Bridge with Erode, twice in one game | What the woman raises, the woman may drown. Twice. |
+| `x_erodebr2` |  | Sink ground raised by a Causeway, twice in one game | What the woman raises, the woman may drown. Twice. |
 | `x_threeway` |  | Be in a fight between three Cunning Women | Three wise women, one argument. |
 | `x_balloons30` |  | Give thirty balloonists one order | A sky so full of wicker you could walk on it. |
 | `x_fourfold` |  | Have a Volcano, your Bog, Day o'the Stones and St. Anthony's Fire all at work at once | Fire, mire, stone and fever, all at once. |
 | `x_drownwoman` |  | Drown a rival Cunning Woman in your Bog | Not every wise woman can swim. |
-| `x_ghostlure` |  | Lure five rival fighters into your Bog with a Ghost Army in one game | They followed the dead into the mire. |
+| `x_ghostlure` |  | Lure five rival fighters into your Bog with a Shade Host in one game | They followed the dead into the mire. |
 | `x_huntqueen` |  | Have the Wild Hunt kill a rival's May Queen | The Hunt takes what it likes. |
 | `x_blast10` |  | Kill ten with a single Blast | One spark, many funerals. |
 | `x_erodegod` |  | Sink the ground under a rival's Wicker God while it burns | Let the burning ram go down into the water. |

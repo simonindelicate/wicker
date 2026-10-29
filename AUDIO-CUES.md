@@ -65,17 +65,17 @@ Each cue has an ID that will become its filename (for example `horn.ogg`). Where
 | `thunder` | Lightning | 2200 | A crack, then a long roll. |
 | `swarm` | Plague of Flies | 6000 loop | Buzzing that swells and swirls. Loops for the spell's life (10 s). |
 | `shield` | Shield | 1500 | A low, held hum. |
-| `ghost` | Ghost Army appearing | 1800 | Breathy, wordless voices. |
+| `ghost` | Shade Host appearing | 1800 | Breathy, wordless voices. |
 | `ghost-pop` | A ghost vanishing when struck | 300 | ×3 |
-| `bridge` | Land Bridge rising | 3000 | Grinding earth and draining water. |
-| `flatten` | Flatten | 2500 | A long, low settling rumble. |
-| `hypno` | Hypnotise | 2000 | A wavering, detuned chant. |
-| `whirl` | Whirlwind | 8000 loop | Roaring air. Loops while the tornado wanders. |
-| `whirl-take` | The whirlwind tearing a building out whole | 2500 | Timber wrenched apart and sucked upward. |
+| `bridge` | Causeway rising | 3000 | Grinding earth and draining water. |
+| `flatten` | Harrow | 2500 | A long, low settling rumble. |
+| `hypno` | Witch | 2000 | A wavering, detuned chant. |
+| `whirl` | Twisting Squall | 8000 loop | Roaring air. Loops while the tornado wanders. |
+| `whirl-take` | The twisting squall tearing a building out whole | 2500 | Timber wrenched apart and sucked upward. |
 | `bog` | Bog laid | 2000 | A wet gulp. It should be quiet, because the bog is meant to be hidden. |
 | `bog-claim` | Someone drowning in a bog | 1200 | ×3. A struggle and a sucking under. |
 | `bog-drain` | A bog using up its ten lives and draining away | 1500 | |
-| `erode` | Erode | 2500 | Ground sinking, water rushing in. |
+| `erode` | Sink | 2500 | Ground sinking, water rushing in. |
 | `quake` | Earthquake | 4000 | The deepest sound in the game. |
 | `fire` | Day o'the Stones | 10000 loop | A hail of falling stones: whistling, then heavy thuds and splintering timber. Loops for the spell's ten seconds. |
 | `angel` | St. Anthony's Fire present | 10000 loop | A low, feverish whispering hum, sickly rather than holy. |

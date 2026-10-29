@@ -307,7 +307,7 @@ details.help summary{cursor:pointer;color:var(--text);font:14px var(--f-display)
           <li>Ground where a building has been razed is salted earth: for three minutes its old owner cannot build there. A rival that falls to a fifth of its greatest size is broken. Its people gather at their stone circle where everyone can see them, its buildings fall to disrepair and its Cunning Woman does not return; destroy her last fighters and the rest are yours for your pyres.</li>
           <li>Tap a rival's marker at the top of the screen to look at where her people are. Tap again to move on to the next group.</li>
           <li>Training buildings turn a villager into a warrior, archer, Oss or balloonist.</li>
-          <li>To cross water, have your Cunning Woman raise a Land Bridge from the shore towards the land you want. Anyone can walk it, your enemies included. Or, if you have balloons, simply order your people across: idle balloons fly to them, carry them over and come back until everyone is across.</li>
+          <li>To cross water, have your Cunning Woman raise a Causeway from the shore towards the land you want. Anyone can walk it, your enemies included. Or, if you have balloons, simply order your people across: idle balloons fly to them, carry them over and come back until everyone is across.</li>
           <li>Balloonists drift above the fighting and drop charges. Only other balloonists can reach them.</li>
           <li>Wildmen wander the wilds. They make easy captives.</li>
           <li>Hollow hills are ancient barrows that await discovery in wild country. Send your Cunning Woman with twenty sacrifices and at least 1,500 mana to perform the ritual of attaining and seal her inside. The hill becomes a wicker fortress: from it she sees everything and casts anywhere at half the mana. If enemies tear it down she is lost for a minute, then rises at your stone circle, and half your mana goes with her.</li>
@@ -530,14 +530,14 @@ const SP=[
   {k:'lightning',n:'Lightning',c:90,cd:6,r:14,rad:1.2,s:0},
   {k:'swarm',n:'Plague of Flies',c:110,cd:8,r:13,rad:2.5,s:0},
   {k:'shield',n:'Shield',c:100,cd:10,r:12,rad:4,s:1},
-  {k:'ghost',n:'Ghost Army',c:160,cd:12,r:12,rad:2,s:1},
-  {k:'bridge',n:'Land Bridge',c:180,cd:8,r:16,rad:1.3,s:2},
-  {k:'flatten',n:'Flatten',c:150,cd:8,r:14,rad:7,s:2},
-  {k:'hypno',n:'Hypnotise',c:260,cd:15,r:12,rad:3,s:1},
-  {k:'whirl',n:'Whirlwind',c:320,cd:18,r:14,rad:2,s:0},
+  {k:'ghost',n:'Shade Host',c:160,cd:12,r:12,rad:2,s:1},
+  {k:'bridge',n:'Causeway',c:180,cd:8,r:16,rad:1.3,s:2},
+  {k:'flatten',n:'Harrow',c:150,cd:8,r:14,rad:7,s:2},
+  {k:'hypno',n:'Witch',c:260,cd:15,r:12,rad:3,s:1},
+  {k:'whirl',n:'Twisting Squall',c:320,cd:18,r:14,rad:2,s:0},
   {k:'torch',n:'Scrying Torch',c:120,cd:20,r:15,rad:1,s:0},
   {k:'swamp',n:'Bog',c:300,cd:18,r:13,rad:3,s:2},
-  {k:'erode',n:'Erode',c:340,cd:20,r:14,rad:4.5,s:2},
+  {k:'erode',n:'Sink',c:340,cd:20,r:14,rad:4.5,s:2},
   {k:'quake',n:'Earthquake',c:450,cd:25,r:15,rad:3,s:2},
   {k:'fire',n:"Day o'the Stones",c:550,cd:30,r:14,rad:4.5,s:0},
   {k:'angel',n:"St. Anthony's Fire",c:650,cd:40,r:12,rad:2,s:0},
@@ -631,7 +631,7 @@ const ICON={
 // =====================================================================================
 const SCEN=[
  {title:'The Strait',season:'spring',seed:1101,style:'twin',enemies:1,diff:'easy',fog:false,goal:{type:'conquer'},
-  addB:['hut','altar','camp'],addS:['blast','bridge'],news:['Forest Altar','Warrior Camp','Blast','Land Bridge'],
+  addB:['hut','altar','camp'],addS:['blast','bridge'],news:['Forest Altar','Warrior Camp','Blast','Causeway'],
   me:{mana:0,wood:150,huts:2,altar:false,manaMult:2.5},ai:{first:1e9,breed:.5,cap:28,mil:.12,gap:3},
   intro:'Greetings, Cunning Woman. It is a pleasure to meet thee. Here. Powerless. On a forsaken world.\n\nDo you see them? Across the water? Cowering? We must reach them, my love.\n\nThy power is not thine own. Nature has its price and you will have to pay it if you wish to bend her to thy will. Raise up an altar among the trees, my dear. Thou shalt find thy villagers obedient; eager for the kiss of the knife. Train them well, raise a great crossing. Ye should not need to cross that same water twice.'},
  {title:'The Grove',season:'spring',seed:2207,style:'twin',enemies:1,diff:'easy',fog:false,goal:{type:'conquer'},
@@ -647,19 +647,19 @@ const SCEN=[
   me:{mana:250,wood:150,huts:2},
   intro:'Train bowmen, O Cunning Woman. These villages across the fens are bilious, ‘tis reported. They needs must be repelled. Make thy sacrifices, wield thy weapons and rain arrows down upon the assailants.'},
  {title:'The Long Watch',season:'summer',seed:5531,style:'continent',enemies:2,diff:'normal',fog:true,keep:true,goal:{type:'survive',n:600},
-  addB:['hedge','nest'],addS:['swamp','erode'],lockB:['camp'],news:['Blackthorn Hedge','Rook Tree','Bog','Erode'],
+  addB:['hedge','nest'],addS:['swamp','erode'],lockB:['camp'],news:['Blackthorn Hedge','Rook Tree','Bog','Sink'],
   me:{mana:400,wood:260,huts:2,warriors:4,manaMult:2},them:{mana:400,warriors:4},ai:{first:150,int:110,need:4,needInc:1,only0:true,mil:.36,cap:70},
   intro:'Our people are weak, my love. They cower craven and unwilling to fight. But we have our crag-ringed vale and our blackthorn seed and thou hast the power of the Bog and the Dyke. Deploy them. Thine altars and pyres reward the transmutation of craven flesh - feed them well and build your defences. Hold fast my love and we shall survive this trial of character.'},
  {title:'The High Places',season:'summer',seed:6607,style:'crags',enemies:1,diff:'normal',fog:true,goal:{type:'conquer'},
-  addS:['ghost','flatten'],news:['Ghost Army','Flatten'],
+  addS:['ghost','flatten'],news:['Shade Host','Harrow'],
   me:{mana:100,wood:180,huts:2},ai:{first:540},
   intro:'‘tis gnarly ground we find ourselves upon, my dearest - up here there is no welcoming meadow upon which to sink a foundation. Make meadows, love, for summer is here and your people need lands to till. The folk of Blood lie beyond the mountain. Do not let them fall upon thee.'},
  {title:'Fire from the Sky',season:'summer',seed:7717,style:'isles',enemies:2,diff:'normal',fog:true,goal:{type:'conquer'},oneLife:true,tombHere:true,ban:['bridge'],
-  addB:['balloon'],addS:['whirl'],news:['Balloon Works','Whirlwind'],
+  addB:['balloon'],addS:['whirl'],news:['Balloon Works','Twisting Squall'],
   me:{mana:300,wood:220,huts:2},ai:{airRaid:true,first:420,firstAt0:1,balRush:150},
   intro:'‘tis time to take wing, O beloved. Thy foes swell their halls across the sea - we must see them sink beneath the waves. We have a new weapon - the balloon. From above we can rain fire upon them, carry our fighting men to their shores and defend our lands from their intrusions. In opportunity there is danger - our enemies have this weapon themselves. Raise the rook trees to resist them and claim the skies for thine own. The land is sick upon these islands - a cunning woman cannot be reborn amidst the salt. Your death will be the end of all.'},
  {title:'May Morning',season:'spring',seed:8803,style:'continent',enemies:2,diff:'normal',fog:false,goal:{type:'mana',n:1000},ban:['wicker','god'],
-  addB:['maypole','inn'],addS:['hypno'],news:['Maypole','Inn','Hypnotise'],
+  addB:['maypole','inn'],addS:['hypno'],news:['Maypole','Inn','Witch'],
   me:{mana:300,wood:220,huts:3},ai:{first:600,queenHunt:true,may:150},
   intro:'Wicker is in short supply this season - if we are to survive, we shall need to appease the land as our oldest ancestors taught us. Crown the May Queen and exalt her for a season. Nature is a lustful mistress. Only the fairest of our daughters shall fit her for a bride. Crown her. Guard her. Attend her prime. Why, then she shall dance her bloody nuptials and bring all favour upon us.'},
  {title:'The Wicker God',season:'summer',seed:9901,style:'islands',enemies:2,diff:'normal',fog:true,goal:{type:'conquer'},
@@ -791,21 +791,21 @@ const TOK_KEY='wicker-tokens-v1';
 const TOKS=[
  ['Seasons of the Witch',[['s_humbled','Endure the Humbling'],['s_all','Finish Seasons of the Witch']]],
  ['Campaign',[['c1','Win the first level of the campaign'],['c5','Win campaign level 5'],['c10','Win campaign level 10'],['c15','Win campaign level 15'],['c20','Win the whole campaign']]],
- ['Spells',[['sp_lightning','Cast Lightning'],['sp_ghost','Raise a Ghost Army'],['sp_hypno','Cast Hypnotise'],['sp_whirl','Call up a Whirlwind'],['sp_swamp','Lay a Bog'],['sp_erode','Cast Erode'],['sp_quake','Cast Earthquake'],['sp_fire',"Bring on Day o'the Stones"],['sp_angel',"Loose St. Anthony's Fire"],['sp_volcano','Raise a Volcano']]],
+ ['Spells',[['sp_lightning','Cast Lightning'],['sp_ghost','Raise a Shade Host'],['sp_hypno','Cast Witch'],['sp_whirl','Call up a Twisting Squall'],['sp_swamp','Lay a Bog'],['sp_erode','Cast Sink'],['sp_quake','Cast Earthquake'],['sp_fire',"Bring on Day o'the Stones"],['sp_angel',"Loose St. Anthony's Fire"],['sp_volcano','Raise a Volcano']]],
  ['Buildings',[['b_wicker','Build a Wicker Man'],['b_god','Build a Wicker God'],['b_oak',"Raise Herne's Oak"],['b_maypole','Raise a Maypole'],['b_balloon','Build a Balloon Works'],['b_nest','Build a Rook Tree'],['b_osshouse','Build an Oss House']]],
  ['Rites',[['r_burnman','Burn a wicker man'],['r_burngod','Burn a Wicker God'],['r_queen','Crown a May Queen'],['r_offerqueen','Give a May Queen to the fire'],['r_hunt','Wake the Wild Hunt'],['r_entomb','Seal your Cunning Woman in a hollow hill'],['r_leap','Ättestupa'],['r_arma','Call down the battle of all-against-all'],['r_moot','Walk away from the Moot']]],
  ['Growth',[['pop25','Lead 25 followers'],['pop50','Lead 50 followers'],['pop100','Lead 100 followers'],['pop150','Lead 150 followers']]],
  ['Endurance',[['t30','Last half an hour in one game'],['t60','Last an hour in one game'],['t120','Last two hours in one game']]],
  ['Victories',[['w_easy','Win on Easy'],['w_normal','Win on Normal'],['w_hard','Win on Hard'],['w_extreme','Win on Extreme'],['w_arch','Win on an archipelago'],['w_cont','Win on a continent'],['w_high','Win in the highlands']]],
- ['Deeds',[['d_godcaps','Burn a Wicker God filled entirely with captives'],['d_phillip','Black Phillip survives his whole rampage'],['d_hemp','End it in hemp: win while your Cunning Woman hangs from the tree'],['d_fetch','Made fetch happen: take a rival Cunning Woman with your fetch'],['d_plagues','Have Murrain, St Anthony\'s Fire and Cradle Blight at work on your rivals all at once'],['d_richqueen','Offer a May Queen at her richest'],['d_harvest20','Drag twenty broken raiders to your altar in one game'],['d_carried','Have the whirlwind carry off a building'],['d_fever8',"Have one St. Anthony's Fire take eight people"],['d_leap2','Go over the edge twice in one game'],['d_thornwall','Survive The Long Watch without losing a building'],['d_nofear','Win without your dread ever passing the mark'],['d_noblade','Win without training a warrior'],['d_skytomb','Win Fire from the Sky from inside a hollow hill'],['d_threefolds','Have three Thrall Folds full at once'],['d_threefires','Have three wicker men burning close together at once']]],
+ ['Deeds',[['d_godcaps','Burn a Wicker God filled entirely with captives'],['d_phillip','Black Phillip survives his whole rampage'],['d_hemp','End it in hemp: win while your Cunning Woman hangs from the tree'],['d_fetch','Made fetch happen: take a rival Cunning Woman with your fetch'],['d_plagues','Have Murrain, St Anthony\'s Fire and Cradle Blight at work on your rivals all at once'],['d_richqueen','Offer a May Queen at her richest'],['d_harvest20','Drag twenty broken raiders to your altar in one game'],['d_carried','Have the twisting squall carry off a building'],['d_fever8',"Have one St. Anthony's Fire take eight people"],['d_leap2','Go over the edge twice in one game'],['d_thornwall','Survive The Long Watch without losing a building'],['d_nofear','Win without your dread ever passing the mark'],['d_noblade','Win without training a warrior'],['d_skytomb','Win Fire from the Sky from inside a hollow hill'],['d_threefolds','Have three Thrall Folds full at once'],['d_threefires','Have three wicker men burning close together at once']]],
  ['Curiosities',[
   ['x_lightfits',"Strike down someone in the fits of St. Anthony's Fire with Lightning",'The burning man does not need the sky as well. Give it to him anyway.'],
-  ['x_erodebr2','Sink ground raised by a Land Bridge with Erode, twice in one game','What the woman raises, the woman may drown. Twice.'],
+  ['x_erodebr2','Sink ground raised by a Causeway, twice in one game','What the woman raises, the woman may drown. Twice.'],
   ['x_threeway','Be in a fight between three Cunning Women','Three wise women, one argument.'],
   ['x_balloons30','Give thirty balloonists one order','A sky so full of wicker you could walk on it.'],
   ['x_fourfold',"Have a Volcano, your Bog, Day o'the Stones and St. Anthony's Fire all at work at once",'Fire, mire, stone and fever, all at once.'],
   ['x_drownwoman','Drown a rival Cunning Woman in your Bog','Not every wise woman can swim.'],
-  ['x_ghostlure','Lure five rival fighters into your Bog with a Ghost Army in one game','They followed the dead into the mire.'],
+  ['x_ghostlure','Lure five rival fighters into your Bog with a Shade Host in one game','They followed the dead into the mire.'],
   ['x_huntqueen',"Have the Wild Hunt kill a rival's May Queen",'The Hunt takes what it likes.'],
   ['x_blast10','Kill ten with a single Blast','One spark, many funerals.'],
   ['x_erodegod',"Sink the ground under a rival's Wicker God while it burns",'Let the burning ram go down into the water.'],
@@ -1128,7 +1128,7 @@ const s=BT[type].s;const cx0=Math.floor(x-s/2+.5),cz0=Math.floor(z-s/2+.5);let m
   for(let dz=-1;dz<=s;dz++)for(let dx=-1;dx<=s;dx++){const c=wi(cz0+dz)*N+wi(cx0+dx);if(bOcc[c])return {err:'Too close to another building'};
     if(dx>=0&&dz>=0&&dx<s&&dz<s){if(water[c])return {err:'Cannot build on water'};if(hazU[c]>gt)return {err:'The ground there is cursed'};if(saltU[c]>gt&&saltOwner[c]===ti)return {err:'This ground has been salted. Nothing of yours will stand here for a while'}}}
   for(let dz=0;dz<=s;dz++)for(let dx=0;dx<=s;dx++){const h=H[wi(cz0+dz)*N+wi(cx0+dx)];if(h<mn)mn=h;if(h>mx)mx=h}
-  if(mx-mn>(settings.style==='crags'?1:3.2))return {err:settings.style==='crags'?'The ground is too broken to build on. Flatten it first':'Too steep to build on'};if(mn<.05)return {err:'Too close to the waterline'};
+  if(mx-mn>(settings.style==='crags'?1:3.2))return {err:settings.style==='crags'?'The ground is too broken to build on. Harrow it first':'Too steep to build on'};if(mn<.05)return {err:'Too close to the waterline'};
   if(type==='oak'){let n=0;const cx=cx0+s/2,cz=cz0+s/2;for(const t of trees)if(t.alive&&d2(cx,cz,t.x,t.z)<64)n++;if(n<8)return {err:"Herne's Oak must stand in deep woodland"}}
   if(type==='altar'){let n=0;const cx=cx0+s/2,cz=cz0+s/2;for(const t of trees)if(t.alive&&d2(cx,cz,t.x,t.z)<36)n++;if(n<3)return {err:'A forest altar must stand among trees'}}
   return {cx0,cz0,x:wrap(cx0+s/2),z:wrap(cz0+s/2)}}
@@ -1441,7 +1441,7 @@ function startRitual(sh,b){const T=tribes[sh.tribe];if(!b||b.bt!=='barrow')retur
     if(far.length){const resume=u=>{if(u===sh){u.st='ritual';u.bld=b;u.rt=0;const a=R()*TAU;setTarget(u,b.x+Math.cos(a)*2.4,b.z+Math.sin(a)*2.4)}else sendToRite(u,b)};
       if(startFerry(far,b.dx,b.dz,resume)){b.rite.ferry=true;const nf=far.length-(far.includes(sh)?1:0);toast(`The hollow hill lies over the water. Your balloons will carry ${far.includes(sh)?'your Cunning Woman'+(nf?' and ':''):''}${nf?nf+' followers':''} across.`);return true}
       b.rite=null;for(const u of units)if(u.alive&&u.tribe===0&&u.st==='enter'&&u.purpose==='entomb'&&u.bld===b){u.st='idle';u.cmd=false}sh.st='idle';
-      toast('The hollow hill lies over the water. Raise a Land Bridge, or build balloons to carry your people there.');return false}}
+      toast('The hollow hill lies over the water. Raise a Causeway, or build balloons to carry your people there.');return false}}
   if(sh.tribe===0)toast('Your Cunning Woman walks to the hollow hill, and twenty followers go with her.');return true}
 // the rite ends: the followers fling flowers into the air and fall dead where they stand, and the Cunning Woman walks down into the hill
 function entomb(sh,b,ps){const T=tribes[sh.tribe];if(sh.tribe===0)earn('r_entomb');const FL=[[1,.55,.8],[1,.9,.3],[1,1,1]];
@@ -3943,7 +3943,7 @@ function command0(grp,g,hu,hb,ht){if(grp.filter(u=>u.type==='balloon'&&u.tribe==
   if(!g)return;
   const lead=grp.find(u=>!UT[u.type].veh);if(lead&&!water[cidx(g.x,g.z)]){const lf=field(g.x,g.z,false);let lc=cidx(lead.x,lead.z);if(lf[lc]<0){const nc=nearestCell(lead.x,lead.z,2,c=>lf[c]>=0);if(nc)lc=cidx(nc.x,nc.z)}if(lf[lc]<0&&pass[cidx(g.x,g.z)]){
     if(startFerry(grp,g.x,g.z)){toast('Your balloons will carry them over');mark(g.x,g.z,.6,.85,1);sfx('select',.35);return}
-    toast(blds.some(b=>b.alive&&b.tribe===0&&b.bt==='balloon')?'There is no way across. Your Cunning Woman can raise a Land Bridge, or a balloon can carry them.':'There is no way across. Your Cunning Woman can raise a Land Bridge, or balloons from a Balloon Works can carry them.')}}
+    toast(blds.some(b=>b.alive&&b.tribe===0&&b.bt==='balloon')?'There is no way across. Your Cunning Woman can raise a Causeway, or a balloon can carry them.':'There is no way across. Your Cunning Woman can raise a Causeway, or balloons from a Balloon Works can carry them.')}}
   orderMove(grp,g.x,g.z);mark(g.x,g.z,.6,.85,1);sfx('select',.35)}
 function formation(i){if(i===0)return[0,0];let r=1,k=i-1;while(k>=r*6){k-=r*6;r++}const a=k/(r*6)*TAU+r;return[Math.cos(a)*r*.85,Math.sin(a)*r*.85]}
 function orderMove(grp,x,z){let gi=0;for(const u of grp){if(!u.alive)continue;

@@ -102,7 +102,7 @@ After that the host sends **updates**, ten to fifteen times a second:
 
 - **Units.** Send each unit's position, facing, type, health, state and a few flags (carrying, drunk, asleep, glamoured, in a vehicle and so on). Pack them as binary rather than JSON, at about twenty bytes a unit, and send only units that have moved or changed. A large late game with a thousand units then costs well under the capacity of any ordinary connection.
 - **Buildings.** These change rarely, so send them only when they do: placed, progressed, damaged, destroyed, occupancy, training queue.
-- **Terrain.** Earthquake, Erode, Land Bridge, the Blood-Running-Sea and swamps all change the height map. The host compares the height map with the last one it sent and sends just the rectangle that differs.
+- **Terrain.** Earthquake, Sink, Causeway, the Blood-Running-Sea and swamps all change the height map. The host compares the height map with the last one it sent and sends just the rectangle that differs.
 - **Each tribe.** Its mana, wood, population, cooldowns and spell palette.
 - **Events.** These are things that happen in an instant and leave nothing behind to snapshot, mainly the look and sound of a spell going off, a sacrifice, a death, a toast. They go as small messages, such as `{e:'cast', k:'lightning', x, z, tribe}`, and the guest plays the same particles and sounds that the host does.
 

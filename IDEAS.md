@@ -15,13 +15,13 @@ A place to keep design ideas between sessions. Nothing here is built yet. Each e
 - **Built in v131:** Black Phillip and the familiar.
 - **Built in v135:** the fetch, with rival Cunning Women fleeing from it.
 - **Built in v136:** in Grimoire games each rival casts its own eight spells:
-  - **Blood (war):** Blast, Lightning, Day o'the Stones, Earthquake, Whirlwind, Volcano, Ghost Army, the Fetch.
-  - **Forest (magic and defence):** Blast, Lightning, Shield, Ghost Army, Hypnotise, Bog, Familiar, Changeling.
-  - **Ash (beasts and disease):** Blast, Lightning, Plague of Flies, St Anthony's Fire, Erode, Murrain, Black Phillip, Familiar.
-  - **Ochre (a bit of everything):** Blast, Lightning, Plague of Flies, Shield, Hypnotise, Day o'the Stones, Changeling, the Fetch.
+  - **Blood (war):** Blast, Lightning, Day o'the Stones, Earthquake, Twisting Squall, Volcano, Shade Host, the Fetch.
+  - **Forest (magic and defence):** Blast, Lightning, Shield, Shade Host, Witch, Bog, Familiar, Changeling.
+  - **Ash (beasts and disease):** Blast, Lightning, Plague of Flies, St Anthony's Fire, Sink, Murrain, Black Phillip, Familiar.
+  - **Ochre (a bit of everything):** Blast, Lightning, Plague of Flies, Shield, Witch, Day o'the Stones, Changeling, the Fetch.
 
   Rival Cunning Women also unmask your changelings.
-- **Built in v138:** Glamour and Pricking. Forest carries Glamour in place of Ghost Army, and Ochre carries Pricking in place of Plague of Flies.
+- **Built in v138:** Glamour and Pricking. Forest carries Glamour in place of Shade Host, and Ochre carries Pricking in place of Plague of Flies.
 - **Built in v142:** Beltane Fire, Sword Dance, Cradle Blight, Keening Wail and Briar Sleep. The Grimoire is now nine strong. Each rival carries one of these as its ninth: Blood Sword Dance, Forest Beltane Fire, Ash Cradle Blight, Ochre Keening Wail.
 - **Next:** teaching rivals to offer animals.
 - **Later:** the challenge levels, one per proven spell; then the unlock wiring (finishing the campaign opens the challenge campaign, and challenge levels open spells); then charms and counters as gaps appear.
@@ -45,10 +45,10 @@ A place to keep design ideas between sessions. Nothing here is built yet. Each e
 
 **Built in v150**, ten seasons (titles and intros are placeholders):
 1. The Humbling: survive five minutes.
-2. The Herd (Black Phillip, Familiar), 3. May Eve (Beltane Fire, Sword Dance; grow to 160 people against two Normal rivals who raid only you and carry Cradle Blight), 4. The Sickness (Murrain, Cradle Blight, St Anthony's Fire; both Cunning Women start entombed, both villages start with one hut and 300 mana; Blast and Lightning dropped), 5. Harvest (Changeling, with Plague of Flies for both sides), 6. The Fair, now in autumn (Glamour, Pricking; Changeling, Familiar, Hypnotise, Earthquake and Scrying Torch carried by you and the rival), 7. The Long Nights (Keening Wail, Briar Sleep, with Changeling for both sides; every camp starts with changelings planted: yours in each rival camp, each rival's in yours), 8. The Hunt (the Fetch; both rivals send a fetch after you three seconds in; no Cunning Woman is reborn; win by bringing down both rival Cunning Women, lose if yours falls), 9. The Flood (Seas of Blood; you start on a raised mountain, the rivals low).
+2. The Herd (Black Phillip, Familiar), 3. May Eve (Beltane Fire, Sword Dance; grow to 160 people against two Normal rivals who raid only you and carry Cradle Blight), 4. The Sickness (Murrain, Cradle Blight, St Anthony's Fire; both Cunning Women start entombed, both villages start with one hut and 300 mana; Blast and Lightning dropped), 5. Harvest (Changeling, with Plague of Flies for both sides), 6. The Fair, now in autumn (Glamour, Pricking; Changeling, Familiar, Witch, Earthquake and Scrying Torch carried by you and the rival), 7. The Long Nights (Keening Wail, Briar Sleep, with Changeling for both sides; every camp starts with changelings planted: yours in each rival camp, each rival's in yours), 8. The Hunt (the Fetch; both rivals send a fetch after you three seconds in; no Cunning Woman is reborn; win by bringing down both rival Cunning Women, lose if yours falls), 9. The Flood (Seas of Blood; you start on a raised mountain, the rivals low).
 10. The Answer: the Humbling's rivals, winnable, every spell yours.
 
-**v153:** in each teaching season you and the rivals carry only Blast, Lightning, Shield, Land Bridge, the season's new spells and All-against-all. The Herd and the Sickness start with livestock at every village; the Herd starts on 150 mana with one free Familiar.
+**v153:** in each teaching season you and the rivals carry only Blast, Lightning, Shield, Causeway, the season's new spells and All-against-all. The Herd and the Sickness start with livestock at every village; the Herd starts on 150 mana with one free Familiar.
 
 Earlier draft season plan:
 
