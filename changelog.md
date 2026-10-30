@@ -373,7 +373,7 @@ Simon's experience of three spells, rather than their numbers, drove these chang
 
 - **The lost Forest woman at All-against-all.** A battle of all-against-all would not end. Forest was down to one member who couldn't be found, and tapping their name only showed empty Forest buildings. She turned out to be a May Queen: everyone else marches to the Moot, but a Queen's own wandering took over before the pull to the Moot, so she stayed at home. Now she goes to the Moot with the rest. Two related things were mended at the same time:
   - **Changelings.** A changeling living among a people counted as one of them, so your own changeling could keep a beaten tribe alive. It no longer counts, and when the tribe falls, the changeling comes home to its own side.
-  - **Finding the stragglers.** During All-against-all, tapping a tribe's name now cycles through its people only, not its buildings.
+  - **Finding the stragglers.** During All-against-all, tapping a tribe's name now cycles through its people only, not its buildings. In any game, once a people is plainly beaten, tapping its name finds its stragglers, nearest first, even in fog, with a toast saying how many are left. Plainly beaten means broken, down to three or fewer, or left with no buildings. Before that, it shows the people and buildings you can see, as before.
 
 ---
 

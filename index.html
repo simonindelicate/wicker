@@ -4153,6 +4153,11 @@ $('foes').addEventListener('click',e=>{const b=e.target.closest('[data-t]');if(!
   if(armed==='fetch'&&!watching){const P=tribes[0],t=T.shaman&&T.shaman.alive?T.shaman:T.tomb;if(!t){toast('Their Cunning Woman is not in the world');return}if(P.mana<spellCost(P,'fetch')){toast('Not enough mana for The Fetch');return}if((P.cd.fetch||0)>gt){toast('The Fetch is still gathering power');return}
     if(P.tomb&&!P.shaman)tryCast(0,'fetch',t.x,t.z,casterOf(P));else if(P.shaman){const sh=P.shaman;sh.st='cast';sh.spell='fetch';sh.px=t.x;sh.pz=t.z}disarm();return}
   if(watching){const f=T.shaman||T.tomb||blds.find(x=>x.alive&&x.tribe===T.id);if(f){cam.fx=f.x;cam.fz=f.z}return}
+  // mop-up: once a people is plainly beaten (broken, down to its last few, or with no buildings left), find its stragglers even in fog, one tap each
+  {const hasB=blds.some(x=>x.alive&&x.tribe===T.id&&!BT[x.bt].inv&&x.bt!=='hedge'),few=T.stats.pop<=3;
+    if(T.broken||few||!hasB){const P=units.filter(u=>u.alive&&u.tribe===T.id&&!u.inV&&u.type!=='captive'&&u.chg==null).concat(blds.filter(x=>x.alive&&x.tribe===T.id&&x.bt==='hut'&&x.occ>0));
+      if(P.length){P.sort((p,q)=>d2(p.x,p.z,cam.fx,cam.fz)-d2(q.x,q.z,cam.fx,cam.fz));T.mopI=(T.mopI==null?0:T.mopI+1)%P.length;const f=P[T.mopI];cam.fx=f.x;cam.fz=f.z;mark(f.x,f.z,.95,.55,.4);
+        toast(P.length===1?`The last of the ${T.name} folk is here.`:`${P.length} of the ${T.name} folk are left. Tap again for the next.`);return}}}
   const L=[];if(!armageddon)for(const x of blds)if(x.alive&&x.tribe===T.id&&!BT[x.bt].inv&&x.bt!=='hedge'&&visB(x))L.push(x);for(const u of units)if(u.alive&&u.tribe===T.id&&!u.inV&&visU(u)&&u.type!=='captive')L.push(u);
   if(!L.length){toast(`None of the ${T.name} folk are in sight. Explore, or wait for them to show themselves.`);return}
   const groups=[];for(const x of L){let g=groups.find(g=>d2(g.x,g.z,x.x,x.z)<10*10);if(!g){g={x:x.x,z:x.z,n:0};groups.push(g)}g.n++}groups.sort((a,c)=>c.n-a.n);
