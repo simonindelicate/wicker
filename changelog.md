@@ -375,6 +375,8 @@ Simon's experience of three spells, rather than their numbers, drove these chang
   - **Changelings.** A changeling living among a people counted as one of them, so your own changeling could keep a beaten tribe alive. It no longer counts, and when the tribe falls, the changeling comes home to its own side.
   - **Finding the stragglers.** During All-against-all, tapping a tribe's name now cycles through its people only, not its buildings. In any game, once a people is plainly beaten, tapping its name finds its stragglers, nearest first, even in fog, with a toast saying how many are left. Plainly beaten means broken, down to three or fewer, or left with no buildings. Before that, it shows the people and buildings you can see, as before.
 
+- **A rougher face.** A type specimen of four authored directions (Play for Today, public information, Fell and Futura) was rejected as too polished — real 1970s titles were crude, optical, put through film or video. What survived: small text moves from Alegreya Sans to Fira Sans, chosen from nine candidates in a test build; corners drop from 8–16px to 2–3px everywhere; and Rejoice! alone gets the Stone Tape treatment — the IM Fell lettering as a blood-red outline with glow, scanlines inside the letters, a sideways smear that boils at video rate, and an occasional rolling jolt. A Squada One block face, green and white and yellow, and a burnt-orange Wicker Man film treatment were all tried and dropped; the animation was annoying anywhere but the celebration.
+
 ---
 
 ## Threads that run through the history
