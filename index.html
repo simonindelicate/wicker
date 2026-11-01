@@ -2269,12 +2269,12 @@ function startArma(){armageddon=true;{const v=SPK.lightning.c+SPK.shield.c+4*SPK
   for(const b of blds)if(b.alive&&BT[b.bt].train){b.q=0;b.trainee=false;b.claim=null}
   for(const u of units)if(u.alive&&u.tribe===wildId)removeUnit(u);
   for(const v of units)if(v.alive&&v.pass&&v.pass.length){for(const p of v.pass){p.inV=null;p.x=v.x;p.z=v.z;p.st='idle'}v.pass.length=0;v.dest=null;v.ferry=null}
-  const rose=armaLand();
+  armaLand();
   const lf=field(moot.x,moot.z,false);
   for(const u of units){if(!u.alive||u.tribe===wildId)continue;
     mootPull(u);
     orderUnit(u,moot.x+(R()-.5)*6,moot.z+(R()-.5)*6,true,moot.x,moot.z);u.cmd=false}
-  if(placing)unplace();toast('The battle of all-against-all. The huts are burning, and every soul walks to the Moot.'+(rose?' The land rises from the sea to carry them.':''))}
+  if(placing)unplace();toast('The battle of all-against-all. The huts are burning, and every soul walks to the Moot.')}
 
 // ---------------- three.js setup ----------------
 const glc=$('gl'),app=$('app');
