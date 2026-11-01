@@ -383,6 +383,8 @@ Simon's experience of three spells, rather than their numbers, drove these chang
 
 - **The land answers all-against-all.** Called on a world the Blood seas have drowned, the battle used to collapse into tribes milling on separate beaches while whoever owned a balloon won. Now, if the Moot is under water it rises to a plateau clear of the sea, and a causeway runs to it from wherever each tribe's people are cut off — from the Cunning Woman first, then from the largest group still stranded, up to three per tribe — before the march begins; anyone left after that is pulled to the Moot as before.
 
+- **The hollow hills sink with the land.** A hollow hill is drawn at a base height fixed when the world is made, not at the ground beneath it, so every Blood sea lowered the land 0.75 and left the barrow standing where the ground used to be — after a few seas, an unearthed grey hulk on its side. Each sea now lowers that base with the land.
+
 ---
 
 ## Threads that run through the history

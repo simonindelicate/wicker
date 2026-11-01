@@ -1335,7 +1335,7 @@ function seaTick(){fetchStartTick();{const SC=scen();if(SC&&SC.seasAt&&!chalSeas
   if(gt<seaRise.t){if((seaRise.t-gt)%5<1&&!watching&&gt-(seaRise.warn||0)>4){seaRise.warn=gt;const n=Math.ceil(seaRise.t-gt);if(n<=20)toast(`The blood tide rises in ${n}.`)}
     for(const u of units){if(!u.alive||u.inV||u.air||UT[u.type].fly||!tribes[u.tribe]||!tribes[u.tribe].ai||u.seaSafe>gt)continue;if(hAt(u.x,u.z)-d>.5)continue;
       const c=nearestCell(u.x,u.z,12,q=>pass[q]&&H[q]-d>1.1);if(c){orderUnit(u,c.x,c.z,false);u.seaSafe=gt+6}}return}
-  seaRise=null;seaRed=Math.min(1,seaRed+.25);for(let c=0;c<N*N;c++)H[c]-=d;postTerrain(0,0,N-1,N-1);
+  seaRise=null;seaRed=Math.min(1,seaRed+.25);for(let c=0;c<N*N;c++)H[c]-=d;for(const b of blds)if(b.baseY!=null)b.baseY-=d;postTerrain(0,0,N-1,N-1);
   let n=0;for(const u of units)if(u.alive&&!u.inV&&!u.air&&!UT[u.type].fly&&water[cidx(u.x,u.z)]){killUnit(u,null);n++}
   for(const a of stock)if(!a.dead&&water[cidx(a.x,a.z)])a.gone=true;stock=stock.filter(a=>!a.gone);flash(.4);cam.shake=Math.max(cam.shake,.7);sfx('quake',1);
   if(!watching)toast(`The blood tide rises and swallows the low ground.${n?' '+n+' are drowned.':''}`)}
