@@ -381,6 +381,8 @@ Simon's experience of three spells, rather than their numbers, drove these chang
 
 - **The fetch is felt, not read.** A toast was too easy to miss, so while a fetch walks for your Cunning Woman the world darkens at the edges and drains of colour — a vignette going from blood red to near-black over the scene and the 3D view desaturated and dimmed — at nearly half strength wherever it is, rising to full as it closes within thirty paces, and pulsing on a double heartbeat that quickens as it nears. It lifts the moment the fetch is fed, fades, or loses her.
 
+- **The land answers all-against-all.** Called on a world the Blood seas have drowned, the battle used to collapse into tribes milling on separate beaches while whoever owned a balloon won. Now, if the Moot is under water it rises to a plateau clear of the sea, and a causeway runs to it from wherever each tribe's people are cut off — from the Cunning Woman first, then from the largest group still stranded, up to three per tribe — before the march begins; anyone left after that is pulled to the Moot as before. The opening toast gains a line when it happens (placeholder wording).
+
 ---
 
 ## Threads that run through the history

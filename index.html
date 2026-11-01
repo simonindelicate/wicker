@@ -2247,16 +2247,34 @@ function invokeArma(ti){const T=tribes[ti];if(!allowS('arma'))return false;if(ar
   if(ti===0)earn('r_arma');wm.lit=true;wm.burnt=true;wm.burnEnd=gt+12;flash(.5);cam.shake=Math.max(cam.shake,.6);sfx('quake',1);toast(ti===0&&!watching?'Ten souls burn in the wicker. The end is coming.':`The ${T.name} tribe has called down the battle of all-against-all`);
   effects.push({t:3,up(e,dt){e.t-=dt;if(e.t>0)return true;startArma();return false}});return true}
 function mootPull(u){if(u.type==='balloon'||u.inV)return;const lf=field(moot.x,moot.z);if(lf[cidx(u.x,u.z)]>=0)return;const a=R()*TAU,r=5+R()*7,c=nearestCell(moot.x+Math.cos(a)*r,moot.z+Math.sin(a)*r,5,c=>pass[c]===1&&lf[c]>=0);if(c){u.x=c.x;u.z=c.z;u.air=false;for(let i=0;i<6;i++)PA.emit(u.x,hAt(u.x,u.z)+.5,u.z,(R()-.5),1+R()*2,(R()-.5),.6,1,.3,.15,1,.4,-1)}}
+// When all-against-all is called on a world the seas have drowned, nobody can reach the Moot and the battle
+// degenerates into tribes milling on separate beaches. So the land answers the call: the Moot rises clear of the
+// water, and a causeway runs to it from wherever each tribe's people are stranded (the Cunning Woman first, then
+// the largest group still cut off, up to three per tribe). Anyone left after that is pulled to the Moot as before.
+function armaWay(sx,sz,px,pz){const ex=wd(px-sx),ez=wd(pz-sz),L2=ex*ex+ez*ez||1,h0=Math.max(hAt(sx,sz),.9),h1=Math.max(hAt(px,pz),.9);
+  const x0=Math.floor(sx+Math.min(0,ex))-3,x1=Math.ceil(sx+Math.max(0,ex))+3,z0=Math.floor(sz+Math.min(0,ez))-3,z1=Math.ceil(sz+Math.max(0,ez))+3;
+  for(let vz=z0;vz<=z1;vz++)for(let vx=x0;vx<=x1;vx++){const qx=vx-sx,qz=vz-sz,t=clamp((qx*ex+qz*ez)/L2,0,1),ox=qx-ex*t,oz=qz-ez*t,d=Math.hypot(ox,oz);if(d>3)continue;
+    const w=d<1.4?1:1-sstep(1.4,3,d),c=wi(vz)*N+wi(vx),tg=lerp(H[c],lerp(h0,h1,t),w);if(tg>H[c])H[c]=tg}
+  postTerrain(x0,z0,x1,z1);for(let i=0;i<24;i++){const t=R();dust(wrap(sx+ex*t),wrap(sz+ez*t))}}
+function armaLand(){let raised=false;
+  if(hAt(moot.x,moot.z)<.9){const R0=8,R1=13,x0=Math.floor(moot.x-R1),x1=Math.ceil(moot.x+R1),z0=Math.floor(moot.z-R1),z1=Math.ceil(moot.z+R1);
+    for(let vz=z0;vz<=z1;vz++)for(let vx=x0;vx<=x1;vx++){const d=Math.hypot(vx-moot.x,vz-moot.z);if(d>R1)continue;const c=wi(vz)*N+wi(vx),tg=lerp(H[c],1.05,d<R0?1:1-sstep(R0,R1,d));if(tg>H[c])H[c]=tg}
+    postTerrain(x0,z0,x1,z1);for(let i=0;i<40;i++){const a=R()*TAU,r=R()*R1;dust(wrap(moot.x+Math.cos(a)*r),wrap(moot.z+Math.sin(a)*r))}raised=true}
+  for(const T of tribes){if(!T||!T.alive||T.wild)continue;for(let k=0;k<3;k++){const lf=field(moot.x,moot.z,false),cut=units.filter(u=>u.alive&&u.tribe===T.id&&!u.inV&&!u.air&&u.type!=='balloon'&&lf[cidx(u.x,u.z)]<0);if(!cut.length)break;
+    let st=cut.find(u=>u.type==='shaman');if(!st){let best=-1;for(const u of cut){let n=0;for(const o of cut)if(d2(u.x,u.z,o.x,o.z)<64)n++;if(n>best){best=n;st=u}}}
+    armaWay(st.x,st.z,moot.x,moot.z);raised=true}}
+  if(raised)cam.shake=Math.max(cam.shake,.5);return raised}
 function startArma(){armageddon=true;{const v=SPK.lightning.c+SPK.shield.c+4*SPK.blast.c;for(const T of tribes)if(T&&!T.wild)T.mana=v}$('app').classList.add('arma');scene.fog.color.setHex(0x9a4224);droneLevel();
   for(const b of blds)if(b.alive&&b.bt==='hut')destroyBld(b);
   for(const b of blds)if(b.alive&&BT[b.bt].train){b.q=0;b.trainee=false;b.claim=null}
   for(const u of units)if(u.alive&&u.tribe===wildId)removeUnit(u);
   for(const v of units)if(v.alive&&v.pass&&v.pass.length){for(const p of v.pass){p.inV=null;p.x=v.x;p.z=v.z;p.st='idle'}v.pass.length=0;v.dest=null;v.ferry=null}
+  const rose=armaLand();
   const lf=field(moot.x,moot.z,false);
   for(const u of units){if(!u.alive||u.tribe===wildId)continue;
     mootPull(u);
     orderUnit(u,moot.x+(R()-.5)*6,moot.z+(R()-.5)*6,true,moot.x,moot.z);u.cmd=false}
-  if(placing)unplace();toast('The battle of all-against-all. The huts are burning, and every soul walks to the Moot.')}
+  if(placing)unplace();toast('The battle of all-against-all. The huts are burning, and every soul walks to the Moot.'+(rose?' The land rises from the sea to carry them.':''))}
 
 // ---------------- three.js setup ----------------
 const glc=$('gl'),app=$('app');
