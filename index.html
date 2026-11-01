@@ -202,11 +202,13 @@ details.help summary{cursor:pointer;color:var(--text);font:14px var(--f-display)
 #rejoice p{text-shadow:0 0 8px rgba(190,22,18,.6),0 2px 10px rgba(0,0,0,.9);color:#f0beb4}
 @keyframes rjRoll{0%{transform:none;opacity:1}61%{transform:translateX(3px) skewX(-4deg);opacity:.75}63%{transform:none;opacity:1}88%{transform:translateX(-2px);opacity:.85}90%{transform:none;opacity:.95}93%{opacity:1}}
 #rpBar{position:absolute;left:50%;bottom:calc(12px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:15;display:flex;gap:6px;align-items:center;padding:6px 8px;background:var(--panel);border:1px solid var(--line);border-radius:3px;width:min(640px,calc(100% - 32px))}#rpPos{flex:1;min-width:60px;accent-color:var(--ochre)}#rpTime{font-size:13px;white-space:nowrap;font-variant-numeric:tabular-nums}body.replaying #top .ctl{display:none}@media (max-width:520px){#rpBar{flex-wrap:wrap}#rpPos{order:9;flex-basis:100%}#rpTime{margin-left:auto}}
+#fetchV{position:absolute;inset:0;pointer-events:none;opacity:0;background:radial-gradient(ellipse at 50% 50%,rgba(0,0,0,0) 32%,rgba(6,8,10,.5) 66%,rgba(2,3,4,.96) 100%)}
 </style>
 
 <div id="app">
   <canvas id="gl"></canvas>
   <canvas id="ov"></canvas>
+  <div id="fetchV"></div>
   <div id="flash"></div>
   <header id="top" hidden>
     <div class="res mana"><span class="lab">Mana</span><b id="rMana">0</b><span class="bar"><i id="rManaBar"></i></span></div>
@@ -1317,6 +1319,13 @@ function fetchTick(dt){if(!fetches.length)return;for(const f of fetches){if(f.do
     const c=cidx(f.x,f.z);if(c!==f.lc){f.lc=c;if(hAt(f.x,f.z)>.3&&!bOcc[c]){let s2=0,n=0;forVerts(f.x,f.z,1.6,q=>{if(H[q]>.25){s2+=H[q];n++}});if(n){const tg=Math.max(.45,s2/n);const bb=forVerts(f.x,f.z,1.6,(q,d)=>{if(H[q]>.25&&!bOcc[q])H[q]=lerp(H[q],tg,1-sstep(1,1.6,d))});postTerrain(...bb);for(const tr of trees)if(tr.alive&&d2(tr.x,tr.z,f.x,f.z)<1.2)killTree(tr)}}}
     if(R()<dt*20){const y=Math.max(0,hAt(f.x,f.z));PN.emit(f.x+(R()-.5)*.5,y+.2+R()*1.4,f.z+(R()-.5)*.5,(R()-.5)*.3,.3+R()*.5,(R()-.5)*.3,1+R(),.04,.04,.04,.6,.8,-.05)}}
   fetches=fetches.filter(f=>!f.done)}
+// While a fetch walks for your Cunning Woman the world darkens at the edges and drains of colour, closing in and
+// beating faster the nearer it gets, so the hunt can't be missed the way a toast can.
+let veilK=-1;
+function fetchVeil(){let k=0;if(running&&!over&&!watching&&!inMenu){const sh=tribes[0]&&tribes[0].shaman;if(sh&&sh.alive)for(const f of fetches){if(f.done||f.tt!==0)continue;const d=Math.sqrt(d2(f.x,f.z,sh.x,sh.z));k=Math.max(k,.35+.65*clamp(1-d/30,0,1))}}
+  const el=$('fetchV'),gl=$('gl');if(k<=0){if(veilK!==0){veilK=0;el.style.opacity='0';gl.style.filter=''}return}
+  const now=performance.now()/1000,ph=(now*(.8+k*1.4))%1,beat=Math.max(0,1-ph*7)+.6*Math.max(0,1-Math.abs(ph-.2)*7);veilK=k;
+  el.style.opacity=String(Math.min(1,k*(.8+.2*beat)));gl.style.filter=`saturate(${(1-.6*k).toFixed(3)}) brightness(${(1-.12*k-.04*beat*k).toFixed(3)})`}
 function unmaskBy(u,ti){if(ti===0){unmask(u);return}const by=u.chg;u.chg=null;u.unmaskT=gt;if(u.sel)deselect(u);u.tribe=by;u.order=null;u.tgt=null;u.cmd=false;const hs=tribes[ti].shaman||u,dx=wd(u.x-hs.x),dz=wd(u.z-hs.z),l=Math.hypot(dx,dz)||1;u.st='flee';u.ft=3;setTarget(u,u.x+dx/l*6,u.z+dz/l*6);if(by===0&&!watching)toast(`The ${tribes[ti].name} folk have found your changeling. It runs for home.`)}
 function fetchStartTick(){const SC=scen();if(!SC||!SC.fetchStart||fetchStartDone||gt<SC.fetchStart||watching)return;const P=tribes[0],me=P&&P.shaman&&P.shaman.alive?P.shaman:null;if(!me)return;fetchStartDone=true;let n=0;
   for(const T of tribes){if(!T.ai||T.wild||!T.alive||!T.shaman||!T.shaman.alive)continue;castLog[T.id+':fetch']=(castLog[T.id+':fetch']||0)+1;castSpell(T.id,'fetch',me.x,me.z,T.shaman);n++}
@@ -4602,6 +4611,7 @@ function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;fogK=Math.mi
     updCam(dt);updTerrain();drawEntities();drawIndicators();PA.write();PN.write();HALO.write();if(film.look)filmRender(dt);else renderer.render(scene,camera);
     if(running&&!over&&!watching){saveT-=dt;if(saveT<=0){saveT=20;saveGame()}}
     if(running||over){drawOverlay();mmT-=dt;if(mmT<=0){mmT=.3;drawMini()}hudT-=dt;if(hudT<=0||dockDirty){hudT=.25;updHUD()}}else ctx.clearRect(0,0,cw,ch);
+    fetchVeil();
   }catch(err){logErr(err);if(!errShown){errShown=true;console.error(err);const fr=String(err.stack||'').split('\n').filter(l=>/\bat\b/.test(l)).slice(0,2).map(l=>{const m=l.match(/at\s+(?:Object\.)?([\w$.]+)?\s*\(?.*?:(\d+):\d+\)?\s*$/);return m?(m[1]||'?')+':'+m[2]:''}).filter(Boolean).join(' < ');toast('Something went wrong: '+err.message+(fr?' ['+fr+']':''))}}
   requestAnimationFrame(frame)}
 

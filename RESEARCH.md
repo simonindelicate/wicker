@@ -38,7 +38,7 @@ Human players can be given the same framings and lore and play the same seeded l
 ## What the fork would need
 
 - **The model seat.** The multiplayer design (`MULTIPLAYER.md`) already defines a seat that receives the world, relabelled so its own tribe is tribe 0, and sends back orders. A model is another guest. Building multiplayer first does most of this work.
-- **Repeatable trials.** The replay harness planned for multiplayer uses fixed dice and a fixed time step, so each framing can be run against identical worlds.
+- **Determinism, here and not in the main game.** Repeatable trials need fixed dice and a fixed time step: one seeded generator for everything the simulation draws (the `R()` calls in sim, AI and combat), a separate one for anything drawn per frame, and the simulation advanced in exact steps rather than by frame time. Then each framing can be run against identical worlds and a run reproduced from its seed and inputs. This is a refactor of the simulation's heart, so it belongs to the fork; the main game keeps `Math.random`, and its test-mode replay records the match rather than re-running it.
 - **The world as text.** A description of what the model's Cunning Woman can see, and the list of actions open to her, in the game's own terms.
 - **A record.** Every decision is logged with its context, so choices can be counted and compared across framings.
 - **Dilemma levels.** Sacrifice is the game's strong play, so restraint must be told apart from weak strategy. A few levels should be built around acts of mercy with a known, measurable cost.
