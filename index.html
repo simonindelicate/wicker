@@ -201,6 +201,7 @@ details.help summary{cursor:pointer;color:var(--text);font:14px var(--f-display)
 #rejoice h1{position:relative;color:transparent;background:repeating-linear-gradient(0deg,rgba(226,52,40,.5) 0 1px,rgba(190,22,18,.12) 1px 3px);-webkit-background-clip:text;background-clip:text;-webkit-text-stroke:1.6px rgb(226,52,40);text-shadow:0 0 4px rgb(190,22,18),0 0 14px rgba(190,22,18,.75),4px 0 10px rgba(190,22,18,.45),9px 0 18px rgba(190,22,18,.25);filter:url(#rjTube);animation:rjRoll 3.7s steps(1) infinite}
 #rejoice p{text-shadow:0 0 8px rgba(190,22,18,.6),0 2px 10px rgba(0,0,0,.9);color:#f0beb4}
 @keyframes rjRoll{0%{transform:none;opacity:1}61%{transform:translateX(3px) skewX(-4deg);opacity:.75}63%{transform:none;opacity:1}88%{transform:translateX(-2px);opacity:.85}90%{transform:none;opacity:.95}93%{opacity:1}}
+#rpBar{position:absolute;left:50%;bottom:calc(12px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:15;display:flex;gap:6px;align-items:center;padding:6px 8px;background:var(--panel);border:1px solid var(--line);border-radius:3px;width:min(640px,calc(100% - 32px))}#rpPos{flex:1;min-width:60px;accent-color:var(--ochre)}#rpTime{font-size:13px;white-space:nowrap;font-variant-numeric:tabular-nums}body.replaying #top .ctl{display:none}@media (max-width:520px){#rpBar{flex-wrap:wrap}#rpPos{order:9;flex-basis:100%}#rpTime{margin-left:auto}}
 </style>
 
 <div id="app">
@@ -4694,6 +4695,118 @@ document.querySelectorAll('.filmBox').forEach(box=>{box.addEventListener('click'
   box.addEventListener('input',e=>{const r=e.target.closest('input[data-fk]');if(!r)return;film[r.dataset.fk]=+r.value;filmSave();filmUI()})});
 filmUI();
 $('errCopy').addEventListener('click',()=>{const t=$('errLogT').textContent;try{navigator.clipboard.writeText(t);toast('Copied')}catch(e){}});$('errClear').addEventListener('click',()=>{try{localStorage.removeItem(ERR_KEY)}catch(e){}showErrLog()});
+// ---------------- REPLAY (test mode only) ----------------
+// While a match is played in test mode, a recorder sits outside the simulation and writes down what the
+// renderer needs: every fifth of a second, which entities exist and which of their drawn fields changed
+// (positions go into a compact typed buffer), plus every particle, sound and piece of debris the simulation
+// makes, and the terrain once a second when it has changed. Nothing is saved; it lives in memory until the
+// next world is built. Watching it back is a puppet show: the simulation never runs, the recorded entities
+// are fed to the ordinary renderer, and moving things are slid between samples so motion stays smooth.
+const RP={rec:null,reset:true,on:false,inSim:false};
+const RP_COLL=[['units',()=>units,v=>units=v,1],['blds',()=>blds,v=>blds=v,0],['stock',()=>stock,v=>stock=v,1],['fetches',()=>fetches,v=>fetches=v,1],['projs',()=>projs,v=>projs=v,2],
+  ['banners',()=>banners,v=>banners=v,0],['stains',()=>stains,v=>stains=v,0],['gore',()=>gore,v=>gore=v,0],['buntings',()=>buntings,v=>buntings=v,0],['hutches',()=>hutches,v=>hutches=v,0],
+  ['patches',()=>patches,v=>patches=v,0],['pits',()=>pits,v=>pits=v,0],['stones',()=>stones,v=>stones=v,0],['tombBeds',()=>tombBeds,v=>tombBeds=v,0],['wells',()=>wells,v=>wells=v,0],
+  ['trees',()=>trees,v=>trees=v,0,5]];
+const RP_TER=[[()=>H,v=>H=v],[()=>TN,v=>TN=v],[()=>hazU,v=>hazU=v],[()=>hazType,v=>hazType=v],[()=>saltU,v=>saltU=v],[()=>hedgeA,v=>hedgeA=v]];
+const RP_G=[['seaRed',()=>seaRed,v=>seaRed=v],['armageddon',()=>armageddon,v=>armageddon=v],['season',()=>season,v=>season=v]];
+const RP_GJ=[['seaRise',()=>seaRise,v=>seaRise=v],['swamps',()=>swamps,v=>swamps=v]];
+const RP_MAXB=64e6;
+let RP_KEYS=null;
+function rpKeys(){if(RP_KEYS)return RP_KEYS;const s=new Set(),src=[drawEntities,drawOverlay,drawMini,unitY,visU,visB,computeStats,paintMap,updTerrain,queenValue,dtrNear,isHold,byaw,updHUD].map(f=>String(f)).join(' ');
+  for(const m of src.matchAll(/\.([A-Za-z_$][\w$]*)/g))s.add(m[1]);for(const k of['x','z','alive','id','tribe','type','bt'])s.add(k);for(const k of['sel','path','length'])s.delete(k);return RP_KEYS=s}
+function rpNew(){return{t0:gt,k:0,next:gt,samples:[],mem:RP_COLL.map(()=>new Set()),last:new Map(),ids:new WeakMap(),nid:1,fb:new Uint16Array(1<<16),fn:0,pb:new Float32Array(1<<15),pn:0,deb:[],debSeen:new WeakSet(),sfx:[],ter0:null,terP:null,tv:-1,gl:{},trL:[],bytes:0,full:false}}
+function rpEnc(r,v,d){if(v===null||v===undefined)return null;const t=typeof v;if(t==='number')return isFinite(v)?v:null;if(t==='function')return undefined;if(t!=='object')return v;
+  const id=r.ids.get(v);if(id)return{'@':id};if(v.isColor||v.isObject3D||v.isMaterial||v.isBufferGeometry||ArrayBuffer.isView(v))return undefined;if(d>1)return null;
+  if(Array.isArray(v))return v.map(x=>{const e=rpEnc(r,x,d+1);return e===undefined?null:e});const o={};for(const k in v){const e=rpEnc(r,v[k],d+1);if(e!==undefined)o[k]=e}return o}
+function rpFast(r,a,b,c,e){if(r.fn+4>r.fb.length){const n=new Uint16Array(r.fb.length*2);n.set(r.fb);r.fb=n}const f=r.fb;f[r.fn++]=a;f[r.fn++]=b;f[r.fn++]=c;f[r.fn++]=e}
+function rpSample(r){const S={t:gt,add:[],del:[],f:[],f0:r.fn,f1:0,tr:[],g:[],ter:null,rc:false},K=rpKeys();let nf=0;
+  RP_COLL.forEach((C,ci)=>{if(C[4]&&r.k%C[4])return;const prev=r.mem[ci],now=new Set();for(const e of C[1]()){if(!e||e.alive===false)continue;let id=r.ids.get(e);if(!id){id=r.nid++;r.ids.set(e,id)}now.add(id)}
+    for(const id of now)if(!prev.has(id))S.add.push(id,ci);for(const id of prev)if(!now.has(id)){S.del.push(id,ci);r.last.delete(id)}r.mem[ci]=now});
+  if(r.nid>65000){r.full=true;return}
+  RP_COLL.forEach((C,ci)=>{if(C[4]&&r.k%C[4])return;const fk=C[3];for(const e of C[1]()){if(!e||e.alive===false)continue;const id=r.ids.get(e);let L=r.last.get(id);if(!L){L={};r.last.set(id,L)}
+    for(const k in e){if(!K.has(k))continue;if(fk===1&&(k==='x'||k==='z'||k==='face'))continue;if(fk===2&&k==='t')continue;const v=e[k];let enc,cmp;
+      if(v!==null&&typeof v==='object'){enc=rpEnc(r,v,0);if(enc===undefined)continue;cmp=JSON.stringify(enc)}else if(typeof v==='function')continue;else{enc=(typeof v==='number'&&!isFinite(v))?null:v;cmp=enc}
+      if(L[k]!==cmp){L[k]=cmp;S.f.push(id,k,enc);nf++}}
+    for(const k in L)if(k[0]!=='#'&&!(k in e)){delete L[k];S.f.push(id,k,undefined)}
+    if(fk===1){const qx=Math.round(wrap(e.x)/N*65534),qz=Math.round(wrap(e.z)/N*65534),qf=Math.round((((e.face||0)%TAU)+TAU)%TAU/TAU*65535);if(L['#x']!==qx||L['#z']!==qz||L['#f']!==qf){L['#x']=qx;L['#z']=qz;L['#f']=qf;rpFast(r,id,qx,qz,qf)}}
+    else if(fk===2){const qt=Math.min(65535,Math.round((e.t||0)*1000));if(L['#t']!==qt){L['#t']=qt;rpFast(r,id,qt,65535,0)}}}});
+  S.f1=r.fn;
+  tribes.forEach((T,i)=>{const L=r.trL[i]||(r.trL[i]={});for(const k in T){const v=T[k];let enc;if(v!==null&&typeof v==='object'){const id=r.ids.get(v);if(!id)continue;enc={'@':id}}else if(typeof v==='function')continue;else enc=(typeof v==='number'&&!isFinite(v))?null:v;
+    const cmp=enc&&typeof enc==='object'?'@'+enc['@']:enc;if(L[k]!==cmp){L[k]=cmp;S.tr.push(i,k,enc)}}});
+  for(const [n,g] of RP_G){const v=g();if(r.gl[n]!==v){r.gl[n]=v;S.g.push(n,v)}}
+  if(r.k%5===0){for(const [n,g] of RP_GJ){const v=JSON.stringify(g()===undefined?null:g());if(r.gl[n]!==v){r.gl[n]=v;S.g.push(n,{j:v})}}
+    if(!r.ter0){r.ter0=RP_TER.map(T=>T[0]().slice());r.terP=RP_TER.map(T=>T[0]().slice());r.tv=tver;r.bytes+=r.ter0.reduce((s,a)=>s+a.byteLength*2,0)}
+    else if(r.tv!==tver){r.tv=tver;S.rc=true;S.ter=[];RP_TER.forEach((T,ti)=>{const a=T[0](),p=r.terP[ti];if(a.length!==p.length)return;const ix=[];for(let c=0;c<a.length;c++)if(a[c]!==p[c]){ix.push(c);p[c]=a[c]}
+      if(ix.length){const vals=new a.constructor(ix.length);ix.forEach((c,j)=>vals[j]=a[c]);S.ter.push(ti,Uint16Array.from(ix),vals);r.bytes+=ix.length*6}})}}
+  r.bytes+=(S.add.length+S.del.length+S.tr.length+S.g.length)*8+nf*24+64;r.samples.push(S);r.k++;
+  if(r.bytes+r.fb.byteLength+r.pb.byteLength>RP_MAXB)r.full=true}
+function rpPart(si,a){const r=RP.rec;if(r.full)return;if(r.pn+15>r.pb.length){const n=new Float32Array(r.pb.length*2);n.set(r.pb);r.pb=n}const b=r.pb;let o=r.pn;b[o++]=gt;b[o++]=si;for(let i=0;i<13;i++)b[o++]=a[i]||0;r.pn=o}
+[PA,PN].forEach((P,si)=>{const o=P.emit;P.emit=function(...a){if(RP.inSim&&RP.rec)rpPart(si,a);return o.apply(this,a)}});
+const rpSim0=sim;sim=function(dt){if(RP.reset){RP.reset=false;RP.rec=(!inMenu&&devMode())?rpNew():null}const r=RP.rec;RP.inSim=!!(r&&!r.full);
+  try{rpSim0(dt)}finally{RP.inSim=false}
+  if(r&&!r.full){for(const d of debris)if(!r.debSeen.has(d)){r.debSeen.add(d);r.deb.push([gt,{geo:d.m.geometry,mat:d.m.material,x:d.x,y:d.y,z:d.z,vx:d.vx,vy:d.vy,vz:d.vz,rx:d.rx,ry:d.ry,rz:d.rz,vr:d.vr,life:d.life,t:d.t,heavy:d.heavy,own:d.own}])}
+    if(gt>=r.next){r.next=gt+.2;rpSample(r)}}};
+const rpSfx0=sfx;sfx=function(kind,vol,x,z){if(RP.inSim&&RP.rec)RP.rec.sfx.push(gt,kind,vol,x,z);return rpSfx0.apply(this,arguments)};
+const rpBW0=buildWorld;buildWorld=function(){if(RP.on)rpStop(false);RP.reset=true;return rpBW0.apply(this,arguments)};
+const rpLG0=loadGame;loadGame=function(){const ok=rpLG0.apply(this,arguments);if(ok)RP.reset=true;return ok};
+const rpUT0=updTerrain;updTerrain=function(){if(RP.on){try{rpFrame()}catch(e){console.error(e);rpStop(true)}}return rpUT0.apply(this,arguments)};
+
+function rpDec(v){if(v===null||typeof v!=='object')return v;if(Array.isArray(v))return v.map(rpDec);if('@' in v)return RP.pup.get(v['@'])||null;if('j' in v)return JSON.parse(v.j);const o={};for(const k in v)o[k]=rpDec(v[k]);return o}
+function rpApply(S){const P=RP.pup;
+  for(let i=0;i<S.add.length;i+=2){const id=S.add[i],ci=S.add[i+1];if(!P.has(id))P.set(id,{});RP.mem[ci].add(id);RP.dirty[ci]=true}
+  for(let i=0;i<S.del.length;i+=2){RP.mem[S.del[i+1]].delete(S.del[i]);RP.dirty[S.del[i+1]]=true}
+  const f=S.f;for(let i=0;i<f.length;i+=3){const p=P.get(f[i]);if(!p)continue;if(f[i+2]===undefined)delete p[f[i+1]];else p[f[i+1]]=rpDec(f[i+2])}
+  const fb=RP.rec.fb;for(let o=S.f0;o<S.f1;o+=4){const p=P.get(fb[o]);if(!p)continue;if(fb[o+2]===65535){p.bt_=fb[o+1]/1000;p.t=p.bt_}else{p.bx=fb[o+1]/65534*N;p.bz=fb[o+2]/65534*N;p.bf=fb[o+3]/65535*TAU;p.x=p.bx;p.z=p.bz;p.face=p.bf}}
+  for(let i=0;i<S.tr.length;i+=3){const T=tribes[S.tr[i]];if(!T)continue;if(S.tr[i+2]===undefined)delete T[S.tr[i+1]];else T[S.tr[i+1]]=rpDec(S.tr[i+2])}
+  for(let i=0;i<S.g.length;i+=2){const n=S.g[i],v=S.g[i+1];const G=RP_G.find(g=>g[0]===n)||RP_GJ.find(g=>g[0]===n);if(G)G[2](rpDec(v))}
+  if(S.ter)for(let i=0;i<S.ter.length;i+=3){const a=RP_TER[S.ter[i]][0](),ix=S.ter[i+1],v=S.ter[i+2];for(let j=0;j<ix.length;j++)a[ix[j]]=v[j]}
+  return S.rc}
+function rpMat(){RP_COLL.forEach((C,ci)=>{if(!RP.dirty[ci])return;RP.dirty[ci]=false;const a=[];for(const id of RP.mem[ci]){const p=RP.pup.get(id);if(p)a.push(p)}C[2](a);if(C[0]==='trees')tGridDirty=true})}
+function rpClearFx(){for(const d of debris)scene.remove(d.m);debris=[];PA.n=0;PN.n=0}
+function rpSeek(t){const r=RP.rec;RP.pup=new Map();RP.mem=RP_COLL.map(()=>new Set());RP.dirty=RP_COLL.map(()=>true);RP_TER.forEach((T,i)=>T[1](r.ter0[i].slice()));rpClearFx();
+  RP.i=-1;while(RP.i+1<r.samples.length&&r.samples[RP.i+1].t<=t){RP.i++;rpApply(r.samples[RP.i])}
+  recompute(0,0,N-1,N-1);rpMat();rebuildTGrid();RP.t=t;gt=t;
+  let lo=0,hi=r.pn/15;while(lo<hi){const m=(lo+hi)>>1;if(r.pb[m*15]<=t)lo=m+1;else hi=m}RP.pi=lo*15;
+  RP.si=0;while(RP.si<r.sfx.length&&r.sfx[RP.si]<=t)RP.si+=5;RP.di=0;while(RP.di<r.deb.length&&r.deb[RP.di][0]<=t)RP.di++;rpInterp();computeStats()}
+function rpInterp(){const r=RP.rec,S=r.samples[RP.i],n=r.samples[RP.i+1];if(!S||!n)return;const a=clamp((RP.t-S.t)/Math.max(1e-6,n.t-S.t),0,1),fb=r.fb;
+  for(let o=n.f0;o<n.f1;o+=4){const p=RP.pup.get(fb[o]);if(!p)continue;if(fb[o+2]===65535){if(p.bt_!==undefined)p.t=p.bt_+(fb[o+1]/1000-p.bt_)*a;continue}if(p.bx===undefined)continue;
+    const tx=fb[o+1]/65534*N,tz=fb[o+2]/65534*N,tf=fb[o+3]/65535*TAU;let df=tf-p.bf;if(df>Math.PI)df-=TAU;else if(df<-Math.PI)df+=TAU;
+    p.x=wrap(p.bx+wd(tx-p.bx)*a);p.z=wrap(p.bz+wd(tz-p.bz)*a);p.face=p.bf+df*a}}
+function rpFrame(){const r=RP.rec,now=performance.now(),dt=Math.min(.1,(now-RP.last)/1000);RP.last=now;const end=r.samples[r.samples.length-1].t;
+  if(RP.seekTo!=null){const t=RP.seekTo;RP.seekTo=null;if(t<RP.t)rpSeek(t);else RP.jump=t}
+  let t1=RP.jump!=null?RP.jump:RP.t+(RP.play?dt*RP.speed:0);const jumped=RP.jump!=null;RP.jump=null;if(t1>=end){t1=end;if(RP.play){RP.play=false;rpUI()}}
+  const rdt=Math.max(0,t1-RP.t);let rc=false;while(RP.i+1<r.samples.length&&r.samples[RP.i+1].t<=t1){RP.i++;if(rpApply(r.samples[RP.i]))rc=true}
+  if(rc)recompute(0,0,N-1,N-1);rpMat();if(tGridDirty)rebuildTGrid();
+  const pb=r.pb;if(jumped&&rdt>2){let lo=RP.pi/15,hi=r.pn/15;while(lo<hi){const m=(lo+hi)>>1;if(pb[m*15]<=t1-1.5)lo=m+1;else hi=m}RP.pi=lo*15}
+  while(RP.pi<r.pn&&pb[RP.pi]<=t1){const o=RP.pi;(pb[o+1]?PN:PA).emit(pb[o+2],pb[o+3],pb[o+4],pb[o+5],pb[o+6],pb[o+7],pb[o+8],pb[o+9],pb[o+10],pb[o+11],pb[o+12],pb[o+13],pb[o+14]);RP.pi+=15}
+  const loud=RP.play&&RP.speed<=2&&!jumped;while(RP.si<r.sfx.length&&r.sfx[RP.si]<=t1){if(loud)rpSfx0(r.sfx[RP.si+1],r.sfx[RP.si+2],r.sfx[RP.si+3],r.sfx[RP.si+4]);RP.si+=5}
+  while(RP.di<r.deb.length&&r.deb[RP.di][0]<=t1){const d=r.deb[RP.di][1];if(!jumped||t1-r.deb[RP.di][0]<d.life){const m=new C.Mesh(d.geo,d.mat);m.frustumCulled=false;scene.add(m);debris.push(Object.assign({},d,{m,geo:undefined,mat:undefined}))}RP.di++}
+  RP.t=t1;gt=t1;rpInterp();PA.update(rdt);PN.update(rdt);updDebris(rdt);snowFall(rdt);
+  RP.cs-=dt;if(RP.cs<=0){RP.cs=1;computeStats()}RP.ui-=dt;if(RP.ui<=0){RP.ui=.25;rpUI()}}
+const rpFmt=s=>{s=Math.max(0,Math.floor(s));return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};
+function rpUI(){const r=RP.rec;if(!r||!RP.on)return;const t0=r.samples[0].t,end=r.samples[r.samples.length-1].t;$('rpPlay').textContent=RP.play?'Pause':'Play';$('rpSpd').textContent=RP.speed+'×';
+  if(!RP.drag)$('rpPos').value=Math.round((RP.t-t0)/Math.max(1,end-t0)*1000);$('rpTime').textContent=rpFmt(RP.t-t0)+' / '+rpFmt(end-t0)}
+function rpStart(){const r=RP.rec;if(!r||r.samples.length<6||RP.on)return;r.full=true;
+  RP.saved={col:RP_COLL.map(C=>C[1]()),ter:RP_TER.map(T=>T[0]()),g:RP_G.map(G=>G[1]()),gj:RP_GJ.map(G=>G[1]()),gt,fogOn,watching,running,over,paused,cam:Object.assign({},cam),tr:tribes.map(T=>Object.assign({},T)),
+    hid:['top','mini','side','dock'].map(id=>$(id).hidden),watchCls:document.body.classList.contains('watch')};
+  RP.on=true;RP.play=true;RP.speed=1;RP.last=performance.now();RP.cs=0;RP.ui=0;RP.seekTo=null;RP.jump=null;
+  fogOn=false;watching=true;running=true;over=true;paused=false;setSel([]);hint(null);
+  document.body.classList.add('watch','replaying');$('end').hidden=true;$('top').hidden=false;$('mini').hidden=false;$('side').hidden=true;$('dock').hidden=true;
+  rpSeek(r.samples[0].t);$('rpBar').hidden=false;rpUI();resize()}
+function rpStop(restore){if(!RP.on)return;RP.on=false;$('rpBar').hidden=true;document.body.classList.remove('replaying');rpClearFx();const s=RP.saved;RP.saved=null;RP.pup=null;if(!restore||!s)return;
+  RP_COLL.forEach((C,i)=>C[2](s.col[i]));RP_TER.forEach((T,i)=>T[1](s.ter[i]));RP_G.forEach((G,i)=>G[2](s.g[i]));RP_GJ.forEach((G,i)=>G[2](s.gj[i]));
+  gt=s.gt;fogOn=s.fogOn;watching=s.watching;running=s.running;over=s.over;paused=s.paused;Object.assign(cam,s.cam);tribes.forEach((T,i)=>{if(s.tr[i])Object.assign(T,s.tr[i])});
+  ['top','mini','side','dock'].forEach((id,i)=>$(id).hidden=s.hid[i]);document.body.classList.toggle('watch',s.watchCls);
+  recompute(0,0,N-1,N-1);rebuildTGrid();computeStats();$('end').hidden=false;resize()}
+$('app').insertAdjacentHTML('beforeend','<div id="rpBar" hidden><button class="btn" id="rpBack" title="Back to the start">Start</button><button class="btn" id="rpPlay">Pause</button><button class="btn" id="rpSpd" title="Playback speed">1×</button><input type="range" id="rpPos" min="0" max="1000" value="0" aria-label="Position in the match"><span id="rpTime">0:00 / 0:00</span><button class="btn" id="rpExit">Leave</button></div>');
+$('bAgain').insertAdjacentHTML('afterend','<button class="secondary" id="bReplay" hidden>Replay</button>');
+$('bReplay').addEventListener('click',()=>rpStart());
+$('rpPlay').addEventListener('click',()=>{const r=RP.rec;if(!RP.play&&RP.t>=r.samples[r.samples.length-1].t-.05)RP.seekTo=r.samples[0].t;RP.play=!RP.play;RP.last=performance.now();rpUI()});
+$('rpBack').addEventListener('click',()=>{RP.seekTo=RP.rec.samples[0].t;RP.play=true;rpUI()});
+$('rpSpd').addEventListener('click',()=>{RP.speed=RP.speed>=8?1:RP.speed*2;rpUI()});
+$('rpExit').addEventListener('click',()=>rpStop(true));
+{const p=$('rpPos');p.addEventListener('input',()=>{RP.drag=true;const r=RP.rec,t0=r.samples[0].t,end=r.samples[r.samples.length-1].t;RP.seekTo=t0+p.value/1000*(end-t0);rpUI()});p.addEventListener('change',()=>{RP.drag=false})}
+new MutationObserver(()=>{if(!$('end').hidden)$('bReplay').hidden=!(RP.rec&&RP.rec.samples.length>=6&&devMode())}).observe($('end'),{attributes:true,attributeFilter:['hidden']});
 textInit();resize();buildWorld();menuUnlocks();showContinue();requestAnimationFrame(frame);
 window.__ws={castLog,setTarget:(u,x,z)=>setTarget(u,x,z),onTap:(a,b,c,d)=>onTap(a,b,c,d),unitScreen:u=>unitScreen(u),isVis:(x,z)=>isVis(x,z),get seaRise(){return seaRise},get seaRed(){return seaRed},get water(){return water},get fetches(){return fetches},get stains(){return stains},sendAnimal,kindle,get stock(){return stock},get hutches(){return hutches},get HUT_TOP(){return HUT_TOP},get wind(){return wind},get windOn(){return windOn},get lastFight(){return lastFight},windTick,get wildFl(){return wildFl},get season(){return season},endGame,destroyBld,crown,villagerCount,tokGet,keepsake,useKeepsake,walkReach,postAt,setSel,get banners(){return banners},get sel(){return sel},get world(){return world},light,memorial,get stats(){return stats},get cam(){return cam},get WS(){return WS},wsOpen,wsClose,captureDef,defFromData,merge,ORIG_UMOD,ORIG_BMOD,get UM(){return UM},get BM(){return BM},get wear(){return wear},get buntings(){return buntings},get patches(){return patches},get wells(){return wells},get units(){return units},get tribes(){return tribes},get blds(){return blds},sim,beginGame,get gt(){return gt},castSpell,tryCast,saveGame,loadGame,setSel,command,showLevel,SCEN,field,get walkA(){return walk},hAt,get water(){return water},findSpot,get allow(){return allowSets},get pass(){return pass},get swamps(){return swamps},get debris(){return debris},queenValue,invokeArma,startRitual,sendVehicle,get wildId(){return wildId},get armageddon(){return armageddon},placeBuilding,validSpot,orderMove,spawnUnit,command,get water(){return water},findSpot};
 })();
