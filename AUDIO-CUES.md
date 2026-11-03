@@ -27,6 +27,7 @@ Each cue has an ID that will become its filename (for example `horn.ogg`). Where
 | `drone` | The constant bed under play (currently synthesised) | 30000 loop | Stereo. Low, slowly shifting, barely there. |
 | `drone-all` | The bed during All-against-all | 30000 loop | Stereo. The same bed, darker and more urgent; it will crossfade from `drone`. |
 | `wind` | General outdoor air, louder when zoomed out | 20000 loop | **In the game:** Simon's three-minute recording, looped seamlessly (22 kHz, 32 kb/s MP3, embedded). Not continuous: comes in for a minute or so in the calm after a fight, or after a long quiet, and leaves when fighting starts. |
+| `wind-far` | Howling wind with snatches of melody, for the camera pulled right back | 20000 loop | **In the game:** Simon's 2:40 recording, looped (22 kHz, 32 kb/s MP3, embedded). Same incidental timing as `wind`; cross-fades with it on zoom, taking over between camera distances 45 and 75. |
 | `water` | Lapping at shorelines when the camera is near the sea | 12000 loop | |
 | `forest` | Birds and leaves when the camera is over trees | 15000 loop | Should feel slightly wrong: too still, one bird too many. |
 
