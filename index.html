@@ -4338,18 +4338,18 @@ function windReset(){lastFight=-1e9;windOn=false;farOn=false;farNext=gt;farLast=
 function windLevel(){if(!wind||!AC)return;const live=soundOn&&running&&!paused,on=live&&windOn&&!farOn,fo=live&&farOn,z=clamp((cam.dist-8)/36,0,1),k=armageddon?1.3:1,tc=on||fo?2.5:(gt-lastFight<3?1:3);
   wind.g.gain.setTargetAtTime(on?WIND_VOL*(.45+.55*z)*k:0,AC.currentTime,tc);wind.g2.gain.setTargetAtTime(fo?WIND_FAR_VOL*k:0,AC.currentTime,fo?3:farFast?1.2:tc);if(fo)farFast=false}
 // The far wind comes on its own occasions. Zoomed all the way out for a few seconds, it is likely to come in, and goes
-// again a while after you zoom back in. It also comes as danger gathers rather than when it arrives: rivals massing
-// near your village, a Blood sea called, a fetch walking for your Cunning Woman, all-against-all begun. Fighting
+// again soon after you zoom back in. It also comes as danger gathers rather than when it arrives: rival fighters
+// massing near your village (not their woodcutters, nor wildmen), a Blood sea called, a fetch walking for your Cunning Woman, all-against-all begun. Fighting
 // that involves you sends it away, as it does the other wind, except when the danger itself is what called it.
 const FAR_SPELL=[60,100],FAR_GAP=80;
 let farFast=false,farLast=0,farOn=false,farUntil=0,farNext=0,farWhy='',farHi=0,farLo=0,farT=0,farHist=[],farArma=false,farSea=null;
 function farThreat(){let n=0;const mine=blds.filter(b=>b.alive&&b.tribe===0).slice(0,40),sh=tribes[0]&&tribes[0].shaman;if(!mine.length&&!sh)return 0;
-  for(const u of units){if(!u.alive||u.tribe===0||u.inV||u.chg!=null||u.type==='balloon'||!tribes[u.tribe])continue;let near=sh&&sh.alive&&d2(u.x,u.z,sh.x,sh.z)<400;if(!near)for(const b of mine)if(d2(u.x,u.z,b.x,b.z)<576){near=true;break}if(near)n++}return n}
+  for(const u of units){if(!u.alive||u.tribe===0||u.inV||u.chg!=null||!tribes[u.tribe]||tribes[u.tribe].wild||!(UT[u.type].aggro>0))continue;let near=sh&&sh.alive&&d2(u.x,u.z,sh.x,sh.z)<400;if(!near)for(const b of mine)if(d2(u.x,u.z,b.x,b.z)<576){near=true;break}if(near)n++}return n}
 function farStart(why,len){farOn=true;farWhy=why;farUntil=gt+(len||FAR_SPELL[0]+R()*(FAR_SPELL[1]-FAR_SPELL[0]))}
 function farTick(){if(watching){farOn=false;return}const calm=gt-lastFight,max=camMax(),wide=cam.dist>=max*.88,dt=clamp(gt-farLast,0,1);farLast=gt;
   if(wide){farHi+=dt;farLo=0}else{farHi=0;if(cam.dist<max*.75)farLo+=dt}
   const ev=(armageddon&&!farArma)?'arma':(seaRise&&seaRise!==farSea&&seaRise.by!==0)?'sea':fetches.some(f=>!f.done&&f.tt===0&&f.born>gt-2)?'fetch':'';if(armageddon)farArma=true;if(seaRise)farSea=seaRise;
-  farT-=dt;let rising=false;if(farT<=0){farT=1;const th=farThreat();farHist.push(th);if(farHist.length>20)farHist.shift();rising=th>=3&&th-Math.min(...farHist.slice(-15))>=2}
+  farT-=dt;let rising=false;if(farT<=0){farT=1;const th=farThreat();farHist.push(th);if(farHist.length>20)farHist.shift();rising=gt>45&&farHist.length>=15&&th>=3&&th-Math.min(...farHist.slice(-15))>=2}
   if(farOn){const byDanger=farWhy==='arma'||farWhy==='sea'||farWhy==='fetch';if(gt>farUntil||(calm<3&&!byDanger)||(farWhy==='wide'&&farLo>3)){farOn=false;farNext=gt+FAR_GAP;farFast=farWhy==='wide'}return}
   if(ev){farStart(ev,ev==='sea'?45:ev==='fetch'?90:undefined);return}
   if(gt<farNext)return;
