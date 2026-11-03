@@ -4314,11 +4314,12 @@ function env(g,t,a,peak,dec){g.gain.setValueAtTime(0,t);g.gain.linearRampToValue
 function nz(t,dur,freq,type,peak,dec){const s=AC.createBufferSource();s.buffer=noiseBuf;const f=AC.createBiquadFilter();f.type=type;f.frequency.value=freq;const g=AC.createGain();env(g,t,.005,peak,dec);s.connect(f);f.connect(g);g.connect(AC.destination);s.start(t);s.stop(t+dur);return f}
 function tone(t,type,f0,f1,peak,dec){const o=AC.createOscillator();o.type=type;o.frequency.setValueAtTime(f0,t);o.frequency.exponentialRampToValueAtTime(Math.max(20,f1),t+dec);const g=AC.createGain();env(g,t,.01,peak,dec);o.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+dec+.05)}
 let drone=null,wind=null,windT=0,lastFight=-1e9,windOn=false,windUntil=0,windNext=0,windEnd=0,windQuiet=300;
-// The wind bed: two recordings (embedded above as MP3, 22 kHz, 32 kb/s) looped under the drone. The first is for the
-// ordinary view and grows louder as you zoom out; the second, howling wind with snatches of melody, is for the camera
-// pulled right back, and the two cross-fade as you go. The encoder pads each end with a sliver of silence, so the loop
-// points are set where the sound actually starts and stops. The second recording is quieter, hence its larger gain.
-const WIND_VOL=.35,WIND_FAR_VOL=.8,WIND_FAR=[45,75];
+// The wind beds: two recordings (embedded above as MP3, 22 kHz, 32 kb/s) looped under the drone, each incidental and
+// on its own timing. The first is the ordinary wind, louder when zoomed out. The second, howling wind with snatches of
+// melody, belongs to the far view and to danger gathering (see farTick); while it plays the first gives way. The encoder
+// pads each end with a sliver of silence, so the loop points are set where the sound actually starts and stops. The
+// second recording is mastered quieter, hence its larger gain.
+const WIND_VOL=.35,WIND_FAR_VOL=.8;
 function windLoad(id,g){try{const b64=document.getElementById(id).textContent.trim(),bin=atob(b64),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);
     AC.decodeAudioData(u.buffer,buf=>{const d=buf.getChannelData(0),sr=buf.sampleRate;let a=0,e=d.length-1;while(a<d.length&&Math.abs(d[a])<2e-4)a++;while(e>a&&Math.abs(d[e])<2e-4)e--;
       const s=AC.createBufferSource();s.buffer=buf;s.loop=true;s.loopStart=a/sr;s.loopEnd=(e+1)/sr;s.connect(g);s.start(0,a/sr);windLevel()},()=>{})}catch(e){}}
@@ -4327,15 +4328,34 @@ function startWind(){if(!AC||wind)return;wind={g:AC.createGain(),g2:AC.createGai
 // The wind is not constant: it comes in for a spell when a fight involving you has died down (a respite), and now and then
 // in a long quiet, then goes again. Fighting sends it away quickly.
 const WIND_CALM=18,WIND_SPELL=[55,95],WIND_GAP=150,WIND_QUIET=[240,420];
-function windTick(){if(!running||paused)return;const calm=gt-lastFight;
+function windTick(){if(!running||paused)return;farTick();const calm=gt-lastFight;
   if(windOn){if(calm<3||gt>windUntil){windOn=false;windEnd=gt;windNext=gt+WIND_GAP}return}
   if(gt<windNext||calm<WIND_CALM)return;
   // a respite: the first calm after a fight that came since the wind last blew; otherwise only after a long quiet
   const respite=lastFight>windEnd,quiet=gt-Math.max(lastFight,windEnd)>windQuiet;
   if(respite||quiet){windOn=true;windUntil=gt+WIND_SPELL[0]+R()*(WIND_SPELL[1]-WIND_SPELL[0]);windQuiet=WIND_QUIET[0]+R()*(WIND_QUIET[1]-WIND_QUIET[0])}}
-function windReset(){lastFight=-1e9;windOn=false;windEnd=gt;windNext=gt;windQuiet=WIND_QUIET[0]+R()*(WIND_QUIET[1]-WIND_QUIET[0])}
-function windLevel(){if(!wind||!AC)return;const on=soundOn&&running&&!paused&&windOn,z=clamp((cam.dist-8)/36,0,1),far=sstep(WIND_FAR[0],WIND_FAR[1],cam.dist),k=armageddon?1.3:1,tc=on?2.5:(gt-lastFight<3?1:3);
-  wind.g.gain.setTargetAtTime(on?WIND_VOL*(.45+.55*z)*(1-far)*k:0,AC.currentTime,tc);wind.g2.gain.setTargetAtTime(on?WIND_FAR_VOL*far*k:0,AC.currentTime,tc)}
+function windReset(){lastFight=-1e9;windOn=false;farOn=false;farNext=gt;farLast=gt;farHist=[];farHi=0;farLo=0;farArma=false;farSea=null;windEnd=gt;windNext=gt;windQuiet=WIND_QUIET[0]+R()*(WIND_QUIET[1]-WIND_QUIET[0])}
+function windLevel(){if(!wind||!AC)return;const live=soundOn&&running&&!paused,on=live&&windOn&&!farOn,fo=live&&farOn,z=clamp((cam.dist-8)/36,0,1),k=armageddon?1.3:1,tc=on||fo?2.5:(gt-lastFight<3?1:3);
+  wind.g.gain.setTargetAtTime(on?WIND_VOL*(.45+.55*z)*k:0,AC.currentTime,tc);wind.g2.gain.setTargetAtTime(fo?WIND_FAR_VOL*k:0,AC.currentTime,fo?3:tc)}
+// The far wind comes on its own occasions. Zoomed all the way out for a few seconds, it is likely to come in, and goes
+// again a while after you zoom back in. It also comes as danger gathers rather than when it arrives: rivals massing
+// near your village, a Blood sea called, a fetch walking for your Cunning Woman, all-against-all begun. Fighting
+// that involves you sends it away, as it does the other wind, except when the danger itself is what called it.
+const FAR_SPELL=[60,100],FAR_GAP=80;
+let farLast=0,farOn=false,farUntil=0,farNext=0,farWhy='',farHi=0,farLo=0,farT=0,farHist=[],farArma=false,farSea=null;
+function farThreat(){let n=0;const mine=blds.filter(b=>b.alive&&b.tribe===0).slice(0,40),sh=tribes[0]&&tribes[0].shaman;if(!mine.length&&!sh)return 0;
+  for(const u of units){if(!u.alive||u.tribe===0||u.inV||u.chg!=null||u.type==='balloon'||!tribes[u.tribe])continue;let near=sh&&sh.alive&&d2(u.x,u.z,sh.x,sh.z)<400;if(!near)for(const b of mine)if(d2(u.x,u.z,b.x,b.z)<576){near=true;break}if(near)n++}return n}
+function farStart(why,len){farOn=true;farWhy=why;farUntil=gt+(len||FAR_SPELL[0]+R()*(FAR_SPELL[1]-FAR_SPELL[0]))}
+function farTick(){if(watching){farOn=false;return}const calm=gt-lastFight,max=camMax(),wide=cam.dist>=max*.88,dt=clamp(gt-farLast,0,1);farLast=gt;
+  if(wide){farHi+=dt;farLo=0}else{farHi=0;farLo+=dt}
+  const ev=(armageddon&&!farArma)?'arma':(seaRise&&seaRise!==farSea&&seaRise.by!==0)?'sea':fetches.some(f=>!f.done&&f.tt===0&&f.born>gt-2)?'fetch':'';if(armageddon)farArma=true;if(seaRise)farSea=seaRise;
+  farT-=dt;let rising=false;if(farT<=0){farT=1;const th=farThreat();farHist.push(th);if(farHist.length>20)farHist.shift();rising=th>=3&&th-Math.min(...farHist.slice(-15))>=2}
+  if(farOn){const byDanger=farWhy==='arma'||farWhy==='sea'||farWhy==='fetch';if(gt>farUntil||(calm<3&&!byDanger)||(farWhy==='wide'&&farLo>10)){farOn=false;farNext=gt+FAR_GAP}return}
+  if(ev){farStart(ev,ev==='sea'?45:ev==='fetch'?90:undefined);return}
+  if(gt<farNext)return;
+  if(rising&&calm>6){farStart('threat');return}
+  if(farHi>=4&&R()<dt*.8)farStart('wide')}
+
 function startDrone(){startWind();if(!AC||drone)return;try{const g=AC.createGain();g.gain.value=0;const f=AC.createBiquadFilter();f.type='lowpass';f.frequency.value=300;f.Q.value=3;
   const mk=(type,fr)=>{const o=AC.createOscillator();o.type=type;o.frequency.value=fr;o.connect(f);o.start();return o};const o1=mk('sawtooth',55),o2=mk('sawtooth',55.7),o3=mk('sine',82.4);
   const lfo=AC.createOscillator(),lg=AC.createGain();lfo.frequency.value=.06;lg.gain.value=160;lfo.connect(lg);lg.connect(f.frequency);lfo.start();f.connect(g);g.connect(AC.destination);drone={g,o1,o2,o3}}catch(e){}}
