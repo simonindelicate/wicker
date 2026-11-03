@@ -385,6 +385,8 @@ Simon's experience of three spells, rather than their numbers, drove these chang
 
 - **The hollow hills sink with the land.** A hollow hill is drawn at a base height fixed when the world is made, not at the ground beneath it, so every Blood sea lowered the land 0.75 and left the barrow standing where the ground used to be — after a few seas, an unearthed grey hulk on its side. Each sea now lowers that base with the land.
 
+- **A second wind, for the far view.** A new recording — howling wind with snatches of melody, made for the camera pulled right back — joins the first wind bed as incidental music. It comes and goes on the same rule (respites after fighting, and now and then in a long quiet), and the two cross-fade on zoom: the first as before up close, the second taking over between a camera distance of 45 and 75. Optimised the same way as the first, from a 6.4 MB 320 kb/s file to 22 kHz, 32 kb/s stereo (640 KB, `audio/wind-far.mp3`), and given more gain because it was mastered about 8.5 LU quieter.
+
 ---
 
 ## Threads that run through the history
