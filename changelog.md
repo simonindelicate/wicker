@@ -389,6 +389,8 @@ Simon's experience of three spells, rather than their numbers, drove these chang
 
 - **Sound off means off.** Switching sound off used to let the drone and wind beds glide down on their usual slow fades; now every bed is cut to silence the moment you press it. Switching back on still fades them in.
 
+- **Rivals keep a breeding stock.** On Extreme, rival villages could fall to two or three villagers and never grow again. It wasn't sacrifice: a training building with a fighter queued and no villager free outside calls one out of a hut, and rivals had no floor, so a tribe that lost a war (or started Extreme's bare way) trained its last villagers — and every newborn after them — into fighters, emptied its huts, and with nobody at home bred nothing. Rival training now waits while the tribe has no more villagers than it has huts (at least four), as yours waits on your last three; and when all a rival's huts are empty, its first idle villager goes home before any other work. In a test cut down to three villagers, the old rule left a Cunning Woman alone within a minute; now the tribe was back to thirteen in four, still training as numbers allowed.
+
 ---
 
 ## Threads that run through the history

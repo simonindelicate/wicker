@@ -1152,7 +1152,13 @@ function faceBuilding(b){const D=BT[b.bt],s=D.s;if(UNTURNED[b.bt])return;const r
 // and go over the edge. Six villagers step out of the stone circle, and for thirty seconds no rival attacks. The crag stays.
 const LEAP_N=6,LEAP_TRUCE=30,LEAP_BELOW=3,LEAP_FLEE=.6;  // LEAP_FLEE: share of each rival's people (villagers only) who flee in terror during the truce
 // The player's last TRAIN_KEEP villagers are never taken for training, counting those already walking in.
-const TRAIN_KEEP=LEAP_BELOW;function spareVillagers(ti){let n=villagerCount(ti);for(const u of units)if(u.alive&&u.tribe===ti&&u.type==='brave'&&u.st==='enter'&&u.purpose==='train')n--;return n}
+const TRAIN_KEEP=LEAP_BELOW;
+// Rivals keep a breeding stock too. A training building that finds no villager free outside calls one out of a hut, and
+// a hut with nobody in it breeds nothing; without a floor, a rival that lost a war (or Extreme's bare start) trained
+// its last villagers into fighters and every newborn after them, and never grew again. So rival training waits while
+// the tribe has no more villagers than it has huts (at least four), as yours waits on your last three.
+function aiKeep(T){let h=0;for(const b of blds)if(b.alive&&b.done&&b.tribe===T.id&&b.bt==='hut')h++;return Math.max(4,h)}
+function spareVillagers(ti){let n=villagerCount(ti);for(const u of units)if(u.alive&&u.tribe===ti&&u.type==='brave'&&u.st==='enter'&&u.purpose==='train')n--;return n}
 function villagerCount(ti){let n=0;for(const u of units)if(u.alive&&u.tribe===ti&&u.type==='brave')n++;for(const b of blds)if(b.alive&&b.tribe===ti&&b.bt==='hut')n+=b.occ;return n}
 function canLeap(T){const sh=T.shaman;return !!(sh&&sh.alive&&!sh.leap&&!sh.hanging&&!sh.inV&&!sh.air&&!T.tomb&&!armageddon&&!(scen()&&scen().oneLife)&&villagerCount(T.id)<LEAP_BELOW)}
 function makeCrag(T){const rc=blds.find(b=>b.alive&&b.bt==='reinc'&&b.tribe===T.id);if(!rc)return null;
@@ -1703,6 +1709,9 @@ function braveThink(u,T){const S=T.stats;
   if(armageddon){const e=nearestEnemy(u,20);if(e){attack(u,e);return}mootPull(u);orderUnit(u,moot.x+(R()-.5)*6,moot.z+(R()-.5)*6,true,moot.x,moot.z);return}
   if(u.lastAtk&&u.lastAtk.alive&&u.lastAtkT>gt-2&&u.lastAtk.tribe!==u.tribe){const a=u.lastAtk;if(a.type==='brave'||a.type==='oss'){attack(u,a);return}
     const dx=wd(u.x-a.x),dz=wd(u.z-a.z),l=Math.hypot(dx,dz)||1;u.st='flee';u.ft=2.5;setTarget(u,u.x+dx/l*5,u.z+dz/l*5);return}
+  // a rival whose huts are all empty breeds nothing however many it has, so the first idle villager goes home before any other work
+  if(T.id!==0){let occ=0,hb=null,hd=1e18;for(const b of blds)if(b.alive&&b.done&&b.bt==='hut'&&b.tribe===u.tribe){occ+=b.occ;const dd=d2(u.x,u.z,b.x,b.z);if(dd<hd){hd=dd;hb=b}}
+    if(!occ&&hb&&!units.some(o=>o!==u&&o.alive&&o.tribe===u.tribe&&o.st==='enter'&&o.purpose==='house')){u.st='enter';u.bld=hb;u.purpose='house';setTarget(u,hb.dx,hb.dz);return}}
   let best=null,bd=30*30;for(const b of blds)if(b.alive&&!b.done&&b.tribe===u.tribe&&b.nb<4){const dd=d2(u.x,u.z,b.x,b.z);if(dd<bd){bd=dd;best=b}}
   if(best){assignBuild(u,best);return}
   if(T.wood<T.woodGoal){const t=nearestTree(u.x,u.z,22);if(t){assignGather(u,t);return}}
@@ -1751,7 +1760,7 @@ function updBld(b,dt){const D=BT[b.bt],T=tribes[b.tribe];if(D.inv)return;
   if(b.bt==='hut'){if(b.occ>0&&T.stats.pop<T.stats.cap){if(!(T.blightUntil>gt)){const dn=DTR.some(d=>d.tribe===b.tribe&&d2(d.x,d.z,b.x,b.z)<DTR_R*DTR_R);b.breed+=dt*(TUNE.breedBase+TUNE.breedPerOccupant*b.occ)*T.breedMult*(T.beltaneUntil>gt?2:1)*(dn?DTR_MULT:1);if(dn&&R()<dt*.5&&seenAt(b.x,b.z))PA.emit(b.x+(R()-.5)*.8,hAt(b.x,b.z)+1.6,b.z+(R()-.5)*.8,0,.5,0,1.4,1,.62,.7,.8,.35,0)}if(b.breed>=1){b.breed=0;const u=spawnUnit('brave',b.tribe,b.dx,b.dz);u.think=1}}
     if(b.occ>0&&R()<dt*.8){const [cx,cz]=byaw(b,.3,0);PN.emit(b.x+cx,hAt(b.x,b.z)+2.2,b.z+cz,(R()-.5)*.2,.5,(R()-.5)*.2,2.5,.55,.53,.5,.35,.7,-.15)}}
   if(D.train&&!armageddon){if(b.trainee){b.tt-=dt*(T.swordUntil>gt?2:1)*(DTR.some(d=>d.tribe===b.tribe&&d2(d.x,d.z,b.x,b.z)<DTR_R*DTR_R)?DTR_MULT:1);if(b.tt<=0){b.trainee=false;b.q--;produce(b);dockDirty=true}}
-    else if(b.q>0){const cl=b.claim;if(!cl||!cl.alive||cl.st!=='enter'||cl.bld!==b){b.held=T.id===0&&spareVillagers(T.id)<=TRAIN_KEEP;const br=b.held?null:getFreeBrave(T,b.x,b.z);if(br){if(T.id===0)mark(br.x,br.z,.6,.85,1);br.st='enter';br.bld=b;br.purpose='train';setTarget(br,b.dx,b.dz);b.claim=br}}}}
+    else if(b.q>0){const cl=b.claim;if(!cl||!cl.alive||cl.st!=='enter'||cl.bld!==b){b.held=spareVillagers(T.id)<=(T.id===0?TRAIN_KEEP:aiKeep(T));const br=b.held?null:getFreeBrave(T,b.x,b.z);if(br){if(T.id===0)mark(br.x,br.z,.6,.85,1);br.st='enter';br.bld=b;br.purpose='train';setTarget(br,b.dx,b.dz);b.claim=br}}}}
   if(b.bt==='oak'){
     if(b.hangUntil&&!b.awake&&gt>=b.hangUntil){b.awake=true;if(b.tribe===0)earn('r_hunt');b.hangUntil=0;const sh=units.find(u=>u.alive&&u.hanging===b);if(sh){sh.hanging=null;sh.inV=null;sh.x=b.dx;sh.z=b.dz;sh.st='idle';sh.gx=sh.x;sh.gz=sh.z}
       flash(.35);sfx('thunder',.9,b.x,b.z);toast(b.tribe===0&&!watching?'The oak wakes. The Wild Hunt rides for you.':`The Wild Hunt rides for the ${T.name} folk`);b.hT=0}
