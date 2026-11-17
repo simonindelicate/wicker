@@ -28,7 +28,7 @@ Tokens are earned only in live play: never in "Watch the tribes fight", and neve
 | `sp_quake` |  | Cast Earthquake |  |
 | `sp_fire` |  | Bring on Day o'the Stones |  |
 | `sp_angel` |  | Loose St. Anthony's Fire |  |
-| `sp_volcano` |  | Raise a Volcano |  |
+| `sp_giant` |  | Wake a Giant |  |
 
 ## Buildings
 
@@ -116,7 +116,7 @@ Tokens are earned only in live play: never in "Watch the tribes fight", and neve
 | `x_erodebr2` |  | Sink ground raised by a Causeway, twice in one game | What the woman raises, the woman may drown. Twice. |
 | `x_threeway` |  | Be in a fight between three Cunning Women | Three wise women, one argument. |
 | `x_balloons30` |  | Give thirty balloonists one order | A sky so full of wicker you could walk on it. |
-| `x_fourfold` |  | Have a Volcano, your Bog, Day o'the Stones and St. Anthony's Fire all at work at once | Fire, mire, stone and fever, all at once. |
+| `x_fourfold` |  | Have a Giant, your Bog, Day o'the Stones and St. Anthony's Fire all at work at once | Fire, mire, stone and fever, all at once. |
 | `x_drownwoman` |  | Drown a rival Cunning Woman in your Bog | Not every wise woman can swim. |
 | `x_ghostlure` |  | Lure five rival fighters into your Bog with a Shade Host in one game | They followed the dead into the mire. |
 | `x_huntqueen` |  | Have the Wild Hunt kill a rival's May Queen | The Hunt takes what it likes. |

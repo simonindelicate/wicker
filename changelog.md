@@ -391,6 +391,16 @@ Simon's experience of three spells, rather than their numbers, drove these chang
 
 - **Rivals keep a breeding stock.** On Extreme, rival villages could fall to two or three villagers and never grow again. It wasn't sacrifice: a training building with a fighter queued and no villager free outside calls one out of a hut, and rivals had no floor, so a tribe that lost a war (or started Extreme's bare way) trained its last villagers — and every newborn after them — into fighters, emptied its huts, and with nobody at home bred nothing. Rival training now waits while the tribe has no more villagers than it has huts (at least four), as yours waits on your last three; and when all a rival's huts are empty, its first idle villager goes home before any other work. In a test cut down to three villagers, the old rule left a Cunning Woman alone within a minute; now the tribe was back to thirteen in four, still training as numbers allowed.
 
+## Toward 1.0
+
+- **0.5 kept whole.** The finished 0.5 stays at its own page and as `releases/wicker-0.5.html` (tagged `v0.5` locally); `index.html` now carries the work toward 1.0, published as a page of its own.
+- **Come, You Giants replaces the Volcano.** The ground gives way in a pit between the Cunning Woman and her mark, an arm of turf and chalk reaches out of it and slams down where she struck, wrecking houses all around and throwing people; it goes slack on the land, its weight drags the clutching hand back through a ploughed trench, and it drops into the dark. The pit stays open to the level of the sea, salted, and the hand leaves its print in chalk. 1500 mana, from the level that brought the Volcano. If she stands too near, the pit opens beyond the mark and the arm reaches toward her.
+- **The Chalk Giant.** A people must have its figure cut into a hillside, within sight of its own buildings, before it can call the giant (1000 mana): the Long Man for Ochre, a warrior for Blood, a sage for Forest, a flaming steed for Ash. It drifts down out of the sky and melts into the turf; break the land under it and it is scoured away, and the giant with it until another is cut. While the spell is armed a ghost of the figure shows where it may lie.
+- **Devil's Dyke**, new, with Harrow: a furrow dug to the nearest sea, or to the nearest sea in the direction it is pressed and pulled; the sea follows it in.
+- **Rivals** cut their figures and wake the giant against the thickest part of another people's village; never on Easy, and on Normal only from a full store of mana.
+- **Tokens.** *Raise a Volcano* becomes *Wake a Giant*; the fourfold token now wants the giant at work with your Bog, Day o'the Stones and St. Anthony's Fire, so it has to come last.
+- Figures, prints and the chalk in the turf are saved with the game, and the test-mode replay shows the giant's coming.
+
 ---
 
 ## Threads that run through the history

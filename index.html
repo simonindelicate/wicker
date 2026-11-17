@@ -545,10 +545,12 @@ const SP=[
   {k:'torch',n:'Scrying Torch',c:120,cd:20,r:15,rad:1,s:0},
   {k:'swamp',n:'Bog',c:300,cd:18,r:13,rad:3,s:2},
   {k:'erode',n:'Sink',c:340,cd:20,r:14,rad:4.5,s:2},
+  {k:'dyke',n:"Devil's Dyke",c:400,cd:25,r:15,rad:1.5,s:2},
   {k:'quake',n:'Earthquake',c:450,cd:25,r:15,rad:3,s:2},
   {k:'fire',n:"Day o'the Stones",c:550,cd:30,r:14,rad:4.5,s:0},
   {k:'angel',n:"St. Anthony's Fire",c:650,cd:40,r:12,rad:2,s:0},
-  {k:'volcano',n:'Volcano',c:1100,cd:45,r:15,rad:8,s:2},
+  {k:'chalk',n:'Chalk Giant',c:1000,cd:30,r:999,rad:6,s:2},
+  {k:'giant',n:'Come, You Giants',c:1500,cd:45,r:24,rad:13,s:2},
   {k:'changeling',n:'Changeling',c:200,cd:60,r:12,rad:.9,s:1},
   {k:'murrain',n:'Murrain',c:200,cd:30,r:14,rad:6,s:0},
   {k:'phillip',n:'Black Phillip',c:350,cd:45,r:14,rad:1.5,s:0},
@@ -565,7 +567,7 @@ const SP=[
   {k:'arma',n:'All-against-all',c:TUNE.manaMax,cd:1,r:0,rad:0,s:0},
 ];
 const SPK={};SP.forEach(s=>SPK[s.k]=s);
-const SPDESC={seas:'The seas turn to blood and, when thirty heartbeats have passed, their level rises permanently.',beltane:'Couples leap the Beltane fire. For a minute thy people breed twice as fast.',sworddance:'The longsword dance. For a minute thy camps and ranges train twice as fast, and those trained come out hardened.',blight:'A barren year. The cradles of the rival village nearest the mark will be barren for one minute.',keening:'A wail borne on the wind to call thy foes hither.',briar:'Every rival in the blackthorn circle sleeps for thirty seconds.',glamour:'Cast a glamour upon thyself or thy followers to deck them in the motley of the nearest rival. They will then pass unseen for 90 seconds or until uncloaked by the cunning, or that they strike a blow upon an enemy. Your cunning woman may cast spells undetected while wearing a glamour.',pricking:'Find the Devil\'s mark. Glamours, changelings and familiars within the circle are laid bare.',fetch:'Go to thy cottage and birth thy fetch. O\'er sea and scarp and hillside it walks. It follows. Dying to a fetch is permanent.',phillip:'Cast this only on a rival\'s goat. It goes about unnoticed until it kicks, killing the first it strikes, then rampages through their village for thirty seconds.',familiar:'Cast on your own goat. Unseen by any rival, it goes from altar to altar drinking their mana and sending it home, lifting the fog where\'er it walks.',changeling:'Select a villager to swap with rival. Yours shall be transformed into a changeling and will live amongst the enemy, giving you a view into their village. Command it to and it will burn one of their buildings and flee. Uncommanded changelings will kindle their closest building after 3 minutes.',murrain:'Engender a cattle plague. Livestock afflicted will sicken and die, and their carcasses spread dread among all around. Requires livestock to be effective.',torch:'Scry where e\'re the beacon burns. For it shalbe thine eyes.',blast:'Thy will readily done upon thine enemies.',lightning:'The strike of thunder is a blow no man or woman can survive.',swarm:'Calls forth a cloud o’ wicked horseflies to bite and sting and scatter thy assailants for ten seconds.',convert:'Turns wandering wildmen within the circle into your villagers.',shield:'A ward against harm for those within its ‘fluence.',ghost:'Raise the shades of dead men. Brief candles who make war, draw the eye and melt away come striking.',bridge:'Raise up a causeway towards heights and across water.',flatten:'From crags and cliffsides spring forth green and level fields. Cannot be cast upon the water.',hypno:'Witch them to thy cause - they’ll fight for you for twenty-five seconds.',whirl:'A twisting wind that tears walls from their foundations afore wand’ring in search of new victims.',swamp:'A sucking mire that offers safe passage to those who know the way - and clammy death to those who do not. Will remain until ten are claimed.',erode:'Creates a dyke within the downs to drown thy foes and their works.',quake:'Behold, the very earth shall shake and rupture.',fire:'A bitter rain of stoney death. Watch as they flee their collapsing homes.',angel:'Engender a plague of paroxysms, contagion and a bloody demise.',volcano:'Nature’s cruellest vengeance at thy command.',arma:'There shalbe a moot at the world’s end and every living souls shalbe a soldier in the battle of all against all. So hath it been and so mote it be.'};
+const SPDESC={seas:'The seas turn to blood and, when thirty heartbeats have passed, their level rises permanently.',beltane:'Couples leap the Beltane fire. For a minute thy people breed twice as fast.',sworddance:'The longsword dance. For a minute thy camps and ranges train twice as fast, and those trained come out hardened.',blight:'A barren year. The cradles of the rival village nearest the mark will be barren for one minute.',keening:'A wail borne on the wind to call thy foes hither.',briar:'Every rival in the blackthorn circle sleeps for thirty seconds.',glamour:'Cast a glamour upon thyself or thy followers to deck them in the motley of the nearest rival. They will then pass unseen for 90 seconds or until uncloaked by the cunning, or that they strike a blow upon an enemy. Your cunning woman may cast spells undetected while wearing a glamour.',pricking:'Find the Devil\'s mark. Glamours, changelings and familiars within the circle are laid bare.',fetch:'Go to thy cottage and birth thy fetch. O\'er sea and scarp and hillside it walks. It follows. Dying to a fetch is permanent.',phillip:'Cast this only on a rival\'s goat. It goes about unnoticed until it kicks, killing the first it strikes, then rampages through their village for thirty seconds.',familiar:'Cast on your own goat. Unseen by any rival, it goes from altar to altar drinking their mana and sending it home, lifting the fog where\'er it walks.',changeling:'Select a villager to swap with rival. Yours shall be transformed into a changeling and will live amongst the enemy, giving you a view into their village. Command it to and it will burn one of their buildings and flee. Uncommanded changelings will kindle their closest building after 3 minutes.',murrain:'Engender a cattle plague. Livestock afflicted will sicken and die, and their carcasses spread dread among all around. Requires livestock to be effective.',torch:'Scry where e\'re the beacon burns. For it shalbe thine eyes.',blast:'Thy will readily done upon thine enemies.',lightning:'The strike of thunder is a blow no man or woman can survive.',swarm:'Calls forth a cloud o’ wicked horseflies to bite and sting and scatter thy assailants for ten seconds.',convert:'Turns wandering wildmen within the circle into your villagers.',shield:'A ward against harm for those within its ‘fluence.',ghost:'Raise the shades of dead men. Brief candles who make war, draw the eye and melt away come striking.',bridge:'Raise up a causeway towards heights and across water.',flatten:'From crags and cliffsides spring forth green and level fields. Cannot be cast upon the water.',hypno:'Witch them to thy cause - they’ll fight for you for twenty-five seconds.',whirl:'A twisting wind that tears walls from their foundations afore wand’ring in search of new victims.',swamp:'A sucking mire that offers safe passage to those who know the way - and clammy death to those who do not. Will remain until ten are claimed.',erode:'Creates a dyke within the downs to drown thy foes and their works.',quake:'Behold, the very earth shall shake and rupture.',fire:'A bitter rain of stoney death. Watch as they flee their collapsing homes.',angel:'Engender a plague of paroxysms, contagion and a bloody demise.',giant:'Rais’d from slumber to devastate thy foes.',chalk:'Cut thy giant into a hillside within sight of thy buildings. Until it lies there, the giants will not come; break the land beneath it and it is lost.',dyke:'Tap to dig a furrow to the nearest sea, or press and pull to choose which way it seeks one. The sea follows it in.',arma:'There shalbe a moot at the world’s end and every living souls shalbe a soldier in the battle of all against all. So hath it been and so mote it be.'};
 const ICON={
   blast:'<circle cx="12" cy="12" r="4"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l3 3M16 16l3 3M5 19l3-3M16 8l3-3"/>',
   lightning:'<path d="M13 2L5 14h6l-2 8 8-12h-6l2-8z"/>',
@@ -596,7 +598,9 @@ const ICON={
   quake:'<path d="M2 12h4l2-5 3 10 3-12 3 9 2-2h3"/>',
   fire:'<circle cx="7" cy="18" r="3"/><circle cx="16.5" cy="15" r="2.5"/><circle cx="12" cy="8" r="2"/><path d="M5 10l1.5 3M17 6l1.5 3M10 2l1 2.5"/>',
   angel:'<path d="M5 5h14M12 5v16"/><path d="M7 14c-1-2 0-4 1-5 0 2 1 2 1 3M17 14c1-2 0-4-1-5 0 2-1 2-1 3"/>',
-  volcano:'<path d="M2 21l7-11h6l7 11z"/><path d="M12 7V3M9 6L7 4M15 6l2-2"/>',
+  giant:'<path d="M7 21v-8l-2-3 1-1 3 3V4a1 1 0 0 1 2 0v6V3a1 1 0 0 1 2 0v7V4a1 1 0 0 1 2 0v7V6a1 1 0 0 1 2 0v9c0 3-2 6-5 6z"/>',
+  chalk:'<circle cx="12" cy="5" r="2"/><path d="M12 7v8M12 15l-3 6M12 15l3 6M12 9l-5 3M12 9l5 3M6 3v19M18 3v19"/>',
+  dyke:'<path d="M3 5c4 2 6 5 7 8s3 6 11 6"/><path d="M3 8c3 2 5 4 6 7"/><path d="M14 19h7v3h-7z"/>',
   arma:'<path d="M12 2c3 4 6 6 6 11a6 6 0 0 1-12 0c0-5 3-7 6-11z"/><path d="M9 16h6M12 12v7"/>',
   oak:'<path d="M12 22v-9M12 13c-3-1-6 0-8-3M12 13c3-1 6 0 8-3M12 16c-2 0-4 1-6 0M12 10c0-3 2-5 1-8M12 10c-1-2-3-3-4-6"/><path d="M17 10v5"/><circle cx="17" cy="16" r="1"/>',
   wicker:'<circle cx="12" cy="4" r="2"/><path d="M12 6v9M5 9h14M9 22l3-7 3 7M9 11h6M9 13h6"/>',
@@ -658,7 +662,7 @@ const SCEN=[
   me:{mana:400,wood:260,huts:2,warriors:4,manaMult:2},them:{mana:400,warriors:4},ai:{first:150,int:110,need:4,needInc:1,only0:true,mil:.36,cap:70},
   intro:'Our people are weak, my love. They cower craven and unwilling to fight. But we have our crag-ringed vale and our blackthorn seed and thou hast the power of the Bog and the Dyke. Deploy them. Thine altars and pyres reward the transmutation of craven flesh - feed them well and build your defences. Hold fast my love and we shall survive this trial of character.'},
  {title:'The High Places',season:'summer',seed:6607,style:'crags',enemies:1,diff:'normal',fog:true,goal:{type:'conquer'},
-  addS:['ghost','flatten'],news:['Shade Host','Harrow'],
+  addS:['ghost','flatten','dyke'],news:['Shade Host','Harrow',"Devil's Dyke"],
   me:{mana:100,wood:180,huts:2},ai:{first:540},
   intro:'‘tis gnarly ground we find ourselves upon, my dearest - up here there is no welcoming meadow upon which to sink a foundation. Make meadows, love, for summer is here and your people need lands to till. The folk of Blood lie beyond the mountain. Do not let them fall upon thee.'},
  {title:'Fire from the Sky',season:'summer',seed:7717,style:'isles',enemies:2,diff:'normal',fog:true,goal:{type:'conquer'},oneLife:true,tombHere:true,ban:['bridge'],
@@ -682,7 +686,7 @@ const SCEN=[
   me:{mana:400,wood:360,huts:3},ai:{hangRaid:true},
   intro:'Didst thou achieve the little death, my sweetness? What secrets didst thou learn? Perhaps ye learned of the wild hunt? And how it may be summoned? And the price?\n\nPlant Herne’s oak in the deep wood. Place guards. Recall thy songs.\n\nUpon the ruddy oaken branch\nThe Cunning Woman hangs\nAnd from her dead and bitter womb\nThe Wild Hunt bares its fangs\nO come away, my wayward girl\nLook not upon her flesh\nThe Wild Hunt shalbe coming soon,\nThe husks of men to thresh'},
  {title:'Three Fires',season:'autumn',seed:12619,style:'highlands',enemies:3,diff:'normal',fog:true,goal:{type:'conquer'},
-  addS:['volcano'],news:['Volcano','Three rivals'],
+  addS:['chalk','giant'],news:['Chalk Giant','Come, You Giants','Three rivals'],
   me:{mana:400,wood:220,huts:3},
   intro:'Truly thy pow’r grows with each passing season, my love. Look upon these three pretenders, befouling the hills with their presence. Wake the fires of the earth, my dear, such grim music we shall make.'},
  {title:'The Moot',season:'autumn',seed:13729,style:'isles',enemies:3,diff:'normal',fog:true,goal:{type:'conquer'},ban:['bridge','balloon','tomb','angel'],
@@ -781,13 +785,13 @@ const allowS=k=>!allowSets||allowSets.s.has(k);
 const GRIM_N=9,GRIM_KEY='wicker-grimoire-v1';
 const NEW_SP=['seas','changeling','murrain','phillip','familiar','fetch','glamour','pricking','beltane','sworddance','blight','keening','briar'];
 // Grimoire: each rival tribe carries its own nine spells, which set its style
-const GRIM_PAL={Blood:['blast','lightning','fire','quake','whirl','volcano','ghost','fetch','sworddance'],Forest:['blast','lightning','shield','glamour','hypno','swamp','familiar','changeling','beltane'],
+const GRIM_PAL={Blood:['blast','lightning','fire','quake','whirl','giant','ghost','fetch','sworddance'],Forest:['blast','lightning','shield','glamour','hypno','swamp','familiar','changeling','beltane'],
   Ash:['blast','lightning','swarm','angel','erode','murrain','phillip','familiar','blight'],Ochre:['blast','lightning','pricking','shield','hypno','fire','changeling','fetch','keening']};
 const grimOn=()=>settings.mode==='grimoire'&&settings.campaign==null&&chalOpen();
 // Cunning spells: every spell for everyone, as in the Answer; opened by finishing Seasons of the Witch
 const cunOpen=()=>devMode()||!!chalProg().complete,cunOn=()=>settings.mode==='cunning'&&settings.campaign==null&&cunOpen();
-const aiPalOK=(T,k)=>T.pal?T.pal.includes(k):!NEW_SP.includes(k);
-const palOK=k=>{if(settings.chal&&settings.campaign!=null){const SC=scen()||{};if(SC.pall)return true;if(SC.teach&&SC.teach.length)return k==='arma'||(SC.drop||[]).indexOf(k)<0&&CHAL_BASIC.includes(k)||SC.teach.includes(k)||(SC.also||[]).includes(k);return !NEW_SP.includes(k)}if(cunOn())return true;const g=settings.mode==='grimoire'&&settings.campaign==null&&settings.palette;if(!g)return !NEW_SP.includes(k);return k==='arma'||settings.palette.includes(k)};
+const aiPalOK=(T,k)=>k==='chalk'?aiPalOK(T,'giant'):T.pal?T.pal.includes(k):!NEW_SP.includes(k);
+const palOK=k=>{if(k==='chalk')return palOK('giant');if(settings.chal&&settings.campaign!=null){const SC=scen()||{};if(SC.pall)return true;if(SC.teach&&SC.teach.length)return k==='arma'||(SC.drop||[]).indexOf(k)<0&&CHAL_BASIC.includes(k)||SC.teach.includes(k)||(SC.also||[]).includes(k);return !NEW_SP.includes(k)}if(cunOn())return true;const g=settings.mode==='grimoire'&&settings.campaign==null&&settings.palette;if(!g)return !NEW_SP.includes(k);return k==='arma'||settings.palette.includes(k)};
 const allowPB=t=>allowB(t)&&!((scen()||{}).lockB||[]).includes(t);
 const CAMP_KEY='wicker-campaign-v1',DEV_KEY='wicker-dev';
 
@@ -798,7 +802,7 @@ const TOK_KEY='wicker-tokens-v1';
 const TOKS=[
  ['Seasons of the Witch',[['s_humbled','Endure the Humbling'],['s_all','Finish Seasons of the Witch']]],
  ['Campaign',[['c1','Win the first level of the campaign'],['c5','Win campaign level 5'],['c10','Win campaign level 10'],['c15','Win campaign level 15'],['c20','Win the whole campaign']]],
- ['Spells',[['sp_lightning','Cast Lightning'],['sp_ghost','Raise a Shade Host'],['sp_hypno','Cast Witch'],['sp_whirl','Call up a Twisting Squall'],['sp_swamp','Lay a Bog'],['sp_erode','Cast Sink'],['sp_quake','Cast Earthquake'],['sp_fire',"Bring on Day o'the Stones"],['sp_angel',"Loose St. Anthony's Fire"],['sp_volcano','Raise a Volcano']]],
+ ['Spells',[['sp_lightning','Cast Lightning'],['sp_ghost','Raise a Shade Host'],['sp_hypno','Cast Witch'],['sp_whirl','Call up a Twisting Squall'],['sp_swamp','Lay a Bog'],['sp_erode','Cast Sink'],['sp_quake','Cast Earthquake'],['sp_fire',"Bring on Day o'the Stones"],['sp_angel',"Loose St. Anthony's Fire"],['sp_giant','Wake a Giant']]],
  ['Buildings',[['b_wicker','Build a Wicker Man'],['b_god','Build a Wicker God'],['b_oak',"Raise Herne's Oak"],['b_maypole','Raise a Maypole'],['b_balloon','Build a Balloon Works'],['b_nest','Build a Rook Tree'],['b_osshouse','Build an Oss House']]],
  ['Rites',[['r_burnman','Burn a wicker man'],['r_burngod','Burn a Wicker God'],['r_queen','Crown a May Queen'],['r_offerqueen','Give a May Queen to the fire'],['r_hunt','Wake the Wild Hunt'],['r_entomb','Seal your Cunning Woman in a hollow hill'],['r_leap','Ättestupa'],['r_arma','Call down the battle of all-against-all'],['r_moot','Walk away from the Moot']]],
  ['Growth',[['pop25','Lead 25 followers'],['pop50','Lead 50 followers'],['pop100','Lead 100 followers'],['pop150','Lead 150 followers']]],
@@ -810,7 +814,7 @@ const TOKS=[
   ['x_erodebr2','Sink ground raised by a Causeway, twice in one game','What the woman raises, the woman may drown. Twice.'],
   ['x_threeway','Be in a fight between three Cunning Women','Three wise women, one argument.'],
   ['x_balloons30','Give thirty balloonists one order','A sky so full of wicker you could walk on it.'],
-  ['x_fourfold',"Have a Volcano, your Bog, Day o'the Stones and St. Anthony's Fire all at work at once",'Fire, mire, stone and fever, all at once.'],
+  ['x_fourfold',"Have a Giant, your Bog, Day o'the Stones and St. Anthony's Fire all at work at once",'Fire, mire, stone and fever, all at once.'],
   ['x_drownwoman','Drown a rival Cunning Woman in your Bog','Not every wise woman can swim.'],
   ['x_ghostlure','Lure five rival fighters into your Bog with a Shade Host in one game','They followed the dead into the mire.'],
   ['x_huntqueen',"Have the Wild Hunt kill a rival's May Queen",'The Hunt takes what it likes.'],
@@ -1818,6 +1822,316 @@ function stoneFall(x,z,ti){atk=ti;
 function forVerts(x,z,r,fn){const x0=Math.floor(x-r),x1=Math.ceil(x+r),z0=Math.floor(z-r),z1=Math.ceil(z+r);
   for(let vz=z0;vz<=z1;vz++)for(let vx=x0;vx<=x1;vx++){const dx=vx-x,dz=vz-z,d=Math.hypot(dx,dz);if(d>r)continue;fn(wi(vz)*N+wi(vx),d)}
   return [x0,z0,x1,z1]}
+// ---------------- Come, You Giants (an arm out of a pit), the Chalk Giant it needs, and Devil's Dyke ----------------
+// The arm is built from workshop pieces (giantUpper, giantFore, giantPalm, finger and thumb pieces), skinned like the land
+// and posed by a two-bone reach with curling fingers. Everything here is drawn relative to the camera, as the game's own
+// meshes are, through a small registry of its own.
+const GN_CHALK=new C.MeshLambertMaterial({color:0xe6e0cf,flatShading:true}),GN_EARTH=new C.MeshLambertMaterial({color:0x6e5536,flatShading:true}),
+  GN_TURF=new C.MeshLambertMaterial({color:0x4f6a2c,flatShading:true}),GN_FLINT=new C.MeshLambertMaterial({color:0x9a917c,flatShading:true});
+function gnBox(g,mat,w,h,l,x,y,z,rx,ry,rz){const m=new C.Mesh(new C.BoxGeometry(w,h,l),mat);m.position.set(x,y,z);m.rotation.set(rx||0,ry||0,rz||0);m.castShadow=true;g.add(m);return m}
+function gnGroup(parent,x,y,z){const g=new C.Group();g.position.set(x,y,z);parent.add(g);return g}
+
+// ---- everything here is drawn relative to the camera, dropping with the curve of the world, like the game's own meshes ----
+let gnSeq=1;const gnObjs=[],gnDecals=[];
+function gnPlace(g,x,z,y,rp){const o={g,x,z,y,pose:null,id:gnSeq++,rp:rp||null};gnObjs.push(o);scene.add(g);return o}
+function gnDrop(g){const i=gnObjs.findIndex(o=>o.g===g);if(i>=0)gnObjs.splice(i,1);scene.remove(g)}
+function gnDraw(){for(const o of gnObjs){const rx=wd(o.x-cam.fx),rz=wd(o.z-cam.fz),r2=rx*rx+rz*rz;o.g.position.set(rx,o.y-drop(r2),rz);if(o.pose)o.pose(o,rx,rz)}
+  for(const d of gnDecals){const p=d.m.geometry.attributes.position,bx=wd(d.cx-cam.fx),bz=wd(d.cz-cam.fz);for(let i=0;i<d.wx.length;i++){const rx=bx+d.wx[i],rz=bz+d.wz[i];p.setXYZ(i,rx,d.wy[i]-drop(rx*rx+rz*rz),rz)}p.needsUpdate=true}
+  for(let i=gnDecals.length-1;i>=0;i--){const d=gnDecals[i];if(d.fade){d.m.material.opacity-=.02;if(d.m.material.opacity<=0){scene.remove(d.m);gnDecals.splice(i,1)}}}
+  gnPupTick();if(++gnTick%45===0&&!gnRpOn)gnFigCheck()}
+let gnTick=0;
+let gnChalk=new Float32Array(N*N);
+const gnVC0=vcol;vcol=function(c){gnVC0(c);const k=gnChalk[c];if(k>0&&H[c]>=.12&&hazU[c]<=gt){const v=Math.min(1,TN[c]+.12);colW[c*3]=lerp(colW[c*3],.86*v,k);colW[c*3+1]=lerp(colW[c*3+1],.83*v,k);colW[c*3+2]=lerp(colW[c*3+2],.75*v,k)}};
+const gnDD0=drawDebris;drawDebris=function(){gnDraw();return gnDD0.apply(this,arguments)};
+// a shape laid on the land: a thin mesh draped over the terrain, drawn from a canvas in the shape's own frame
+// (s sideways, f forward; world x = cx + cos(yaw)*s + sin(yaw)*f, world z = cz - sin(yaw)*s + cos(yaw)*f)
+function gnDecal(cx,cz,yaw,w,l,f0,draw,col,rp){const cv=draw instanceof HTMLCanvasElement?draw:document.createElement('canvas');if(cv!==draw){cv.width=256;cv.height=256;draw(cv.getContext('2d'),256)}
+  const tex=new C.CanvasTexture(cv),geo=new C.PlaneGeometry(w,l,Math.ceil(w*1.5),Math.ceil(l*1.5)),p=geo.attributes.position,ca=Math.cos(yaw),sa=Math.sin(yaw),WX=[],WZ=[],WY=[];
+  for(let i=0;i<p.count;i++){const s=p.getX(i),f=p.getY(i)+l/2+f0;WX.push(ca*s+sa*f);WZ.push(-sa*s+ca*f);WY.push(0)}
+  const m=new C.Mesh(geo,new C.MeshBasicMaterial({map:tex,color:col==null?0xd9d3c2:col,transparent:true,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-2,side:C.DoubleSide}));
+  m.renderOrder=2;m.frustumCulled=false;scene.add(m);const d={m,cx,cz,yaw,wx:WX,wz:WZ,wy:WY,id:gnSeq++,rp:rp||null};gnDecals.push(d);gnDrape(d);return d}
+function gnDrape(d){for(let i=0;i<d.wx.length;i++){const h=hAt(wrap(d.cx+d.wx[i]),wrap(d.cz+d.wz[i]));d.wy[i]=d.sink&&h<.14?h-.5:Math.max(h,-.05)+.07}}   // a figure's edges over water are tucked under it
+function gnLocal(cx,cz,yaw,x,z){const dx=wd(x-cx),dz=wd(z-cz),ca=Math.cos(yaw),sa=Math.sin(yaw);return [dx*ca-dz*sa,dx*sa+dz*ca]}
+function gnSeg(s,f,s0,f0,s1,f1){const ex=s1-s0,ef=f1-f0,L2=ex*ex+ef*ef||1,t=clamp(((s-s0)*ex+(f-f0)*ef)/L2,0,1);return Math.hypot(s-s0-ex*t,f-f0-ef*t)}
+function gnStamp(cx,cz,yaw,R0,depthFn,deep){let bx0=1e9,bz0=1e9,bx1=-1e9,bz1=-1e9;const x0=Math.floor(cx-R0),x1=Math.ceil(cx+R0),z0=Math.floor(cz-R0),z1=Math.ceil(cz+R0);
+  for(let vz=z0;vz<=z1;vz++)for(let vx=x0;vx<=x1;vx++){const [s,f]=gnLocal(cx,cz,yaw,vx,vz),d=depthFn(s,f);if(d<=0)continue;H[wi(vz)*N+wi(vx)]-=deep*d;
+    bx0=Math.min(bx0,vx);bz0=Math.min(bz0,vz);bx1=Math.max(bx1,vx);bz1=Math.max(bz1,vz)}
+  if(bx1>=bx0)postTerrain(bx0,bz0,bx1,bz1)}
+function gnCrush(ti,inside){for(const b of blds)if(b.alive&&inside(b.x,b.z,BT[b.bt].s*.45))destroyBld(b);
+  for(const u of units)if(u.alive&&!u.inV&&!u.air&&inside(u.x,u.z,.4)&&!(u.type==='shaman'&&u.tribe===ti))dmgUnit(u,9999,null);
+  for(const t of trees)if(t.alive&&inside(t.x,t.z,.3))killTree(t)}
+
+// ---- the arm. Pieces hang off one another along +y: root > shoulder > upper arm > elbow > forearm > wrist > hand > fingers ----
+const GN_L=8.5,GN_PC=3.3,GN_REACH=9.5,GN_HOLE=4.8;          // bone length, wrist-to-palm-centre, hole-to-wrist at rest, sinkhole radius
+// fingers, little to index: where each is hung across the palm, its fan, its length, how far its knuckle sits up or down the hand, its girth
+const GN_FING=[[-2.4,.17,.8,-.55,.86],[-.8,.05,1,0,.98],[.8,-.05,1.08,.15,1.04],[2.4,-.16,.96,-.1,1]],GN_FSEG=[2.7,2.2,1.7],GN_REST=[.1,.16,.13],GN_THUMB={x:2.5,y:1.7,z:.7,g:-.85,opp:.7,seg:[2.7,2.1]};
+const GN_GS=4,GN_FW=.33,GN_FL=.6,GN_TW=.37,GN_TL=.6;   // workshop pieces are a quarter size; finger and thumb segments are stretched to fit
+// the arm's skin. The workshop pieces give only its masses; here every corner is knocked a little out of true, so the
+// facets are irregular like the terrain's, and each facet takes its colour from the way it faces: turf (the colour of the
+// ground where the spell was cast) on the outer side, dark topsoil where it turns, chalk rubble below that, and raw chalk
+// on the palm side, each a little lighter or darker than its neighbour as the land's own faces are. Flint is left alone.
+let gnTurf=[.4,.47,.24];
+const gnHash=(x,y,z)=>{const s=Math.sin(x*127.1+y*311.7+z*74.7)*43758.5453;return s-Math.floor(s)};
+function gnSkin(g,jit,darkBelow){const p=g.attributes.position,col=g.attributes.color,n=p.count,T=gnTurf;
+  for(let i=0;i<n;i++){const x=p.getX(i),y=p.getY(i),z=p.getZ(i);if(col.getX(i)<.34&&col.getZ(i)<.3)continue;const kx=Math.round(x*150),ky=Math.round(y*150),kz=Math.round(z*150);
+    p.setXYZ(i,x+(gnHash(kx,ky,kz)-.5)*jit,y+(gnHash(ky,kz,kx)-.5)*jit,z+(gnHash(kz,kx,ky)-.5)*jit)}
+  for(let i=0;i+2<n;i+=3){if(col.getX(i)<.34&&col.getZ(i)<.3)continue;
+    const ax=p.getX(i),ay=p.getY(i),az=p.getZ(i),ux=p.getX(i+1)-ax,uy=p.getY(i+1)-ay,uz=p.getZ(i+1)-az,vx=p.getX(i+2)-ax,vy=p.getY(i+2)-ay,vz=p.getZ(i+2)-az;
+    let nx=uy*vz-uz*vy,ny=uz*vx-ux*vz,nz=ux*vy-uy*vx;const nl=Math.hypot(nx,ny,nz)||1;nz/=nl;const cy=ay+(uy+vy)/3,h=gnHash(Math.round((ax+ux/3+vx/3)*90),Math.round(cy*90),Math.round((az+uz/3+vz/3)*90)),v=.84+.3*h;
+    const jt=Math.abs(col.getX(i)-.5)<.03&&Math.abs(col.getY(i)-.5)<.03;   // joints are marked mid-grey in the pieces: there the turf has split and the chalk shows
+    let r,gg,b;if(jt){if(nz<-.2){r=.62;gg=.56;b=.44}else{r=.9;gg=.87;b=.79}}else if(nz<-.52){r=T[0]*.8;gg=T[1]*.82;b=T[2]*.78}else if(nz<-.05){r=.3;gg=.23;b=.14}else if(nz<.42){r=.62;gg=.56;b=.44}else{r=.9;gg=.87;b=.79}
+    if(darkBelow!=null){const k=clamp((darkBelow-cy)/.7,0,1);r=lerp(r,.24,k);gg=lerp(gg,.19,k);b=lerp(b,.12,k)}
+    for(let j=0;j<3;j++)col.setXYZ(i+j,r*v,gg*v,b*v)}
+  p.needsUpdate=true;col.needsUpdate=true;return g}
+function gnPiece(parent,key,sx,sy,sz,mat){const d=UMOD[key](),g=new C.Group();g.scale.set(sx,sy==null?sx:sy,sz==null?sx:sz);parent.add(g);
+  const m=new C.Mesh(gnSkin(merge(d.f),key==='giantUpper'||key==='giantFore'||key==='giantPalm'?.07:.035,key==='giantUpper'?.75:null),mat||matF);m.castShadow=true;g.add(m);return g}
+function gnArmModel(turf){if(turf)gnTurf=turf;const root=new C.Group();root.rotation.order='YXZ';const A={root,curl:[],spread:[],thumb:[]};
+  // below the rim of its pit the arm goes into the dark: its own material, shaded toward black with depth inside the hole
+  const mat=A.mat=matF.clone(),u=A.u={gnPit:{value:new C.Vector3(0,-1e4,0)},gnFall:{value:2},gnRad:{value:GN_HOLE}};
+  mat.onBeforeCompile=sh=>{Object.assign(sh.uniforms,u);sh.vertexShader='varying vec3 vGnW;\n'+sh.vertexShader.replace('#include <project_vertex>','#include <project_vertex>\n vGnW=(modelMatrix*vec4(transformed,1.0)).xyz;');
+    sh.fragmentShader='uniform vec3 gnPit;uniform float gnFall;uniform float gnRad;varying vec3 vGnW;\n'+sh.fragmentShader.replace('gl_FragColor = vec4( outgoingLight, diffuseColor.a );','float gnDk=(1.0-smoothstep(gnPit.y-gnFall,gnPit.y-.15,vGnW.y))*(1.0-smoothstep(gnRad,gnRad+1.5,length(vGnW.xz-gnPit.xz)));\n gl_FragColor = vec4( outgoingLight*(1.0-gnDk), diffuseColor.a );')};
+  mat.customProgramCacheKey=()=>'gnArm';
+  const sh=A.sh=gnGroup(root,0,0,0);gnPiece(sh,'giantUpper',GN_GS,null,null,mat);
+  const el=A.el=gnGroup(sh,0,GN_L,0);gnPiece(el,'giantFore',GN_GS,null,null,mat);
+  const wr=A.wr=gnGroup(el,0,GN_L,0);gnPiece(wr,'giantPalm',GN_GS,null,null,mat);
+  GN_FING.forEach(([x,g,k,yo,ws],fi)=>{const sp=gnGroup(wr,x,GN_PC+3+yo,0);A.spread.push([sp,g]);let par=sp,j=[];
+    GN_FSEG.forEach((l0,i)=>{const l=l0*k,jt=gnGroup(par,0,i?GN_FSEG[i-1]*k:0,0);j.push(jt);const w=(1.52-.12*i)*ws;gnPiece(jt,i===2?'giantFingerTip':'giantFinger',w/GN_FW,l/GN_FL,w/GN_FW,mat);par=jt});
+    j.rest=fi===0?1.5:fi===3?.8:1;A.curl.push(j)});
+  {const T=GN_THUMB,sp=gnGroup(wr,T.x,T.y,T.z);sp.rotation.order='ZYX';sp.rotation.z=T.g;sp.rotation.y=T.opp;let par=sp,j=[];T.seg.forEach((l,i)=>{const jt=gnGroup(par,0,i?T.seg[i-1]:0,0);j.push(jt);const w=1.75-.18*i;gnPiece(jt,i?'giantThumbTip':'giantThumb',w/GN_TW,l/GN_TL,w/GN_TW,mat);par=jt});A.thumb=j;A.thumbBase=sp}
+  return A}
+// the print the hand leaves, in a frame centred on the palm (s sideways, f along the fingers)
+const GN_HAND_PARTS=(()=>{const P=[['box',0,0,3.2,3.0]];for(const [x,g,k,yo] of GN_FING){const L=(GN_FSEG[0]+GN_FSEG[1]+GN_FSEG[2])*k;P.push(['seg',x,3+yo,x-Math.sin(g)*L,3+yo+Math.cos(g)*L,.72])}
+  const T=GN_THUMB,L=T.seg[0]+T.seg[1];P.push(['seg',T.x,T.y-GN_PC,T.x-Math.sin(T.g)*L,T.y-GN_PC+Math.cos(T.g)*L,.8]);return P})();
+function gnHandDepth(s,f){let d=0;for(const p of GN_HAND_PARTS){const q=p[0]==='box'?Math.max(Math.abs(s-p[1])-p[3],Math.abs(f-p[2])-p[4]):gnSeg(s,f,p[1],p[2],p[3],p[4])-p[5];d=Math.max(d,clamp(-q/.9+.35,0,1))}return d}
+// pose from a wrist target: st.d along the ground from the hole, st.h up (free), st.g how far the hand has settled onto the land,
+// st.th the hand's own pitch when free. Settled, the hand takes the lie of the (curved) ground under it.
+function gnArmPose(o,rbx,rbz){const A=o.A,st=o.st,fx=Math.sin(o.yaw),fz=Math.cos(o.yaw),sx=Math.cos(o.yaw),sz=-Math.sin(o.yaw);
+  const rwx=rbx+fx*st.d,rwz=rbz+fz*st.d,rpx=rwx+fx*GN_PC,rpz=rwz+fz*GN_PC,g=st.g;
+  const gy=Math.max(hAt(wrap(o.x+fx*(st.d+GN_PC)),wrap(o.z+fz*(st.d+GN_PC))),0);
+  const th=st.th*(1-g)+g*(Math.PI/2+Math.atan(2*K*(rpx*fx+rpz*fz))+st.tilt),dr=drop(rbx*rbx+rbz*rbz);
+  A.root.rotation.z=-g*Math.atan(2*K*(rpx*sx+rpz*sz));
+  if(A.u&&o.rimY!=null){A.u.gnPit.value.set(rbx,o.rimY-dr,rbz);A.u.gnFall.value=Math.max(.8,(o.rimY-o.floorY)*.85)}
+  let a1,a2;
+  const solve=r=>{const hw=st.h*(1-g)+g*(gy+st.lift-o.y-r+dr-drop(rwx*rwx+rwz*rwz));
+    const D=Math.min(Math.hypot(st.d,hw),GN_L*1.999),phi=Math.atan2(hw,st.d),beta=Math.acos(clamp(D/(2*GN_L),0,1));a1=Math.PI/2-phi-beta;a2=2*beta};
+  // lying on the land, the elbow and forearm are lifted just enough to clear it (with the turf they wear)
+  const pen=r=>{solve(r);const ez=GN_L*Math.sin(a1),ey=GN_L*Math.cos(a1),wz=ez+GN_L*Math.sin(a1+a2),wy=ey+GN_L*Math.cos(a1+a2);let p=-1e9;
+    for(const t of [0,.15,.3,.45,.6])for(const sd of [-1.1,0,1.1]){const z=ez+(wz-ez)*t,y=ey+(wy-ey)*t,ax=rbx+fx*z+sx*sd,az=rbz+fz*z+sz*sd;
+      p=Math.max(p,Math.max(hAt(wrap(o.x+fx*z+sx*sd),wrap(o.z+fz*z+sz*sd)),0)-drop(ax*ax+az*az)+1.25-(o.y-dr+r+y))}return p};
+  let raise=0;
+  if(st.clear&&g>.5&&pen(0)>0){let lo=0,hi=2.2;for(let i=0;i<7;i++){const m=(lo+hi)/2;if(pen(m)>0)lo=m;else hi=m}raise=hi}
+  solve(raise);
+  A.root.position.y+=raise;
+  A.sh.rotation.x=a1;A.el.rotation.x=a2;A.wr.rotation.x=th-a1-a2;
+  A.spread.forEach(([sp,gm])=>{sp.rotation.z=gm*st.spread});A.curl.forEach(j=>{const r=j.rest*(1-.6*st.g);j[0].rotation.x=GN_REST[0]*r+st.curl*.95;j[1].rotation.x=GN_REST[1]*r+st.curl*1.1;j[2].rotation.x=GN_REST[2]*r+st.curl*.8});   // never quite straight: a living hand's ease, flattening as it presses down
+  A.thumb[0].rotation.x=.1+st.curl*.7;A.thumb[1].rotation.x=.14+st.curl*.9;A.thumbBase.rotation.z=GN_THUMB.g*(1-.35*st.curl);A.thumbBase.rotation.y=GN_THUMB.opp*(1-.5*st.g)+.5*st.curl}
+// the blow beyond the hand itself: houses all around, people thrown, the land broken into pits and cracks
+function gnShock(ti,px,pz){atk=ti;
+  for(const b of blds){if(!b.alive)continue;const d=Math.sqrt(d2(px,pz,b.x,b.z))-BT[b.bt].s*.4;if(d<7.5)destroyBld(b);else if(d<14)dmgBld(b,Math.round(90+330*(1-(d-7.5)/6.5)))}
+  for(const u of units){if(!u.alive||u.inV||u.air||(u.type==='shaman'&&u.tribe===ti))continue;const d=Math.sqrt(d2(px,pz,u.x,u.z));if(d<7){toss(u,px,pz,5,8);dmgUnit(u,9999,null)}else if(d<14.5){toss(u,px,pz,3+R()*2,5);dmgUnit(u,Math.round(12+70*(1-(d-7)/7.5)),null)}}
+  for(const t of trees){if(!t.alive)continue;const dd=d2(px,pz,t.x,t.z);if(dd<64||(dd<144&&R()<.5))killTree(t)}
+  for(let i=0;i<16;i++){const a=R()*TAU,r=5.5+R()*7.5,x=px+Math.cos(a)*r,z=pz+Math.sin(a)*r,rr=1.2+R()*1.7,dp=.5+R()*1;forVerts(x,z,rr,(c,d)=>{H[c]-=dp*(1-d/rr)});dust(wrap(x),wrap(z))}
+  for(let i=0;i<7;i++){const a=i/7*TAU+R()*.5;let w=a;for(let r=4.5;r<12.5;r+=.6){w+=(R()-.5)*.35;forVerts(px+Math.cos(w)*r,pz+Math.sin(w)*r,1.05,(c,d)=>{H[c]-=.42*(1-d/1.05)})}}
+  postTerrain(Math.floor(px-15),Math.floor(pz-15),Math.ceil(px+15),Math.ceil(pz+15))}
+function gnHoleDraw(x,S){const g=x.createRadialGradient(S/2,S/2,0,S/2,S/2,S/2);g.addColorStop(0,'rgba(0,0,0,1)');g.addColorStop(.62,'rgba(0,0,0,1)');g.addColorStop(.82,'rgba(6,4,2,.75)');g.addColorStop(1,'rgba(10,6,3,0)');x.fillStyle=g;x.fillRect(0,0,S,S)}
+function gnPrintDraw(x,S){const id=x.createImageData(S,S);for(let j=0;j<S;j++)for(let i=0;i<S;i++){const s=(i/S-.5)*17,f=(1-j/S)*15-4.5,d=gnHandDepth(s,f),n=R()*.25,o=(j*S+i)*4;
+  id.data[o]=236-n*30;id.data[o+1]=231-n*30;id.data[o+2]=216-n*30;id.data[o+3]=clamp((d-.25-n*.4)*3,0,1)*225}x.putImageData(id,0,0)}
+// The pit opens between the Cunning Woman and where she strikes, and the arm reaches away from her. If she stands too close
+// for that, it opens beyond the place instead, and the arm reaches toward her.
+const GN_NEAR=GN_REACH+GN_PC+GN_HOLE+2;
+function gnHand(ti,px,pz,cu){const sx=cu?cu.x:px,sz=cu?cu.z:pz,dc=Math.sqrt(d2(sx,sz,px,pz));let yaw=Math.atan2(wd(px-sx),wd(pz-sz));if(!isFinite(yaw)||dc<1)yaw=R()*TAU;else if(dc<GN_NEAR)yaw+=Math.PI;
+  const fx=Math.sin(yaw),fz=Math.cos(yaw),back=GN_REACH+GN_PC,bx=wrap(px-fx*back),bz=wrap(pz-fz*back),DEEP=GN_L*2+12,UP=GN_L*1.985;
+  let baseY=Math.max(hAt(bx,bz),.3),rimY=0;{let n=0;for(let i=0;i<16;i++){const a=i/16*TAU;rimY+=Math.max(hAt(wrap(bx+Math.cos(a)*(GN_HOLE+1.6)),wrap(bz+Math.sin(a)*(GN_HOLE+1.6))),.16);n++}rimY/=n}let tf=null;{let r=0,g=0,b=0,n=0;for(let i=0;i<24;i++){const a=i*.9,rr=2+i*.45,c=cidx(wrap(bx+Math.cos(a)*rr),wrap(bz+Math.sin(a)*rr));if(H[c]>=.55&&hazU[c]<=gt){r+=colW[c*3];g+=colW[c*3+1];b+=colW[c*3+2];n++}}if(n>3)tf=[r/n,g/n,b/n]}
+  const A=gnArmModel(tf),O=gnPlace(A.root,bx,bz,baseY-DEEP,{k:'arm',turf:tf});A.root.rotation.y=yaw;A.root.visible=false;O.A=A;O.yaw=yaw;O.pose=gnArmPose;O.rimY=rimY;O.floorY=.16;
+  const st=O.st={d:0,h:UP,g:0,th:0,lift:.95,tilt:0,curl:.25,spread:.2};
+  const hole=gnDecal(bx,bz,yaw,(GN_HOLE+1)*2,(GN_HOLE+1)*2,-(GN_HOLE+1),gnHoleDraw,0xffffff,{k:'hole'});
+  hole.m.material.opacity=0;const inHole=(x,z,pad)=>d2(x,z,bx,bz)<(GN_HOLE-.4+pad)*(GN_HOLE-.4+pad);sfx('quake',1,bx,bz);
+  const rim=n=>{for(let i=0;i<n;i++){const a=R()*TAU,r=GN_HOLE*(.8+R()*.4);dust(wrap(bx+Math.cos(a)*r),wrap(bz+Math.sin(a)*r))}};
+  effects.push({k:'giant',ti,live:true,t:0,step:0,hit:false,drag:GN_REACH,up(e,dt){e.t+=dt;const t=e.t;
+    // 0-1.5: the ground gives way, a round pit sinking in stages, black at the bottom
+    if(t<1.5){hole.m.material.opacity=clamp(t/.9,0,1);cam.shake=Math.max(cam.shake,.45);rim(2);
+      while(e.step<5&&t>.1+e.step*.27){if(!e.step){atk=ti;gnCrush(ti,inHole)}e.step++;
+        const bb=forVerts(bx,bz,GN_HOLE+1.3,(c,r)=>{const k=r<GN_HOLE-1?1:Math.max(0,1-(r-(GN_HOLE-1))/2.3);if(H[c]>.16)H[c]-=(H[c]-.16)*k/(6-e.step)});postTerrain(bb[0],bb[1],bb[2],bb[3]);gnDrape(hole);sfx('quake',.5,bx,bz)}
+      return true}
+    A.root.visible=true;baseY=Math.max(hAt(bx,bz),.16);O.floorY=baseY;
+    // 1.5-3.0: the arm comes up out of it, straight, fingers to the sky
+    if(t<3){const k=sstep(1.5,3,t);O.y=baseY-DEEP*(1-k);st.d=0;st.h=UP;st.th=0;st.spread=.2+.5*k;st.curl=.25*(1-k);rim(1);for(let i=0;i<3;i++){const y=O.y+R()*(UP+8);if(y>baseY+1)PN.emit(bx+(R()-.5)*3.2,y,bz+(R()-.5)*3.2,(R()-.5)*1.2,-1-R()*2,(R()-.5)*1.2,1.1+R()*.6,.37,.28,.17,.95,.45+R()*.4,9)}   // soil falling off it as it comes
+      cam.shake=Math.max(cam.shake,.3);return true}
+    // 3.0-3.65: it draws back, the hand cocked and spread
+    if(t<3.65){const k=sstep(3,3.65,t);O.y=baseY;st.d=UP*Math.cos(1.76)*k;st.h=lerp(UP,UP*Math.sin(1.76),k);st.th=-.45*k;st.spread=.7+.3*k;return true}
+    // 3.65-4.05: the slam, the wrist swinging down in an arc and the hand settling flat where the spell was cast
+    if(t<4.05){const k=Math.pow((t-3.65)/.4,2.2),ang=lerp(1.76,0,k),len=lerp(UP,GN_REACH,k);st.d=len*Math.cos(ang);st.h=len*Math.sin(ang);st.th=lerp(-.45,Math.PI/2,Math.min(1,k*1.25));st.g=sstep(.7,1,k);return true}
+    if(!e.hit){e.hit=true;st.d=GN_REACH;st.g=1;st.h=0;st.clear=true;const inside=(x,z,pad)=>{const [s,f]=gnLocal(px,pz,yaw,x,z);return gnHandDepth(s,f)>.05||gnHandDepth(s+pad,f)>.05||gnHandDepth(s-pad,f)>.05||gnHandDepth(s,f+pad)>.05||gnHandDepth(s,f-pad)>.05};
+      atk=ti;gnCrush(ti,inside);gnShock(ti,px,pz);for(let vz=Math.floor(pz-13);vz<=Math.ceil(pz+13);vz++)for(let vx=Math.floor(px-13);vx<=Math.ceil(px+13);vx++){const [s2,f2]=gnLocal(px,pz,yaw,vx,vz),d=gnHandDepth(s2,f2);if(d>.15){const c=wi(vz)*N+wi(vx);gnChalk[c]=Math.max(gnChalk[c],clamp((d-.15)*1.2,0,.4))}}
+      gnStamp(px,pz,yaw,13,gnHandDepth,2);
+      e.print=gnDecal(px,pz,yaw,17,15,-4.5,gnPrintDraw,null,{k:'print'});e.print.sink=true;gnDrape(e.print);gnPrints.push(e.print);cam.shake=Math.max(cam.shake,2);flash(.4);sfx('quake',1,px,pz);sfx('thunder',.9,px,pz);
+      for(let i=0;i<110;i++){const a=R()*TAU,r=2+R()*12;dust(wrap(px+Math.cos(a)*r),wrap(pz+Math.sin(a)*r))}
+      for(let i=0;i<160;i++){const a=R()*TAU,v=5+R()*10;PN.emit(px+(R()-.5)*9,Math.max(hAt(px,pz),0)+.5,pz+(R()-.5)*9,Math.cos(a)*v,1+R()*4,Math.sin(a)*v,1.7+R(),.62,.56,.46,.8,1.7,1)}
+      return true}
+    // after the blow the arm is measured from the lip of its pit: the shoulder hangs some way down it, the hand lies on the land
+    const S0=7.44,gP=d=>Math.max(hAt(wrap(bx+fx*(d+GN_PC)),wrap(bz+fz*(d+GN_PC))),0),
+      fit=(d,s)=>Math.min(s,Math.sqrt(Math.max(0,(GN_L*1.95)**2-d*d))-(gP(d)-rimY+st.lift));   // never so deep the hand can't reach the land
+    // 4.05-4.7: the arm goes slack, the shoulder sinking back down the pit and the forearm falling onto the land, the hand resting where it struck
+    if(t<4.7){const k=Math.pow((t-4.05)/.65,2);O.y=lerp(baseY,rimY-fit(GN_REACH,S0),k);st.d=GN_REACH;st.g=1;st.lift=.95;st.tilt=0;st.curl=.7*sstep(4.05,4.7,t);st.spread=1-.3*sstep(4.05,4.7,t);
+      if(k>.85&&!e.thud){e.thud=true;{let q=[1e9,1e9,-1e9,-1e9];for(let r=GN_HOLE-.5;r<=GN_REACH+.5;r+=.5){const b=forVerts(bx+fx*r,bz+fz*r,1.9,(c,dd)=>{if(H[c]>.16)H[c]=Math.max(.16,H[c]-.75*(1-dd/1.9))});q=[Math.min(q[0],b[0]),Math.min(q[1],b[1]),Math.max(q[2],b[2]),Math.max(q[3],b[3])]}postTerrain(q[0],q[1],q[2],q[3])}cam.shake=Math.max(cam.shake,.9);sfx('quake',.4,px,pz);for(let i=0;i<14;i++){const r=GN_PC+R()*GN_REACH;dust(wrap(bx+fx*r+(R()-.5)*2),wrap(bz+fz*r+(R()-.5)*2))}}
+      return true}
+    // 4.7-5.3: it lies there, the fingers closing into the earth
+    if(t<5.3){const k=sstep(4.7,5.3,t);O.y=rimY-fit(GN_REACH,S0);st.curl=.7+.15*k;st.spread=.7-.2*k;if(R()<.3)dust(wrap(px+(R()-.5)*7),wrap(pz+(R()-.5)*7));return true}
+    // 5.3-7.3: its own weight draws it back, the hand dragged flat along the land and ploughing a trench, the elbow going down the pit first
+    if(t<7.3){const k=Math.pow((t-5.3)/2,1.8),d=lerp(GN_REACH,1.2,k);st.d=d;O.y=rimY-fit(d,S0+Math.sqrt(Math.max(0,GN_L*GN_L-(d-1)*(d-1))));
+      st.curl=lerp(.85,.45,k);st.spread=.5;
+      while(e.drag-d>=.5){e.drag-=.5;const x=bx+fx*(e.drag+GN_PC),z=bz+fz*(e.drag+GN_PC);if(e.drag+GN_PC>GN_HOLE+1.5){const near=(ux,uz,pad)=>d2(ux,uz,wrap(x),wrap(z))<(2.3+pad)*(2.3+pad);atk=ti;gnCrush(ti,near);
+          const bb=forVerts(x,z,3.1,(c,r)=>{if(H[c]>.16)H[c]=Math.max(.16,H[c]-.5*(1-r/3.1))});postTerrain(bb[0],bb[1],bb[2],bb[3]);dust(wrap(x),wrap(z));dust(wrap(x+(R()-.5)*3),wrap(z+(R()-.5)*3))}}
+      cam.shake=Math.max(cam.shake,.25);return true}
+    if(!e.redraped){e.redraped=true;gnDrape(hole);gnDrape(e.print)}
+    // 7.3-7.8: the fingertips hang on at the lip a moment
+    if(t<7.8){const k=sstep(7.3,7.8,t);st.d=lerp(1.2,.8,k);O.y=rimY-fit(st.d,S0+GN_L);st.curl=lerp(.45,.9,k);return true}
+    // 7.8-9.0: then the whole of it drops into the dark, the hand coming in over the pit and the fingers trailing up last
+    if(!e.fall){e.fall=O.y;st.clear=false}
+    if(t<9){const k=(t-7.8)/1.2,f=(DEEP+8)*k*k;O.y=e.fall-f;st.lift=.95-f;st.d=lerp(.8,-3.4,sstep(0,.5,k));st.tilt=-1.1*sstep(0,.6,k);st.curl=lerp(.9,.3,sstep(0,.5,k));rim(1);return true}
+    if(!e.salted){e.salted=true;e.live=false;gnDrop(A.root);
+      const bb=forVerts(bx,bz,GN_HOLE+.8,(c,r)=>{saltU[c]=gt+TUNE.saltTime;saltOwner[c]=ti;saltList.add(c)});postTerrain(bb[0],bb[1],bb[2],bb[3]);gnDrape(hole);rim(10)}
+    // the dark at the bottom goes slowly, leaving the pit open to the level of the sea
+    if(t<17){hole.m.material.opacity=1-sstep(9,17,t);return true}
+    hole.fade=true;return false}})}
+
+// ---- hill figures. Each tribe has its own chalk giant. One must be cut into the land before Come, You Giants can be
+// called, as the Fetch needs a cottage; it drifts down out of the sky and melts into the turf. Break the land it lies on
+// and it is scoured away, and the giant with it. ----
+function gnFigCanvas(W,Hh,lw,fn){const cv=document.createElement('canvas');cv.width=W;cv.height=Hh;const x=cv.getContext('2d');x.strokeStyle='#f1ecdf';x.fillStyle='#f1ecdf';x.lineCap='round';x.lineJoin='round';x.lineWidth=lw;
+  const P=(...pts)=>{x.beginPath();pts.forEach((p,i)=>i?x.lineTo(p[0]*W,p[1]*Hh):x.moveTo(p[0]*W,p[1]*Hh));x.stroke()},O=(cx,cy,rx,ry)=>{x.beginPath();x.ellipse(cx*W,cy*Hh,rx*W,ry*Hh,0,0,TAU);x.stroke()},D=(cx,cy,r)=>{x.beginPath();x.arc(cx*W,cy*Hh,r*W,0,TAU);x.fill()};
+  fn(P,O,D);return cv}
+const GN_FIGS={
+  // the player's: the Long Man, a giant between two staves
+  Ochre:{w:5.5,l:11,cv:()=>gnFigCanvas(128,256,5.5,(P,O)=>{O(.5,.13,.1,.062);P([.5,.195],[.5,.585]);P([.5,.585],[.33,.92]);P([.5,.585],[.67,.92]);P([.5,.28],[.19,.42],[.17,.46]);P([.5,.28],[.81,.42],[.83,.46]);P([.14,.12],[.14,.94]);P([.86,.12],[.86,.94])})},
+  // Blood: a warrior striding, sword raised, shield out
+  Blood:{w:5.5,l:11,cv:()=>gnFigCanvas(128,256,5.5,(P,O,D)=>{O(.5,.2,.09,.046);P([.5,.25],[.5,.6]);P([.5,.6],[.32,.78],[.24,.95]);P([.5,.6],[.68,.78],[.8,.95]);P([.5,.31],[.72,.28],[.76,.18]);P([.76,.18],[.9,.02]);P([.7,.15],[.84,.19]);P([.5,.31],[.32,.38]);O(.2,.43,.14,.07);D(.2,.43,.035)})},
+  // Forest: a robed sage with a crooked staff
+  Forest:{w:5.5,l:11,cv:()=>gnFigCanvas(128,256,5.5,(P,O)=>{O(.44,.15,.085,.044);P([.44,.2],[.2,.93],[.7,.93],[.44,.2]);P([.39,.2],[.44,.31],[.49,.2]);P([.5,.36],[.82,.4]);P([.84,.05],[.84,.96]);P([.84,.05],[.72,.035],[.66,.08],[.72,.125]);P([.4,.4],[.3,.56])})},
+  // Ash: a flaming steed, long in the body like the white horses
+  Ash:{w:11,l:6.2,cv:()=>gnFigCanvas(256,144,5.5,(P,O,D)=>{P([.03,.62],[.1,.5],[.3,.43],[.55,.43],[.68,.33],[.78,.2],[.9,.17],[.96,.25],[.85,.3]);P([.29,.56],[.58,.54]);P([.6,.5],[.7,.68],[.82,.72]);P([.56,.54],[.58,.76],[.66,.9]);P([.3,.5],[.2,.7],[.27,.9]);P([.24,.47],[.12,.66],[.08,.84]);
+    P([.3,.41],[.34,.2],[.39,.36],[.45,.12],[.5,.35],[.56,.08],[.61,.31],[.66,.1],[.71,.26],[.76,.04]);D(.88,.215,.013)})}};
+const gnFigs=[];
+const gnFigOf=ti=>GN_FIGS[(TRIBES[ti]||{}).name]||GN_FIGS.Ochre;
+function gnFigYaw(px,pz,cu){const gx=hAt(wrap(px+2),pz)-hAt(wrap(px-2),pz),gz=hAt(px,wrap(pz+2))-hAt(px,wrap(pz-2));if(Math.hypot(gx,gz)>.3)return Math.atan2(gx,gz);   // head uphill
+  return cu&&d2(cu.x,cu.z,px,pz)>1?Math.atan2(wd(px-cu.x),wd(pz-cu.z)):0}
+const GN_SIGHT=18;
+function gnFigOK(D,px,pz,yaw,ti){const ca=Math.cos(yaw),sa=Math.sin(yaw);if(hAt(px,pz)<.2)return 'The chalk giant must lie on land';
+  if(ti!=null&&!blds.some(b=>b.alive&&b.tribe===ti&&b.bt!=='hedge'&&d2(b.x,b.z,px,pz)<GN_SIGHT*GN_SIGHT))return 'The chalk giant must lie within sight of thy buildings';
+  let wet=0,n=0;for(let i=0;i<=4;i++)for(let j=0;j<=6;j++){const s=(i/4-.5)*D.w,f=(j/6-.5)*D.l;n++;if(hAt(wrap(px+ca*s+sa*f),wrap(pz-sa*s+ca*f))<.14)wet++}
+  if(wet>n*.3)return 'Too much of the chalk giant would lie in the water';
+  for(const b of blds)if(b.alive&&b.bt!=='hedge'){const [s,f]=gnLocal(px,pz,yaw,b.x,b.z),pad=BT[b.bt].s*.3;if(Math.abs(s)<D.w*.4+pad&&Math.abs(f)<D.l*.42+pad)return 'There are buildings where the chalk giant would lie'}return null}
+function gnFigSet(ti,D,px,pz,yaw,decal,keepTrees){const old=gnFigs.findIndex(f=>f.tribe===ti);if(old>=0){gnFigs[old].decal.fade=true;gnFigs.splice(old,1)}
+  if(!keepTrees)for(const t of trees)if(t.alive){const [s2,f2]=gnLocal(px,pz,yaw,t.x,t.z);if(Math.abs(s2)<D.w/2+.6&&Math.abs(f2)<D.l/2+.6)killTree(t)}   // a hill figure lies on cleared turf
+  const ca=Math.cos(yaw),sa=Math.sin(yaw),smp=[];for(let i=0;i<4;i++)for(let j=0;j<5;j++){const s=(i/3-.5)*D.w*.8,f=(j/4-.5)*D.l*.85,x=wrap(px+ca*s+sa*f),z=wrap(pz-sa*s+ca*f);smp.push([x,z,hAt(x,z)])}
+  gnFigs.push({tribe:ti,x:px,z:pz,yaw,decal,smp})}
+// scoured when a good part of its ground has moved (measured against the middle change, so a rising sea that lowers all the land alike does not count)
+const gnPrints=[];
+function gnFigCheck(){for(const d of gnPrints)gnDrape(d);for(let i=gnFigs.length-1;i>=0;i--){const f=gnFigs[i],ds=f.smp.map(s=>hAt(s[0],s[1])-s[2]),md=ds.slice().sort((a,b)=>a-b)[ds.length>>1];let n=0;for(const d of ds)if(Math.abs(d-md)>.5)n++;
+    if(n>=5){f.decal.fade=true;gnFigs.splice(i,1);if(f.tribe===0&&!watching)toast('Thy chalk giant is scoured from the hill')}else gnDrape(f.decal)}}
+// the figure coming down out of the sky, a pale sheet turning as it falls
+function gnSky(ti,cv){const D=gnFigOf(ti),g=new C.Group();g.rotation.order='YXZ';
+  const pm=new C.MeshBasicMaterial({map:new C.CanvasTexture(cv||D.cv()),transparent:true,depthWrite:false,side:C.DoubleSide,opacity:0}),pl=new C.Mesh(new C.PlaneGeometry(D.w,D.l),pm);pl.rotation.x=Math.PI/2;pl.frustumCulled=false;g.add(pl);return {g,pm}}
+function gnCut(ti,px,pz,cu){const D=gnFigOf(ti),yaw=gnFigYaw(px,pz,cu),cv=D.cv(),{g,pm}=gnSky(ti,cv);
+  const gy=Math.max(hAt(px,pz),0),O=gnPlace(g,px,pz,gy+26,{k:'sky',ti,pm}),ca=Math.cos(yaw),sa=Math.sin(yaw);let decal=null;
+  effects.push({t:0,up(e,dt){e.t+=dt;const t=e.t;
+    if(t<3.8){const k=1-Math.pow(1-t/3.8,2.2);O.y=gy+26*(1-k)+.6;g.rotation.set(.1*Math.sin(t*1.3+1)*(1-k),yaw+.9*(1-k),.16*Math.sin(t*1.9)*(1-k));pm.opacity=.25*Math.min(1,t/.7);return true}
+    if(!decal){decal=gnDecal(px,pz,yaw,D.w,D.l,-D.l/2,cv,null,{k:'fig',ti});decal.sink=true;gnDrape(decal);decal.m.material.opacity=0;sfx('quake',.3,px,pz)}
+    if(t<5.3){const k=(t-3.8)/1.5;pm.opacity=.25*(1-k);decal.m.material.opacity=k;O.y=gy+.6-.5*k;g.rotation.set(0,yaw,0);
+      if(R()<.7){const s=(R()-.5)*D.w,f=(R()-.5)*D.l;dust(wrap(px+ca*s+sa*f),wrap(pz-sa*s+ca*f))}return true}
+    decal.m.material.opacity=1;gnDrop(g);gnFigSet(ti,D,px,pz,yaw,decal);if(ti===0&&!watching)toast('The giant lies in the hill. It may be called.');return false}})}
+const gnTC0=tryCast;tryCast=function(ti,k,px,pz,cu){if(k==='giant'&&!gnFigs.some(f=>f.tribe===ti)){if(ti===0)toast('Cut thy chalk giant into the land first');return false}
+  if(k==='chalk'){const err=gnFigOK(gnFigOf(ti),px,pz,gnFigYaw(px,pz,cu),ti);if(err){if(ti===0)toast(err);return false}}return gnTC0.apply(this,arguments)};
+
+// ---- Devil's Dyke: a furrow dug fast enough to watch, and the sea follows it in. Tapped, it runs to the nearest sea;
+// pressed and pulled, to the nearest sea in the direction it was pulled. If there is none that way it stops short, a dry
+// ditch: the Devil, as in the story, was interrupted. ----
+let gnAim=null;
+function gnDykePlan(px,pz,aim){let best=-1,bs=1e9,bd=0,bx=0,bz=0;const al=aim?Math.hypot(aim.x,aim.z)||1:1;
+  for(let c=0;c<N*N;c++){if(H[c]>=.05)continue;const dx=wd(c%N+.5-px),dz=wd(((c/N)|0)+.5-pz),d=Math.hypot(dx,dz);if(d<2.5||d>80)continue;let sc=d;
+    if(aim){const cs=(dx*aim.x+dz*aim.z)/(d*al);if(cs<.62)continue;sc=d*(1+1.3*(1-cs))}if(sc<bs){bs=sc;best=c;bd=d;bx=dx;bz=dz}}
+  if(best<0)return aim?{ux:aim.x/al,uz:aim.z/al,L:26,dry:true,amp:.6}:null;return {ux:bx/bd,uz:bz/bd,L:bd+2,dry:false,amp:aim?1:1.6}}
+function gnDykeAt(P,px,pz,ph,d){const w=Math.sin(d*.22+ph)*P.amp*Math.min(1,d/6);return [wrap(px+P.ux*d-P.uz*w),wrap(pz+P.uz*d+P.ux*w)]}
+function gnDyke(ti,px,pz,cu){const aim=gnAim||(cu&&cu.gnAim)||null;gnAim=null;if(cu)cu.gnAim=null;const P=gnDykePlan(px,pz,aim);if(!P){if(ti===0)toast('There is no sea for the Devil to reach');return}
+  const nx=-P.uz,nz=P.ux,ph=R()*TAU,floor=P.dry?.3:-.7;sfx('quake',.9,px,pz);
+  effects.push({d:0,up(e,dt){const d0=e.d;e.d=Math.min(P.L,e.d+dt*11);let bx0=1e9,bz0=1e9,bx1=-1e9,bz1=-1e9;atk=ti;
+    for(let d=d0;d<=e.d;d+=.5){const [x,z]=gnDykeAt(P,px,pz,ph,d);const bb=forVerts(x,z,3.4,(c,r)=>{if(r<1.3)H[c]=Math.min(H[c],floor);else if(r<1.9)H[c]=Math.min(H[c],lerp(floor,H[c],(r-1.3)/.6));else if(r>2.2)H[c]+=.06*(1-(r-2.2)/1.2)});
+      bx0=Math.min(bx0,bb[0]);bz0=Math.min(bz0,bb[1]);bx1=Math.max(bx1,bb[2]);bz1=Math.max(bz1,bb[3]);gnCrush(ti,(ux2,uz2,pad)=>d2(ux2,uz2,x,z)<(1.5+pad)*(1.5+pad));
+      const y=Math.max(hAt(x,z),0);for(let i=0;i<5;i++){const s=R()<.5?-1:1;PA.emit(x,y+.3,z,nx*s*(2+R()*3)+(R()-.5),3+R()*4,nz*s*(2+R()*3)+(R()-.5),.9,.42,.3,.16,1,.7,9)}if(R()<.5)dust(x,z)}
+    if(bx1>=bx0)postTerrain(bx0,bz0,bx1,bz1);cam.shake=Math.max(cam.shake,.3);
+    if(e.d>=P.L){for(const [k,s] of [[.35,1],[.75,-1]]){const [x,z]=gnDykeAt(P,px,pz,ph,P.L*k),cx2=x+nx*s*6,cz2=z+nz*s*6;const bb=forVerts(cx2,cz2,3.6,(c,r)=>{H[c]+=1.9*Math.pow(1-r/3.6,1.4)});postTerrain(bb[0],bb[1],bb[2],bb[3]);for(let i=0;i<14;i++)dust(wrap(cx2+(R()-.5)*4),wrap(cz2+(R()-.5)*4))}
+      sfx('quake',.6,px,pz);return false}
+    return true}})}
+function gnReset(){for(const o of gnObjs)scene.remove(o.g);gnObjs.length=0;for(const d of gnDecals)scene.remove(d.m);gnDecals.length=0;gnFigs.length=0;gnPrints.length=0;gnChalk.fill(0);gnGhost=null;gnPup.d.clear();gnPup.o.clear();gnRpOn=false}
+{const gnBW0=buildWorld;buildWorld=function(){gnReset();return gnBW0.apply(this,arguments)}}
+
+// ---- placing the chalk giant: while the spell is armed, the figure follows the pointer as a ghost on the land, pale
+// where it may be cut and red where it may not, with the reason in the hint. On a touch screen, where nothing hovers,
+// a refused tap leaves the red ghost where it was tried. ----
+let gnGhost=null,gnGhostAt=null,gnGhostErr=null;
+function gnGhostShow(px,pz,ti){const D=gnFigOf(ti),yaw=gnFigYaw(px,pz,tribes[ti]&&tribes[ti].shaman),err=gnFigOK(D,px,pz,yaw,ti);
+  if(!gnGhost||gnGhost.D!==D){if(gnGhost){scene.remove(gnGhost.m);gnDecals.splice(gnDecals.indexOf(gnGhost),1)}gnGhost=gnDecal(px,pz,0,D.w,D.l,-D.l/2,D.cv());gnGhost.D=D;gnGhost.sink=true;
+    gnGhost.ls=gnGhost.wx.map((x,i)=>[x,gnGhost.wz[i]])}
+  const G=gnGhost,ca=Math.cos(yaw),sa=Math.sin(yaw);for(let i=0;i<G.ls.length;i++){const [s2,f2]=G.ls[i];G.wx[i]=ca*s2+sa*f2;G.wz[i]=-sa*s2+ca*f2}
+  G.cx=px;G.cz=pz;gnDrape(G);G.m.visible=true;G.m.material.color.setHex(err?0xff4a3a:0xffffff);G.m.material.opacity=err?.55:.42;return err}
+function gnGhostHide(){if(gnGhost)gnGhost.m.visible=false}
+const gnDO1=drawOverlay;drawOverlay=function(){const r=gnDO1.apply(this,arguments);
+  if(armed==='chalk'&&running&&!over){let at=null;if(hoverMouse&&hoverSX>=0)at=pickGround(hoverSX,hoverSY);if(!at&&gnGhostAt&&performance.now()<gnGhostAt.until)at=gnGhostAt;
+    if(at){const err=gnGhostShow(at.x,at.z,0);if(err!==gnGhostErr){gnGhostErr=err;hint(err||'The chalk giant may lie here. Tap to cut it.')}}
+    else{gnGhostHide();if(gnGhostErr!=='-'){gnGhostErr='-';hint('Chalk Giant: choose where it lies, within sight of thy buildings.')}}}
+  else{gnGhostHide();gnGhostErr=null}return r};
+const gnOT0=onTap;onTap=function(sx,sy,right,shift){if(armed==='chalk'&&!right&&!over&&!watching){const g=pickGround(sx,sy);
+    if(g&&gnFigOK(gnFigOf(0),g.x,g.z,gnFigYaw(g.x,g.z,tribes[0].shaman),0)){gnGhostAt={x:g.x,z:g.z,until:performance.now()+2500};sfx('select',.3);return}}return gnOT0.apply(this,arguments)};
+
+// ---- rivals. Not on Easy. On Normal only out of a full store of mana, as a rival left alone too long might. A rival
+// first cuts its own figure near its village, then strikes at the thickest knot of another people's buildings. ----
+function gnFigSpot(ti){const T=tribes[ti],base=(T.ai&&T.ai.base)||blds.find(b=>b.alive&&b.tribe===ti&&!BT[b.bt].inv);if(!base)return null;const D=gnFigOf(ti);
+  for(let i=0;i<80;i++){const a=R()*TAU,rr=8+R()*12,x=wrap(base.x+Math.cos(a)*rr),z=wrap(base.z+Math.sin(a)*rr);if(!gnFigOK(D,x,z,gnFigYaw(x,z,null),ti))return {x,z}}return null}
+function gnAI(T,ai,sh,opts){if(settings.diff==='easy'||armageddon||!sh||sh.tomb)return;
+  const can=k=>allowS(k)&&aiPalOK(T,k)&&(T.cd[k]||0)<=gt&&(SPK[k].c>ai.D.maxSpell?T.mana>=TUNE.manaMax*.97:T.mana>=spellCost(T,k)+30);
+  if(!gnFigs.some(f=>f.tribe===T.id)){if(can('chalk')&&allowS('giant')&&gt>(ai.gnFigT||0)){ai.gnFigT=gt+20;const p=gnFigSpot(T.id);if(p)opts.push(['chalk',p.x,p.z,8])}return}
+  if(!can('giant'))return;let best=null,bs=1;
+  for(const b of blds){if(!b.alive||b.tribe===T.id||BT[b.bt].inv||b.bt==='hedge'||!tribes[b.tribe]||tribes[b.tribe].wild||d2(sh.x,sh.z,b.x,b.z)>40*40)continue;
+    let n=0;for(const o of blds)if(o.alive&&o.tribe===b.tribe&&!BT[o.bt].inv&&o.bt!=='hedge'&&d2(o.x,o.z,b.x,b.z)<81)n++;if(n>bs){bs=n;best=b}}
+  if(best)opts.push(['giant',best.x,best.z,8])}
+
+// ---- saving: the figures, the prints of the hand, and the chalk they have worked into the turf. A strike or a cutting
+// still under way when the game is saved is not kept; its pit and craters are, being the land. ----
+function gnSave(){return {f:gnFigs.map(f=>[f.tribe,+f.x.toFixed(3),+f.z.toFixed(3),+f.yaw.toFixed(4)]),p:gnPrints.map(d=>[+d.cx.toFixed(3),+d.cz.toFixed(3),+d.yaw.toFixed(4)]),c:b64(gnChalk)}}
+function gnLoad(g){gnReset();if(!g)return;if(g.c){const a=unb64(g.c,Float32Array);if(a.length===N*N)gnChalk.set(a)}
+  for(const [ti,x,z,yaw] of g.f||[]){const D=gnFigOf(ti),dc=gnDecal(x,z,yaw,D.w,D.l,-D.l/2,D.cv(),null,{k:'fig',ti});dc.sink=true;gnDrape(dc);gnFigSet(ti,D,x,z,yaw,dc,true)}
+  for(const [x,z,yaw] of g.p||[]){const d=gnDecal(x,z,yaw,17,15,-4.5,gnPrintDraw,null,{k:'print'});d.sink=true;gnDrape(d);gnPrints.push(d)}
+  recompute(0,0,N-1,N-1)}
+{const gnLG0=loadGame;loadGame=function(){const d=readSave(),ok=gnLG0.apply(this,arguments);if(ok)gnLoad(d&&d.gn);return ok}}
+
+// ---- replays: the recorder keeps what the giants' things looked like five times a second; in a replay the live ones are
+// hidden and puppets made from the record take their place, the arm easing between its recorded poses ----
+let gnRpOn=false;const gnPup={d:new Map(),o:new Map()};
+const gnR=(v,n)=>+v.toFixed(n);
+function gnRpGet(){const D=[],O=[];for(const d of gnDecals)if(d.rp&&!d.pup)D.push([d.id,d.rp.k,d.rp.ti==null?-1:d.rp.ti,gnR(d.cx,2),gnR(d.cz,2),gnR(d.yaw,3),gnR(d.m.material.opacity,2)]);
+  for(const o of gnObjs){if(!o.rp||o.pup)continue;if(o.rp.k==='arm'){const s=o.st;O.push([o.id,'arm',gnR(o.x,2),gnR(o.z,2),gnR(o.y,2),gnR(o.yaw,3),o.A.root.visible?1:0,[s.d,s.h,s.g,s.th,s.lift,s.tilt,s.curl,s.spread].map(v=>gnR(v,3)),s.clear?1:0,gnR(o.rimY,2),gnR(o.floorY,2),o.rp.turf])}
+    else if(o.rp.k==='sky'){const r=o.g.rotation;O.push([o.id,'sky',o.rp.ti,gnR(o.x,2),gnR(o.z,2),gnR(o.y,2),gnR(r.x,3),gnR(r.y,3),gnR(r.z,3),gnR(o.rp.pm.opacity,2)])}}
+  return JSON.stringify([D,O])}
+function gnPupShape(k,ti){if(k==='fig'){const D=gnFigOf(ti);return [D.w,D.l,-D.l/2,D.cv(),null,true]}if(k==='print')return [17,15,-4.5,gnPrintDraw,null,true];return [(GN_HOLE+1)*2,(GN_HOLE+1)*2,-(GN_HOLE+1),gnHoleDraw,0xffffff,false]}
+function gnRpSet(v){
+  if(!RP.on){for(const p of gnPup.d.values()){scene.remove(p.m);const i=gnDecals.indexOf(p);if(i>=0)gnDecals.splice(i,1)}gnPup.d.clear();for(const p of gnPup.o.values())gnDrop(p.g);gnPup.o.clear();
+    for(const d of gnDecals)if(d.hid){d.m.visible=d.hidVis;d.hid=false}for(const o of gnObjs)if(o.hid){o.g.visible=o.hidVis;o.hid=false}gnRpOn=false;return}
+  if(!gnRpOn){gnRpOn=true;for(const d of gnDecals)if(!d.pup&&!d.hid){d.hid=true;d.hidVis=d.m.visible;d.m.visible=false}for(const o of gnObjs)if(!o.pup&&!o.hid){o.hid=true;o.hidVis=o.g.visible;o.g.visible=false}}
+  let D=[],O=[];try{[D,O]=JSON.parse(v)||[[],[]]}catch(e){}
+  const seenD=new Set();for(const [id,k,ti,cx,cz,yaw,op] of D){seenD.add(id);let p=gnPup.d.get(id);if(!p){const sh=gnPupShape(k,ti);p=gnDecal(cx,cz,yaw,sh[0],sh[1],sh[2],sh[3],sh[4]);p.sink=sh[5];p.pup=true;gnPup.d.set(id,p)}
+    p.cx=cx;p.cz=cz;p.m.material.opacity=op;gnDrape(p)}
+  for(const [id,p] of gnPup.d)if(!seenD.has(id)){scene.remove(p.m);const i=gnDecals.indexOf(p);if(i>=0)gnDecals.splice(i,1);gnPup.d.delete(id)}
+  const seenO=new Set();for(const e of O){const id=e[0];seenO.add(id);let p=gnPup.o.get(id);
+    if(e[1]==='arm'){const [,,x,z,y,yaw,vis,sv,clr,rimY,floorY,turf]=e;if(!p){const A=gnArmModel(turf);A.root.rotation.y=yaw;p=gnPlace(A.root,x,z,y);p.A=A;p.yaw=yaw;p.pose=gnArmPose;p.pup=true;
+        p.st={d:sv[0],h:sv[1],g:sv[2],th:sv[3],lift:sv[4],tilt:sv[5],curl:sv[6],spread:sv[7]};gnPup.o.set(id,p)}
+      p.tgt={y,sv,snap:!p.tgt||Math.abs(y-p.y)>12};p.A.root.visible=!!vis;p.st.clear=!!clr;p.rimY=rimY;p.floorY=floorY}
+    else{const [,,ti,x,z,y,rx,ry,rz,op]=e;if(!p){const s=gnSky(ti);p=gnPlace(s.g,x,z,y);p.pm=s.pm;p.pup=true;gnPup.o.set(id,p)}p.y=y;p.g.rotation.set(rx,ry,rz);p.pm.opacity=op}}
+  for(const [id,p] of gnPup.o)if(!seenO.has(id)){gnDrop(p.g);gnPup.o.delete(id)}}
+let gnPupT=0;
+function gnPupTick(){const now=performance.now(),dt=Math.min(.1,(now-(gnPupT||now))/1000);gnPupT=now;if(!gnRpOn)return;const k=1-Math.exp(-dt*12*((RP.play&&RP.speed)||1));
+  for(const p of gnPup.o.values()){const T=p.tgt;if(!T||!p.st)continue;const a=T.snap?1:k;T.snap=false;p.y=lerp(p.y,T.y,a);const s=p.st,v=T.sv;
+    s.d=lerp(s.d,v[0],a);s.h=lerp(s.h,v[1],a);s.g=lerp(s.g,v[2],a);s.th=lerp(s.th,v[3],a);s.lift=lerp(s.lift,v[4],a);s.tilt=lerp(s.tilt,v[5],a);s.curl=lerp(s.curl,v[6],a);s.spread=lerp(s.spread,v[7],a)}}
+
 function castSpell(ti,k,px,pz,cu){atk=ti;let sx=cu?cu.x:px,sz=cu?cu.z:pz,sy=cu?unitY(cu)+1:hAt(px,pz)+5;
   if(cu&&cu.tomb){const dx=wd(px-cu.x),dz=wd(pz-cu.z),d=Math.hypot(dx,dz)||1,L=Math.min(12,d);sx=wrap(px-dx/d*L);sz=wrap(pz-dz/d*L);sy=Math.max(0,hAt(sx,sz))+(k==='bridge'?0:14)}
   switch(k){
@@ -1945,16 +2259,9 @@ function castSpell(ti,k,px,pz,cu){atk=ti;let sx=cu?cu.x:px,sz=cu?cu.z:pz,sy=cu?u
       if(R()<dt*12)PN.emit(e.x+(R()-.5)*.6,e.y-.3,e.z+(R()-.5)*.6,(R()-.5)*.3,-.2,(R()-.5)*.3,1.6,.32,.45,.12,.55,.9,0);
       PA.emit(e.x,e.y,e.z,0,0,0,.08,.75,1,.45,1,1.4,0);
       return e.t>0}});sfx('cast',1,px,pz);break;
-  case 'volcano':{const bb=forVerts(px,pz,7,(c,d)=>{H[c]+=10*Math.pow(1-d/7,1.5);if(d<1.3)H[c]-=2.5});
-    for(const b of blds)if(b.alive&&b.tribe!==ti&&Math.sqrt(d2(px,pz,b.x,b.z))<8+BT[b.bt].s*.4)destroyBld(b);
-    for(const u of units)if(u.alive&&!u.inV&&u.tribe!==ti&&d2(px,pz,u.x,u.z)<64){toss(u,px,pz,6,9);dmgUnit(u,999,null)}
-    for(const t of trees)if(t.alive&&d2(px,pz,t.x,t.z)<64)killTree(t);
-    const cx=Math.floor(px),cz=Math.floor(pz);for(let dz=-5;dz<=5;dz++)for(let dx=-5;dx<=5;dx++)if(dx*dx+dz*dz<=21)setHaz(wi(cz+dz)*N+wi(cx+dx),40,2,ti);
-    postTerrain(bb[0],bb[1],bb[2],bb[3]);cam.shake=Math.max(cam.shake,1.2);sfx('quake',1,px,pz);
-    effects.push({x:px,z:pz,t:18,tick:0,up(e,dt){e.t-=dt;const y=hAt(e.x,e.z);for(let i=0;i<4;i++)PA.emit(e.x+(R()-.5),y+.5,e.z+(R()-.5),(R()-.5)*3,5+R()*6,(R()-.5)*3,.9+R()*.6,1,.35+R()*.3,.05,1,.9,9);
-      PN.emit(e.x+(R()-.5),y+1,e.z+(R()-.5),(R()-.5)*.6,2.5,(R()-.5)*.6,4,.18,.16,.15,.7,2.4,-.2);
-      e.tick-=dt;if(e.tick<=0){e.tick=.6;const a=R()*TAU,r=2+R()*5,x=e.x+Math.cos(a)*r,z=e.z+Math.sin(a)*r;proj({kind:'fireball',sx:e.x,sz:e.z,sy:y+1,tx:x,tz:z,ty:Math.max(0,hAt(x,z)),dur:1,arc:4,ti,onHit:(x,z)=>boom(x,z,1.1,25,ti,40,3,4)})}
-      return e.t>0}});break}
+  case 'giant':gnHand(ti,px,pz,cu);break;
+  case 'chalk':gnCut(ti,px,pz,cu);break;
+  case 'dyke':gnDyke(ti,px,pz,cu);break;
   }}
 function bolt(x,y,z){let px=x+(R()-.5)*4,py=y+26,pz=z+(R()-.5)*4;const n=16;for(let i=1;i<=n;i++){const f=i/n,j=(1-f)*1.6;const nx=lerp(x+(R()-.5)*4,x,f)+(R()-.5)*j,ny=lerp(y+26,y,f),nz=lerp(z,z,f)+(R()-.5)*j;
     for(let k=0;k<5;k++){const t=k/5;PA.emit(lerp(px,nx,t),lerp(py,ny,t),lerp(pz,nz,t),0,0,0,.28,.8,.88,1,1,.7,0)}px=nx;py=ny;pz=nz}
@@ -2146,7 +2453,8 @@ function aiCast(T){const ai=T.ai,sh=casterOf(T);if(!sh||sh.preg||sh.intoHill||sh
     if(tgt){opts.push(['fetch',tgt.x,tgt.z,5]);ai.fetchT=gt+150}}
   if(ok('changeling')&&!sh.tomb&&gt>(ai.chgT||120)&&!units.some(u=>u.alive&&u.chg===T.id)){const v=units.find(o=>chgOK(o,T.id)&&o.type==='brave'&&d2(o.x,o.z,sh.x,sh.z)<10*10);if(v){opts.push(['changeling',v.x,v.z,3]);ai.chgT=gt+150}}
   const eb=nearestEnemyBld(cx,cz,T.id,14);
-  if(eb){if(ok('quake'))opts.push(['quake',eb.x,eb.z,3]);if(ok('whirl'))opts.push(['whirl',eb.x,eb.z,3]);if(ok('erode'))opts.push(['erode',eb.x,eb.z,2]);if(ok('volcano')&&settings.diff!=='easy')opts.push(['volcano',eb.x,eb.z,4]);if(ok('blast')&&!en.length)opts.push(['blast',eb.x,eb.z,1])}
+  if(eb){if(ok('quake'))opts.push(['quake',eb.x,eb.z,3]);if(ok('whirl'))opts.push(['whirl',eb.x,eb.z,3]);if(ok('erode'))opts.push(['erode',eb.x,eb.z,2]);if(ok('blast')&&!en.length)opts.push(['blast',eb.x,eb.z,1])}
+  gnAI(T,ai,sh,opts);
   if(!opts.length)return;let tot=0;for(const o of opts)tot+=o[3];let r=R()*tot;let pk=opts[0];for(const o of opts){r-=o[3];if(r<=0){pk=o;break}}
   if(pk[4]==='sh')ai.boltT=gt+TUNE.boltEvery;ai.castT=gt+ai.gap*(.7+R()*.6);if(sh.tomb){tryCast(T.id,pk[0],wrap(pk[1]),wrap(pk[2]),sh);return}sh.st='cast';sh.spell=pk[0];sh.px=wrap(pk[1]);sh.pz=wrap(pk[2])}
 
@@ -2233,7 +2541,7 @@ function tokTick(){const T=tribes[0];if(!T||!T.alive||!tokLive())return;const a=
   if(gt>=1800)earn('t30');if(gt>=3600)earn('t60');if(gt>=7200)earn('t120');if(T.dread>TUNE.desertAt)a.dreadOver=true;
   const sh=T.shaman;if(sh&&sh.alive&&!sh.inV&&sh.hitT>gt-4){const near=units.filter(o=>o.alive&&o.type==='shaman'&&o.tribe!==0&&!o.inV&&o.hitT>gt-4&&d2(o.x,o.z,sh.x,sh.z)<100);
     for(let i=0;i<near.length;i++)for(let j=i+1;j<near.length;j++)if(near[i].tribe!==near[j].tribe&&d2(near[i].x,near[i].z,near[j].x,near[j].z)<100)earn('x_threeway')}
-  if(effects.some(e=>e.k==='fire'&&e.ti===0&&e.t>0)&&effects.some(e=>e.k==='angel'&&e.ti===0&&e.t>0)&&Object.values(swamps).some(w=>w.owner===0)){let lava=false;for(const c of hazList)if(hazType[c]===2&&hazOwner[c]===0&&hazU[c]>gt){lava=true;break}if(lava)earn('x_fourfold')}}
+  if(effects.some(e=>e.k==='fire'&&e.ti===0&&e.t>0)&&effects.some(e=>e.k==='angel'&&e.ti===0&&e.t>0)&&Object.values(swamps).some(w=>w.owner===0)&&effects.some(e=>e.k==='giant'&&e.ti===0&&e.live))earn('x_fourfold')}
 function checkEnd(){if(over)return;if(fetchTook&&!watching){endGame(false);$('endS').textContent='The fetch has taken your Cunning Woman. Here she does not come back.';return}if(cwLost&&!watching&&(scen()||{}).cwLoss){endGame(false);$('endS').textContent='Your Cunning Woman has been taken. Here she does not come back.';return}tokTick();if(tribes[0]&&!watching){const v=canLeap(tribes[0]);if(v!==leapLast){leapLast=v;dockDirty=true}}{const SC=scen();if(SC&&tribes[0].alive){const g=SC.goal,T=tribes[0];if((g.type==='survive'&&gt>=g.n)||(g.type==='captives'&&(T.stats.caps||0)>=g.n)||(g.type==='queen'&&(stats.queenOffered||0)>=(g.n||1))||(g.type==='mana'&&T.mana>=g.n)||(g.type==='pop'&&T.stats.pop>=g.n)||(g.type==='fetch'&&(stats.fetched||0)>=g.n)||(g.type==='cws'&&gt>5&&tribes.every(o=>!o.ai||o.wild||!(o.shaman&&o.shaman.alive)&&!(o.tomb&&o.tomb.alive)))){endGame(true);return}}}if(watching){const left=tribes.filter(T=>!T.wild&&T.alive);if(left.length<=1)endWatch(left[0]);return}if(!tribes[0].alive){endGame(false);return}if(tribes.slice(1).filter(T=>!T.wild).every(T=>!T.alive))endGame(true)}
 function spawnWild(x,z){const u=spawnUnit('wild',wildId,x,z);u.hx=u.x;u.hz=u.z;return u}
 function wildSpot(){for(let t=0;t<60;t++){const x=R()*N,z=R()*N,c=cidx(x,z);if(!pass[c])continue;let ok=true;for(const b of blds)if(b.alive&&b.tribe!==wildId&&d2(x,z,b.x,b.z)<22*22){ok=false;break}if(ok)return {x,z}}return null}
@@ -3586,6 +3894,29 @@ function captureDef(def){const proto=C.BufferGeometry.prototype,AM=proto.applyMa
 function modelEdits(){let loc={};try{loc=JSON.parse(localStorage.getItem(MODEL_KEY))||{}}catch(e){}return Object.assign({},MODEL_DATA,loc)}
 UMOD.shamanP=UMOD.shaman;UMOD.braveDaze=UMOD.brave; // a villager drawn by the Keening Wail; her look is the workshop model u:braveDaze
  // the Cunning Woman with child (carrying a Fetch); her look is the workshop model u:shamanP
+// The giant's arm, as workshop models: seven pieces at a quarter of their size in the world, each drawn from its own
+// joint (shoulder, elbow, wrist, the base of a finger or thumb segment) upwards. These give the arm its masses only:
+// coarse, few-sided forms. Its surface is made when the arm is built (gnSkin): every corner is knocked a little out of
+// true so the facets are irregular like the land's, and each facet is coloured by which way it faces, as a slab of
+// downland would be: turf on the outer side, dark soil at the edge, raw chalk on the palm side. Flint stays flint.
+{const CH=0xe3dccb,JT=0x808080,FL=0x4b4a45,NT=[P(new C.BoxGeometry(.001,.001,.001),CH,0,0,0)],Cy=(rt,rb,h,s)=>new C.CylinderGeometry(rt,rb,h,s),Sp=(r,a,b)=>new C.SphereGeometry(r,a,b),Bx=(w,h,d)=>new C.BoxGeometry(w,h,d),
+   E=(g,col,x,y,z,sx=1,sy=1,sz=1,rx=0,ry=0,rz=0)=>{g.scale(sx,sy,sz);return P(g,col,x,y,z,rx,ry,rz)},
+   KN=[[-.6,1.4375,.16],[-.2,1.575,.19],[.2,1.6125,.2],[.6,1.55,.185]];   // the knuckles, where the fingers are hung
+  UMOD.giantUpper=()=>({t:NT,f:[P(Cy(.5,.57,1.7,6),CH,0,-1.4,0),P(Cy(.46,.5,.75,6),CH,0,-.3,0,0,.5),E(Sp(.48,6,4),CH,0,.2,0,1,1.1,.92),
+    E(Sp(.47,6,4),CH,0,1.0,0,.95,2.1,.88,0,.4),E(Sp(.31,5,3),CH,.03,1.05,.2,.9,1.55,.8),E(Sp(.31,5,3),CH,-.02,.95,-.2,.95,1.7,.8,0,.6),P(Cy(.3,.38,.45,6),CH,0,1.9,0),
+    E(Sp(.35,5,3),JT,0,2.1,-.03,1,.95,1),P(Sp(.18,4,3),CH,0,2.05,-.24),E(Sp(.2,4,3),CH,.3,.15,.3,1.2,.8,1),E(Sp(.16,4,3),CH,-.36,.45,-.22,1,.9,1.2),
+    P(Sp(.07,4,2),FL,.4,.6,.12),P(Sp(.05,4,2),FL,-.38,1.2,.1),P(Sp(.06,4,2),FL,.2,.05,.42)]});
+  UMOD.giantFore=()=>({t:NT,f:[P(Sp(.34,5,3),JT,0,0,0),E(Sp(.43,6,4),CH,.02,.72,0,1.02,1.9,.86,0,.3),E(Sp(.27,5,3),CH,.2,.55,.1,.8,1.7,.8),
+    E(Cy(.29,.36,1.15,6),CH,0,1.5,0,1.15,1,.74,0,.5),P(Sp(.13,4,3),CH,-.3,2,-.06),P(Sp(.06,4,2),FL,.33,1.2,.08),P(Sp(.05,4,2),FL,-.3,.8,.14)]});
+  UMOD.giantPalm=()=>{const f=[E(Cy(.31,.3,.3,6),JT,0,.06,0,1.12,1,.74),E(Sp(.4,6,4),CH,0,.4,0,1.3,.85,.66),E(Sp(.63,7,4),CH,0,.95,0,1.1,1.05,.47,0,.2),E(Sp(.5,6,3),CH,0,1.36,0,1.44,.6,.46),
+      E(Sp(.42,5,3),CH,.48,.62,.16,.9,1.35,.78,0,0,-.45),E(Sp(.3,5,3),CH,-.5,.72,.14,.8,1.5,.66,0,0,.1),P(Sp(.06,4,2),FL,-.62,1.0,.06),P(Sp(.05,4,2),FL,.6,1.1,.05)];
+    for(const [x,y,r] of KN){const x0=x*.45,y0=.42,dx=x-x0,dy=y-y0,L=Math.hypot(dx,dy);f.push(E(Sp(r,5,3),JT,x,y-.02,-.1,1.05,1.25,1),E(Sp(.12,4,3),CH,(x+x0)/2,(y+y0)/2+.1,-.2,1,2.4,.5,0,0,-Math.asin(dx/L)))}
+    return {t:NT,f}};
+  UMOD.giantFinger=()=>({t:NT,f:[P(Sp(.16,5,3),JT,0,.03,0),E(Cy(.15,.17,.52,5),CH,0,.29,0,1,1,.92,0,.3),E(Sp(.155,5,3),CH,0,.54,0,1,.8,.92)]});
+  UMOD.giantFingerTip=()=>({t:NT,f:[P(Sp(.15,5,3),JT,0,.03,0),E(Cy(.125,.155,.4,5),CH,0,.23,0,1,1,.9,0,.3),E(Sp(.14,5,3),CH,0,.45,0,1,1.2,.86),E(Bx(.16,.2,.03),FL,0,.47,-.11,1,1,1,.14)]});
+  UMOD.giantThumb=()=>({t:NT,f:[P(Sp(.18,5,3),JT,0,.03,0),E(Cy(.165,.19,.52,5),CH,0,.29,0,1,1,.92,0,.3),E(Sp(.17,5,3),CH,0,.54,0,1,.8,.92)]});
+  UMOD.giantThumbTip=()=>({t:NT,f:[P(Sp(.165,5,3),JT,0,.03,0),E(Cy(.14,.17,.4,5),CH,0,.23,0,1,1,.9,0,.3),E(Sp(.155,5,3),CH,0,.45,0,1,1.2,.86),E(Bx(.19,.21,.03),FL,0,.46,-.125,1,1,1,.12)]});
+  for(const k of ['giantUpper','giantFore','giantPalm','giantFinger','giantFingerTip','giantThumb','giantThumbTip'])UCAP[k]=1}
 const ORIG_UMOD=Object.assign({},UMOD),ORIG_BMOD=Object.assign({},BMOD);
 function applyModelEdits(){const E=modelEdits();for(const k in ORIG_UMOD)UMOD[k]=ORIG_UMOD[k];for(const k in ORIG_BMOD)BMOD[k]=ORIG_BMOD[k];
   for(const k in E){const name=k.slice(2),set=k[0]==='u'?UMOD:BMOD,orig=k[0]==='u'?ORIG_UMOD:ORIG_BMOD;if(!orig[name]||!Array.isArray(E[k]))continue;try{set[name]=defFromData(E[k])}catch(e){console.error('model edit',k,e)}}
@@ -4414,7 +4745,7 @@ function saveGame(){if(!running||over||watching||!tribes.length||inMenu&&!paused
   const d={v:1,saved:Date.now(),settings:Object.assign({},settings),gt,nextId,armageddon,moot,wildId,wildT,stats,fogOn,stones,cam:{fx:cam.fx,fz:cam.fz,yaw:cam.yaw,dist:cam.dist},
     H:b64(H),TN:b64(TN),hazU:b64(hazU),saltU:b64(saltU),saltOwner:b64(saltOwner),hazType:b64(hazType),hazOwner:b64(hazOwner),hazGrp:b64(hazGrp),swamps,swampSeq,seen:b64(seen),
     trees:live.map(t=>[+t.x.toFixed(2),+t.z.toFixed(2),t.wood,+t.sc.toFixed(2),+t.tint.toFixed(2),t.born||0]),
-    tribes:tr,banners,units:units.filter(u=>u.alive).map(ent),blds:blds.filter(b=>b.alive).map(ent)};
+    tribes:tr,gn:gnSave(),banners,units:units.filter(u=>u.alive).map(ent),blds:blds.filter(b=>b.alive).map(ent)};
   localStorage.setItem(SAVE_KEY,JSON.stringify(d));return true}catch(e){console.warn('save failed',e);return false}}
 function loadGame(){const d=readSave();if(!d)return false;
   if(d.settings.campaign!=null&&settings.campaign==null)skirmishSettings=Object.assign({},settings);Object.assign(settings,d.settings);if(settings.campaign===undefined)settings.campaign=null;if(!d.settings.chal)settings.chal=false;else campView='chal';allowSets=settings.campaign!=null?scenSets(settings.campaign):null;watching=false;document.body.classList.remove('watch');
@@ -4454,7 +4785,7 @@ window.addEventListener('pagehide',()=>saveGame());document.addEventListener('vi
 // gives a block of text that can be baked into MODEL_DATA so they ship with the game.
 let wsOn=false,galleryOn=false;
 const WS={multi:new Set(),addMode:false,scene:null,group:null,key:null,parts:[],sel:-1,undo:[],lastPush:0,yaw:.6,pitch:.42,dist:4,ty:.5,tribe:0,ref:true,refMesh:null,box:null,drag:null,pts:new Map(),dirty:new Set()};
-const ANIM_L={shamanP:'Cunning Woman with child',braveDaze:'Villager drawn by the keening',goat:'Black goat',chicken:'Chicken',rabbit:'Rabbit'};
+const ANIM_L={giantUpper:'Giant: upper arm',giantFore:'Giant: forearm',giantPalm:'Giant: hand',giantFinger:'Giant: finger segment',giantFingerTip:'Giant: fingertip',giantThumb:'Giant: thumb segment',giantThumbTip:'Giant: thumb tip',shamanP:'Cunning Woman with child',braveDaze:'Villager drawn by the keening',goat:'Black goat',chicken:'Chicken',rabbit:'Rabbit'};
 function wsLabel(k){const n=k.slice(2);if(k==='b:hedgelink')return 'Blackthorn Hedge (join)';if(k==='b:hutch')return 'Rabbit hutch';if(k==='b:firepit')return 'Beltane fire pit';if(k[0]==='u'&&ANIM_L[n])return ANIM_L[n];return k[0]==='u'?(UT[n]?UT[n].label:n):(BT[n]?BT[n].label:n)}
 function wsKeys(){return Object.keys(ORIG_UMOD).filter(k=>k!=='ghost'&&k!=='phillip').map(k=>'u:'+k).concat(Object.keys(ORIG_BMOD).map(k=>'b:'+k))}
 function wsOrigParts(k){const n=k.slice(2);return captureDef(k[0]==='u'?ORIG_UMOD[n]:ORIG_BMOD[n])}
@@ -4772,6 +5103,7 @@ const RP_COLL=[['units',()=>units,v=>units=v,1],['blds',()=>blds,v=>blds=v,0],['
 const RP_TER=[[()=>H,v=>H=v],[()=>TN,v=>TN=v],[()=>hazU,v=>hazU=v],[()=>hazType,v=>hazType=v],[()=>saltU,v=>saltU=v],[()=>hedgeA,v=>hedgeA=v]];
 const RP_G=[['seaRed',()=>seaRed,v=>seaRed=v],['armageddon',()=>armageddon,v=>armageddon=v],['season',()=>season,v=>season=v]];
 const RP_GJ=[['seaRise',()=>seaRise,v=>seaRise=v],['swamps',()=>swamps,v=>swamps=v]];
+RP_G.push(['gn',gnRpGet,gnRpSet]);RP_TER.push([()=>gnChalk,v=>gnChalk=v]);
 const RP_MAXB=64e6;
 let RP_KEYS=null;
 function rpKeys(){if(RP_KEYS)return RP_KEYS;const s=new Set(),src=[drawEntities,drawOverlay,drawMini,unitY,visU,visB,computeStats,paintMap,updTerrain,queenValue,dtrNear,isHold,byaw,updHUD].map(f=>String(f)).join(' ');
@@ -4869,6 +5201,16 @@ $('rpSpd').addEventListener('click',()=>{RP.speed=RP.speed>=8?1:RP.speed*2;rpUI(
 $('rpExit').addEventListener('click',()=>rpStop(true));
 {const p=$('rpPos');p.addEventListener('input',()=>{RP.drag=true;const r=RP.rec,t0=r.samples[0].t,end=r.samples[r.samples.length-1].t;RP.seekTo=t0+p.value/1000*(end-t0);rpUI()});p.addEventListener('change',()=>{RP.drag=false})}
 new MutationObserver(()=>{if(!$('end').hidden)$('bReplay').hidden=!(RP.rec&&RP.rec.samples.length>=6&&devMode())}).observe($('end'),{attributes:true,attributeFilter:['hidden']});
+// ---- Devil's Dyke takes a direction from a press and pull: it runs to the nearest sea that way. A tap alone sends it to
+// the nearest sea anywhere. A tapped spell is cast a moment later by the Cunning Woman, so the direction is left with her. ----
+const gnDragSt={on:false};
+glc.addEventListener('pointerdown',e=>{const S=gnDragSt;S.on=false;if(armed!=='dyke'||!running||e.button===2||pointers.size!==1)return;const g=pickGround(e.clientX,e.clientY);if(!g)return;
+  clearTimeout(lpTimer);gest={kind:'dyke'};Object.assign(S,{on:true,id:e.pointerId,sx:e.clientX,sy:e.clientY,x:e.clientX,y:e.clientY,gx:g.x,gz:g.z,moved:false})});
+glc.addEventListener('pointermove',e=>{const S=gnDragSt;if(!S.on||e.pointerId!==S.id)return;if(pointers.size>1){S.on=false;return}S.x=e.clientX;S.y=e.clientY;if(Math.hypot(S.x-S.sx,S.y-S.sy)>14)S.moved=true});
+const gnUp=e=>{const S=gnDragSt;if(!S.on||e.pointerId!==S.id)return;S.on=false;const sh=tribes[0]&&tribes[0].shaman;if(e.type!=='pointerup')return;if(!S.moved){if(sh)sh.gnAim=null;return}if(armed!=='dyke')return;
+  const g=pickGround(S.x,S.y);if(!g)return;const ax=wd(g.x-S.gx),az=wd(g.z-S.gz);if(Math.hypot(ax,az)<1.5)return;const aim={x:ax,z:az};gnAim=aim;onTap(S.sx,S.sy,false,false);gnAim=null;
+  if(sh&&sh.st==='cast'&&sh.spell==='dyke')sh.gnAim=aim};
+glc.addEventListener('pointerup',gnUp);glc.addEventListener('pointercancel',gnUp);
 textInit();resize();buildWorld();menuUnlocks();showContinue();requestAnimationFrame(frame);
 window.__ws={castLog,setTarget:(u,x,z)=>setTarget(u,x,z),onTap:(a,b,c,d)=>onTap(a,b,c,d),unitScreen:u=>unitScreen(u),isVis:(x,z)=>isVis(x,z),get seaRise(){return seaRise},get seaRed(){return seaRed},get water(){return water},get fetches(){return fetches},get stains(){return stains},sendAnimal,kindle,get stock(){return stock},get hutches(){return hutches},get HUT_TOP(){return HUT_TOP},get wind(){return wind},get windOn(){return windOn},get lastFight(){return lastFight},windTick,get wildFl(){return wildFl},get season(){return season},endGame,destroyBld,crown,villagerCount,tokGet,keepsake,useKeepsake,walkReach,postAt,setSel,get banners(){return banners},get sel(){return sel},get world(){return world},light,memorial,get stats(){return stats},get cam(){return cam},get WS(){return WS},wsOpen,wsClose,captureDef,defFromData,merge,ORIG_UMOD,ORIG_BMOD,get UM(){return UM},get BM(){return BM},get wear(){return wear},get buntings(){return buntings},get patches(){return patches},get wells(){return wells},get units(){return units},get tribes(){return tribes},get blds(){return blds},sim,beginGame,get gt(){return gt},castSpell,tryCast,saveGame,loadGame,setSel,command,showLevel,SCEN,field,get walkA(){return walk},hAt,get water(){return water},findSpot,get allow(){return allowSets},get pass(){return pass},get swamps(){return swamps},get debris(){return debris},queenValue,invokeArma,startRitual,sendVehicle,get wildId(){return wildId},get armageddon(){return armageddon},placeBuilding,validSpot,orderMove,spawnUnit,command,get water(){return water},findSpot};
 })();
